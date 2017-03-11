@@ -1,0 +1,34 @@
+{
+  "name": "tallerify-catalog-server",
+  "version": "1.0.0",
+  "description": "Tallerify Catalog server stores all music catalog and registered users",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "mocha spec"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/manuporto/tallerify-catalog-server.git"
+  },
+  "keywords": [
+    "server",
+    "nodejs",
+    "catalog",
+    "tallerify"
+  ],
+  "author": "",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/manuporto/tallerify-catalog-server/issues"
+  },
+  "homepage": "https://github.com/manuporto/tallerify-catalog-server#readme",
+  "engines": {
+    "node": "6.10.0"
+  },
+  "dependencies": {
+    "bower": "1.8.0",
+    "grunt": "1.0.1",
+    "mocha": "3.2.0"
+  }
+}
