@@ -2,7 +2,7 @@
   "name": "tallerify-catalog-server",
   "version": "1.0.0",
   "description": "Tallerify Catalog server stores all music catalog and registered users",
-  "main": "index.js",
+  "main": "./bin/www",
   "scripts": {
     "dev": "NODE_ENV=development nodemon ./bin/www",
     "start": "node ./bin/www",
