@@ -10,9 +10,14 @@ Install the node packages via:
 ## Compile
 To compile the Typescript run:
 
-`$ npm grunt`
+`$ npm run grunt`
 
 ## Start
 To start the server run:
 
 `npm start`
+
+## Test
+For running the test suit run:
+
+`npm run test`
