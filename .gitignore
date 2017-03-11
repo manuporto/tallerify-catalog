@@ -19,6 +19,10 @@ coverage
 
 # Grunt intermediate storage (http://gruntjs.com/creating-plugins#storing-task-files)
 .grunt
+dist/
+
+# Typescript
+.tscache/
 
 # node-waf configuration
 .lock-wscript
@@ -35,3 +39,9 @@ jspm_packages
 
 # Optional REPL history
 .node_repl_history
+
+#Idea
+.idea/
+
+
+
