@@ -4,8 +4,10 @@
   "description": "Tallerify Catalog server stores all music catalog and registered users",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "test": "mocha spec"
+    "dev": "NODE_ENV=development nodemon ./bin/www",
+    "start": "node ./bin/www",
+    "test": "mocha spec",
+    "grunt": "grunt"
   },
   "repository": {
     "type": "git",
@@ -27,16 +29,31 @@
     "node": "6.10.0"
   },
   "dependencies": {
+    "body-parser": "1.17.1",
     "bower": "1.8.0",
+    "cookie-parser": "1.4.3",
+    "errorhandler": "1.5.0",
     "express": "4.15.2",
     "grunt": "1.0.1",
-    "mocha": "3.2.0"
+    "method-override": "2.3.7",
+    "mocha": "3.2.0",
+    "morgan": "1.8.1",
+    "pug": "2.0.0-beta11"
   },
   "devDependencies": {
+    "@types/body-parser": "1.16.0",
+    "@types/errorhandler": "0.0.30",
+    "@types/method-override": "0.0.29",
+    "@types/morgan": "1.7.32",
     "eslint": "3.17.1",
     "eslint-config-airbnb": "14.1.0",
     "eslint-plugin-import": "2.2.0",
     "eslint-plugin-jsx-a11y": "4.0.0",
-    "eslint-plugin-react": "6.10.0"
+    "eslint-plugin-react": "6.10.0",
+    "grunt": "1.0.1",
+    "grunt-contrib-copy": "1.0.0",
+    "grunt-contrib-watch": "1.0.0",
+    "grunt-ts": "6.0.0-beta.15",
+    "typescript": "2.2.1"
   }
 }
