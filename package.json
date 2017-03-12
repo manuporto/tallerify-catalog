@@ -5,10 +5,11 @@
   "main": "./bin/www",
   "scripts": {
     "dev": "NODE_ENV=development nodemon ./bin/www",
-    "start": "node ./bin/www",
+    "start": "tslint --force 'src/**/*.ts?(x)' && grunt && node ./bin/www",
     "test": "mocha -r ts-node/register src/**/*.spec.ts",
     "grunt": "grunt",
-    "postinstall": "grunt"
+    "postinstall": "grunt",
+    "lint": "tslint 'src/**/*.ts?(x)'"
   },
   "repository": {
     "type": "git",
@@ -47,11 +48,6 @@
     "@types/mocha": "2.2.40",
     "@types/morgan": "1.7.32",
     "chai": "3.5.0",
-    "eslint": "3.17.1",
-    "eslint-config-airbnb": "14.1.0",
-    "eslint-plugin-import": "2.2.0",
-    "eslint-plugin-jsx-a11y": "4.0.0",
-    "eslint-plugin-react": "6.10.0",
     "grunt": "1.0.1",
     "grunt-cli": "1.2.0",
     "grunt-contrib-copy": "1.0.0",
@@ -59,6 +55,7 @@
     "grunt-ts": "6.0.0-beta.15",
     "mocha": "3.2.0",
     "ts-node": "2.1.0",
+    "tslint": "4.5.1",
     "typescript": "2.2.1"
   }
 }
