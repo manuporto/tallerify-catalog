@@ -6,13 +6,16 @@ WORKDIR /usr/src/app
 
 # Install app dependencies
 COPY package.json /usr/src/app/
-RUN npm install
+RUN npm install --production
 
-# Compile Typescript
-RUN npm run grunt
+# Copy files
+COPY dist /usr/src/app
 
-# Bundle app source
-COPY . /usr/src/app
+# Set the running environment as production
+ENV NODE_ENV production
 
+# Expose on specified network port
 EXPOSE 8080
+
+# Executing defaults
 CMD [ "npm", "start" ]
