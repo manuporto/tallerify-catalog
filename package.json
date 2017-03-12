@@ -5,7 +5,7 @@
   "main": "./bin/www",
   "scripts": {
     "dev": "NODE_ENV=development nodemon ./bin/www",
-    "start": "tslint 'src/**/*.ts?(x)' && grunt && node ./bin/www",
+    "start": "tslint --force 'src/**/*.ts?(x)' && grunt && node ./bin/www",
     "test": "mocha -r ts-node/register src/**/*.spec.ts",
     "grunt": "grunt",
     "postinstall": "grunt",
