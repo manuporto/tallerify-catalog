@@ -11,7 +11,6 @@ export class BaseRoute {
 
     private scripts: string[];
 
-
     /**
      * Constructor
      *
@@ -19,7 +18,7 @@ export class BaseRoute {
      * @constructor
      */
     constructor() {
-        //initialize variables
+        // initialize variables
         this.title = "Tour of Heros";
         this.scripts = [];
     }
@@ -49,16 +48,16 @@ export class BaseRoute {
      * @return void
      */
     public render(req: Request, res: Response, view: string, options?: Object) {
-        //add constants
+        // add constants
         res.locals.BASE_URL = "/";
 
-        //add scripts
+        // add scripts
         res.locals.scripts = this.scripts;
 
-        //add title
+        // add title
         res.locals.title = this.title;
 
-        //render view
+        // render view
         res.render(view, options);
     }
 }
