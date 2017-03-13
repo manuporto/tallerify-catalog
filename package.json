@@ -7,6 +7,7 @@
     "dev": "NODE_ENV=development nodemon ./bin/www",
     "start": "tslint --force 'src/**/*.ts?(x)' && grunt && node ./bin/www",
     "test": "mocha -r ts-node/register src/**/*.spec.ts",
+    "test:coverage": "grunt codecoverage",
     "grunt": "grunt",
     "postinstall": "grunt",
     "lint": "tslint 'src/**/*.ts?(x)'"
