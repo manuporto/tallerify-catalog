@@ -18,6 +18,10 @@ dist/
 # Typescript
 .tscache/
 src/**/*.js
+/src/.baseDir.*
+
+# Coverage
+coverage
 
 # node-waf configuration
 .lock-wscript
@@ -37,7 +41,3 @@ jspm_packages
 
 #Idea
 .idea/
-
-
-
-/src/.baseDir.*

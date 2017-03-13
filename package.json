@@ -7,6 +7,7 @@
     "dev": "NODE_ENV=development nodemon ./bin/www",
     "start": "tslint --force 'src/**/*.ts?(x)' && grunt && node ./bin/www",
     "test": "mocha -r ts-node/register src/**/*.spec.ts",
+    "test:coverage": "grunt codecoverage",
     "grunt": "grunt",
     "postinstall": "grunt",
     "lint": "tslint 'src/**/*.ts?(x)'"
@@ -50,10 +51,15 @@
     "chai": "3.5.0",
     "grunt": "1.0.1",
     "grunt-cli": "1.2.0",
+    "grunt-contrib-clean": "1.0.0",
     "grunt-contrib-copy": "1.0.0",
     "grunt-contrib-watch": "1.0.0",
+    "grunt-istanbul-coverage": "0.1.4",
+    "grunt-mocha-istanbul": "5.0.2",
     "grunt-ts": "6.0.0-beta.15",
+    "load-grunt-tasks": "3.5.2",
     "mocha": "3.2.0",
+    "remap-istanbul": "0.9.1",
     "ts-node": "2.1.0",
     "tslint": "4.5.1",
     "typescript": "2.2.1"
