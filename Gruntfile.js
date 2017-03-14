@@ -59,11 +59,18 @@ module.exports = function(grunt) {
 
         /* Generates the coverage JSON and HTML files */
         "mocha_istanbul": {
-            generateReport: {
+            coverage: {
                 options: {
                     mask: "*.spec.js"
                 },
                 src: "dist"
+            },
+            coveralls: {
+                src: "dist",
+                options: {
+                    coverage:true, // this will make the grunt.event.on('coverage') event listener to be triggered
+                    reportFormats: ['cobertura','lcovonly']
+                }
             }
         },
 
@@ -113,8 +120,26 @@ module.exports = function(grunt) {
         "clean",
         "copy",
         "ts",
-        "mocha_istanbul:generateReport",
+        "mocha_istanbul:coverage",
         "remapIstanbul:dist",
         "coverage:check"
     ]);
+
+    grunt.registerTask("coveralls", "Runs the code coverage tests", [
+        "clean",
+        "copy",
+        "ts",
+        "mocha_istanbul:coveralls",
+        "remapIstanbul:dist",
+        "coverage:check"
+    ]);
+
+    grunt.event.on('coverage', function(lcov, done){
+        require('coveralls').handleInput(lcov, function(err){
+            if (err) {
+                return done(err);
+            }
+            done();
+        });
+    });
 };
