@@ -1,7 +1,7 @@
 # tallerify-catalog-server
 
 [![Build Status](https://travis-ci.org/manuporto/tallerify-catalog-server.svg?branch=master)](https://travis-ci.org/manuporto/tallerify-catalog-server)
-[![Coverage Status](https://coveralls.io/repos/github/manuporto/tallerify-catalog-server/badge.svg?branch=develop)](https://coveralls.io/github/manuporto/tallerify-catalog-server?branch=develop)
+[![Coverage Statuss](https://coveralls.io/repos/github/manuporto/tallerify-catalog-server/badge.svg?branch=develop)](https://coveralls.io/github/manuporto/tallerify-catalog-server?branch=develop)
 
 ## Install
 Install the node packages via:
