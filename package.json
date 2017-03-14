@@ -8,6 +8,7 @@
     "start": "tslint --force 'src/**/*.ts?(x)' && grunt && node ./bin/www",
     "test": "mocha -r ts-node/register src/**/*.spec.ts",
     "test:coverage": "grunt codecoverage",
+    "test:coveralls": "grunt coveralls",
     "grunt": "grunt",
     "postinstall": "grunt",
     "lint": "tslint 'src/**/*.ts?(x)'"
@@ -42,6 +43,7 @@
     "pug": "2.0.0-beta11"
   },
   "devDependencies": {
+    "@angular/cli": "1.0.0-rc.2",
     "@types/body-parser": "1.16.0",
     "@types/chai": "3.4.35",
     "@types/errorhandler": "0.0.30",
@@ -49,6 +51,7 @@
     "@types/mocha": "2.2.40",
     "@types/morgan": "1.7.32",
     "chai": "3.5.0",
+    "coveralls": "2.12.0",
     "grunt": "1.0.1",
     "grunt-cli": "1.2.0",
     "grunt-contrib-clean": "1.0.0",
