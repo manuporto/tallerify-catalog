@@ -1,70 +1,46 @@
 {
-  "name": "tallerify-catalog-server",
-  "version": "1.0.0",
-  "description": "Tallerify Catalog server stores all music catalog and registered users",
-  "main": "./bin/www",
+  "name": "tallerify-catalog",
+  "version": "0.0.0",
+  "license": "MIT",
   "scripts": {
-    "dev": "NODE_ENV=development nodemon ./bin/www",
-    "start": "tslint --force 'src/**/*.ts?(x)' && grunt && node ./bin/www",
-    "test": "mocha -r ts-node/register src/**/*.spec.ts",
-    "test:coverage": "grunt codecoverage",
-    "test:coveralls": "grunt coveralls",
-    "grunt": "grunt",
-    "postinstall": "grunt",
-    "lint": "tslint 'src/**/*.ts?(x)'"
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "test": "ng test",
+    "lint": "ng lint",
+    "e2e": "ng e2e"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/manuporto/tallerify-catalog-server.git"
-  },
-  "keywords": [
-    "server",
-    "nodejs",
-    "catalog",
-    "tallerify"
-  ],
-  "author": "",
-  "license": "GPL-3.0",
-  "bugs": {
-    "url": "https://github.com/manuporto/tallerify-catalog-server/issues"
-  },
-  "homepage": "https://github.com/manuporto/tallerify-catalog-server#readme",
-  "engines": {
-    "node": "6.10.0"
-  },
+  "private": true,
   "dependencies": {
-    "body-parser": "1.17.1",
-    "bower": "1.8.0",
-    "cookie-parser": "1.4.3",
-    "errorhandler": "1.5.0",
-    "express": "4.15.2",
-    "method-override": "2.3.7",
-    "morgan": "1.8.1",
-    "pug": "2.0.0-beta11"
+    "@angular/common": "^2.4.0",
+    "@angular/compiler": "^2.4.0",
+    "@angular/core": "^2.4.0",
+    "@angular/forms": "^2.4.0",
+    "@angular/http": "^2.4.0",
+    "@angular/platform-browser": "^2.4.0",
+    "@angular/platform-browser-dynamic": "^2.4.0",
+    "@angular/router": "^3.4.0",
+    "core-js": "^2.4.1",
+    "rxjs": "^5.1.0",
+    "zone.js": "^0.7.6"
   },
   "devDependencies": {
     "@angular/cli": "1.0.0-rc.2",
-    "@types/body-parser": "1.16.0",
-    "@types/chai": "3.4.35",
-    "@types/errorhandler": "0.0.30",
-    "@types/method-override": "0.0.29",
-    "@types/mocha": "2.2.40",
-    "@types/morgan": "1.7.32",
-    "chai": "3.5.0",
-    "coveralls": "2.12.0",
-    "grunt": "1.0.1",
-    "grunt-cli": "1.2.0",
-    "grunt-contrib-clean": "1.0.0",
-    "grunt-contrib-copy": "1.0.0",
-    "grunt-contrib-watch": "1.0.0",
-    "grunt-istanbul-coverage": "0.1.4",
-    "grunt-mocha-istanbul": "5.0.2",
-    "grunt-ts": "6.0.0-beta.15",
-    "load-grunt-tasks": "3.5.2",
-    "mocha": "3.2.0",
-    "remap-istanbul": "0.9.1",
-    "ts-node": "2.1.0",
-    "tslint": "4.5.1",
-    "typescript": "2.2.1"
+    "@angular/compiler-cli": "^2.4.0",
+    "@types/jasmine": "2.5.38",
+    "@types/node": "~6.0.60",
+    "codelyzer": "~2.0.0",
+    "jasmine-core": "~2.5.2",
+    "jasmine-spec-reporter": "~3.2.0",
+    "karma": "~1.4.1",
+    "karma-chrome-launcher": "~2.0.0",
+    "karma-cli": "~1.0.1",
+    "karma-jasmine": "~1.1.0",
+    "karma-jasmine-html-reporter": "^0.2.2",
+    "karma-coverage-istanbul-reporter": "^0.2.0",
+    "protractor": "~5.1.0",
+    "ts-node": "~2.0.0",
+    "tslint": "~4.5.0",
+    "typescript": "~2.0.0"
   }
 }
