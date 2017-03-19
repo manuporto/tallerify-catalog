@@ -1,5 +1,10 @@
 #!/usr/bin/env node
 
+/*
+* Load env file
+*/
+require('dotenv').config();
+
 /**
  * Module dependencies.
  */
