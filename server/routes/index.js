@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const pg = require('pg');
 const path = require('path');
-const connectionString = process.env.DATABASE_URL || 'postgres://postgres:postgres@localhost:5432/todo';
+const connectionString = process.env.DATABASE_URL.concat("?ssl=true") || 'postgres://postgres:postgres@localhost:5432/todo';
 
 router.get('/', (req, res, next) => {
   res.sendFile(path.join(
