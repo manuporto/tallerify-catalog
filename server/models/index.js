@@ -1,5 +1,5 @@
 'use strict';
-
+const winston = require('winston');
 var fs        = require('fs');
 var path      = require('path');
 var Sequelize = require('sequelize');
@@ -8,11 +8,13 @@ var env       = process.env.NODE_ENV || 'development';
 var config    = require(__dirname + '/../config.json')[env];
 var db        = {};
 
+winston.log('info', 'Connecting to database');
 if (config.use_env_variable) {
   var sequelize = new Sequelize(process.env[config.use_env_variable], config);
 } else {
   var sequelize = new Sequelize(config.database, config.username, config.password, config);
 }
+winston.log('info', 'Connected to database');
 
 fs
   .readdirSync(__dirname)
@@ -24,11 +26,14 @@ fs
     db[model.name] = model;
   });
 
+winston.log('info', 'Associating models');
 Object.keys(db).forEach(function(modelName) {
   if (db[modelName].associate) {
+    winston.log('info', `Associating "${modelName}" model`);
     db[modelName].associate(db);
   }
 });
+winston.log('info', 'Finished associating models');
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
