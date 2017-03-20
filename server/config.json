@@ -12,10 +12,6 @@
   },
   "production": {
     "use_env_variable": "DATABASE_URL",
-    "username": "update_me",
-    "password": "update_me",
-    "database": "update_me",
-    "host": "update_me",
-    "dialect": "update_me"
+    "dialect": "postgres"
   }
 }
