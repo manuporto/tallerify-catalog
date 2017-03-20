@@ -28,6 +28,7 @@
     "sequelize-cli": "2.6.0",
     "serve-favicon": "^2.4.1",
     "swig": "1.4.2",
+    "winston": "2.3.1",
     "zone.js": "^0.7.6"
   },
   "devDependencies": {
