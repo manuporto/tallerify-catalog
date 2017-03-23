@@ -53,5 +53,7 @@
   "defaults": {
     "styleExt": "css",
     "component": {}
-  }
+  },
+  "viewEncapsulation": "Emulated",
+  "changeDetection": "Default"
 }

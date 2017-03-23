@@ -1,0 +1,37 @@
+<div *ngIf="user" class="row">
+  <div class="col-md-12">
+    <h2 *ngIf="user._id">User Details</h2>
+    <h2 *ngIf="!user._id">New User</h2>
+  </div>
+</div>
+<div *ngIf="user" class="row">
+  <form class="col-md-12">
+    <div class="form-group">
+      <label for="user-userName">Username</label>
+      <input class="form-control" name="user-userName" [(ngModel)]="user.userName" placeholder="comandante34"/>
+    </div>
+    <div class="form-group">
+      <label for="user-firstName">First name</label>
+      <input class="form-control" name="user-firstName" [(ngModel)]="user.firstName" placeholder="Ricky"/>
+    </div>
+    <div class="form-group">
+      <label for="user-lastName">Last name</label>
+      <input class="form-control" name="user-lastName" [(ngModel)]="user.lastName" placeholder="Fort"/>
+    </div>
+    <div class="form-group">
+      <label for="user-country">Country</label>
+      <input class="form-control" name="user-country" [(ngModel)]="user.country" placeholder="MAIAME"/>
+    </div>
+    <div class="form-group">
+      <label for="user-email">Email</label>
+      <input class="form-control" name="user-email" [(ngModel)]="user.email" placeholder="ricky@basta.chicos"/>
+    </div>
+    <div class="form-group">
+      <label for="user-birthdate">Birthdate</label>
+      <input class="form-control" name="user-birthdate" [(ngModel)]="user.birthdate" placeholder="1/1/1900"/>
+    </div>
+    <button class="btn btn-primary" *ngIf="!user._id" (click)="createUser(user)">Create</button>
+    <button class="btn btn-info" *ngIf="user._id" (click)="updateUser(user)">Update</button>
+    <button class="btn btn-danger" *ngIf="user._id" (click)="deleteUser(user._id)">Delete</button>
+  </form>
+</div>

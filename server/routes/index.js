@@ -8,17 +8,18 @@ router.get('/', (req, res, next) => {
   res.render('index', { title: 'Express' });
 });
 
-router.get('/users', (req, res) => {
+router.get('/api/users', (req, res) => {
   winston.log('info', `Get /users`);
   models.User.findAll({}).then(users => {
       winston.log('info', `Response: ${res}`);
-      return res.json(users);
+      res.status(200).json(users);
     }).catch(reason => {
       winston.log('warn', `Error when doing /users query: "${reason}"`);
+      res.status(500);
   });
 });
 
-router.post('/users', (req, res) => {
+router.post('/api/users', (req, res) => {
   winston.log('info', `Post /users with query ${JSON.stringify(req.body, null, 4)}`);
   models.User.create({
     userName: req.body.userName,
@@ -30,7 +31,7 @@ router.post('/users', (req, res) => {
     images: req.body.images
   }).then(user => {
     winston.log('info', `Response: ${res}`);
-    return res.json(user);
+    res.status(200).json(user);
   });
 });
 
