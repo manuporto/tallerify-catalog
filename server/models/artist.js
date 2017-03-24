@@ -1,0 +1,18 @@
+'use strict';
+module.exports = function(sequelize, DataTypes) {
+  var Artist = sequelize.define('Artist', {
+    genres: DataTypes.ARRAY(DataTypes.STRING),
+    href: DataTypes.STRING,
+    images: DataTypes.ARRAY(DataTypes.STRING),
+    albums: DataTypes.ARRAY(DataTypes.INTEGER),
+    name: DataTypes.STRING,
+    popularity: DataTypes.INTEGER
+  }, {
+    classMethods: {
+      associate: function(models) {
+        // associations can be defined here
+      }
+    }
+  });
+  return Artist;
+};
