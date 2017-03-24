@@ -41,9 +41,9 @@ router.post('/api/tracks', (req, res) => {
     albumId: albumId.body.albumId,
     artists: req.body.artists,
     name: req.body.name
-  }).then(user => {
+  }).then(track => {
     winston.log('info', `Response: ${res}`);
-    res.status(200).json(user);
+    res.status(200).json(track);
   });
 });
 
