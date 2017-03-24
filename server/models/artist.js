@@ -4,7 +4,6 @@ module.exports = function(sequelize, DataTypes) {
     genres: DataTypes.ARRAY(DataTypes.STRING),
     href: DataTypes.STRING,
     images: DataTypes.ARRAY(DataTypes.STRING),
-    albums: DataTypes.ARRAY(DataTypes.INTEGER),
     name: DataTypes.STRING,
     popularity: DataTypes.INTEGER
   }, {

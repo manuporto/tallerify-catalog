@@ -8,9 +8,6 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      artists: {
-        type: Sequelize.ARRAY(Sequelize.INTEGER)
-      },
       genres: {
         type: Sequelize.ARRAY(Sequelize.STRING)
       },
@@ -29,9 +26,6 @@ module.exports = {
       },
       release_date: {
         type: Sequelize.STRING
-      },
-      tracks: {
-        type: Sequelize.ARRAY(Sequelize.INTEGER)
       },
       createdAt: {
         allowNull: false,

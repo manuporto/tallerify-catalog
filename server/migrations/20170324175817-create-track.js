@@ -8,11 +8,8 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      album: {
+      AlbumId: {
         type: Sequelize.INTEGER
-      },
-      artists: {
-        type: Sequelize.ARRAY(Sequelize.INTEGER)
       },
       duration: {
         type: Sequelize.INTEGER

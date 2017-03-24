@@ -45,7 +45,7 @@ router.get('/api/artists', (req, res) => {
     winston.log('info', `Response: ${res}`);
     res.status(200).json(artists);
   }).catch(reason => {
-    winston.log('warn', `Error when doing /users query: "${reason}"`);
+    winston.log('warn', `Error when doing /artists query: "${reason}"`);
     res.status(500);
   });
 });

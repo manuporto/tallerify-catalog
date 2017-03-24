@@ -1,8 +1,7 @@
 'use strict';
 module.exports = function(sequelize, DataTypes) {
   var Track = sequelize.define('Track', {
-    album: DataTypes.INTEGER,
-    artists: DataTypes.ARRAY(DataTypes.INTEGER),
+    AlbumId: DataTypes.INTEGER,
     duration: DataTypes.INTEGER,
     href: DataTypes.STRING,
     name: DataTypes.STRING,
@@ -10,8 +9,8 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
-        Track.belongsTo(models.Album);
         Track.hasMany(models.Artist);
+        Track.belongsTo(models.Album);
       }
     }
   });

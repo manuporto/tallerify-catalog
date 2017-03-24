@@ -17,9 +17,6 @@ module.exports = {
       images: {
         type: Sequelize.ARRAY(Sequelize.STRING)
       },
-      albums: {
-        type: Sequelize.ARRAY(Sequelize.INTEGER)
-      },
       name: {
         type: Sequelize.STRING,
         allowNull: false
