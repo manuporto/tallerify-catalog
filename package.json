@@ -5,6 +5,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng build && node ./server/bin/www",
+    "test": "jasmine-node spec",
     "lint": "tslint \"src/**/*.ts\"",
     "pree2e": "webdriver-manager update --standalone false --gecko false",
     "e2e": "protractor",
@@ -28,6 +29,7 @@
     "morgan": "^1.8.1",
     "pg": "^6.1.4",
     "pg-hstore": "^2.3.2",
+    "request": "2.81.0",
     "rxjs": "^5.1.0",
     "sequelize": "3.30.2",
     "sequelize-cli": "2.6.0",
@@ -47,6 +49,7 @@
     "gulp-jshint": "2.0.4",
     "gulp-nodemon": "2.2.1",
     "jasmine-core": "~2.5.2",
+    "jasmine-node": "1.14.5",
     "jasmine-spec-reporter": "~3.2.0",
     "jshint": "2.9.4",
     "jshint-stylish": "2.2.1",
