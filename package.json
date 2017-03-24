@@ -5,8 +5,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng build && node ./server/bin/www",
-    "test": "istanbul cover --include-all-sources --root server jasmine-node --captureExceptions server",
-    "coveralls": "npm test &&  cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
+    "test": "istanbul cover --include-all-sources --root server jasmine-node -- --captureExceptions server",
     "lint": "tslint \"client/**/*.ts\"",
     "pree2e": "webdriver-manager update --standalone false --gecko false",
     "e2e": "protractor",
