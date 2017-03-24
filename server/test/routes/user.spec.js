@@ -1,15 +1,27 @@
-const request = require("request");
+let models = require('../../models');
+let user = require('../../routes/user');
 
-const base_url = "http://localhost:3000/api/";
+//Require the dev-dependencies
+let chai = require('chai');
+let chaiHttp = require('chai-http');
+let app = require('../../app');
+let expect = chai.expect;
+let should = chai.should;
 
-describe("User routes", () => {
-  describe("GET /api/users endpoint", () => {
-    it("Returns status code 200", () => {
-      expect(1).toEqual(1);
-      // request.get(base_url.concat("users"), (error, res, body) => {
-      //   expect(res.statusCode).toBe(201);
-      //   done();
-      // })
-    })
-  })
+
+chai.use(chaiHttp);
+
+describe('User', () => {
+
+  describe('/GET users', () => {
+    it('should get all the users', () => {
+      expect(1).to.equal(1);
+      // chai.request(app)
+      //   .get('/api/users')
+      //   .end((err, res) => {
+      //     res.should.have.status(200);
+      //     done();
+      //   });
+    });
+  });
 })
