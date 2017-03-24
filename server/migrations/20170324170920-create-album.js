@@ -24,7 +24,8 @@ module.exports = {
         type: Sequelize.STRING
       },
       popularity: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        defaultValue: 0
       },
       release_date: {
         type: Sequelize.STRING
