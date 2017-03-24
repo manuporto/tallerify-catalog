@@ -8,6 +8,8 @@ router.get('/', (req, res, next) => {
   res.render('index', { title: 'Express' });
 });
 
+/* Users */
+
 router.get('/api/users', (req, res) => {
   winston.log('info', `Get /users`);
   models.User.findAll({}).then(users => {
@@ -34,6 +36,34 @@ router.post('/api/users', (req, res) => {
     res.status(200).json(user);
   });
 });
+
+/* Artists */
+
+router.get('/api/artists', (req, res) => {
+  winston.log('info', `Get /artists`);
+  models.Artist.findAll({}).then(artists => {
+    winston.log('info', `Response: ${res}`);
+    res.status(200).json(artists);
+  }).catch(reason => {
+    winston.log('warn', `Error when doing /users query: "${reason}"`);
+    res.status(500);
+  });
+});
+
+router.post('/api/artists', (req, res) => {
+  winston.log('info', `Post /artists with query ${JSON.stringify(req.body, null, 4)}`);
+  models.Artist.create({
+    name: req.body.name,
+    description: req.body.description,
+    genres: req.body.genres,
+    images: req.body.images
+  }).then(artist => {
+    winston.log('info', `Response: ${res}`);
+    res.status(200).json(artist);
+  });
+});
+
+/* Tracks */
 
 router.post('/api/tracks', (req, res) => {
   winston.log('info', `Post /tracks with query ${JSON.stringify(req.body, null, 4)}`);
