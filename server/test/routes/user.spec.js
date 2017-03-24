@@ -24,4 +24,19 @@ describe('User', () => {
       //   });
     });
   });
+
+  describe('/POST users', () => {
+    it('should return status code 400 when incorrect parameters are set', () => {
+      chai.request(app)
+        .post('/api/users')
+        .send({
+          userName: 'jDoe',
+          firstName: 'John',
+          lastName: 'Doe'
+        }).end((err, res) => {
+        res.should.have.status(400);
+        done();
+      });
+    });
+  });
 })
