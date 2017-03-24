@@ -35,4 +35,16 @@ router.post('/api/users', (req, res) => {
   });
 });
 
+router.post('/api/tracks', (req, res) => {
+  winston.log('info', `Post /tracks with query ${JSON.stringify(req.body, null, 4)}`);
+  models.Track.create({
+    albumId: req.body.albumId,
+    artists: req.body.artists,
+    name: req.body.name
+  }).then(track => {
+    winston.log('info', `Response: ${res}`);
+    res.status(200).json(track);
+  });
+});
+
 module.exports = router;
