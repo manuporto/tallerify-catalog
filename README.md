@@ -1,7 +1,7 @@
 # tallerify-catalog-server
 [![Build Status](https://travis-ci.org/manuporto/tallerify-catalog.svg?branch=develop)](https://travis-ci.org/manuporto/tallerify-catalog)
-[![Coverage Status](https://coveralls.io/repos/github/manuporto/tallerify-catalog-server/badge.svg?branch=develop)](https://coveralls.io/github/manuporto/tallerify-catalog-server?branch=develop)
 
+[![Coverage Status](https://coveralls.io/repos/github/tallerify/tallerify-catalog/badge.svg?branch=develop)](https://coveralls.io/github/tallerify/tallerify-catalog?branch=develop)
 
 ## Install
 1. Install postgres:

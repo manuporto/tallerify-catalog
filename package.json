@@ -3,8 +3,14 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "start": "node ./server/bin/www",
-    "heroku-postbuild": "sequelize db:migrate"
+    "ng": "ng",
+    "start": "ng build && node ./server/bin/www",
+    "test": "istanbul cover --include-all-sources --root server jasmine-node --captureExceptions server",
+    "coveralls": "npm test &&  cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
+    "lint": "tslint \"client/**/*.ts\"",
+    "pree2e": "webdriver-manager update --standalone false --gecko false",
+    "e2e": "protractor",
+    "postinstall": "ng build"
   },
   "private": true,
   "dependencies": {
@@ -24,6 +30,7 @@
     "morgan": "^1.8.1",
     "pg": "^6.1.4",
     "pg-hstore": "^2.3.2",
+    "request": "2.81.0",
     "rxjs": "^5.1.0",
     "sequelize": "3.30.2",
     "sequelize-cli": "2.6.0",
@@ -39,10 +46,13 @@
     "@types/node": "~6.0.60",
     "browser-sync": "2.18.8",
     "codelyzer": "~2.0.0",
+    "coveralls": "2.12.0",
     "gulp": "3.9.1",
     "gulp-jshint": "2.0.4",
     "gulp-nodemon": "2.2.1",
+    "istanbul": "0.4.5",
     "jasmine-core": "~2.5.2",
+    "jasmine-node": "1.14.5",
     "jasmine-spec-reporter": "~3.2.0",
     "jshint": "2.9.4",
     "jshint-stylish": "2.2.1",
