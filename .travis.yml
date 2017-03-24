@@ -1,8 +1,5 @@
 language: node_js
 node:
-script:
-  - npm install
-  - npm run coveralls
 notifications:
   email: false
   slack: tallerify:3BddOwjmsqmpRjYFXvbRZu1r
