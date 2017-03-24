@@ -1,6 +1,5 @@
 # tallerify-catalog-server
-[![Build Status](https://travis-ci.org/manuporto/tallerify-catalog.svg?branch=develop)](https://travis-ci.org/manuporto/tallerify-catalog)
-
+[![Build Status](https://travis-ci.org/tallerify/tallerify-catalog.svg?branch=develop)](https://travis-ci.org/tallerify/tallerify-catalog)
 [![Coverage Status](https://coveralls.io/repos/github/tallerify/tallerify-catalog/badge.svg?branch=develop)](https://coveralls.io/github/tallerify/tallerify-catalog?branch=develop)
 
 ## Install
