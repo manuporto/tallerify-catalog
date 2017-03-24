@@ -17,13 +17,13 @@ var app = express();
 
 
 // *** view engine *** //
-// var swig = new swig.Swig();
-// app.engine('html', swig.renderFile);
-// app.set('view engine', 'html');
+var swig = new swig.Swig();
+app.engine('html', swig.renderFile);
+app.set('view engine', 'html');
 
 
 // *** static directory *** //
-// app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, 'views'));
 
 
 // *** config middleware *** //
