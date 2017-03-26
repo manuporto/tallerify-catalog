@@ -1,4 +1,3 @@
-let models = require('../../models');
 let user = require('../../routes/user');
 
 //Require the dev-dependencies
