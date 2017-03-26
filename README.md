@@ -7,12 +7,12 @@
   * `$ sudo apt-get update`
   * `$ sudo apt-get install postgresql postgresql-contrib`
 2. Create database (replace dbname with used database):
-  * `psql -U postgres -h localhost`
-  * `postgres=# CREATE DATABASE dbname;`
+  * `$ psql -U postgres -h localhost`
+  * `$ postgres=# CREATE DATABASE dbname;`
 3. Install the node packages via:
   * `$ npm install`
 4. Create database table:
-  * `node server/models/database.js`
+  * `$ ./node_modules/.bin/sequelize db:migrate`
   
 ## Start
 To start the server run:

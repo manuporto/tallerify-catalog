@@ -22,7 +22,7 @@ fs
     return (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js');
   })
   .forEach(function(file) {
-    var model = sequelize['import'](path.join(__dirname, file));
+    var model = sequelize.import(path.join(__dirname, file));
     db[model.name] = model;
   });
 
@@ -31,6 +31,7 @@ Object.keys(db).forEach(function(modelName) {
   if (db[modelName].associate) {
     winston.log('info', `Associating "${modelName}" model`);
     db[modelName].associate(db);
+    db[modelName].sync();
   }
 });
 winston.log('info', 'Finished associating models');
