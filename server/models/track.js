@@ -9,7 +9,7 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
-        Track.hasMany(models.Artist);
+        //Track.hasMany(models.Artist);
         Track.belongsTo(models.Album);
       }
     }
