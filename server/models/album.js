@@ -10,7 +10,6 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
-        Album.belongsToMany(models.Artist, {through: 'ArtistAlbum'});
         Album.hasMany(models.Track);
       }
     }
