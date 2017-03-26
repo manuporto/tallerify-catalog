@@ -8,6 +8,9 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      href: {
+        type: Sequelize.STRING
+      },
       userName: {
         type: Sequelize.STRING
       },
@@ -28,6 +31,9 @@ module.exports = {
       },
       images: {
         type: Sequelize.ARRAY(Sequelize.STRING)
+      },
+      contacts: {
+        type: Sequelize.ARRAY(Sequelize.INTEGER)
       },
       createdAt: {
         allowNull: false,

@@ -7,33 +7,12 @@ getUsers = (req, res) => {
     res.status(200).json(users);
   }).catch(reason => {
     winston.log('warn', `Error when doing GET /api/users: "${reason}"`);
-    res.status(500);
+    res.status(500).json({code: 500, message: 'Unexpected error'});
   });
-};
-
-isReqBodyValid = (body) => {
-  return (
-    typeof body.userName !== 'undefined' &&
-    typeof body.firstName !== 'undefined' &&
-    typeof body.lastName !== 'undefined' &&
-    typeof body.country !== 'undefined' &&
-    typeof body.email !== 'undefined' &&
-    typeof body.birthdate !== 'undefined' &&
-    typeof body.images !== 'undefined'
-  );
 };
 
 postUser = (req, res) => {
   winston.log('info', `POST /api/users with body ${JSON.stringify(req.body, null, 4)}`);
-  if (!isReqBodyValid(req.body)) {
-    winston.log('warn', 'Request body parameters invalid');
-    res.status(400).json({
-      code: 0,
-      message: "string"
-    });
-    return;
-  }
-
   models.User.create({
     userName: req.body.userName,
     firstName: req.body.firstName,
@@ -44,10 +23,16 @@ postUser = (req, res) => {
     images: req.body.images
   }).then(user => {
     winston.log('info', `Response: ${res}`);
-    res.status(200).json(user);
+    res.status(201).json(user);
   }).catch(reason => {
-    winston.log('warn', `Error when doing POST /api/users: "${reason}"`);
-    res.status(500);
+    if (reason.name === 'SequelizeValidationError') {
+      winston.log('warn', 'Invalid parameters when doing POST /api/users');
+      winston.log('warn', reason);
+      res.status(400).json({code: 400, message: 'Incumplimiento de precondiciones (parámetros faltantes)'});
+    } else {
+      winston.log('warn', `Error when doing POST /api/users: "${reason}"`);
+      res.status(500).json({code: 500, message: 'Unexpected error'});
+    }
   });
 };
 
