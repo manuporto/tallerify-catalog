@@ -59,10 +59,6 @@ router.post('/api/artists', (req, res) => {
     images: req.body.images
   }).then(artist => {
     winston.log('info', `Response: ${res}`);
-
-    // Add to response
-    console.log(artist.getAlbums());
-
     res.status(200).json(artist);
   });
 });
@@ -71,17 +67,25 @@ router.post('/api/artists', (req, res) => {
 
 router.post('/api/albums', (req, res) => {
   winston.log('info', `Post /albums with query ${JSON.stringify(req.body, null, 4)}`);
+
   models.Album.create({
     name: req.body.name,
     release_date: req.body.release_date,
     genres: req.body.genres,
-    images: req.body.images,
-    Artists: req.body.artists
-  }, {
-    include: [ models.Artist ]
+    images: req.body.images
   }).then(album => {
-    winston.log('info', `Response: ${res}`);
-    res.status(200).json(album);
+    winston.log('info', `New album created: ${album}`);
+
+    req.body.artists.forEach((artistId, index, artistsIds) => models.ArtistAlbum.create({
+      albumId: album.id,
+      artistId: artistId
+    }).then(relationship => {
+      winston.log('info', `New album-artist relationship: ${relationship}`);
+      if (index + 1 == artistId.length) {
+        album.artists = req.body.artists; //TODO replace with query
+        res.status(200).json(album);
+      }
+    }));
   });
 });
 
