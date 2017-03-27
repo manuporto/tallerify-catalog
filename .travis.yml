@@ -1,5 +1,7 @@
 language: node_js
 node:
+env:
+  - DATABASE_URL=postgres://travis:travis@localhost:5432/tallerify_travis
 after_success:
   - npm run coverage
   - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
