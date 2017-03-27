@@ -1,10 +1,7 @@
 {
   "development": {
-    "dialect": "postgres",
-    "username": "postgres",
-    "password": "postgres",
-    "database": "tallerify_dev",
-    "host": "127.0.0.1"
+    "use_env_variable": "DATABASE_URL",
+    "dialect": "postgres"
   },
   "test": {
     "username": "update_me",

@@ -14,5 +14,7 @@ services:
     env_file:
       - .env
     build: .
+    environment:
+      - DATABASE_URL=postgres://postgres:postgres@db:5432/tallerify_dev
     depends_on:
       - db
