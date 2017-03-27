@@ -55,13 +55,24 @@ router.post('/api/albums', (req, res) => {
     winston.log('info', `New album created: ${album}`);
 
     req.body.artists.forEach((artistId, index, artistsIds) => models.ArtistAlbum.create({
-      albumId: album.id,
-      artistId: artistId
+      AlbumId: album.id,
+      ArtistId: artistId
     }).then(relationship => {
       winston.log('info', `New album-artist relationship: ${relationship}`);
-      if (index + 1 == artistId.length) {
-        album.artists = req.body.artists; //TODO replace with query
-        res.status(200).json(album);
+
+      if (index + 1 == artistsIds.length) { //TODO fix this bs
+
+        models.Album.find({
+          where: {
+            id : album.id
+          },
+          include: [{
+            model: models.Artist
+          }]
+        }).then(function(result) {
+          res.status(200).json(result);
+        });
+
       }
     }));
   });
