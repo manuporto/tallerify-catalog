@@ -54,14 +54,6 @@ router.post('/api/albums', (req, res) => {
   }).then(album => {
     winston.log('info', `New album created: ${album}`);
 
-    req.body.artists.forEach((artistId, index, artistsIds) => models.ArtistAlbum.create({
-      AlbumId: album.id,
-      ArtistId: artistId
-    }).then(relationship => {
-      winston.log('info', `New album-artist relationship: ${relationship}`);
-
-      if (index + 1 == artistsIds.length) { //TODO fix this bs
-
         models.Album.find({
           where: {
             id : album.id
@@ -73,8 +65,6 @@ router.post('/api/albums', (req, res) => {
           res.status(200).json(result);
         });
 
-      }
-    }));
   });
 });
 

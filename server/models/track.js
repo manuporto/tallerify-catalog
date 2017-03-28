@@ -1,18 +1,11 @@
 'use strict';
-module.exports = function(sequelize, DataTypes) {
-  var Track = sequelize.define('Track', {
+module.exports = (sequelize, DataTypes) => {
+  const Track = sequelize.define('tracks', {
     AlbumId: DataTypes.INTEGER,
     duration: DataTypes.INTEGER,
     href: DataTypes.STRING,
     name: DataTypes.STRING,
     popularity: DataTypes.INTEGER
-  }, {
-    classMethods: {
-      associate: function(models) {
-        //Track.hasMany(models.Artist);
-        Track.belongsTo(models.Album);
-      }
-    }
   });
   return Track;
 };

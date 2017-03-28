@@ -39,4 +39,15 @@ winston.log('info', 'Finished associating models');
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
+/* Models/tables */
+db.album = require('../models/album.js')(sequelize, Sequelize);
+db.artist = require('../models/artist.js')(sequelize, Sequelize);
+db.track = require('../models/track.js')(sequelize, Sequelize);
+
+/* Relations */
+db.album.hasMany(db.track);
+db.album.belongsToMany(db.artist, {through: 'ArtistAlbum'});
+db.artist.belongsToMany(db.album, {through: 'ArtistAlbum'});
+db.track.belongsTo(db.album);
+
 module.exports = db;
