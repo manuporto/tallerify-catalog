@@ -26,12 +26,12 @@ fs
     db[model.name] = model;
   });
 
-winston.log('info', 'Associating models');
 Object.keys(db).forEach(function(modelName) {
+  winston.log('info', `Syncing ${modelName} model`);
+  db[modelName].sync();
   if (db[modelName].associate) {
     winston.log('info', `Associating "${modelName}" model`);
     db[modelName].associate(db);
-    db[modelName].sync();
   }
 });
 winston.log('info', 'Finished associating models');
