@@ -28,6 +28,7 @@ fs
 
 Object.keys(db).forEach(function(modelName) {
   winston.log('info', `Syncing ${modelName} model`);
+  db[modelName].sync(db);
   if (db[modelName].associate) {
     winston.log('info', `Associating "${modelName}" model`);
     db[modelName].associate(db);
