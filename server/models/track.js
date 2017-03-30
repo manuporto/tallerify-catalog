@@ -6,6 +6,8 @@ module.exports = (sequelize, DataTypes) => {
     href: DataTypes.STRING,
     name: DataTypes.STRING,
     popularity: DataTypes.INTEGER
+  }, {
+    timestamp: false
   });
   return Track;
 };

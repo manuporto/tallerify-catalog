@@ -7,6 +7,8 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING,
     popularity: DataTypes.INTEGER,
     release_date: DataTypes.STRING
+  }, {
+    timestamp: false
   });
   return Album;
 };

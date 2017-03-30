@@ -48,7 +48,7 @@ router.post('/api/albums', (req, res) => {
 
   models.album.create({
     name: req.body.name,
-    release_date: req.body.release_date,
+    release_date: req.body.release_tdate,
     genres: req.body.genres,
     images: req.body.images
   }).then(album => {
@@ -59,7 +59,7 @@ router.post('/api/albums', (req, res) => {
             id : album.id
           },
           include: [{
-            model: models.Artist
+            model: models.artist
           }]
         }).then(function(result) {
           res.status(200).json(result);

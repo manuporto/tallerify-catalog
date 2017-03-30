@@ -28,7 +28,6 @@ fs
 
 Object.keys(db).forEach(function(modelName) {
   winston.log('info', `Syncing ${modelName} model`);
-  db[modelName].sync();
   if (db[modelName].associate) {
     winston.log('info', `Associating "${modelName}" model`);
     db[modelName].associate(db);
@@ -36,13 +35,12 @@ Object.keys(db).forEach(function(modelName) {
 });
 winston.log('info', 'Finished associating models');
 
-db.sequelize = sequelize;
-db.Sequelize = Sequelize;
 
 /* Models/tables */
 db.album = require('../models/album.js')(sequelize, Sequelize);
 db.artist = require('../models/artist.js')(sequelize, Sequelize);
 db.track = require('../models/track.js')(sequelize, Sequelize);
+db.user = require('../models/track.js')(sequelize, Sequelize);
 
 /* Relations */
 db.album.hasMany(db.track);
@@ -50,4 +48,6 @@ db.album.belongsToMany(db.artist, {through: 'ArtistAlbum'});
 db.artist.belongsToMany(db.album, {through: 'ArtistAlbum'});
 db.track.belongsTo(db.album);
 
+db.sequelize = sequelize;
+db.Sequelize = Sequelize;
 module.exports = db;

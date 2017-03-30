@@ -6,6 +6,8 @@ module.exports = (sequelize, DataTypes) => {
     images: DataTypes.ARRAY(DataTypes.STRING),
     name: DataTypes.STRING,
     popularity: DataTypes.INTEGER
+  }, {
+    timestamp: false
   });
   return Artist;
 };
