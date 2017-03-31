@@ -10,14 +10,14 @@ module.exports = (sequelize, DataTypes) => {
     popularity: DataTypes.INTEGER,
     release_date: DataTypes.STRING
   }, {
+    timestamps: false
+  }, {
     classMethods: {
       associate: function(db) {
         winston.log('info', Object.keys(db));
         db.albums.belongsToMany(db.artists, {through: 'ArtistAlbum'});
       }
     }
-  }, {
-    timestamp: false
   });
   return Album;
 };

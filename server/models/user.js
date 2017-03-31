@@ -26,14 +26,14 @@ module.exports = function(sequelize, DataTypes) {
       notEmpty: true,
     }},
     contacts: { type: DataTypes.ARRAY(DataTypes.INTEGER), defaultValue: []}
+  },{
+    timestamps: false
   }, {
     classMethods: {
       associate: function(db) {
         // associations can be defined here
       }
     }
-  }, {
-    timestamp: false
   });
   return User;
 };

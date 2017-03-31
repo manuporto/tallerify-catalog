@@ -7,12 +7,12 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING,
     popularity: DataTypes.INTEGER
   }, {
+    timestamps: false
+  }, {
     classMethods: {
       associate: function(db) {
       }
     }
-  }, {
-    timestamp: false
   });
   return Track;
 };
