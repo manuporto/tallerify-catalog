@@ -30,9 +30,7 @@ module.exports = function(sequelize, DataTypes) {
     timestamps: false
   }, {
     classMethods: {
-      associate: function(db) {
-        // associations can be defined here
-      }
+      associate: function(db) {}
     }
   });
   return User;

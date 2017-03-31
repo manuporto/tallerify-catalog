@@ -52,18 +52,29 @@ router.post('/api/albums', (req, res) => {
     genres: req.body.genres,
     images: req.body.images
   }).then(album => {
-    winston.log('info', `New album created: ${album}`);
-
-        models.album.find({
-          where: {
-            id : album.id
-          },
-          include: [{
-            model: models.artists
-          }]
-        }).then(function(result) {
-          res.status(200).json(result);
-        });
+      // It hangs here
+      Promise.all(req.body.artists.map(artist => {
+        winston.log('debug', `Finding artist: ${artist}`);
+        models.artists.findAll(
+          {
+            where: {
+              name: artist
+            }
+          }).then((selectedArtist => {
+          winston.log('debug', `Artist id: ${selectedArtist}`);
+          }));
+      }));
+      // models.albums.find({
+      //   where: {
+      //     id : album.id
+      //   },
+      //   include: [{
+      //     model: models.artists
+      //   }]
+      // }).then(function(result) {
+      //   winston.log('info', `New album created: ${album}`);
+      //   res.status(200).json(result);
+      // });
 
   });
 });

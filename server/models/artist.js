@@ -11,7 +11,6 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     classMethods: {
       associate: function(db) {
-        // associations can be defined here
         db.artists.belongsToMany(db.albums, {through: 'ArtistAlbum'});
       }
     }

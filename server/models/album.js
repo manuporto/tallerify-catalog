@@ -1,6 +1,4 @@
 'use strict';
-const winston = require('winston');
-
 module.exports = (sequelize, DataTypes) => {
   const Album = sequelize.define('albums', {
     genres: DataTypes.ARRAY(DataTypes.STRING),
@@ -14,7 +12,6 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     classMethods: {
       associate: function(db) {
-        winston.log('info', Object.keys(db));
         db.albums.belongsToMany(db.artists, {through: 'ArtistAlbum'});
       }
     }
