@@ -28,7 +28,7 @@ module.exports = function(sequelize, DataTypes) {
     contacts: { type: DataTypes.ARRAY(DataTypes.INTEGER), defaultValue: []}
   }, {
     classMethods: {
-      associate: function(models) {
+      associate: function(db) {
         // associations can be defined here
       }
     }

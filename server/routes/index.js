@@ -19,7 +19,7 @@ router.post('/api/users', user.postUser);
 
 router.get('/api/artists', (req, res) => {
   winston.log('info', `Get /artists`);
-  models.artist.findAll({}).then(artists => {
+  models.artists.findAll({}).then(artists => {
     winston.log('info', `Response: ${res}`);
     res.status(200).json(artists);
   }).catch(reason => {
@@ -30,7 +30,7 @@ router.get('/api/artists', (req, res) => {
 
 router.post('/api/artists', (req, res) => {
   winston.log('info', `Post /artists with query ${JSON.stringify(req.body, null, 4)}`);
-  models.artist.create({
+  models.artists.create({
     name: req.body.name,
     description: req.body.description,
     genres: req.body.genres,
@@ -46,7 +46,7 @@ router.post('/api/artists', (req, res) => {
 router.post('/api/albums', (req, res) => {
   winston.log('info', `Post /albums with query ${JSON.stringify(req.body, null, 4)}`);
 
-  models.album.create({
+  models.albums.create({
     name: req.body.name,
     release_date: req.body.release_tdate,
     genres: req.body.genres,
@@ -59,7 +59,7 @@ router.post('/api/albums', (req, res) => {
             id : album.id
           },
           include: [{
-            model: models.artist
+            model: models.artists
           }]
         }).then(function(result) {
           res.status(200).json(result);
@@ -72,7 +72,7 @@ router.post('/api/albums', (req, res) => {
 
 router.post('/api/tracks', (req, res) => {
   winston.log('info', `Post /tracks with query ${JSON.stringify(req.body, null, 4)}`);
-  models.track.create({
+  models.tracks.create({
     albumId: req.body.albumId,
     artists: req.body.artists,
     name: req.body.name

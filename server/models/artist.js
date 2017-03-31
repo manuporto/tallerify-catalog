@@ -7,6 +7,13 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING,
     popularity: DataTypes.INTEGER
   }, {
+    classMethods: {
+      associate: function(db) {
+        // associations can be defined here
+        db.artists.belongsToMany(db.albums, {through: 'ArtistAlbum'});
+      }
+    }
+  }, {
     timestamp: false
   });
   return Artist;
