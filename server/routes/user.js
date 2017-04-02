@@ -15,8 +15,8 @@ getUsers = (req, res) => {
       users: users
     });
   }).catch(reason => {
-    winston.log('warn', `Error when doing GET /api/users: "${reason}"`);
-    res.status(500).json({code: 500, message: 'Unexpected error'});
+    winston.log('warn', `Unexpected error: ${reason}`);
+    res.status(500).json({code: 500, message: `Unexpected error: ${reason}`});
   });
 };
 
@@ -68,7 +68,7 @@ newUser = (req, res) => {
   winston.log('info', `Validating request body "${JSON.stringify(req.body, null, 4)}"`);
   jsonSchemaValidator.validate(req.body, newUserExpectedBodySchema, error => {
     if (error) {
-      winston.log('err', `Request body is invalid: ${error[0].message}`);
+      winston.log('warn', `Request body is invalid: ${error[0].message}`);
       return res.status(400).json({code: 400, message: `Invalid body: ${error[0].message}`});
     } else {
       models.users.create({
@@ -84,7 +84,7 @@ newUser = (req, res) => {
         winston.log('info', `Response: ${res}`);
         res.status(201).json(user);
       }).catch(reason => {
-        winston.log('err', `Unexpected error: ${reason}`);
+        winston.log('warn', `Unexpected error: ${reason}`);
         res.status(500).json({code: 500, message: `Unexpected error: ${reason}`});
       });
     }
@@ -115,12 +115,12 @@ deleteUser = (req, res) => {
       winston.log('info', `Successful user deletion`);
       res.sendStatus(204);
     }).catch(reason => {
-      winston.log('err', `Unexpected error: ${reason}`);
+      winston.log('warn', `Unexpected error: ${reason}`);
       res.status(500).json({code: 500, message: `Unexpected error: ${reason}`});
     });
 
   }).catch(reason => {
-    winston.log('err', `Unexpected error: ${reason}`);
+    winston.log('warn', `Unexpected error: ${reason}`);
     res.status(500).json({code: 500, message: `Unexpected error: ${reason}`});
   });
 };
