@@ -1,4 +1,6 @@
 const winston = require('winston');
+const amanda = require('amanda');
+var jsonSchemaValidator = amanda('json');
 var models = require('../models/index');
 
 getUsers = (req, res) => {
@@ -11,29 +13,75 @@ getUsers = (req, res) => {
   });
 };
 
-postUser = (req, res) => {
+const newUserExpectedBodySchema = {
+  type: 'object',
+  properties: {
+    userName: {
+      required: true,
+      type: 'string'
+    },
+    password: {
+      required: true,
+      type: 'string'
+    },
+    firstName: {
+      required: true,
+      type: 'string'
+    },
+    lastName: {
+      required: true,
+      type: 'string'
+    },
+    country: {
+      required: true,
+      type: 'string'
+    },
+    email: {
+      required: true,
+      type: 'string',
+      format: 'email'
+    },
+    birthdate: {
+      required: true,
+      type: 'string'
+    },
+    images: {
+      required: true,
+      type: 'array',
+      items: {
+        type: 'string'
+      }
+    },
+  }
+};
+
+newUser = (req, res) => {
   winston.log('info', `POST /api/users with body ${JSON.stringify(req.body, null, 4)}`);
-  models.users.create({
-    userName: req.body.userName,
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
-    country: req.body.country,
-    email: req.body.email,
-    birthdate: req.body.birthdate,
-    images: req.body.images
-  }).then(user => {
-    winston.log('info', `Response: ${res}`);
-    res.status(201).json(user);
-  }).catch(reason => {
-    if (reason.name === 'SequelizeValidationError') {
-      winston.log('warn', 'Invalid parameters when doing POST /api/users');
-      winston.log('warn', reason);
-      res.status(400).json({code: 400, message: 'Incumplimiento de precondiciones (parámetros faltantes)'});
+
+  winston.log('info', `Validating request body "${JSON.stringify(req.body, null, 4)}"`);
+  jsonSchemaValidator.validate(req.body, newUserExpectedBodySchema, (error) => {
+    if (error) {
+      winston.log('err', `Request body is invalid: ${error[0].message}`);
+      return res.status(400).json({code: 400, message: `Invalid body: ${error[0].message}`});
     } else {
-      winston.log('warn', `Error when doing POST /api/users: "${reason}"`);
-      res.status(500).json({code: 500, message: 'Unexpected error'});
+      models.users.create({
+        userName: req.body.userName,
+        password: req.body.password,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        country: req.body.country,
+        email: req.body.email,
+        birthdate: req.body.birthdate,
+        images: req.body.images
+      }).then(user => {
+        winston.log('info', `Response: ${res}`);
+        res.status(201).json(user);
+      }).catch(reason => {
+        winston.log('err', `Unexpected error: ${reason}`);
+        res.status(500).json({code: 500, message: `Unexpected error: ${reason}`});
+      });
     }
   });
 };
 
-module.exports = { getUsers, postUser };
+module.exports = { getUsers, newUser };
