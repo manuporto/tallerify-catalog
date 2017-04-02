@@ -2,11 +2,18 @@ const winston = require('winston');
 const amanda = require('amanda');
 var jsonSchemaValidator = amanda('json');
 var models = require('../models/index');
+const constants = require('./constants.json');
 
 getUsers = (req, res) => {
   winston.log('info', `GET /api/users`);
   models.users.findAll({}).then(users => {
-    res.status(200).json(users);
+    res.status(200).json({
+      metadata: {
+        count: users.length,
+        version: constants.API_VERSION
+      },
+      users: users
+    });
   }).catch(reason => {
     winston.log('warn', `Error when doing GET /api/users: "${reason}"`);
     res.status(500).json({code: 500, message: 'Unexpected error'});
