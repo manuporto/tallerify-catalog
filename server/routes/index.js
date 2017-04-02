@@ -19,6 +19,8 @@ router.get('/api/users', user.getUsers);
 
 router.post('/api/users', user.newUser);
 
+router.delete('/api/users/:id', user.deleteUser);
+
 /* Tokens */
 
 router.post('/api/tokens', token.generateToken);
