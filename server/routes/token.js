@@ -28,7 +28,7 @@ generateToken = (req, res) => {
 
     } else {
       winston.log('info', `Querying database for user with credentials "${JSON.stringify(req.body, null, 4)}"`);
-      models.User.findAll({
+      models.users.findAll({
         where: {
           userName: req.body.userName,
           password: req.body.password,
