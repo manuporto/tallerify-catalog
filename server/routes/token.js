@@ -45,8 +45,8 @@ generateToken = (req, res) => {
       return res.status(500).json({code: 500, message: `Internal server error: No user with such credentials`});
     }
     if (users.length > 1) {
-      winston.log('err', `There is more than one user with that userName and password "${users}"`);
-      return res.status(500).json({code: 500, message: `Internal server error: There is more than one user with that userName and password`});
+      winston.log('err', `There is more than one user with those credentials "${users}"`);
+      return res.status(500).json({code: 500, message: `Internal server error: There is more than one user with those credentials`});
     }
 
     res.status(201).json(Object.assign(
