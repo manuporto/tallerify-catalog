@@ -34,4 +34,4 @@ For running the test suit run:
 * `npm test`
 
 ## Documentation
- * [Api Specification](http://rebilly.github.io/ReDoc/?url=https://gist.githubusercontent.com/agrojas/ea2001512de94ce03ebebef797a6cdd0/raw/537e016ee678ebb15177920f990ea59040061068/music-shared-api.yaml)
+ * [Api Specification](http://rebilly.github.io/ReDoc/?url=https://raw.githubusercontent.com/tallerify/tallerify-catalog/develop/docs/tallerify-catalog-api.yaml)
