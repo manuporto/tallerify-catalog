@@ -3,7 +3,7 @@ var models = require('../models/index');
 
 getUsers = (req, res) => {
   winston.log('info', `GET /api/users`);
-  models.User.findAll({}).then(users => {
+  models.users.findAll({}).then(users => {
     res.status(200).json(users);
   }).catch(reason => {
     winston.log('warn', `Error when doing GET /api/users: "${reason}"`);
@@ -13,7 +13,7 @@ getUsers = (req, res) => {
 
 postUser = (req, res) => {
   winston.log('info', `POST /api/users with body ${JSON.stringify(req.body, null, 4)}`);
-  models.User.create({
+  models.users.create({
     userName: req.body.userName,
     firstName: req.body.firstName,
     lastName: req.body.lastName,

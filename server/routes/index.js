@@ -3,26 +3,33 @@ var express = require('express');
 var router = express.Router();
 var models = require('../models/index');
 var user = require('./user');
+var artist = require('./artist');
+var track = require('./track');
+var album = require('./album');
 
 router.get('/', (req, res, next) => {
   winston.log('info', 'Get /');
   res.render('index', { title: 'Express' });
 });
 
+/* Users */
+
 router.get('/api/users', user.getUsers);
 
 router.post('/api/users', user.postUser);
 
-router.post('/api/tracks', (req, res) => {
-  winston.log('info', `Post /tracks with query ${JSON.stringify(req.body, null, 4)}`);
-  models.Track.create({
-    albumId: req.body.albumId,
-    artists: req.body.artists,
-    name: req.body.name
-  }).then(track => {
-    winston.log('info', `Response: ${res}`);
-    res.status(200).json(track);
-  });
-});
+/* Artists */
+
+router.get('/api/artists', artist.getArtists);
+
+router.post('/api/artists', artist.postArtist);
+
+/* Albums */
+
+router.post('/api/albums', album.postAlbum);
+
+/* Tracks */
+
+router.post('/api/tracks', track.postTrack);
 
 module.exports = router;

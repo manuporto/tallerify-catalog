@@ -1,14 +1,16 @@
 'use strict';
-module.exports = function(sequelize, DataTypes) {
-  var Track = sequelize.define('Track', {
-    albumId: DataTypes.INTEGER,
-    artists: DataTypes.ARRAY(DataTypes.INTEGER),
-    name: DataTypes.STRING
+module.exports = (sequelize, DataTypes) => {
+  const Track = sequelize.define('tracks', {
+    AlbumId: DataTypes.INTEGER,
+    duration: DataTypes.INTEGER,
+    href: DataTypes.STRING,
+    name: DataTypes.STRING,
+    popularity: DataTypes.INTEGER
+  }, {
+    timestamps: false
   }, {
     classMethods: {
-      associate: function(models) {
-        // associations can be defined here
-      }
+      associate: function(db) {}
     }
   });
   return Track;
