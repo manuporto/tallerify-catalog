@@ -4,19 +4,17 @@ var jsonSchemaValidator = amanda('json');
 var models = require('../models/index');
 
 const expectedBodySchema = {
-  "properties": {
-  "password": {
-    "type": "string"
-  },
-  "userName": {
-    "type": "string"
+  type: 'object',
+  properties: {
+    userName: {
+      required: true,
+      type: 'string'
+    },
+    password: {
+      required: true,
+      type: 'string'
+    }
   }
-},
-  "required": [
-  "userName",
-  "password"
-],
-  "type": "object"
 };
 
 generateToken = (req, res) => {
