@@ -1,7 +1,7 @@
 <div *ngIf="user" class="row">
   <div class="col-md-12">
-    <h2 *ngIf="user._id">User Details</h2>
-    <h2 *ngIf="!user._id">New User</h2>
+    <h2 *ngIf="user.id">User Details</h2>
+    <h2 *ngIf="!user.id">New User</h2>
   </div>
 </div>
 <div *ngIf="user" class="row">
@@ -30,8 +30,8 @@
       <label for="user-birthdate">Birthdate</label>
       <input class="form-control" name="user-birthdate" [(ngModel)]="user.birthdate" placeholder="1/1/1900"/>
     </div>
-    <button class="btn btn-primary" *ngIf="!user._id" (click)="createUser(user)">Create</button>
-    <button class="btn btn-info" *ngIf="user._id" (click)="updateUser(user)">Update</button>
-    <button class="btn btn-danger" *ngIf="user._id" (click)="deleteUser(user._id)">Delete</button>
+    <button class="btn btn-primary" *ngIf="!user.id" (click)="createUser(user)">Create</button>
+    <button class="btn btn-info" *ngIf="user.id" (click)="updateUser(user)">Update</button>
+    <button class="btn btn-danger" *ngIf="user.id" (click)="deleteUser(user.id)">Delete</button>
   </form>
 </div>
