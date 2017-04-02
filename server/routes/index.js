@@ -3,6 +3,9 @@ var express = require('express');
 var router = express.Router();
 var models = require('../models/index');
 var user = require('./user');
+var artist = require('./artist');
+var track = require('./track');
+var album = require('./album');
 
 router.get('/', (req, res, next) => {
   winston.log('info', 'Get /');
@@ -17,80 +20,16 @@ router.post('/api/users', user.postUser);
 
 /* Artists */
 
-router.get('/api/artists', (req, res) => {
-  winston.log('info', `Get /artists`);
-  models.artists.findAll({}).then(artists => {
-    winston.log('info', `Response: ${res}`);
-    res.status(200).json(artists);
-  }).catch(reason => {
-    winston.log('warn', `Error when doing /artists query: "${reason}"`);
-    res.status(500);
-  });
-});
+router.get('/api/artists', artist.getArtists);
 
-router.post('/api/artists', (req, res) => {
-  winston.log('info', `Post /artists with query ${JSON.stringify(req.body, null, 4)}`);
-  models.artists.create({
-    name: req.body.name,
-    description: req.body.description,
-    genres: req.body.genres,
-    images: req.body.images
-  }).then(artist => {
-    winston.log('info', `Response: ${res}`);
-    res.status(200).json(artist);
-  });
-});
+router.post('/api/artists', artist.postArtist);
 
 /* Albums */
 
-router.post('/api/albums', (req, res) => {
-  winston.log('info', `Post /albums with query ${JSON.stringify(req.body, null, 4)}`);
-
-  models.albums.create({
-    name: req.body.name,
-    release_date: req.body.release_tdate,
-    genres: req.body.genres,
-    images: req.body.images
-  }).then(album => {
-      // It hangs here
-      Promise.all(req.body.artists.map(artist => {
-        winston.log('debug', `Finding artist: ${artist}`);
-        models.artists.findAll(
-          {
-            where: {
-              name: artist
-            }
-          }).then((selectedArtist => {
-          winston.log('debug', `Artist id: ${selectedArtist}`);
-          }));
-      }));
-      // models.albums.find({
-      //   where: {
-      //     id : album.id
-      //   },
-      //   include: [{
-      //     model: models.artists
-      //   }]
-      // }).then(function(result) {
-      //   winston.log('info', `New album created: ${album}`);
-      //   res.status(200).json(result);
-      // });
-
-  });
-});
+router.post('/api/albums', album.postAlbum);
 
 /* Tracks */
 
-router.post('/api/tracks', (req, res) => {
-  winston.log('info', `Post /tracks with query ${JSON.stringify(req.body, null, 4)}`);
-  models.tracks.create({
-    albumId: req.body.albumId,
-    artists: req.body.artists,
-    name: req.body.name
-  }).then(track => {
-    winston.log('info', `Response: ${res}`);
-    res.status(200).json(track);
-  });
-});
+router.post('/api/tracks', track.postTrack);
 
 module.exports = router;

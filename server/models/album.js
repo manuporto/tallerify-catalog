@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     classMethods: {
       associate: function(db) {
-        db.albums.belongsToMany(db.artists, {through: 'ArtistAlbum'});
+        db.albums.belongsToMany(db.artists, {through: db.artistsAlbums});
       }
     }
   });

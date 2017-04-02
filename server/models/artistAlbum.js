@@ -7,7 +7,10 @@ module.exports = (sequelize, DataTypes) => {
     timestamps: false
   }, {
     classMethods: {
-      associate: function(db) {}
+      associate: function(db) {
+        db.artistsAlbums.belongsTo(db.artists);
+        db.artistsAlbums.belongsTo(db.albums);
+      }
     }
   });
   return Album;
