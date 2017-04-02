@@ -15,6 +15,7 @@ postUser = (req, res) => {
   winston.log('info', `POST /api/users with body ${JSON.stringify(req.body, null, 4)}`);
   models.users.create({
     userName: req.body.userName,
+    password: req.body.password,
     firstName: req.body.firstName,
     lastName: req.body.lastName,
     country: req.body.country,
