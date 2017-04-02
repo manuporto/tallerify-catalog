@@ -24,7 +24,7 @@ const expectedBodySchema = {
 };
 
 generateToken = (req, res) => {
-  winston.log('info', `GET /api/tokens`);
+  winston.log('info', `POST /api/tokens`);
 
   winston.log('info', `Validating request body`);
   if (!validator.validate(expectedBodySchema, req.body)) {
@@ -40,26 +40,28 @@ generateToken = (req, res) => {
     }
   }).then(users => {
 
+    if (users.length === 0) {
+      winston.log('err', `No user with such credentials`);
+      return res.status(500).json({code: 500, message: `Internal server error: No user with such credentials`});
+    }
     if (users.length > 1) {
       winston.log('err', `There is more than one user with that userName and password "${users}"`);
       return res.status(500).json({code: 500, message: `Internal server error: There is more than one user with that userName and password`});
     }
 
-    var user = users[0];
-
     res.status(201).json(Object.assign(
       {},
       {
-        token: user.id.toString(),
+        token: users[0].id.toString(),
         user: {
-          id: user.id,
-          href: user.href,
-          userName: user.userName
+          id: users[0].id,
+          href: users[0].href,
+          userName: users[0].userName
         }
       }));
 
   }).catch(reason => {
-    winston.log('err', `Error when doing GET /api/tokens: "${reason}"`);
+    winston.log('err', `${reason}`);
     res.status(500).json({code: 500, message: `Internal server error: ${reason}`});
   });
 };
