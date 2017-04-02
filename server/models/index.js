@@ -26,17 +26,29 @@ fs
     db[model.name] = model;
   });
 
-winston.log('info', 'Associating models');
 Object.keys(db).forEach(function(modelName) {
+  winston.log('info', `Syncing ${modelName} model`);
   if (db[modelName].associate) {
     winston.log('info', `Associating "${modelName}" model`);
     db[modelName].associate(db);
-    db[modelName].sync();
   }
+  db[modelName].sync(db);
 });
 winston.log('info', 'Finished associating models');
 
+
+// /* Models/tables */
+// db.album = require('../models/album.js')(sequelize, Sequelize);
+// db.artist = require('../models/artist.js')(sequelize, Sequelize);
+// db.track = require('../models/track.js')(sequelize, Sequelize);
+// db.user = require('../models/track.js')(sequelize, Sequelize);
+//
+// /* Relations */
+// db.album.hasMany(db.track);
+// db.album.belongsToMany(db.artist, {through: 'ArtistAlbum'});
+// db.artist.belongsToMany(db.album, {through: 'ArtistAlbum'});
+// db.track.belongsTo(db.album);
+
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
-
 module.exports = db;
