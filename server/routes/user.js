@@ -20,6 +20,29 @@ getUsers = (req, res) => {
   });
 };
 
+getUser = (req, res) => {
+  winston.log('info', `GET /api/users/${req.params.id}`);
+
+  winston.log('info', `Searching for user ${req.params.id}`);
+  models.users.find({
+    where: {
+      id: req.params.id
+    }
+  }).then(user => {
+
+    if (!user) {
+      winston.log('info', `No user with id ${req.params.id}`);
+      return res.status(404).json({code: 404, message: `No user with id ${req.params.id}`});
+    }
+
+    res.status(200).json(user);
+
+  }).catch(reason => {
+    winston.log('warn', `Unexpected error: ${reason}`);
+    res.status(500).json({code: 500, message: `Unexpected error: ${reason}`});
+  });
+};
+
 const userExpectedBodySchema = {
   type: 'object',
   properties: {
@@ -175,4 +198,4 @@ deleteUser = (req, res) => {
   });
 };
 
-module.exports = { getUsers, newUser, updateUser, deleteUser };
+module.exports = { getUsers, getUser, newUser, updateUser, deleteUser };
