@@ -37,14 +37,14 @@ generateToken = (req, res) => {
 
         if (users.length === 0) {
           winston.log('err', `No user with such credentials`);
-          return res.status(500).json({code: 500, message: `Internal server error: No user with such credentials`});
+          return res.status(500).json({code: 500, message: `No user with such credentials`});
         }
         if (users.length > 1) {
           winston.log('err', `There is more than one user with those credentials "${users}"`);
-          return res.status(500).json({code: 500, message: `Internal server error: There is more than one user with those credentials`});
+          return res.status(500).json({code: 500, message: `There is more than one user with those credentials`});
         }
 
-        res.status(201).json(Object.assign(
+        var response = Object.assign(
           {},
           {
             token: users[0].id.toString(),
@@ -53,11 +53,14 @@ generateToken = (req, res) => {
               href: users[0].href,
               userName: users[0].userName
             }
-          }));
+          });
+
+        winston.log('info', `Response: ${response}`);
+        res.status(201).json(response);
 
       }).catch(reason => {
-        winston.log('err', `${reason}`);
-        res.status(500).json({code: 500, message: `Internal server error: ${reason}`});
+        winston.log('err', `Unexpected error: ${reason}`);
+        res.status(500).json({code: 500, message: `Unexpected error: ${reason}`});
       });
     }
   });
