@@ -5,7 +5,6 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var swig = require('swig');
 
 
 // *** routes *** //
@@ -17,7 +16,6 @@ var app = express();
 
 
 // *** view engine *** //
-// var swig = new swig.Swig();
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 
