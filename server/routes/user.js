@@ -20,7 +20,7 @@ getUsers = (req, res) => {
   });
 };
 
-const newUserExpectedBodySchema = {
+const userExpectedBodySchema = {
   type: 'object',
   properties: {
     userName: {
@@ -66,7 +66,7 @@ newUser = (req, res) => {
   winston.log('info', `POST /api/users with body ${JSON.stringify(req.body, null, 4)}`);
 
   winston.log('info', `Validating request body "${JSON.stringify(req.body, null, 4)}"`);
-  jsonSchemaValidator.validate(req.body, newUserExpectedBodySchema, error => {
+  jsonSchemaValidator.validate(req.body, userExpectedBodySchema, error => {
     if (error) {
       winston.log('warn', `Request body is invalid: ${error[0].message}`);
       return res.status(400).json({code: 400, message: `Invalid body: ${error[0].message}`});
@@ -91,11 +91,61 @@ newUser = (req, res) => {
   });
 };
 
+
+updateUser = (req, res) => {
+  winston.log('info', `PUT /api/users/${req.params.id} with body ${JSON.stringify(req.body, null, 4)}`);
+
+  winston.log('info', `Validating request body "${JSON.stringify(req.body, null, 4)}"`);
+  jsonSchemaValidator.validate(req.body, userExpectedBodySchema, error => {
+    if (error) {
+      winston.log('warn', `Request body is invalid: ${error[0].message}`);
+      return res.status(400).json({code: 400, message: `Invalid body: ${error[0].message}`});
+    } else {
+
+      winston.log('info', `Searching for user ${req.params.id}`);
+      models.users.find({
+        where: {
+          id: req.params.id
+        }
+      }).then(user => {
+
+        if (!user) {
+          winston.log('info', `No user with id ${req.params.id}`);
+          return res.status(404).json({code: 404, message: `No user with id ${req.params.id}`});
+        }
+
+        winston.log('info', `Found, updating user ${req.params.id}`);
+
+        user.updateAttributes({
+          userName: req.body.userName,
+          password: req.body.password,
+          firstName: req.body.firstName,
+          lastName: req.body.lastName,
+          country: req.body.country,
+          email: req.body.email,
+          birthdate: req.body.birthdate,
+          images: req.body.images
+        }).then(user => {
+          winston.log('info', `Response: ${res}`);
+          res.status(200).json(user);
+        }).catch(reason => {
+          winston.log('warn', `Unexpected error: ${reason}`);
+          res.status(500).json({code: 500, message: `Unexpected error: ${reason}`});
+        });
+
+      }).catch(reason => {
+        winston.log('warn', `Unexpected error: ${reason}`);
+        res.status(500).json({code: 500, message: `Unexpected error: ${reason}`});
+      });
+    }
+  });
+};
+
 deleteUser = (req, res) => {
   winston.log('info', `DELETE /api/users/${req.params.id}`);
 
   winston.log('info', `Searching for user ${req.params.id}`);
-  models.users.findOne({
+  models.users.find({
     where: {
       id: req.params.id
     }
@@ -125,4 +175,4 @@ deleteUser = (req, res) => {
   });
 };
 
-module.exports = { getUsers, newUser, deleteUser };
+module.exports = { getUsers, newUser, updateUser, deleteUser };
