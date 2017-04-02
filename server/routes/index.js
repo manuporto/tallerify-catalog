@@ -17,7 +17,7 @@ router.get('/', (req, res, next) => {
 
 router.get('/api/users', user.getUsers);
 
-router.post('/api/users', user.postUser);
+router.post('/api/users', user.newUser);
 
 /* Tokens */
 
