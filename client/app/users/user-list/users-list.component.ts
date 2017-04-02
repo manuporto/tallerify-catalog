@@ -37,7 +37,7 @@ export class UserListComponent implements OnInit {
     this.selectedUser = user
   }
 
-  createNewUser() {
+  createNewUser = () => {
     var user: User = {
       userName: '',
       firstName: '',
@@ -47,8 +47,6 @@ export class UserListComponent implements OnInit {
       birthdate: '',
       images: ['']
     }
-    };
-
     // By default, a newly-created user will have the selected state.
     this.selectUser(user);
   }
