@@ -287,4 +287,25 @@ describe('User', () => {
     });
   });
 
+  describe('/DELETE users/{id}', () => {
+
+    it('should return status code 204 when deletion is successful', done => {
+      request(app)
+        .delete(`/api/users/${constants.initialUser.id}`)
+        .end((err, res) => {
+        res.should.have.status(204);
+        done();
+      });
+    });
+
+    it('should return status code 404 if id does not match a user', done => {
+      request(app)
+        .delete(`/api/users/${constants.invalidUserId}`)
+        .end((err,res) => {
+          res.should.have.status(404);
+          done();
+        });
+    });
+  });
+
 });
