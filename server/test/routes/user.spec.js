@@ -18,50 +18,30 @@
 // var server = supertest.agent("http://localhost:3000");
 
 var app = require('../../app');
-var chai = require('chai');
 var request = require('supertest');
-
+var chai = require('chai');
+let chaiHttp = require('chai-http');
+let should = chai.should();
 var expect = chai.expect;
 
-//TODO tests are broken debug them
+chai.use(chaiHttp);
+
 
 describe('User', () => {
-
-  // it('should return status code 200', done => {
-  //   request(app)
-  //     .get("/api/test1")
-  //     .end(function(err,res){
-  //       console.log(res.statusCode);
-  //       expect(res.body.version).to.be.ok;
-  //       expect(res.statusCode).to.equal('puto');
-  //       done();
-  //     });
-  // });
-  //
-  // it('should return version number', function(done) {
-  //   request(app)
-  //     .get('/api')
-  //     .end(function(err, res) {
-  //       console.log(res.statusCode);
-  //       expect(res.body.version).to.be.ok;
-  //       expect(res.statusCode).to.equal(200);
-  //       done();
-  //     });
-  // });
 
   describe('/GET users', () => {
     it('should return status code 200', done => {
       request(app)
       .get("/api/users")
       .end((err,res) => {
-        expect(res.statusCode).to.equal(200);
+        res.should.have.status(200);
         done();
       });
     });
   });
 
   describe('/POST users', () => {
-    it('should return status code 400 when incorrect parameters are sent', done => {
+    it('should return status code 400 when parameters are missing', done => {
       request(app)
         .post('/api/users')
         .send({
@@ -69,7 +49,7 @@ describe('User', () => {
           firstName: 'John',
           lastName: 'Doe'
         }).end((err, res) => {
-        expect(res.statusCode).to.equal(400);
+        res.should.have.status(400);
         done();
       });
     });
