@@ -25,5 +25,9 @@
       "lele",
       "lulu"
     ]
+  },
+  "invalidCredentials": {
+    "userName": "tano_villano",
+    "password": "botox8"
   }
 }

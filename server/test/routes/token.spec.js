@@ -46,7 +46,7 @@ describe('Token', () => {
       request(app)
         .post('/api/tokens')
         .send({
-          userName: 'abrden'
+          userName: constants.initialUser.userName
         }).end((err, res) => {
          res.should.have.status(400);
          done();
@@ -57,8 +57,8 @@ describe('Token', () => {
       request(app)
         .post('/api/tokens')
         .send({
-          userName: 'tano_villano',
-          password: 'hitler5',
+          userName: constants.invalidCredentials.userName,
+          password: constants.invalidCredentials.password,
         }).end((err, res) => {
           res.should.have.status(500);
           done();
@@ -69,8 +69,8 @@ describe('Token', () => {
       request(app)
         .post('/api/tokens')
         .send({
-          userName: 'abrden',
-          password: '1234',
+          userName: constants.initialUser.userName,
+          password: constants.initialUser.password,
         }).end((err, res) => {
           res.should.have.status(201);
           done();
@@ -81,8 +81,8 @@ describe('Token', () => {
       request(app)
         .post('/api/tokens')
         .send({
-          userName: 'abrden',
-          password: '1234',
+          userName: constants.initialUser.userName,
+          password: constants.initialUser.password,
         }).end((err, res) => {
           res.body.should.be.a('object');
           res.body.should.have.property('token');
