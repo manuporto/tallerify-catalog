@@ -1,4 +1,4 @@
-const winston = require('winston');
+var logger = require('../utils/logger');
 var express = require('express');
 var router = express.Router();
 var models = require('../models/index');
@@ -9,8 +9,7 @@ var track = require('./track');
 var album = require('./album');
 
 router.get('/', (req, res, next) => {
-  winston.log('info', 'Get /');
-  res.render('index', { title: 'Express' });
+  res.render('index');
 });
 
 /* Users */

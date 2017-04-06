@@ -32,6 +32,15 @@ describe('Token', () => {
       });
   });
 
+  after(done => {
+    db.sequelize.drop()
+      .then(() => {
+        done();
+      }).catch(error => {
+      done(error);
+    })
+  });
+
   describe('/POST tokens', () => {
     it('should return status code 400 when parameters are missing', done => {
       request(app)

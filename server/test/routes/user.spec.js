@@ -32,6 +32,15 @@ describe('User', () => {
       });
   });
 
+  after(done => {
+    db.sequelize.drop()
+      .then(() => {
+        done();
+      }).catch(error => {
+        done(error);
+    })
+  });
+
   describe('/GET users', () => {
     it('should return status code 200', done => {
       request(app)
