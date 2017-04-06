@@ -19,16 +19,7 @@ describe('User', () => {
       .sync({force: true})
       .then(() => {
         db.users
-          .create({
-            userName: constants.initialUser.userName,
-            password: constants.initialUser.password,
-            firstName: constants.initialUser.firstName,
-            lastName: constants.initialUser.lastName,
-            country: constants.initialUser.country,
-            email: constants.initialUser.email,
-            birthdate: constants.initialUser.birthdate,
-            images: constants.initialUser.images
-          })
+          .create(constants.initialUser)
           .then(user => {
             done();
           })
@@ -70,11 +61,8 @@ describe('User', () => {
     it('should return status code 400 when parameters are missing', done => {
       request(app)
         .post('/api/users')
-        .send({
-          userName: constants.testUser.userName,
-          firstName: constants.testUser.firstName,
-          lastName: constants.testUser.lastName,
-        }).end((err, res) => {
+        .send(constants.newUserWithMissingAttributes)
+        .end((err, res) => {
           res.should.have.status(400);
           done();
       });
@@ -83,16 +71,8 @@ describe('User', () => {
     it('should return status code 400 when parameters are invalid', done => {
       request(app)
         .post('/api/users')
-        .send({
-          userName: constants.invalidUser.userName,
-          password: constants.invalidUser.password,
-          firstName: constants.invalidUser.firstName,
-          lastName: constants.invalidUser.lastName,
-          country: constants.invalidUser.country,
-          email: constants.invalidUser.email,
-          birthdate: constants.invalidUser.birthdate,
-          images: constants.invalidUser.images
-        }).end((err, res) => {
+        .send(constants.invalidUser)
+        .end((err, res) => {
         res.should.have.status(400);
         done();
       });
@@ -101,16 +81,8 @@ describe('User', () => {
     it('should return status code 201 when correct parameters are sent', done => {
       request(app)
         .post('/api/users')
-        .send({
-          userName: constants.testUser.userName,
-          password: constants.testUser.password,
-          firstName: constants.testUser.firstName,
-          lastName: constants.testUser.lastName,
-          country: constants.testUser.country,
-          email: constants.testUser.email,
-          birthdate: constants.testUser.birthdate,
-          images: constants.testUser.images
-        }).end((err, res) => {
+        .send(constants.testUser)
+        .end((err, res) => {
           res.should.have.status(201);
           done();
       });
@@ -119,16 +91,8 @@ describe('User', () => {
     it('should return the expected body response when correct parameters are sent', done => {
       request(app)
         .post('/api/users')
-        .send({
-          userName: constants.testUser.userName,
-          password: constants.testUser.password,
-          firstName: constants.testUser.firstName,
-          lastName: constants.testUser.lastName,
-          country: constants.testUser.country,
-          email: constants.testUser.email,
-          birthdate: constants.testUser.birthdate,
-          images: constants.testUser.images
-        }).end((err, res) => {
+        .send(constants.testUser)
+        .end((err, res) => {
           res.body.should.be.a('object');
           res.body.should.have.property('id');
           res.body.should.have.property('userName').eql(constants.testUser.userName);
@@ -149,7 +113,7 @@ describe('User', () => {
   describe('/GET users/{id}', () => {
     it('should return status code 200', done => {
       request(app)
-        .get(`/api/users/${constants.initialUser.id}`)
+        .get(`/api/users/${constants.validUserId}`)
         .end((err,res) => {
           res.should.have.status(200);
           done();
@@ -158,11 +122,11 @@ describe('User', () => {
 
     it('should return user data', done => {
       request(app)
-        .get(`/api/users/${constants.initialUser.id}`)
+        .get(`/api/users/${constants.validUserId}`)
         .end((err,res) => {
           res.body.should.be.a('object');
           res.body.should.be.a('object');
-          res.body.should.have.property('id').eql(constants.initialUser.id);
+          res.body.should.have.property('id').eql(constants.validUserId);
           res.body.should.have.property('userName').eql(constants.initialUser.userName);
           res.body.should.have.property('password').eql(constants.initialUser.password);
           res.body.should.have.property('firstName').eql(constants.initialUser.firstName);
@@ -190,17 +154,9 @@ describe('User', () => {
   describe('/PUT users/{id}', () => {
     it('should return status code 201 when correct parameters are sent', done => {
       request(app)
-        .put(`/api/users/${constants.initialUser.id}`)
-        .send({
-          userName: constants.updatedUser.userName,
-          password: constants.updatedUser.password,
-          firstName: constants.updatedUser.firstName,
-          lastName: constants.updatedUser.lastName,
-          country: constants.updatedUser.country,
-          email: constants.updatedUser.email,
-          birthdate: constants.updatedUser.birthdate,
-          images: constants.updatedUser.images
-        }).end((err, res) => {
+        .put(`/api/users/${constants.validUserId}`)
+        .send(constants.updatedUser)
+        .end((err, res) => {
           res.should.have.status(200);
           done();
       });
@@ -208,20 +164,12 @@ describe('User', () => {
 
     it('should return the expected body response when correct parameters are sent', done => {
       request(app)
-        .put(`/api/users/${constants.initialUser.id}`)
-        .send({
-          userName: constants.updatedUser.userName,
-          password: constants.updatedUser.password,
-          firstName: constants.updatedUser.firstName,
-          lastName: constants.updatedUser.lastName,
-          country: constants.updatedUser.country,
-          email: constants.updatedUser.email,
-          birthdate: constants.updatedUser.birthdate,
-          images: constants.updatedUser.images
-        }).end((err, res) => {
+        .put(`/api/users/${constants.validUserId}`)
+        .send(constants.updatedUser)
+        .end((err, res) => {
           res.body.should.be.a('object');
           res.body.should.be.a('object');
-          res.body.should.have.property('id').eql(constants.initialUser.id);
+          res.body.should.have.property('id').eql(constants.validUserId);
           res.body.should.have.property('userName').eql(constants.updatedUser.userName);
           res.body.should.have.property('password').eql(constants.updatedUser.password);
           res.body.should.have.property('firstName').eql(constants.updatedUser.firstName);
@@ -238,12 +186,9 @@ describe('User', () => {
 
     it('should return status code 400 when parameters are missing', done => {
       request(app)
-        .put(`/api/users/${constants.initialUser.id}`)
-        .send({
-          userName: constants.updatedUser.userName,
-          password: constants.updatedUser.password,
-          email: constants.updatedUser.email,
-        }).end((err, res) => {
+        .put(`/api/users/${constants.validUserId}`)
+        .send(constants.updatedUserWithMissingAttributes)
+        .end((err, res) => {
         res.should.have.status(400);
         done();
       });
@@ -251,17 +196,9 @@ describe('User', () => {
 
     it('should return status code 400 when parameters are invalid', done => {
       request(app)
-        .put(`/api/users/${constants.initialUser.id}`)
-        .send({
-          userName: constants.invalidUser.userName,
-          password: constants.invalidUser.password,
-          firstName: constants.invalidUser.firstName,
-          lastName: constants.invalidUser.lastName,
-          country: constants.invalidUser.country,
-          email: constants.invalidUser.email,
-          birthdate: constants.invalidUser.birthdate,
-          images: constants.invalidUser.images
-        }).end((err, res) => {
+        .put(`/api/users/${constants.validUserId}`)
+        .send(constants.invalidUser)
+        .end((err, res) => {
         res.should.have.status(400);
         done();
       });
@@ -270,16 +207,7 @@ describe('User', () => {
     it('should return status code 404 if id does not match a user', done => {
       request(app)
         .put(`/api/users/${constants.invalidUserId}`)
-        .send({
-          userName: constants.updatedUser.userName,
-          password: constants.updatedUser.password,
-          firstName: constants.updatedUser.firstName,
-          lastName: constants.updatedUser.lastName,
-          country: constants.updatedUser.country,
-          email: constants.updatedUser.email,
-          birthdate: constants.updatedUser.birthdate,
-          images: constants.updatedUser.images
-        })
+        .send(constants.updatedUser)
         .end((err,res) => {
           res.should.have.status(404);
           done();
@@ -291,7 +219,7 @@ describe('User', () => {
 
     it('should return status code 204 when deletion is successful', done => {
       request(app)
-        .delete(`/api/users/${constants.initialUser.id}`)
+        .delete(`/api/users/${constants.validUserId}`)
         .end((err, res) => {
         res.should.have.status(204);
         done();
