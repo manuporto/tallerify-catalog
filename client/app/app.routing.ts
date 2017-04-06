@@ -4,19 +4,25 @@ import { Routes, RouterModule, CanActivate } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { UserListComponent } from './users/user-list/user-list.component';
 import { UserDetailsComponent } from './users/user-details/user-details.component';
+import { PageNotFoundComponent } from './page-not-found.component';
 
 const appRoutes: Routes = [
   {
-    path: '/',
-    redirectTo: '/login',
-    pathMatch: 'full'
+    path: 'users',
+    component: UserListComponent
   },
   {
-    path: '/login',
+    path: '',
+    redirectTo: '/login',
+    pathMatch: 'full',
     component: LoginComponent
+  },
+  {
+    path: '**',
+    component: PageNotFoundComponent
   }
 ];
 
 export const routing = RouterModule.forRoot(appRoutes);
 
-export const routedComponents = [LoginComponent];
+export const routedComponents = [UserListComponent, LoginComponent];
