@@ -80,7 +80,7 @@ describe('User', () => {
       });
     });
 
-    it('should return status code 400 when parameters invalid', done => {
+    it('should return status code 400 when parameters are invalid', done => {
       request(app)
         .post('/api/users')
         .send({
@@ -180,6 +180,106 @@ describe('User', () => {
     it('should return status code 404 if id does not match a user', done => {
       request(app)
         .get(`/api/users/${constants.invalidUserId}`)
+        .end((err,res) => {
+          res.should.have.status(404);
+          done();
+        });
+    });
+  });
+
+  describe('/PUT users/{id}', () => {
+    it('should return status code 201 when correct parameters are sent', done => {
+      request(app)
+        .put(`/api/users/${constants.initialUser.id}`)
+        .send({
+          userName: constants.updatedUser.userName,
+          password: constants.updatedUser.password,
+          firstName: constants.updatedUser.firstName,
+          lastName: constants.updatedUser.lastName,
+          country: constants.updatedUser.country,
+          email: constants.updatedUser.email,
+          birthdate: constants.updatedUser.birthdate,
+          images: constants.updatedUser.images
+        }).end((err, res) => {
+          res.should.have.status(200);
+          done();
+      });
+    });
+
+    it('should return the expected body response when correct parameters are sent', done => {
+      request(app)
+        .put(`/api/users/${constants.initialUser.id}`)
+        .send({
+          userName: constants.updatedUser.userName,
+          password: constants.updatedUser.password,
+          firstName: constants.updatedUser.firstName,
+          lastName: constants.updatedUser.lastName,
+          country: constants.updatedUser.country,
+          email: constants.updatedUser.email,
+          birthdate: constants.updatedUser.birthdate,
+          images: constants.updatedUser.images
+        }).end((err, res) => {
+          res.body.should.be.a('object');
+          res.body.should.be.a('object');
+          res.body.should.have.property('id').eql(constants.initialUser.id);
+          res.body.should.have.property('userName').eql(constants.updatedUser.userName);
+          res.body.should.have.property('password').eql(constants.updatedUser.password);
+          res.body.should.have.property('firstName').eql(constants.updatedUser.firstName);
+          res.body.should.have.property('lastName').eql(constants.updatedUser.lastName);
+          res.body.should.have.property('country').eql(constants.updatedUser.country);
+          res.body.should.have.property('email').eql(constants.updatedUser.email);
+          res.body.should.have.property('birthdate').eql(constants.updatedUser.birthdate);
+          res.body.should.have.property('images').eql(constants.updatedUser.images);
+          res.body.should.have.property('contacts');
+          res.body.should.have.property('href');
+          done();
+      });
+    });
+
+    it('should return status code 400 when parameters are missing', done => {
+      request(app)
+        .put(`/api/users/${constants.initialUser.id}`)
+        .send({
+          userName: constants.updatedUser.userName,
+          password: constants.updatedUser.password,
+          email: constants.updatedUser.email,
+        }).end((err, res) => {
+        res.should.have.status(400);
+        done();
+      });
+    });
+
+    it('should return status code 400 when parameters are invalid', done => {
+      request(app)
+        .put(`/api/users/${constants.initialUser.id}`)
+        .send({
+          userName: constants.invalidUser.userName,
+          password: constants.invalidUser.password,
+          firstName: constants.invalidUser.firstName,
+          lastName: constants.invalidUser.lastName,
+          country: constants.invalidUser.country,
+          email: constants.invalidUser.email,
+          birthdate: constants.invalidUser.birthdate,
+          images: constants.invalidUser.images
+        }).end((err, res) => {
+        res.should.have.status(400);
+        done();
+      });
+    });
+
+    it('should return status code 404 if id does not match a user', done => {
+      request(app)
+        .put(`/api/users/${constants.invalidUserId}`)
+        .send({
+          userName: constants.updatedUser.userName,
+          password: constants.updatedUser.password,
+          firstName: constants.updatedUser.firstName,
+          lastName: constants.updatedUser.lastName,
+          country: constants.updatedUser.country,
+          email: constants.updatedUser.email,
+          birthdate: constants.updatedUser.birthdate,
+          images: constants.updatedUser.images
+        })
         .end((err,res) => {
           res.should.have.status(404);
           done();

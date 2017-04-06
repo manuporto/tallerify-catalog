@@ -29,15 +29,28 @@
   },
   "invalidUser": {
     "userName": "conto",
-    "password": "1111",
+    "password": 5555,
     "firstName": "Conto",
     "lastName": "Circense",
     "country": "Croacia",
-    "email": "conto@circo.com",
+    "email": "contoarrobacirco.com",
     "birthdate": 3,
     "images": "muchas"
   },
   "invalidUserId": 999999,
+  "updatedUser": {
+    "userName": "abrden",
+    "password": "4321",
+    "firstName": "Agustina",
+    "lastName": "Barbetta",
+    "country": "Argentina",
+    "email": "aibarbetta@fi.uba.ar",
+    "birthdate": "120894",
+    "images": [
+      "lele",
+      "lulu"
+    ]
+  },
   "invalidCredentials": {
     "userName": "tano_villano",
     "password": "botox8"
