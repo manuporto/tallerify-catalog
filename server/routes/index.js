@@ -1,4 +1,4 @@
-const winston = require('winston');
+var logger = require('../utils/logger');
 var express = require('express');
 var router = express.Router();
 var models = require('../models/index');
@@ -9,7 +9,6 @@ var track = require('./track');
 var album = require('./album');
 
 router.get('/', (req, res, next) => {
-  winston.log('info', 'Get /');
   res.render('index');
 });
 
@@ -17,7 +16,13 @@ router.get('/', (req, res, next) => {
 
 router.get('/api/users', user.getUsers);
 
+router.get('/api/users/:id', user.getUser);
+
 router.post('/api/users', user.newUser);
+
+router.put('/api/users/:id', user.updateUser);
+
+router.delete('/api/users/:id', user.deleteUser);
 
 /* Tokens */
 

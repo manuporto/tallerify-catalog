@@ -33,7 +33,9 @@ module.exports = function(sequelize, DataTypes) {
     timestamps: false
   }, {
     classMethods: {
-      associate: function(db) {}
+      associate: function(db) {
+        db.users.belongsToMany(db.users, { as: 'Contacts', through: 'UserContacts' })
+      }
     }
   });
   return User;

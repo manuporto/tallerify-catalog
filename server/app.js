@@ -1,8 +1,13 @@
+/**
+ * Load env file
+ */
+require('dotenv').config();
+
 // *** main dependencies *** //
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
-var logger = require('morgan');
+var logger = require('./utils/logger');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
@@ -25,7 +30,7 @@ app.set('views', path.join(__dirname, '../dist'));
 app.use(express.static(path.join(__dirname, '../dist')));
 
 // *** config middleware *** //
-app.use(logger('dev'));
+app.use(require('morgan')('combined', { 'stream': logger.stream }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -45,9 +50,9 @@ app.use(function(req, res, next) {
 
 // *** error handlers *** //
 
-// development error handler
+// development and test error handler
 // will print stacktrace
-if (app.get('env') === 'development') {
+if (app.get('env') === 'development' || app.get('env') === 'test') {
   app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     res.render('index', {

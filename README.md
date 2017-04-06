@@ -2,7 +2,16 @@
 [![Build Status](https://travis-ci.org/tallerify/tallerify-catalog.svg?branch=develop)](https://travis-ci.org/tallerify/tallerify-catalog)
 [![Coverage Status](https://coveralls.io/repos/github/tallerify/tallerify-catalog/badge.svg?branch=develop)](https://coveralls.io/github/tallerify/tallerify-catalog?branch=develop)
 
-## Install
+## Installation
+
+### With Docker and Docker Compose
+1. Install [Docker](https://docs.docker.com/engine/installation/) and [Docker Compose](https://docs.docker.com/compose/install/)
+2. Run `$ docker-compose up --build`
+3. Go to `http://localhost:300/`
+
+### Without Docker
+
+#### Install depenencies
 1. Install postgres:
   * `$ sudo apt-get update`
   * `$ sudo apt-get install postgresql postgresql-contrib`
@@ -14,16 +23,15 @@
 4. Create database table:
   * `$ ./node_modules/.bin/sequelize db:migrate`
   
-## Start
-To start the server run:
+#### Start
+To start the application (server and client) run:
 
 * `npm start`
 
-To start the client app run:
-
-* `ng serve`
-
-## Test
+#### Test
 For running the test suit run:
 
 * `npm test`
+
+## Documentation
+ * [Api Specification](http://rebilly.github.io/ReDoc/?url=https://raw.githubusercontent.com/tallerify/tallerify-catalog/develop/docs/tallerify-catalog-api.yaml)
