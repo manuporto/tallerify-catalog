@@ -13,13 +13,22 @@ chai.use(chaiHttp);
 describe('User', () => {
 
   before(done => {
-    db.users.sync({force: true})
+    db.sequelize.sync({force: true})
       .then(() => {
         done();
       })
       .catch(error => {
         done(error);
       });
+  });
+
+  after(done => {
+    db.sequelize.drop()
+      .then(() => {
+        done();
+      }).catch(error => {
+        done(error);
+    })
   });
 
   describe('/GET users', () => {

@@ -1,11 +1,10 @@
-const winston = require('winston');
+var logger = require('../utils/logger');
 const amanda = require('amanda');
 var jsonSchemaValidator = amanda('json');
 var models = require('../models/index');
 const constants = require('./constants.json');
 
 getUsers = (req, res) => {
-  winston.log('info', `GET /api/users`);
   models.users.findAll({}).then(users => {
     res.status(200).json({
       metadata: {
@@ -15,15 +14,14 @@ getUsers = (req, res) => {
       users: users
     });
   }).catch(reason => {
-    winston.log('warn', `Unexpected error: ${reason}`);
-    res.status(500).json({code: 500, message: `Unexpected error: ${reason}`});
+    const message = `Unexpected error: ${reason}`;
+    logger.warn(message);
+    res.status(500).json({code: 500, message: message});
   });
 };
 
 getUser = (req, res) => {
-  winston.log('info', `GET /api/users/${req.params.id}`);
-
-  winston.log('info', `Searching for user ${req.params.id}`);
+  logger.info(`Searching for user ${req.params.id}`);
   models.users.find({
     where: {
       id: req.params.id
@@ -31,15 +29,16 @@ getUser = (req, res) => {
   }).then(user => {
 
     if (!user) {
-      winston.log('info', `No user with id ${req.params.id}`);
-      return res.status(404).json({code: 404, message: `No user with id ${req.params.id}`});
+      const message = `No user with id ${req.params.id}`;
+      logger.warn(message);
+      return res.status(404).json({code: 404, message: message});
     }
-
     res.status(200).json(user);
 
   }).catch(reason => {
-    winston.log('warn', `Unexpected error: ${reason}`);
-    res.status(500).json({code: 500, message: `Unexpected error: ${reason}`});
+    const message = `Unexpected error: ${reason}`;
+    logger.warn(message);
+    res.status(500).json({code: 500, message: message});
   });
 };
 
@@ -86,12 +85,10 @@ const userExpectedBodySchema = {
 };
 
 newUser = (req, res) => {
-  winston.log('info', `POST /api/users with body ${JSON.stringify(req.body, null, 4)}`);
-
-  winston.log('info', `Validating request body "${JSON.stringify(req.body, null, 4)}"`);
+  logger.info(`Validating request body "${JSON.stringify(req.body, null, 4)}"`);
   jsonSchemaValidator.validate(req.body, userExpectedBodySchema, error => {
     if (error) {
-      winston.log('warn', `Request body is invalid: ${error[0].message}`);
+      logger.warn(`Request body is invalid: ${error[0].message}`);
       return res.status(400).json({code: 400, message: `Invalid body: ${error[0].message}`});
     } else {
       models.users.create({
@@ -104,11 +101,11 @@ newUser = (req, res) => {
         birthdate: req.body.birthdate,
         images: req.body.images
       }).then(user => {
-        winston.log('info', `Response: ${res}`);
         res.status(201).json(user);
       }).catch(reason => {
-        winston.log('warn', `Unexpected error: ${reason}`);
-        res.status(500).json({code: 500, message: `Unexpected error: ${reason}`});
+        const message = `Unexpected error: ${reason}`;
+        logger.warn(message);
+        res.status(500).json({code: 500, message: message});
       });
     }
   });
@@ -116,16 +113,13 @@ newUser = (req, res) => {
 
 
 updateUser = (req, res) => {
-  winston.log('info', `PUT /api/users/${req.params.id} with body ${JSON.stringify(req.body, null, 4)}`);
-
-  winston.log('info', `Validating request body "${JSON.stringify(req.body, null, 4)}"`);
+  logger.info(`Validating request body "${JSON.stringify(req.body, null, 4)}"`);
   jsonSchemaValidator.validate(req.body, userExpectedBodySchema, error => {
     if (error) {
-      winston.log('warn', `Request body is invalid: ${error[0].message}`);
+      logger.warn(`Request body is invalid: ${error[0].message}`);
       return res.status(400).json({code: 400, message: `Invalid body: ${error[0].message}`});
     } else {
-
-      winston.log('info', `Searching for user ${req.params.id}`);
+      logger.info(`Searching for user ${req.params.id}`);
       models.users.find({
         where: {
           id: req.params.id
@@ -133,11 +127,10 @@ updateUser = (req, res) => {
       }).then(user => {
 
         if (!user) {
-          winston.log('info', `No user with id ${req.params.id}`);
+          logger.warn(`No user with id ${req.params.id}`);
           return res.status(404).json({code: 404, message: `No user with id ${req.params.id}`});
         }
-
-        winston.log('info', `Found, updating user ${req.params.id}`);
+        logger.info(`Found, updating user ${req.params.id}`);
 
         user.updateAttributes({
           userName: req.body.userName,
@@ -149,25 +142,24 @@ updateUser = (req, res) => {
           birthdate: req.body.birthdate,
           images: req.body.images
         }).then(user => {
-          winston.log('info', `Response: ${res}`);
           res.status(200).json(user);
         }).catch(reason => {
-          winston.log('warn', `Unexpected error: ${reason}`);
-          res.status(500).json({code: 500, message: `Unexpected error: ${reason}`});
+          const message = `Unexpected error: ${reason}`;
+          logger.warn(message);
+          res.status(500).json({code: 500, message: message});
         });
 
       }).catch(reason => {
-        winston.log('warn', `Unexpected error: ${reason}`);
-        res.status(500).json({code: 500, message: `Unexpected error: ${reason}`});
+        const message = `Unexpected error: ${reason}`;
+        logger.warn(message);
+        res.status(500).json({code: 500, message: message});
       });
     }
   });
 };
 
 deleteUser = (req, res) => {
-  winston.log('info', `DELETE /api/users/${req.params.id}`);
-
-  winston.log('info', `Searching for user ${req.params.id}`);
+  logger.info(`Searching for user ${req.params.id}`);
   models.users.find({
     where: {
       id: req.params.id
@@ -175,26 +167,28 @@ deleteUser = (req, res) => {
   }).then(user => {
 
     if (!user) {
-      winston.log('info', `No user with id ${req.params.id}`);
+      logger.warn(`No user with id ${req.params.id}`);
       return res.status(404).json({code: 404, message: `No user with id ${req.params.id}`});
     }
 
-    winston.log('info', `Found, deleting user ${req.params.id}`);
+    logger.info(`Found, deleting user ${req.params.id}`);
     models.users.destroy({
       where: {
         id: req.params.id
       }
     }).then(user => {
-      winston.log('info', `Successful user deletion`);
+      logger.info(`Successful user deletion`);
       res.sendStatus(204);
     }).catch(reason => {
-      winston.log('warn', `Unexpected error: ${reason}`);
-      res.status(500).json({code: 500, message: `Unexpected error: ${reason}`});
+      const message = `Unexpected error: ${reason}`;
+      logger.warn(message);
+      res.status(500).json({code: 500, message: message});
     });
 
   }).catch(reason => {
-    winston.log('warn', `Unexpected error: ${reason}`);
-    res.status(500).json({code: 500, message: `Unexpected error: ${reason}`});
+    const message = `Unexpected error: ${reason}`;
+    logger.warn(message);
+    res.status(500).json({code: 500, message: message});
   });
 };
 
