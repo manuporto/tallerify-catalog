@@ -176,6 +176,15 @@ describe('User', () => {
           done();
         });
     });
+
+    it('should return status code 404 if id does not match a user', done => {
+      request(app)
+        .get(`/api/users/${constants.invalidUserId}`)
+        .end((err,res) => {
+          res.should.have.status(404);
+          done();
+        });
+    });
   });
 
 });
