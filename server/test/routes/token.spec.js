@@ -1,6 +1,7 @@
 process.env.NODE_ENV = 'test';
 
 const app = require('../../app');
+const db = require('../../models');
 let request = require('supertest');
 let chai = require('chai');
 let chaiHttp = require('chai-http');
@@ -10,6 +11,28 @@ let expect = chai.expect;
 chai.use(chaiHttp);
 
 describe('Token', () => {
+
+  before(done => {
+    db.users.sync({force: true})
+      .then(() => {
+        db.users.create({
+          userName: 'abrden',
+            password: '1234',
+          firstName: 'Agustina',
+          lastName: 'Barbetta',
+          country: 'Argentina',
+          email: 'a@a.com',
+          birthdate: '12/8/1994',
+          images: [ 'hello', 'world']
+        });
+      })
+      .then(() => {
+        done();
+      })
+      .catch(error => {
+        done(error);
+      });
+  });
 
   describe('/POST tokens', () => {
     it('should return status code 400 when parameters are missing', done => {

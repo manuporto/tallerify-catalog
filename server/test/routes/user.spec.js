@@ -1,22 +1,5 @@
 process.env.NODE_ENV = 'test';
 
-// let user = require('../../routes/user');
-
-//Require the dev-dependencies
-// var assert = require('assert');
-// let chai = require('chai');
-// let chaiHttp = require('chai-http');
-// let app = require('../../app');
-// let should = chai.should();
-
-
-// chai.use(chaiHttp);
-
-// var supertest = require("supertest");
-// var should = require("should");
-//
-// var server = supertest.agent("http://localhost:3000");
-
 const app = require('../../app');
 const db = require('../../models');
 let request = require('supertest');
@@ -30,14 +13,14 @@ chai.use(chaiHttp);
 describe('User', () => {
 
   before(done => {
-    db.sequelize.sync({force: true})
+    db.users.sync({force: true})
       .then(() => {
         done();
       })
       .catch(error => {
         done(error);
       });
-  })
+  });
 
   describe('/GET users', () => {
     it('should return status code 200', done => {
