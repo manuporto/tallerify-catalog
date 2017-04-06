@@ -58,16 +58,16 @@ describe('User', () => {
       request(app)
         .post('/api/users')
         .send({
-          userName: 'postTest',
+          userName: 'abrden',
           password: '1234',
-          firstName: 'Post',
-          lastName: 'Test',
-          country: 'Mocha',
-          email: 'post@test.com',
-          birthdate: '1/1/1990',
-          images: ['']
+          firstName: 'Agustina',
+          lastName: 'Barbetta',
+          country: 'Argentina',
+          email: 'a@a.com',
+          birthdate: '12/8/1994',
+          images: [ 'hello', 'world']
         }).end((err, res) => {
-        expect(res.statusCode).to.equal(200);
+        res.should.have.status(201);
         done();
       });
     });
