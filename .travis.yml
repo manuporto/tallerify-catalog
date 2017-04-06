@@ -1,7 +1,7 @@
 language: node_js
 node:
 services:
-  - postgresql: "9.5"
+  - postgresql
 before_script:
   - psql -c 'create database tallerify_travis;' -U postgres
 env:
