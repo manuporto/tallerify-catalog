@@ -6,7 +6,6 @@ let request = require('supertest');
 let chai = require('chai');
 let chaiHttp = require('chai-http');
 let should = chai.should();
-let expect = chai.expect;
 
 chai.use(chaiHttp);
 
@@ -14,8 +13,8 @@ const constants = require('./constants.json');
 
 describe('User', () => {
 
-  before(done => {
-    db.users
+  beforeEach(done => {
+    db.sequelize
       .sync({force: true})
       .then(() => {
         db.users
@@ -32,8 +31,9 @@ describe('User', () => {
       });
   });
 
-  after(done => {
-    db.sequelize.drop()
+  afterEach(done => {
+    db.sequelize
+      .drop()
       .then(() => {
         done();
       }).catch(error => {
