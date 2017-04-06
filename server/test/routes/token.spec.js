@@ -19,16 +19,7 @@ describe('Token', () => {
       .sync({force: true})
       .then(() => {
         db.users
-          .create({
-            userName: constants.initialUser.userName,
-            password: constants.initialUser.password,
-            firstName: constants.initialUser.firstName,
-            lastName: constants.initialUser.lastName,
-            country: constants.initialUser.country,
-            email: constants.initialUser.email,
-            birthdate: constants.initialUser.birthdate,
-            images: constants.initialUser.images
-          })
+          .create(constants.initialUser)
           .then(user => {
             done();
           })
@@ -45,9 +36,8 @@ describe('Token', () => {
     it('should return status code 400 when parameters are missing', done => {
       request(app)
         .post('/api/tokens')
-        .send({
-          userName: constants.initialUser.userName
-        }).end((err, res) => {
+        .send(constants.tokenGenerationWithMissingAttributes)
+        .end((err, res) => {
          res.should.have.status(400);
          done();
       });
@@ -56,10 +46,8 @@ describe('Token', () => {
     it('should return status code 500 when credentials dont match', done => {
       request(app)
         .post('/api/tokens')
-        .send({
-          userName: constants.invalidCredentials.userName,
-          password: constants.invalidCredentials.password,
-        }).end((err, res) => {
+        .send(constants.invalidCredentials)
+        .end((err, res) => {
           res.should.have.status(500);
           done();
       });
@@ -68,10 +56,8 @@ describe('Token', () => {
     it('should return status code 201', done => {
       request(app)
         .post('/api/tokens')
-        .send({
-          userName: constants.initialUser.userName,
-          password: constants.initialUser.password,
-        }).end((err, res) => {
+        .send(constants.tokenGeneration)
+        .end((err, res) => {
           res.should.have.status(201);
           done();
       });
@@ -80,10 +66,8 @@ describe('Token', () => {
     it('should return the expected body response when correct credentials are sent', done => {
       request(app)
         .post('/api/tokens')
-        .send({
-          userName: constants.initialUser.userName,
-          password: constants.initialUser.password,
-        }).end((err, res) => {
+        .send(constants.tokenGeneration)
+        .end((err, res) => {
           res.body.should.be.a('object');
           res.body.should.have.property('token');
           res.body.token.should.be.a('string');
