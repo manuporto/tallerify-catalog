@@ -38,7 +38,7 @@ getUser = (req, res) => {
     res.status(200).json(user);
 
   }).catch(reason => {
-    winston.log('warn', `Unexpected error: ${reason}`);
+    // winston.log('warn', `Unexpected error: ${reason}`);
     res.status(500).json({code: 500, message: `Unexpected error: ${reason}`});
   });
 };
@@ -104,10 +104,10 @@ newUser = (req, res) => {
         birthdate: req.body.birthdate,
         images: req.body.images
       }).then(user => {
-        winston.log('info', `Response: ${res}`);
+        // winston.log('info', `Response: ${res}`);
         res.status(201).json(user);
       }).catch(reason => {
-        winston.log('warn', `Unexpected error: ${reason}`);
+        // winston.log('warn', `Unexpected error: ${reason}`);
         res.status(500).json({code: 500, message: `Unexpected error: ${reason}`});
       });
     }
@@ -137,7 +137,7 @@ updateUser = (req, res) => {
           return res.status(404).json({code: 404, message: `No user with id ${req.params.id}`});
         }
 
-        winston.log('info', `Found, updating user ${req.params.id}`);
+        // winston.log('info', `Found, updating user ${req.params.id}`);
 
         user.updateAttributes({
           userName: req.body.userName,
