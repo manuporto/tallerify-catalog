@@ -1,7 +1,11 @@
 language: node_js
 node:
+services:
+  - postgresql: "9.5"
+before_script:
+  - psql -c 'create database tallerify_travis;' -U postgres
 env:
-  - DATABASE_URL=postgres://travis:travis@localhost:5432/tallerify_travis
+  - DATABASE_URL=postgres://postgres@localhost:5432/tallerify_travis
 after_success:
   - npm run coverage
   - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
