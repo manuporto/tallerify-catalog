@@ -13,7 +13,7 @@ chai.use(chaiHttp);
 describe('User', () => {
 
   before(done => {
-    db.users.sync({force: true})
+    db.sequelize.sync({force: true})
       .then(() => {
         done();
       })
@@ -23,7 +23,7 @@ describe('User', () => {
   });
 
   after(done => {
-    db.users.drop()
+    db.sequelize.drop()
       .then(() => {
         done();
       }).catch(error => {

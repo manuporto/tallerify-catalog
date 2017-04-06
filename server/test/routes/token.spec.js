@@ -13,7 +13,7 @@ chai.use(chaiHttp);
 describe('Token', () => {
 
   before(done => {
-    db.users.sync({force: true})
+    db.sequelize.sync({force: true})
       .then(() => {
         db.users.create({
           userName: 'abrden',
@@ -35,7 +35,7 @@ describe('Token', () => {
   });
 
   after(done => {
-    db.users.drop()
+    db.sequelize.drop()
       .then(() => {
         done();
       }).catch(error => {

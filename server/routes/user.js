@@ -101,7 +101,6 @@ newUser = (req, res) => {
         birthdate: req.body.birthdate,
         images: req.body.images
       }).then(user => {
-        logger.info(`Response: ${res}`);
         res.status(201).json(user);
       }).catch(reason => {
         const message = `Unexpected error: ${reason}`;
@@ -143,7 +142,6 @@ updateUser = (req, res) => {
           birthdate: req.body.birthdate,
           images: req.body.images
         }).then(user => {
-          logger.info(`Response: ${res}`);
           res.status(200).json(user);
         }).catch(reason => {
           const message = `Unexpected error: ${reason}`;
