@@ -17,15 +17,14 @@
 //
 // var server = supertest.agent("http://localhost:3000");
 
-var app = require('../../app');
-var request = require('supertest');
-var chai = require('chai');
+const app = require('../../app');
+let request = require('supertest');
+let chai = require('chai');
 let chaiHttp = require('chai-http');
 let should = chai.should();
-var expect = chai.expect;
+let expect = chai.expect;
 
 chai.use(chaiHttp);
-
 
 describe('User', () => {
 
@@ -37,6 +36,20 @@ describe('User', () => {
         res.should.have.status(200);
         done();
       });
+    });
+
+    it('should return the expected body response when correct parameters are sent', done => {
+      request(app)
+        .get("/api/users")
+        .end((err,res) => {
+          res.body.should.be.a('object');
+          res.body.should.have.property('metadata');
+          res.body.metadata.should.have.property('version');
+          res.body.metadata.should.have.property('count');
+          res.body.should.have.property('users');
+          res.body.users.should.be.a('array');
+          done();
+        });
     });
   });
 
