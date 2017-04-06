@@ -26,6 +26,16 @@
       "lulu"
     ]
   },
+  "invalidUser": {
+    "userName": "conto",
+    "password": "1111",
+    "firstName": "Conto",
+    "lastName": "Circense",
+    "country": "Croacia",
+    "email": "conto@circo.com",
+    "birthdate": 3,
+    "images": "muchas"
+  },
   "invalidCredentials": {
     "userName": "tano_villano",
     "password": "botox8"
