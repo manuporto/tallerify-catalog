@@ -1,5 +1,6 @@
 {
   "initialUser": {
+      "id": 1,
       "userName": "abrden",
       "password": "1234",
       "firstName": "Agustina",

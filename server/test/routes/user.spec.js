@@ -146,5 +146,36 @@ describe('User', () => {
     });
   });
 
+  describe('/GET users/{id}', () => {
+    it('should return status code 200', done => {
+      request(app)
+        .get(`/api/users/${constants.initialUser.id}`)
+        .end((err,res) => {
+          res.should.have.status(200);
+          done();
+        });
+    });
+
+    it('should return user data', done => {
+      request(app)
+        .get(`/api/users/${constants.initialUser.id}`)
+        .end((err,res) => {
+          res.body.should.be.a('object');
+          res.body.should.be.a('object');
+          res.body.should.have.property('id').eql(constants.initialUser.id);
+          res.body.should.have.property('userName').eql(constants.initialUser.userName);
+          res.body.should.have.property('password').eql(constants.initialUser.password);
+          res.body.should.have.property('firstName').eql(constants.initialUser.firstName);
+          res.body.should.have.property('lastName').eql(constants.initialUser.lastName);
+          res.body.should.have.property('country').eql(constants.initialUser.country);
+          res.body.should.have.property('email').eql(constants.initialUser.email);
+          res.body.should.have.property('birthdate').eql(constants.initialUser.birthdate);
+          res.body.should.have.property('images').eql(constants.initialUser.images);
+          res.body.should.have.property('contacts');
+          res.body.should.have.property('href');
+          done();
+        });
+    });
+  });
 
 });
