@@ -73,28 +73,30 @@ describe('User', () => {
     });
 
     it('should return the expected body response when correct parameters are sent', done => {
-      const expected ={
-        id: 0,
-        userName: 'postTest',
-        password: '1234',
-        firstName: 'Post',
-        lastName: 'Test',
-        country: 'Mocha',
-        email: 'post@test.com',
-        birthdate: '1/1/1990',
-        images: ['']
-      };
+      const expected = {
+          userName: 'abrden',
+          password: '1234',
+          firstName: 'Agustina',
+          lastName: 'Barbetta',
+          country: 'Argentina',
+          email: 'a@a.com',
+          birthdate: '12/8/1994',
+          images: [ 'hello', 'world'],
+          contacts: [],
+          href: null,
+          id: 1
+        };
       request(app)
         .post('/api/users')
         .send({
-          userName: 'postTest',
+          userName: 'abrden',
           password: '1234',
-          firstName: 'Post',
-          lastName: 'Test',
-          country: 'Mocha',
-          email: 'post@test.com',
-          birthdate: '1/1/1990',
-          images: ['']
+          firstName: 'Agustina',
+          lastName: 'Barbetta',
+          country: 'Argentina',
+          email: 'a@a.com',
+          birthdate: '12/8/1994',
+          images: [ 'hello', 'world']
         }).end((err, res) => {
         expect(res.body).to.equal(expected);
         done();
