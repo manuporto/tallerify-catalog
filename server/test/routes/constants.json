@@ -1,0 +1,29 @@
+{
+  "initialUser": {
+      "userName": "abrden",
+      "password": "1234",
+      "firstName": "Agustina",
+      "lastName": "Barbetta",
+      "country": "Argentina",
+      "email": "agustina.barbetta@gmail.com",
+      "birthdate": "120894",
+      "images": [
+        "lala",
+        "lolo",
+        "lili"
+      ]
+  },
+  "testUser": {
+    "userName": "mporto",
+    "password": "1234",
+    "firstName": "Manuel",
+    "lastName": "Porto",
+    "country": "Argentina",
+    "email": "manuel.porto94@gmail.com",
+    "birthdate": "240994",
+    "images": [
+      "lele",
+      "lulu"
+    ]
+  }
+}
