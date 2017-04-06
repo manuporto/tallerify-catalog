@@ -1,8 +1,8 @@
-const winston = require('winston');
+var logger = require('../utils/logger');
 const models = require('../models/index');
 
 postAlbum = (req, res) => {
-  winston.log('info', `Post /albums with query ${JSON.stringify(req.body, null, 4)}`);
+  logger.info(`Post /albums with query ${JSON.stringify(req.body, null, 4)}`);
 
   models.albums.create({
     name: req.body.name,
@@ -10,14 +10,14 @@ postAlbum = (req, res) => {
     genres: req.body.genres,
     images: req.body.images
   }).then(album => {
-    winston.log('info', `Finding artist: ${req.body.artists[0]}`);
+    logger.debug(`[Post /albums]Finding artist: ${req.body.artists[0]}`);
     models.artists.findAll(
       {
         where: {
           name: req.body.artists[0]
         }
       }).then(selectedArtist => {
-      winston.log('info', `Artist id: ${selectedArtist}`);
+      logger.debug(`[Post /albums] Found artist id: ${selectedArtist}`);
       res.status(200).json(selectedArtist)});
     // It hangs here
     // Promise.all(req.body.artists.map(artist => {

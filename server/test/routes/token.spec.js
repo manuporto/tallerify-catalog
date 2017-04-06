@@ -17,7 +17,7 @@ describe('Token', () => {
       .then(() => {
         db.users.create({
           userName: 'abrden',
-            password: '1234',
+          password: '1234',
           firstName: 'Agustina',
           lastName: 'Barbetta',
           country: 'Argentina',
@@ -32,6 +32,15 @@ describe('Token', () => {
       .catch(error => {
         done(error);
       });
+  });
+
+  after(done => {
+    db.users.drop()
+      .then(() => {
+        done();
+      }).catch(error => {
+      done(error);
+    })
   });
 
   describe('/POST tokens', () => {

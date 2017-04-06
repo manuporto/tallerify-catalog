@@ -10,6 +10,7 @@ var config    = require(__dirname + '/../config.json')[env];
 var db        = {};
 
 logger.info('Connecting to database');
+config.logging = logger.debug;
 if (config.use_env_variable) {
   var sequelize = new Sequelize(process.env[config.use_env_variable], config);
 } else {

@@ -22,6 +22,15 @@ describe('User', () => {
       });
   });
 
+  after(done => {
+    db.users.drop()
+      .then(() => {
+        done();
+      }).catch(error => {
+        done(error);
+    })
+  });
+
   describe('/GET users', () => {
     it('should return status code 200', done => {
       request(app)
