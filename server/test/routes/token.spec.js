@@ -10,24 +10,31 @@ let expect = chai.expect;
 
 chai.use(chaiHttp);
 
+const constants = require('./constants.json');
+
 describe('Token', () => {
 
   before(done => {
-    db.users.sync({force: true})
+    db.users
+      .sync({force: true})
       .then(() => {
-        db.users.create({
-          userName: 'abrden',
-            password: '1234',
-          firstName: 'Agustina',
-          lastName: 'Barbetta',
-          country: 'Argentina',
-          email: 'a@a.com',
-          birthdate: '12/8/1994',
-          images: [ 'hello', 'world']
-        });
-      })
-      .then(() => {
-        done();
+        db.users
+          .create({
+            userName: constants.initialUser.userName,
+            password: constants.initialUser.password,
+            firstName: constants.initialUser.firstName,
+            lastName: constants.initialUser.lastName,
+            country: constants.initialUser.country,
+            email: constants.initialUser.email,
+            birthdate: constants.initialUser.birthdate,
+            images: constants.initialUser.images
+          })
+          .then(user => {
+            done();
+          })
+          .catch(error => {
+            done(error);
+          })
       })
       .catch(error => {
         done(error);

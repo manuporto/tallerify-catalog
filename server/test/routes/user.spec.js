@@ -10,12 +10,31 @@ let expect = chai.expect;
 
 chai.use(chaiHttp);
 
+const constants = require('./constants.json');
+
 describe('User', () => {
 
   before(done => {
-    db.users.sync({force: true})
+    db.users
+      .sync({force: true})
       .then(() => {
-        done();
+        db.users
+          .create({
+            userName: constants.initialUser.userName,
+            password: constants.initialUser.password,
+            firstName: constants.initialUser.firstName,
+            lastName: constants.initialUser.lastName,
+            country: constants.initialUser.country,
+            email: constants.initialUser.email,
+            birthdate: constants.initialUser.birthdate,
+            images: constants.initialUser.images
+          })
+          .then(user => {
+            done();
+          })
+          .catch(error => {
+            done(error);
+          })
       })
       .catch(error => {
         done(error);
