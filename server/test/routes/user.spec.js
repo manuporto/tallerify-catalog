@@ -49,12 +49,12 @@ describe('User', () => {
           firstName: 'John',
           lastName: 'Doe'
         }).end((err, res) => {
-        res.should.have.status(400);
-        done();
+          res.should.have.status(400);
+          done();
       });
     });
 
-    it('should return status code 200 when correct parameters are sent', done => {
+    it('should return status code 201 when correct parameters are sent', done => {
       request(app)
         .post('/api/users')
         .send({
@@ -67,38 +67,40 @@ describe('User', () => {
           birthdate: '12/8/1994',
           images: [ 'hello', 'world']
         }).end((err, res) => {
-        res.should.have.status(201);
-        done();
+          res.should.have.status(201);
+          done();
       });
     });
 
     it('should return the expected body response when correct parameters are sent', done => {
-      const expected ={
-        id: 0,
-        userName: 'postTest',
-        password: '1234',
-        firstName: 'Post',
-        lastName: 'Test',
-        country: 'Mocha',
-        email: 'post@test.com',
-        birthdate: '1/1/1990',
-        images: ['']
-      };
       request(app)
         .post('/api/users')
         .send({
-          userName: 'postTest',
+          userName: 'abrden',
           password: '1234',
-          firstName: 'Post',
-          lastName: 'Test',
-          country: 'Mocha',
-          email: 'post@test.com',
-          birthdate: '1/1/1990',
-          images: ['']
+          firstName: 'Agustina',
+          lastName: 'Barbetta',
+          country: 'Argentina',
+          email: 'a@a.com',
+          birthdate: '12/8/1994',
+          images: [ 'hello', 'world']
         }).end((err, res) => {
-        expect(res.body).to.equal(expected);
-        done();
+          res.body.should.be.a('object');
+          res.body.should.have.property('id');
+          res.body.should.have.property('userName').eql('abrden');
+          res.body.should.have.property('password').eql('1234');
+          res.body.should.have.property('firstName').eql('Agustina');
+          res.body.should.have.property('lastName').eql('Barbetta');
+          res.body.should.have.property('country').eql('Argentina');
+          res.body.should.have.property('email').eql('a@a.com');
+          res.body.should.have.property('birthdate').eql('12/8/1994');
+          res.body.should.have.property('images').eql([ 'hello', 'world']);
+          res.body.should.have.property('contacts');
+          res.body.should.have.property('href');
+          done();
       });
     });
   });
-})
+
+
+});
