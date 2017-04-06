@@ -6,7 +6,7 @@ import 'rxjs/add/operator/toPromise';
 @Injectable()
 export class UserService {
 
-  private usersUrl = '/users';
+  private usersUrl = '/api/users';
 
   constructor(private http: Http) { }
 
@@ -17,8 +17,15 @@ export class UserService {
       .then(response => response.json() as User[])
       .catch(this.handleError);
   }
+  // post("/api/users")
+  createUser(newContact: User): Promise<User> {
+    return this.http.post(this.usersUrl, newContact)
+      .toPromise()
+      .then(response => response.json() as User)
+      .catch(this.handleError);
+  }
 
-  // get("/api/users/:id") endpoint not used b  y Angular app
+  // get("/api/users/:id") endpoint not used by Angular app
 
   // delete("/api/users/:id")
   deleteUser(delUserId: String): Promise<String> {
@@ -30,7 +37,7 @@ export class UserService {
 
   // put("/api/users/:id")
   updateUser(putUser: User): Promise<User> {
-    var putUrl = this.usersUrl + '/' + putUser._id;
+    var putUrl = this.usersUrl + '/' + putUser.id;
     return this.http.put(putUrl, putUser)
       .toPromise()
       .then(response => response.json() as User)

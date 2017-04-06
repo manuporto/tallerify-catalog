@@ -9,8 +9,7 @@ var track = require('./track');
 var album = require('./album');
 
 router.get('/', (req, res, next) => {
-  // logger.info('Get /');
-  res.render('index', { title: 'Express' });
+  res.render('index');
 });
 
 /* Users */

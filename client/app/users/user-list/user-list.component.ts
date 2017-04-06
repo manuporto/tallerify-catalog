@@ -29,7 +29,7 @@ export class UserListComponent implements OnInit {
 
   private getIndexOfUser = (userId: String) => {
     return this.users.findIndex((user) => {
-      return user._id === userId;
+      return user.id === userId;
     });
   }
 
@@ -37,7 +37,7 @@ export class UserListComponent implements OnInit {
     this.selectedUser = user
   }
 
-  createNewUser() {
+  createNewUser = () => {
     var user: User = {
       userName: '',
       firstName: '',
@@ -47,8 +47,6 @@ export class UserListComponent implements OnInit {
       birthdate: '',
       images: ['']
     }
-    };
-
     // By default, a newly-created user will have the selected state.
     this.selectUser(user);
   }
@@ -69,7 +67,7 @@ export class UserListComponent implements OnInit {
   }
 
   updateUser = (user: User) => {
-    var idx = this.getIndexOfUser(user._id);
+    var idx = this.getIndexOfUser(user.id);
     if (idx !== -1) {
       this.users[idx] = user;
       this.selectUser(user);

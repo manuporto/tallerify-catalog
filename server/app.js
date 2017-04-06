@@ -10,7 +10,6 @@ var favicon = require('serve-favicon');
 var logger = require('./utils/logger');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var swig = require('swig');
 
 
 // *** routes *** //
@@ -22,21 +21,19 @@ var app = express();
 
 
 // *** view engine *** //
-var swig = new swig.Swig();
-app.engine('html', swig.renderFile);
+app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 
 
 // *** static directory *** //
-app.set('views', path.join(__dirname, 'views'));
-
+app.set('views', path.join(__dirname, '../dist'));
+app.use(express.static(path.join(__dirname, '../dist')));
 
 // *** config middleware *** //
 app.use(require('morgan')('combined', { 'stream': logger.stream }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, '../dist')));
 
 
 // *** main routes *** //
@@ -58,7 +55,7 @@ app.use(function(req, res, next) {
 if (app.get('env') === 'development' || app.get('env') === 'test') {
   app.use(function(err, req, res, next) {
     res.status(err.status || 500);
-    res.render('error', {
+    res.render('index', {
       message: err.message,
       error: err
     });
@@ -69,7 +66,7 @@ if (app.get('env') === 'development' || app.get('env') === 'test') {
 // no stacktraces leaked to user
 app.use(function(err, req, res, next) {
   res.status(err.status || 500);
-  res.render('error', {
+  res.render('index', {
     message: err.message,
     error: {}
   });
