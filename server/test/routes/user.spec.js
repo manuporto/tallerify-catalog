@@ -98,7 +98,7 @@ describe('User', () => {
           birthdate: '12/8/1994',
           images: [ 'hello', 'world']
         }).end((err, res) => {
-        expect(res.body).to.equal(expected);
+        expect(res.body.keys).to.equal(expected.keys);
         done();
       });
     });
