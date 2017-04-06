@@ -6,16 +6,11 @@ WORKDIR /usr/src/app
 
 # Install app dependencies
 COPY package.json /usr/src/app/
-RUN npm install --production
+RUN npm install --silent
 
-# Copy files
-COPY dist /usr/src/app
+# Bundle app source
+COPY . /usr/src/app
 
-# Set the running environment as production
-ENV NODE_ENV production
+EXPOSE 3000
 
-# Expose on specified network port
-EXPOSE 8080
-
-# Executing defaults
 CMD [ "npm", "start" ]

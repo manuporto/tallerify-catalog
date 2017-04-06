@@ -1,2 +1,14 @@
 language: node_js
 node:
+services:
+  - postgresql
+before_script:
+  - psql -c 'create database tallerify_travis;' -U postgres
+env:
+  - TEST_DATABASE_URL=postgres://postgres@localhost:5432/tallerify_travis
+after_success:
+  - npm run coverage
+  - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
+notifications:
+  email: false
+  slack: tallerify:3BddOwjmsqmpRjYFXvbRZu1r
