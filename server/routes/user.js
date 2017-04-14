@@ -48,7 +48,8 @@ const userExpectedBodySchema = {
 };
 
 const getUsers = (req, res) => {
-  return models.users.findAll({}).then((users) => {
+  logger.debug('Getting all users.');
+  return models.users.findAll({}).then((users) => { // eslint-disable-line arrow-body-style
     return res.status(200).json({
       metadata: {
         count: users.length,
@@ -99,9 +100,8 @@ const newUser = (req, res) => {
       email: req.body.email,
       birthdate: req.body.birthdate,
       images: req.body.images,
-    }).then((user) => {
-      return res.status(201).json(user);
-    }).catch((reason) => {
+    }).then(user => res.status(201).json(user))
+    .catch((reason) => {
       const message = `Unexpected error: ${reason}`;
       logger.warn(message);
       return res.status(500).json({ code: 500, message });
@@ -129,7 +129,7 @@ const updateUser = (req, res) => {
       }
       logger.info(`Found, updating user ${req.params.id}`);
 
-      user.updateAttributes({
+      return user.updateAttributes({
         userName: req.body.userName,
         password: req.body.password,
         firstName: req.body.firstName,
@@ -138,7 +138,7 @@ const updateUser = (req, res) => {
         email: req.body.email,
         birthdate: req.body.birthdate,
         images: req.body.images,
-      }).then((user) => {
+      }).then((user) => { // eslint-disable-line no-shadow
         res.status(200).json(user);
       }).catch((reason) => {
         const message = `Unexpected error: ${reason}`;

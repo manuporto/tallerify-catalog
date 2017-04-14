@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     timestamps: false,
   }, {
     classMethods: {
-      associate(db) {},
+      associate() {},
     },
   });
   return Track;

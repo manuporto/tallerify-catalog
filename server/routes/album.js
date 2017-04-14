@@ -9,7 +9,7 @@ const postAlbum = (req, res) => {
     release_date: req.body.release_tdate,
     genres: req.body.genres,
     images: req.body.images,
-  }).then((album) => {
+  }).then(() => {
     logger.debug(`[Post /albums]Finding artist: ${req.body.artists[0]}`);
     models.artists.findAll(
       {
