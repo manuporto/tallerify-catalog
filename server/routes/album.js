@@ -1,24 +1,25 @@
-var logger = require('../utils/logger');
+const logger = require('../utils/logger');
 const models = require('../models/index');
 
-postAlbum = (req, res) => {
+const postAlbum = (req, res) => {
   logger.info(`Post /albums with query ${JSON.stringify(req.body, null, 4)}`);
 
   models.albums.create({
     name: req.body.name,
     release_date: req.body.release_tdate,
     genres: req.body.genres,
-    images: req.body.images
-  }).then(album => {
+    images: req.body.images,
+  }).then(() => {
     logger.debug(`[Post /albums]Finding artist: ${req.body.artists[0]}`);
     models.artists.findAll(
       {
         where: {
-          name: req.body.artists[0]
-        }
-      }).then(selectedArtist => {
-      logger.debug(`[Post /albums] Found artist id: ${selectedArtist}`);
-      res.status(200).json(selectedArtist)});
+          name: req.body.artists[0],
+        },
+      }).then((selectedArtist) => {
+        logger.debug(`[Post /albums] Found artist id: ${selectedArtist}`);
+        res.status(200).json(selectedArtist);
+      });
     // It hangs here
     // Promise.all(req.body.artists.map(artist => {
     //   winston.log('debug', `Finding artist: ${artist}`);
@@ -42,7 +43,6 @@ postAlbum = (req, res) => {
     //   winston.log('info', `New album created: ${album}`);
     //   res.status(200).json(result);
     // });
-
   });
 };
 

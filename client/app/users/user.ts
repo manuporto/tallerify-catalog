@@ -6,5 +6,5 @@ export class User {
   country: string;
   email: string;
   birthdate: string;
-  images: Array<string>
-}
+  images: Array<string>;
+};

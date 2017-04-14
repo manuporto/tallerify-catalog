@@ -2,59 +2,58 @@ process.env.NODE_ENV = 'test';
 
 const app = require('../../app');
 const db = require('../../models');
-let request = require('supertest');
-let chai = require('chai');
-let chaiHttp = require('chai-http');
-let should = chai.should();
+const request = require('supertest');
+const chai = require('chai');
+const chaiHttp = require('chai-http');
 
+chai.should();
 chai.use(chaiHttp);
 
 const constants = require('./constants.json');
 
 describe('User', () => {
-
-  beforeEach(done => {
+  beforeEach((done) => {
     db.sequelize
-      .sync({force: true})
+      .sync({ force: true })
       .then(() => {
         db.users
           .create(constants.initialUser)
-          .then(user => {
+          .then(() => {
             done();
           })
-          .catch(error => {
+          .catch((error) => {
             done(error);
-          })
+          });
       })
-      .catch(error => {
+      .catch((error) => {
         done(error);
       });
   });
 
-  afterEach(done => {
+  afterEach((done) => {
     db.sequelize
       .drop()
       .then(() => {
         done();
-      }).catch(error => {
+      }).catch((error) => {
         done(error);
-    })
+      });
   });
 
   describe('/GET users', () => {
-    it('should return status code 200', done => {
+    it('should return status code 200', (done) => {
       request(app)
-      .get("/api/users")
-      .end((err,res) => {
+      .get('/api/users')
+      .end((err, res) => {
         res.should.have.status(200);
         done();
       });
     });
 
-    it('should return the expected body response when correct parameters are sent', done => {
+    it('should return the expected body response when correct parameters are sent', (done) => {
       request(app)
-        .get("/api/users")
-        .end((err,res) => {
+        .get('/api/users')
+        .end((err, res) => {
           res.body.should.be.a('object');
           res.body.should.have.property('metadata');
           res.body.metadata.should.have.property('version');
@@ -67,37 +66,37 @@ describe('User', () => {
   });
 
   describe('/POST users', () => {
-    it('should return status code 400 when parameters are missing', done => {
+    it('should return status code 400 when parameters are missing', (done) => {
       request(app)
         .post('/api/users')
         .send(constants.newUserWithMissingAttributes)
         .end((err, res) => {
           res.should.have.status(400);
           done();
-      });
+        });
     });
 
-    it('should return status code 400 when parameters are invalid', done => {
+    it('should return status code 400 when parameters are invalid', (done) => {
       request(app)
         .post('/api/users')
         .send(constants.invalidUser)
         .end((err, res) => {
-        res.should.have.status(400);
-        done();
-      });
+          res.should.have.status(400);
+          done();
+        });
     });
 
-    it('should return status code 201 when correct parameters are sent', done => {
+    it('should return status code 201 when correct parameters are sent', (done) => {
       request(app)
         .post('/api/users')
         .send(constants.testUser)
         .end((err, res) => {
           res.should.have.status(201);
           done();
-      });
+        });
     });
 
-    it('should return the expected body response when correct parameters are sent', done => {
+    it('should return the expected body response when correct parameters are sent', (done) => {
       request(app)
         .post('/api/users')
         .send(constants.testUser)
@@ -115,24 +114,24 @@ describe('User', () => {
           res.body.should.have.property('contacts');
           res.body.should.have.property('href');
           done();
-      });
+        });
     });
   });
 
   describe('/GET users/{id}', () => {
-    it('should return status code 200', done => {
+    it('should return status code 200', (done) => {
       request(app)
         .get(`/api/users/${constants.validUserId}`)
-        .end((err,res) => {
+        .end((err, res) => {
           res.should.have.status(200);
           done();
         });
     });
 
-    it('should return user data', done => {
+    it('should return user data', (done) => {
       request(app)
         .get(`/api/users/${constants.validUserId}`)
-        .end((err,res) => {
+        .end((err, res) => {
           res.body.should.be.a('object');
           res.body.should.be.a('object');
           res.body.should.have.property('id').eql(constants.validUserId);
@@ -150,10 +149,10 @@ describe('User', () => {
         });
     });
 
-    it('should return status code 404 if id does not match a user', done => {
+    it('should return status code 404 if id does not match a user', (done) => {
       request(app)
         .get(`/api/users/${constants.invalidUserId}`)
-        .end((err,res) => {
+        .end((err, res) => {
           res.should.have.status(404);
           done();
         });
@@ -161,17 +160,17 @@ describe('User', () => {
   });
 
   describe('/PUT users/{id}', () => {
-    it('should return status code 201 when correct parameters are sent', done => {
+    it('should return status code 201 when correct parameters are sent', (done) => {
       request(app)
         .put(`/api/users/${constants.validUserId}`)
         .send(constants.updatedUser)
         .end((err, res) => {
           res.should.have.status(200);
           done();
-      });
+        });
     });
 
-    it('should return the expected body response when correct parameters are sent', done => {
+    it('should return the expected body response when correct parameters are sent', (done) => {
       request(app)
         .put(`/api/users/${constants.validUserId}`)
         .send(constants.updatedUser)
@@ -190,34 +189,34 @@ describe('User', () => {
           res.body.should.have.property('contacts');
           res.body.should.have.property('href');
           done();
-      });
+        });
     });
 
-    it('should return status code 400 when parameters are missing', done => {
+    it('should return status code 400 when parameters are missing', (done) => {
       request(app)
         .put(`/api/users/${constants.validUserId}`)
         .send(constants.updatedUserWithMissingAttributes)
         .end((err, res) => {
-        res.should.have.status(400);
-        done();
-      });
+          res.should.have.status(400);
+          done();
+        });
     });
 
-    it('should return status code 400 when parameters are invalid', done => {
+    it('should return status code 400 when parameters are invalid', (done) => {
       request(app)
         .put(`/api/users/${constants.validUserId}`)
         .send(constants.invalidUser)
         .end((err, res) => {
-        res.should.have.status(400);
-        done();
-      });
+          res.should.have.status(400);
+          done();
+        });
     });
 
-    it('should return status code 404 if id does not match a user', done => {
+    it('should return status code 404 if id does not match a user', (done) => {
       request(app)
         .put(`/api/users/${constants.invalidUserId}`)
         .send(constants.updatedUser)
-        .end((err,res) => {
+        .end((err, res) => {
           res.should.have.status(404);
           done();
         });
@@ -225,24 +224,22 @@ describe('User', () => {
   });
 
   describe('/DELETE users/{id}', () => {
-
-    it('should return status code 204 when deletion is successful', done => {
+    it('should return status code 204 when deletion is successful', (done) => {
       request(app)
         .delete(`/api/users/${constants.validUserId}`)
         .end((err, res) => {
-        res.should.have.status(204);
-        done();
-      });
+          res.should.have.status(204);
+          done();
+        });
     });
 
-    it('should return status code 404 if id does not match a user', done => {
+    it('should return status code 404 if id does not match a user', (done) => {
       request(app)
         .delete(`/api/users/${constants.invalidUserId}`)
-        .end((err,res) => {
+        .end((err, res) => {
           res.should.have.status(404);
           done();
         });
     });
   });
-
 });
