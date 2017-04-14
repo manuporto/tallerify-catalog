@@ -8,6 +8,7 @@ const express = require('express');
 const path = require('path');
 const logger = require('./utils/logger');
 const cookieParser = require('cookie-parser');
+const cors = require('cors');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const ejs = require('ejs');
@@ -32,6 +33,7 @@ app.use(express.static(path.join(__dirname, '../dist')));
 
 // *** config middleware *** //
 app.use(morgan('combined', { stream: logger.stream }));
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
