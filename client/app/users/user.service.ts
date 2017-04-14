@@ -37,7 +37,7 @@ export class UserService {
 
   // put("/api/users/:id")
   updateUser(putUser: User): Promise<User> {
-    var putUrl = this.usersUrl + '/' + putUser.id;
+    const putUrl = this.usersUrl + '/' + putUser.id;
     return this.http.put(putUrl, putUser)
       .toPromise()
       .then(response => response.json() as User)
@@ -45,7 +45,7 @@ export class UserService {
   }
 
   private handleError (error: any) {
-    let errMsg = (error.message) ? error.message :
+    const errMsg = (error.message) ? error.message :
       error.status ? `${error.status} - ${error.statusText}` : 'Server error';
     console.error(errMsg); // log to console instead
   }

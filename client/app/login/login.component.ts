@@ -3,7 +3,7 @@ import { Login } from './login';
 import { LoginService } from './login.service';
 
 @Component({
-  selector: 'admin-login',
+  selector: 'app-admin-login',
   templateUrl: 'login.component.html',
   styleUrls: ['login.component.css'],
   providers: [LoginService]
@@ -19,7 +19,7 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
     return;
   }
-  
+
   constructor (private loginService: LoginService) {}
 
   doLogin(login: Login) {

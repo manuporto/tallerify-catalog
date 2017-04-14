@@ -4,7 +4,7 @@ import { UserService } from '../user.service';
 import { UserDetailsComponent } from '../user-details/user-details.component';
 
 @Component({
-  selector: 'user-list',
+  selector: 'app-user-list',
   templateUrl: 'user-list.component.html',
   styleUrls: ['./user-list.component.css'],
   providers: [UserService]
@@ -12,8 +12,8 @@ import { UserDetailsComponent } from '../user-details/user-details.component';
 
 export class UserListComponent implements OnInit {
 
-  users: User[]
-  selectedUser: User
+  users: User[];
+  selectedUser: User;
 
   constructor(private userService: UserService) { }
 
@@ -34,11 +34,11 @@ export class UserListComponent implements OnInit {
   }
 
   selectUser(user: User) {
-    this.selectedUser = user
+    this.selectedUser = user;
   }
 
   createNewUser = () => {
-    var user: User = {
+    const user: User = {
       userName: '',
       firstName: '',
       lastName: '',
@@ -46,13 +46,13 @@ export class UserListComponent implements OnInit {
       email: '',
       birthdate: '',
       images: ['']
-    }
+    };
     // By default, a newly-created user will have the selected state.
     this.selectUser(user);
   }
 
   deleteUser = (userId: String) => {
-    var idx = this.getIndexOfUser(userId);
+    const idx = this.getIndexOfUser(userId);
     if (idx !== -1) {
       this.users.splice(idx, 1);
       this.selectUser(null);
@@ -67,7 +67,7 @@ export class UserListComponent implements OnInit {
   }
 
   updateUser = (user: User) => {
-    var idx = this.getIndexOfUser(user.id);
+    const idx = this.getIndexOfUser(user.id);
     if (idx !== -1) {
       this.users[idx] = user;
       this.selectUser(user);
