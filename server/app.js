@@ -9,6 +9,7 @@ var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('./utils/logger');
 var cookieParser = require('cookie-parser');
+var cors = require('cors');
 var bodyParser = require('body-parser');
 
 
@@ -30,6 +31,7 @@ app.set('views', path.join(__dirname, '../dist'));
 app.use(express.static(path.join(__dirname, '../dist')));
 
 // *** config middleware *** //
+app.use(cors());
 app.use(require('morgan')('combined', { 'stream': logger.stream }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
