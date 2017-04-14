@@ -34,4 +34,5 @@ For running the test suit run:
 * `npm test`
 
 ## Documentation
+ * [App Documentation](https://github.com/tallerify/tallerify-catalog/wiki)
  * [Api Specification](http://rebilly.github.io/ReDoc/?url=https://raw.githubusercontent.com/tallerify/tallerify-catalog/develop/docs/tallerify-catalog-api.yaml)
