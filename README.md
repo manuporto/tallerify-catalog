@@ -7,7 +7,7 @@
 ### With Docker and Docker Compose
 1. Install [Docker](https://docs.docker.com/engine/installation/) and [Docker Compose](https://docs.docker.com/compose/install/)
 2. Run `$ docker-compose up --build`
-3. Go to `http://localhost:300/`
+3. Go to `http://localhost:3000/`
 
 ### Without Docker
 
