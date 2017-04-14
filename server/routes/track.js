@@ -1,4 +1,4 @@
-var logger = require('../utils/logger');
+const logger = require('../utils/logger');
 const models = require('../models/index');
 
 postTrack = (req, res) => {
@@ -6,8 +6,8 @@ postTrack = (req, res) => {
   models.tracks.create({
     albumId: req.body.albumId,
     artists: req.body.artists,
-    name: req.body.name
-  }).then(track => {
+    name: req.body.name,
+  }).then((track) => {
     res.status(200).json(track);
   });
 };

@@ -1,12 +1,12 @@
-var logger = require('../utils/logger');
-var express = require('express');
-var router = express.Router();
-var models = require('../models/index');
-var user = require('./user');
-var token = require('./token');
-var artist = require('./artist');
-var track = require('./track');
-var album = require('./album');
+const logger = require('../utils/logger');
+const express = require('express');
+const router = express.Router();
+const models = require('../models/index');
+const user = require('./user');
+const token = require('./token');
+const artist = require('./artist');
+const track = require('./track');
+const album = require('./album');
 
 router.get('/', (req, res, next) => {
   res.render('index');
