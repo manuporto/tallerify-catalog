@@ -6,10 +6,11 @@ require('dotenv').config();
 // *** main dependencies *** //
 const express = require('express');
 const path = require('path');
-const favicon = require('serve-favicon');
 const logger = require('./utils/logger');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
+const morgan = require('morgan');
+const ejs = require('ejs');
 
 
 // *** routes *** //
@@ -21,7 +22,7 @@ const app = express();
 
 
 // *** view engine *** //
-app.engine('html', require('ejs').renderFile);
+app.engine('html', ejs.renderFile);
 app.set('view engine', 'html');
 
 
@@ -30,7 +31,7 @@ app.set('views', path.join(__dirname, '../dist'));
 app.use(express.static(path.join(__dirname, '../dist')));
 
 // *** config middleware *** //
-app.use(require('morgan')('combined', { stream: logger.stream }));
+app.use(morgan('combined', { stream: logger.stream }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -53,7 +54,7 @@ app.use((req, res, next) => {
 // development and test error handler
 // will print stacktrace
 if (app.get('env') === 'development' || app.get('env') === 'test') {
-  app.use((err, req, res, next) => {
+  app.use((err, req, res) => {
     res.status(err.status || 500);
     res.render('index', {
       message: err.message,
@@ -64,7 +65,7 @@ if (app.get('env') === 'development' || app.get('env') === 'test') {
 
 // production error handler
 // no stacktraces leaked to user
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
   res.status(err.status || 500);
   res.render('index', {
     message: err.message,

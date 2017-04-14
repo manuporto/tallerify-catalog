@@ -4,12 +4,13 @@ const app = require('../../app');
 const db = require('../../models');
 const request = require('supertest');
 const chai = require('chai');
+const dirtyChai = require('dirty-chai');
 const chaiHttp = require('chai-http');
-const should = chai.should();
-
-chai.use(chaiHttp);
-
 const constants = require('./constants.json');
+
+chai.use(dirtyChai);
+const should = chai.should();
+chai.use(chaiHttp);
 
 describe('Token', () => {
   beforeEach((done) => {
@@ -18,7 +19,7 @@ describe('Token', () => {
       .then(() => {
         db.users
           .create(constants.initialUser)
-          .then((user) => {
+          .then(() => {
             done();
           })
           .catch((error) => {

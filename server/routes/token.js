@@ -1,7 +1,8 @@
 const winston = require('winston');
 const amanda = require('amanda');
-const jsonSchemaValidator = amanda('json');
 const models = require('../models/index');
+
+const jsonSchemaValidator = amanda('json');
 
 const expectedBodySchema = {
   type: 'object',
@@ -17,17 +18,17 @@ const expectedBodySchema = {
   },
 };
 
-generateToken = (req, res) => {
+const generateToken = (req, res) => {
   winston.log('info', 'POST /api/tokens');
 
   winston.log('info', `Validating request "${JSON.stringify(req.body, null, 4)}"`);
-  jsonSchemaValidator.validate(req.body, expectedBodySchema, (error) => {
+  return jsonSchemaValidator.validate(req.body, expectedBodySchema, (error) => {
     if (error) {
       winston.log('warn', `Request body is invalid: ${error[0].message}`);
       return res.status(400).json({ code: 400, message: `Invalid body: ${error[0].message}` });
     }
     winston.log('info', `Querying database for user with credentials "${JSON.stringify(req.body, null, 4)}"`);
-    models.users.findAll({
+    return models.users.findAll({
       where: {
         userName: req.body.userName,
         password: req.body.password,
@@ -54,10 +55,10 @@ generateToken = (req, res) => {
         });
 
       winston.log('info', `Response: ${response}`);
-      res.status(201).json(response);
+      return res.status(201).json(response);
     }).catch((reason) => {
       winston.log('warn', `Unexpected error: ${reason}`);
-      res.status(500).json({ code: 500, message: `Unexpected error: ${reason}` });
+      return res.status(500).json({ code: 500, message: `Unexpected error: ${reason}` });
     });
   });
 };

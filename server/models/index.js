@@ -1,20 +1,22 @@
+const env = process.env.NODE_ENV || 'development';
 
-const winston = require('winston');
 const logger = require('../utils/logger');
 const fs = require('fs');
 const path = require('path');
 const Sequelize = require('sequelize');
+const config = require('../config.json')[env];
+
 const basename = path.basename(module.filename);
-const env = process.env.NODE_ENV || 'development';
-const config = require(`${__dirname}/../config.json`)[env];
 const db = {};
 
 logger.info('Connecting to database');
 config.logging = logger.debug;
+
+let sequelize;
 if (config.use_env_variable) {
-  var sequelize = new Sequelize(process.env[config.use_env_variable], config);
+  sequelize = new Sequelize(process.env[config.use_env_variable], config);
 } else {
-  var sequelize = new Sequelize(config.database, config.username, config.password, config);
+  sequelize = new Sequelize(config.database, config.username, config.password, config);
 }
 logger.info('Connected to database');
 

@@ -1,44 +1,9 @@
 const logger = require('../utils/logger');
 const amanda = require('amanda');
-const jsonSchemaValidator = amanda('json');
 const models = require('../models/index');
 const constants = require('./constants.json');
 
-getUsers = (req, res) => {
-  models.users.findAll({}).then((users) => {
-    res.status(200).json({
-      metadata: {
-        count: users.length,
-        version: constants.API_VERSION,
-      },
-      users,
-    });
-  }).catch((reason) => {
-    const message = `Unexpected error: ${reason}`;
-    logger.warn(message);
-    res.status(500).json({ code: 500, message });
-  });
-};
-
-getUser = (req, res) => {
-  logger.info(`Searching for user ${req.params.id}`);
-  models.users.find({
-    where: {
-      id: req.params.id,
-    },
-  }).then((user) => {
-    if (!user) {
-      const message = `No user with id ${req.params.id}`;
-      logger.warn(message);
-      return res.status(404).json({ code: 404, message });
-    }
-    res.status(200).json(user);
-  }).catch((reason) => {
-    const message = `Unexpected error: ${reason}`;
-    logger.warn(message);
-    res.status(500).json({ code: 500, message });
-  });
-};
+const jsonSchemaValidator = amanda('json');
 
 const userExpectedBodySchema = {
   type: 'object',
@@ -82,14 +47,50 @@ const userExpectedBodySchema = {
   },
 };
 
-newUser = (req, res) => {
+const getUsers = (req, res) => {
+  return models.users.findAll({}).then((users) => {
+    return res.status(200).json({
+      metadata: {
+        count: users.length,
+        version: constants.API_VERSION,
+      },
+      users,
+    });
+  }).catch((reason) => {
+    const message = `Unexpected error: ${reason}`;
+    logger.warn(message);
+    return res.status(500).json({ code: 500, message });
+  });
+};
+
+const getUser = (req, res) => {
+  logger.info(`Searching for user ${req.params.id}`);
+  return models.users.find({
+    where: {
+      id: req.params.id,
+    },
+  }).then((user) => {
+    if (!user) {
+      const message = `No user with id ${req.params.id}`;
+      logger.warn(message);
+      return res.status(404).json({ code: 404, message });
+    }
+    return res.status(200).json(user);
+  }).catch((reason) => {
+    const message = `Unexpected error: ${reason}`;
+    logger.warn(message);
+    return res.status(500).json({ code: 500, message });
+  });
+};
+
+const newUser = (req, res) => {
   logger.info(`Validating request body "${JSON.stringify(req.body, null, 4)}"`);
-  jsonSchemaValidator.validate(req.body, userExpectedBodySchema, (error) => {
+  return jsonSchemaValidator.validate(req.body, userExpectedBodySchema, (error) => {
     if (error) {
       logger.warn(`Request body is invalid: ${error[0].message}`);
       return res.status(400).json({ code: 400, message: `Invalid body: ${error[0].message}` });
     }
-    models.users.create({
+    return models.users.create({
       userName: req.body.userName,
       password: req.body.password,
       firstName: req.body.firstName,
@@ -99,25 +100,25 @@ newUser = (req, res) => {
       birthdate: req.body.birthdate,
       images: req.body.images,
     }).then((user) => {
-      res.status(201).json(user);
+      return res.status(201).json(user);
     }).catch((reason) => {
       const message = `Unexpected error: ${reason}`;
       logger.warn(message);
-      res.status(500).json({ code: 500, message });
+      return res.status(500).json({ code: 500, message });
     });
   });
 };
 
 
-updateUser = (req, res) => {
+const updateUser = (req, res) => {
   logger.info(`Validating request body "${JSON.stringify(req.body, null, 4)}"`);
-  jsonSchemaValidator.validate(req.body, userExpectedBodySchema, (error) => {
+  return jsonSchemaValidator.validate(req.body, userExpectedBodySchema, (error) => {
     if (error) {
       logger.warn(`Request body is invalid: ${error[0].message}`);
       return res.status(400).json({ code: 400, message: `Invalid body: ${error[0].message}` });
     }
     logger.info(`Searching for user ${req.params.id}`);
-    models.users.find({
+    return models.users.find({
       where: {
         id: req.params.id,
       },
@@ -142,19 +143,19 @@ updateUser = (req, res) => {
       }).catch((reason) => {
         const message = `Unexpected error: ${reason}`;
         logger.warn(message);
-        res.status(500).json({ code: 500, message });
+        return res.status(500).json({ code: 500, message });
       });
     }).catch((reason) => {
       const message = `Unexpected error: ${reason}`;
       logger.warn(message);
-      res.status(500).json({ code: 500, message });
+      return res.status(500).json({ code: 500, message });
     });
   });
 };
 
-deleteUser = (req, res) => {
+const deleteUser = (req, res) => {
   logger.info(`Searching for user ${req.params.id}`);
-  models.users.find({
+  return models.users.find({
     where: {
       id: req.params.id,
     },
@@ -165,22 +166,22 @@ deleteUser = (req, res) => {
     }
 
     logger.info(`Found, deleting user ${req.params.id}`);
-    models.users.destroy({
+    return models.users.destroy({
       where: {
         id: req.params.id,
       },
-    }).then((user) => {
+    }).then(() => {
       logger.info('Successful user deletion');
-      res.sendStatus(204);
+      return res.sendStatus(204);
     }).catch((reason) => {
       const message = `Unexpected error: ${reason}`;
       logger.warn(message);
-      res.status(500).json({ code: 500, message });
+      return res.status(500).json({ code: 500, message });
     });
   }).catch((reason) => {
     const message = `Unexpected error: ${reason}`;
     logger.warn(message);
-    res.status(500).json({ code: 500, message });
+    return res.status(500).json({ code: 500, message });
   });
 };
 

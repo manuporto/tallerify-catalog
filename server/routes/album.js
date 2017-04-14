@@ -1,7 +1,7 @@
 const logger = require('../utils/logger');
 const models = require('../models/index');
 
-postAlbum = (req, res) => {
+const postAlbum = (req, res) => {
   logger.info(`Post /albums with query ${JSON.stringify(req.body, null, 4)}`);
 
   models.albums.create({

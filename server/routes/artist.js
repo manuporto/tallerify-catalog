@@ -1,7 +1,7 @@
 const logger = require('../utils/logger');
 const models = require('../models/index');
 
-getArtists = (req, res) => {
+const getArtists = (req, res) => {
   models.artists.findAll({}).then((artists) => {
     res.status(200).json(artists);
   }).catch((reason) => {
@@ -11,7 +11,7 @@ getArtists = (req, res) => {
   });
 };
 
-postArtist = (req, res) => {
+const postArtist = (req, res) => {
   logger.info(`Post /artists with query ${JSON.stringify(req.body, null, 4)}`);
   models.artists.create({
     name: req.body.name,
