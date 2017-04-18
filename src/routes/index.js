@@ -4,6 +4,7 @@ const token = require('./token');
 const artist = require('./artist');
 const track = require('./track');
 const album = require('./album');
+const admin = require('./admin');
 
 const router = express.Router();
 
@@ -23,9 +24,19 @@ router.put('/api/users/:id', user.updateUser);
 
 router.delete('/api/users/:id', user.deleteUser);
 
+/* Admins */
+
+router.get('/api/admins', admin.getAdmins);
+
+router.post('/api/admins', admin.newAdmin);
+
+router.delete('/api/admins/:id', admin.deleteAdmin);
+
 /* Tokens */
 
 router.post('/api/tokens', token.generateToken);
+
+router.post('/api/admins/tokens', token.generateAdminToken);
 
 /* Artists */
 
