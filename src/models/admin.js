@@ -1,7 +1,6 @@
 
 module.exports = (sequelize, DataTypes) => {
   const Admin = sequelize.define('admins', {
-    href: DataTypes.STRING,
     userName: { type: DataTypes.STRING,
       allowNull: false,
       validate: {
