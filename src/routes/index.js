@@ -23,9 +23,19 @@ router.put('/api/users/:id', user.updateUser);
 
 router.delete('/api/users/:id', user.deleteUser);
 
+/* Admins */
+
+router.get('/api/admins', user.getAdmins);
+
+router.post('/api/admins', user.newAdmin);
+
+router.delete('/api/admins/:id', user.deleteAdmin);
+
 /* Tokens */
 
 router.post('/api/tokens', token.generateToken);
+
+router.post('/api/admins/tokens', token.generateAdminToken);
 
 /* Artists */
 
