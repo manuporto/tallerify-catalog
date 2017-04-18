@@ -14,12 +14,6 @@ var nodemon = require('gulp-nodemon');
  */
 
 var paths = {
-  styles: [
-    './client/css/*.css',
-  ],
-  scripts: [
-    './client/js/*.js',
-  ],
   server: './server/bin/www'
 };
 
