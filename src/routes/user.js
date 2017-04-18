@@ -37,14 +37,49 @@ const userExpectedBodySchema = {
       required: true,
       type: 'string',
     },
-    images: {
-      required: true,
-      type: 'array',
-      items: {
-        type: 'string',
-      },
-    },
   },
+};
+
+const updateUserExpectedBodySchema = {
+    type: 'object',
+    properties: {
+        userName: {
+            required: true,
+            type: 'string',
+        },
+        password: {
+            required: true,
+            type: 'string',
+        },
+        firstName: {
+            required: true,
+            type: 'string',
+        },
+        lastName: {
+            required: true,
+            type: 'string',
+        },
+        country: {
+            required: true,
+            type: 'string',
+        },
+        email: {
+            required: true,
+            type: 'string',
+            format: 'email',
+        },
+        birthdate: {
+            required: true,
+            type: 'string',
+        },
+        images: {
+            required: true,
+            type: 'array',
+            items: {
+                type: 'string',
+            },
+        },
+    },
 };
 
 const getUsers = (req, res) => {
@@ -99,7 +134,7 @@ const newUser = (req, res) => {
       country: req.body.country,
       email: req.body.email,
       birthdate: req.body.birthdate,
-      images: req.body.images,
+      images: [ constants.DEFAULT_IMAGE ],
     }).then(user => res.status(201).json(user))
     .catch((reason) => {
       const message = `Unexpected error: ${reason}`;
@@ -112,7 +147,7 @@ const newUser = (req, res) => {
 
 const updateUser = (req, res) => {
   logger.info(`Validating request body "${JSON.stringify(req.body, null, 4)}"`);
-  return jsonSchemaValidator.validate(req.body, userExpectedBodySchema, (error) => {
+  return jsonSchemaValidator.validate(req.body, updateUserExpectedBodySchema, (error) => {
     if (error) {
       logger.warn(`Request body is invalid: ${error[0].message}`);
       return res.status(400).json({ code: 400, message: `Invalid body: ${error[0].message}` });

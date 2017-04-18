@@ -110,7 +110,7 @@ describe('User', () => {
           res.body.should.have.property('country').eql(constants.testUser.country);
           res.body.should.have.property('email').eql(constants.testUser.email);
           res.body.should.have.property('birthdate').eql(constants.testUser.birthdate);
-          res.body.should.have.property('images').eql(constants.testUser.images);
+          res.body.should.have.property('images');
           res.body.should.have.property('contacts');
           res.body.should.have.property('href');
           done();

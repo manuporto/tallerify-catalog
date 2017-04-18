@@ -1,3 +1,4 @@
 {
-  "API_VERSION": "v1.0.0"
+  "API_VERSION": "v1.0.0",
+  "DEFAULT_IMAGE": "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png"
 }
