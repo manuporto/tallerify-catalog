@@ -3,27 +3,15 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "ng": "ng",
-    "start": "ng build && node ./server/bin/www",
-    "test": "mocha 'server/test/**/*.spec.js'",
-    "coverage": "istanbul cover _mocha -- 'server/test/**/*.spec.js'",
+    "start": "node ./src/bin/www",
+    "test": "mocha 'src/test/**/*.spec.js'",
+    "coverage": "istanbul cover _mocha -- 'src/test/**/*.spec.js'",
     "lint-server": "eslint server",
-    "lint-client": "tslint \"client/**/*.ts\"",
-    "lint": "npm run lint-server && npm run lint-client",
-    "pree2e": "webdriver-manager update --standalone false --gecko false",
-    "e2e": "protractor",
-    "postinstall": "ng build"
+    "lint": "npm run lint-server",
+    "pree2e": "webdriver-manager update --standalone false --gecko false"
   },
   "private": true,
   "dependencies": {
-    "@angular/common": "^2.4.0",
-    "@angular/compiler": "^2.4.0",
-    "@angular/core": "^2.4.0",
-    "@angular/forms": "^2.4.0",
-    "@angular/http": "^2.4.0",
-    "@angular/platform-browser": "^2.4.0",
-    "@angular/platform-browser-dynamic": "^2.4.0",
-    "@angular/router": "^3.4.0",
     "amanda": "^0.5.1",
     "body-parser": "^1.17.1",
     "cookie-parser": "^1.4.3",
@@ -45,8 +33,6 @@
     "zone.js": "^0.7.6"
   },
   "devDependencies": {
-    "@angular/cli": "1.0.0-rc.2",
-    "@angular/compiler-cli": "^2.4.0",
     "@types/jasmine": "2.5.38",
     "@types/node": "~6.0.60",
     "browser-sync": "2.18.8",
@@ -62,24 +48,12 @@
     "gulp-jshint": "2.0.4",
     "gulp-nodemon": "2.2.1",
     "istanbul": "0.4.5",
-    "jasmine-core": "~2.5.2",
     "jasmine-node": "1.14.5",
-    "jasmine-spec-reporter": "3.2.0",
     "jshint": "2.9.4",
     "jshint-stylish": "2.2.1",
-    "karma": "~1.4.1",
-    "karma-chrome-launcher": "~2.0.0",
-    "karma-cli": "~1.0.1",
-    "karma-coverage-istanbul-reporter": "^0.2.0",
-    "karma-jasmine": "~1.1.0",
-    "karma-jasmine-html-reporter": "^0.2.2",
     "mocha": "3.2.0",
-    "protractor": "~5.1.0",
     "request": "2.81.0",
     "should": "11.2.1",
-    "supertest": "3.0.0",
-    "ts-node": "~2.0.0",
-    "tslint": "~4.5.0",
-    "typescript": "2.2.2"
+    "supertest": "3.0.0"
   }
 }

@@ -25,10 +25,9 @@ const app = express();
 // *** view engine *** //
 app.engine('html', ejs.renderFile);
 app.set('view engine', 'html');
-
+app.set('views', path.join(__dirname, '../public'));
 
 // *** static directory *** //
-app.set('views', path.join(__dirname, '../dist'));
 app.use(express.static(path.join(__dirname, '../dist')));
 
 // *** config middleware *** //
@@ -60,7 +59,7 @@ if (app.get('env') === 'development' || app.get('env') === 'test') {
     res.status(err.status || 500);
     res.render('index', {
       message: err.message,
-      error: err,
+      error: err
     });
   });
 }
@@ -71,7 +70,7 @@ app.use((err, req, res) => {
   res.status(err.status || 500);
   res.render('index', {
     message: err.message,
-    error: {},
+    error: {}
   });
 });
 
