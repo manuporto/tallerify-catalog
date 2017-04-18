@@ -63,4 +63,48 @@ const generateToken = (req, res) => {
   });
 };
 
-module.exports = { generateToken };
+const generateAdminToken = (req, res) => {
+  winston.log('info', 'POST /api/tokens/admins');
+
+  winston.log('info', `Validating request "${JSON.stringify(req.body, null, 4)}"`);
+  return jsonSchemaValidator.validate(req.body, expectedBodySchema, (error) => {
+    if (error) {
+      winston.log('warn', `Request body is invalid: ${error[0].message}`);
+      return res.status(400).json({ code: 400, message: `Invalid body: ${error[0].message}` });
+    }
+    winston.log('info', `Querying database for admin with credentials "${JSON.stringify(req.body, null, 4)}"`);
+    return models.admins.findAll({
+      where: {
+        userName: req.body.userName,
+        password: req.body.password,
+      },
+    }).then((admins) => {
+      if (admins.length === 0) {
+        winston.log('warn', 'No admin with such credentials');
+        return res.status(500).json({ code: 500, message: 'No admin with such credentials' });
+      }
+      if (admins.length > 1) {
+        winston.log('warn', `There is more than one admin with those credentials "${admins}"`);
+        return res.status(500).json({ code: 500, message: 'There is more than one admin with those credentials' });
+      }
+
+      const response = Object.assign(
+        {},
+        {
+          token: admins[0].id.toString(),
+          admin: {
+            id: admins[0].id,
+            userName: admins[0].userName,
+          },
+        });
+
+      winston.log('info', `Response: ${response}`);
+      return res.status(201).json(response);
+    }).catch((reason) => {
+      winston.log('warn', `Unexpected error: ${reason}`);
+      return res.status(500).json({ code: 500, message: `Unexpected error: ${reason}` });
+    });
+  });
+};
+
+module.exports = { generateToken, generateAdminToken };

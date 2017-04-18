@@ -36,6 +36,8 @@ router.delete('/api/admins/:id', admin.deleteAdmin);
 
 router.post('/api/tokens', token.generateToken);
 
+router.post('/api/admins/tokens', token.generateAdminToken);
+
 /* Artists */
 
 router.get('/api/artists', artist.getArtists);
