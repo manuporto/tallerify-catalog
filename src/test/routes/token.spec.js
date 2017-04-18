@@ -5,7 +5,7 @@ const db = require('../../models');
 const request = require('supertest');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
-const constants = require('./constants.json');
+const constants = require('./token.constants.json');
 
 chai.should();
 chai.use(chaiHttp);

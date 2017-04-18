@@ -9,7 +9,7 @@ const chaiHttp = require('chai-http');
 chai.should();
 chai.use(chaiHttp);
 
-const constants = require('./constants.json');
+const constants = require('./user.constants.json');
 
 describe('User', () => {
   beforeEach((done) => {
