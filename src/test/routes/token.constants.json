@@ -13,7 +13,18 @@
         "lili"
       ]
   },
+  "initialAdmin": {
+    "userName": "aisha",
+    "password": "2589",
+    "firstName": "Aisha",
+    "lastName": "Kim",
+    "email": "akim@gmail.com"
+  },
   "invalidCredentials": {
+    "userName": "tano_villano",
+    "password": "botox8"
+  },
+  "adminInvalidCredentials": {
     "userName": "tano_villano",
     "password": "botox8"
   },
@@ -21,7 +32,14 @@
     "userName": "abrden",
     "password": "1234"
   },
+  "adminTokenGeneration": {
+    "userName": "aisha",
+    "password": "2589"
+  },
   "tokenGenerationWithMissingAttributes": {
     "userName": "abrden"
+  },
+  "adminTokenGenerationWithMissingAttributes": {
+    "userName": "aisha"
   }
 }
