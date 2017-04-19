@@ -27,11 +27,6 @@ function validateRequestBody(body, callback) {
 
 const validateJson = promisify(validateRequestBody);
 
-function invalidRequestBodyError(reasons, response) {
-  logger.warn(`Request body is invalid: ${reasons[0].message}`);
-  return response.status(400).json({ code: 400, message: `Invalid body: ${reasons[0].message}` });
-}
-
 function findWithUsernameAndPassword(model, username, password) {
   logger.info(`Querying database for entry with username "${username}" and password "${password}"`);
   return model.findAll({
@@ -101,7 +96,7 @@ const generateToken = (req, res) => {
         });
     })
     .catch((error) => {
-      invalidRequestBodyError(error, res);
+      common.invalidRequestBodyError(error, res);
     });
 };
 
@@ -118,7 +113,7 @@ const generateAdminToken = (req, res) => {
         });
     })
     .catch((error) => {
-      invalidRequestBodyError(error, res);
+      common.invalidRequestBodyError(error, res);
     });
 };
 

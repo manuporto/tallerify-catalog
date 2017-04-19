@@ -1,4 +1,5 @@
 const logger = require('../utils/logger');
+const promisify = require('promisify-node');
 const amanda = require('amanda');
 const models = require('../models/index');
 const common = require('./common');
@@ -83,9 +84,16 @@ const updateUserExpectedBodySchema = {
     },
 };
 
+function validateRequestBody(body, schema, callback) {
+  logger.info(`Validating request "${JSON.stringify(body, null, 4)}"`);
+  return jsonSchemaValidator.validate(body, schema, callback);
+}
+
+const validateJson = promisify(validateRequestBody);
+
 function findAllUsers() {
   logger.debug('Getting all users.');
-  return models.users.findAll({})
+  return models.users.findAll({});
 }
 
 function successfulUsersFetch(users, response) {
@@ -120,88 +128,41 @@ function successfulUserFetch(user, response) {
   return response.status(200).json(user);
 }
 
-const getUsers = (req, res) => {
-  findAllUsers()
-  .then((users) => {
-    successfulUsersFetch(users, res);
-  })
-  .catch((reason) => {
-    common.internalServerError(reason, res);
+function createNewUser(body) {
+  logger.info('Creating user');
+  return models.users.create({
+    userName: body.userName,
+    password: body.password,
+    firstName: body.firstName,
+    lastName: body.lastName,
+    country: body.country,
+    email: body.email,
+    birthdate: body.birthdate,
+    images: [constants.DEFAULT_IMAGE],
   });
-};
+}
 
-const getUser = (req, res) => {
-  findUserWithId(req.params.id)
-  .then((user) => {
-    if (!userExists(req.params.id, user, res)) return;
-    successfulUserFetch(user, res);
-  }).catch((reason) => {
-    common.internalServerError(reason, res);
+function successfulUserCreation(user, response) {
+  response.status(201).json(user);
+}
+
+function updateUserInfo(user, body) {
+  logger.info('Updating user');
+  return user.updateAttributes({
+    userName: body.userName,
+    password: body.password,
+    firstName: body.firstName,
+    lastName: body.lastName,
+    country: body.country,
+    email: body.email,
+    birthdate: body.birthdate,
+    images: body.images,
   });
-};
+}
 
-const newUser = (req, res) => {
-  logger.info(`Validating request body "${JSON.stringify(req.body, null, 4)}"`);
-  return jsonSchemaValidator.validate(req.body, userExpectedBodySchema, (error) => {
-    if (error) {
-      logger.warn(`Request body is invalid: ${error[0].message}`);
-      return res.status(400).json({ code: 400, message: `Invalid body: ${error[0].message}` });
-    }
-    return models.users.create({
-      userName: req.body.userName,
-      password: req.body.password,
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      country: req.body.country,
-      email: req.body.email,
-      birthdate: req.body.birthdate,
-      images: [ constants.DEFAULT_IMAGE ],
-    }).then(user => res.status(201).json(user))
-    .catch((reason) => {
-      common.internalServerError(reason, res);
-    });
-  });
-};
-
-
-const updateUser = (req, res) => {
-  logger.info(`Validating request body "${JSON.stringify(req.body, null, 4)}"`);
-  return jsonSchemaValidator.validate(req.body, updateUserExpectedBodySchema, (error) => {
-    if (error) {
-      logger.warn(`Request body is invalid: ${error[0].message}`);
-      return res.status(400).json({ code: 400, message: `Invalid body: ${error[0].message}` });
-    }
-    logger.info(`Searching for user ${req.params.id}`);
-    return models.users.find({
-      where: {
-        id: req.params.id,
-      },
-    }).then((user) => {
-      if (!user) {
-        logger.warn(`No user with id ${req.params.id}`);
-        return res.status(404).json({ code: 404, message: `No user with id ${req.params.id}` });
-      }
-      logger.info(`Found, updating user ${req.params.id}`);
-
-      return user.updateAttributes({
-        userName: req.body.userName,
-        password: req.body.password,
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        country: req.body.country,
-        email: req.body.email,
-        birthdate: req.body.birthdate,
-        images: req.body.images,
-      }).then((user) => { // eslint-disable-line no-shadow
-        res.status(200).json(user);
-      }).catch((reason) => {
-        common.internalServerError(reason, res);
-      });
-    }).catch((reason) => {
-      common.internalServerError(reason, res);
-    });
-  });
-};
+function successfulUserUpdate(user, response) {
+  response.status(200).json(user);
+}
 
 function deleteUserWithId(id) {
   logger.info(`Deleting user ${id}`);
@@ -217,6 +178,53 @@ function successfulUserDeletion(response) {
   response.sendStatus(204);
 }
 
+const getUsers = (req, res) => {
+  findAllUsers()
+    .then((users) => {
+      successfulUsersFetch(users, res);
+    })
+    .catch((error) => {
+      common.internalServerError(error, res);
+    });
+};
+
+const getUser = (req, res) => {
+  findUserWithId(req.params.id)
+    .then((user) => {
+      if (!userExists(req.params.id, user, res)) return;
+      successfulUserFetch(user, res);
+    }).catch((error) => {
+    common.internalServerError(error, res);
+  });
+};
+
+const newUser = (req, res) => {
+  validateJson(req.body, userExpectedBodySchema)
+    .then(() => {
+      createNewUser(req.body)
+        .then(user => successfulUserCreation(user, res))
+        .catch(error => common.internalServerError(error, res));
+    })
+    .catch((error) => {
+      common.invalidRequestBodyError(error, res);
+    });
+};
+
+const updateUser = (req, res) => {
+  validateJson(req.body, updateUserExpectedBodySchema)
+    .then(() => {
+      findUserWithId(req.params.id)
+        .then((user) => {
+          if (!userExists(req.params.id, user, res)) return;
+          updateUserInfo(user, req.body)
+          .then(updatedUser => successfulUserUpdate(updatedUser, res))
+          .catch(error => common.internalServerError(error, res));
+      })
+        .catch(error => common.internalServerError(error, res));
+    })
+    .catch(error => common.invalidRequestBodyError(error, res));
+};
+
 const deleteUser = (req, res) => {
   findUserWithId(req.params.id)
   .then((user) => {
@@ -224,11 +232,11 @@ const deleteUser = (req, res) => {
     deleteUserWithId(req.params.id)
     .then(() => {
       successfulUserDeletion(res);
-    }).catch((reason) => {
-      common.internalServerError(reason, res);
+    }).catch((error) => {
+      common.internalServerError(error, res);
     });
-  }).catch((reason) => {
-    common.internalServerError(reason, res);
+  }).catch((error) => {
+    common.internalServerError(error, res);
   });
 };
 
