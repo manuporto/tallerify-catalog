@@ -1,10 +1,10 @@
 const express = require('express');
-const user = require('./user');
-const token = require('./token');
+// const user = require('./user');
+// const token = require('./token');
 const artist = require('./artist');
 const track = require('./track');
-const album = require('./album');
-const admin = require('./admin');
+// const album = require('./album');
+// const admin = require('./admin');
 
 const router = express.Router();
 
@@ -14,29 +14,29 @@ router.get('/', (req, res) => {
 
 /* Users */
 
-router.get('/api/users', user.getUsers);
+// router.get('/api/users', user.getUsers);
 
-router.get('/api/users/:id', user.getUser);
+// router.get('/api/users/:id', user.getUser);
 
-router.post('/api/users', user.newUser);
+// router.post('/api/users', user.newUser);
 
-router.put('/api/users/:id', user.updateUser);
+// router.put('/api/users/:id', user.updateUser);
 
-router.delete('/api/users/:id', user.deleteUser);
+// router.delete('/api/users/:id', user.deleteUser);
 
-/* Admins */
+// /* Admins */
 
-router.get('/api/admins', admin.getAdmins);
+// router.get('/api/admins', admin.getAdmins);
 
-router.post('/api/admins', admin.newAdmin);
+// router.post('/api/admins', admin.newAdmin);
 
-router.delete('/api/admins/:id', admin.deleteAdmin);
+// router.delete('/api/admins/:id', admin.deleteAdmin);
 
-/* Tokens */
+// /* Tokens */
 
-router.post('/api/tokens', token.generateToken);
+// router.post('/api/tokens', token.generateToken);
 
-router.post('/api/admins/tokens', token.generateAdminToken);
+// router.post('/api/admins/tokens', token.generateAdminToken);
 
 /* Artists */
 
@@ -44,9 +44,9 @@ router.get('/api/artists', artist.getArtists);
 
 router.post('/api/artists', artist.postArtist);
 
-/* Albums */
+// /* Albums */
 
-router.post('/api/albums', album.postAlbum);
+// router.post('/api/albums', album.postAlbum);
 
 /* Tracks */
 
