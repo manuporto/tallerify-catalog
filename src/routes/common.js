@@ -1,4 +1,7 @@
 const logger = require('../utils/logger');
+const promisify = require('promisify-node');
+const amanda = require('amanda');
+const jsonSchemaValidator = amanda('json');
 
 function internalServerError(reason, response) {
   const message = `Unexpected error: ${reason}`;
@@ -6,9 +9,16 @@ function internalServerError(reason, response) {
   return response.status(500).json({ code: 500, message });
 }
 
+function validateJson(body, schema, callback) {
+  logger.info(`Validating request "${JSON.stringify(body, null, 4)}"`);
+  return jsonSchemaValidator.validate(body, schema, callback);
+}
+
+const validateRequestBody = promisify(validateJson);
+
 function invalidRequestBodyError(reasons, response) {
   logger.warn(`Request body is invalid: ${reasons[0].message}`);
   return response.status(400).json({ code: 400, message: `Invalid body: ${reasons[0].message}` });
 }
 
-module.exports = { internalServerError, invalidRequestBodyError };
+module.exports = { internalServerError, validateRequestBody, invalidRequestBodyError };

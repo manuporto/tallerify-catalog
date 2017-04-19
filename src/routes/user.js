@@ -1,11 +1,7 @@
 const logger = require('../utils/logger');
-const promisify = require('promisify-node');
-const amanda = require('amanda');
 const models = require('../models/index');
 const common = require('./common');
 const constants = require('./constants.json');
-
-const jsonSchemaValidator = amanda('json');
 
 const userExpectedBodySchema = {
   type: 'object',
@@ -83,13 +79,6 @@ const updateUserExpectedBodySchema = {
         },
     },
 };
-
-function validateRequestBody(body, schema, callback) {
-  logger.info(`Validating request "${JSON.stringify(body, null, 4)}"`);
-  return jsonSchemaValidator.validate(body, schema, callback);
-}
-
-const validateJson = promisify(validateRequestBody);
 
 function findAllUsers() {
   logger.debug('Getting all users.');
@@ -194,7 +183,7 @@ const getUser = (req, res) => {
 };
 
 const newUser = (req, res) => {
-  validateJson(req.body, userExpectedBodySchema)
+  common.validateRequestBody(req.body, userExpectedBodySchema)
     .then(() => {
       createNewUser(req.body)
         .then(user => successfulUserCreation(user, res))
@@ -204,7 +193,7 @@ const newUser = (req, res) => {
 };
 
 const updateUser = (req, res) => {
-  validateJson(req.body, updateUserExpectedBodySchema)
+  common.validateRequestBody(req.body, updateUserExpectedBodySchema)
     .then(() => {
       findUserWithId(req.params.id)
         .then((user) => {

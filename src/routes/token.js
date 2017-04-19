@@ -1,10 +1,6 @@
 const logger = require('../utils/logger');
-const promisify = require('promisify-node');
-const amanda = require('amanda');
 const models = require('../models/index');
 const common = require('./common');
-
-const jsonSchemaValidator = amanda('json');
 
 const expectedBodySchema = {
   type: 'object',
@@ -19,13 +15,6 @@ const expectedBodySchema = {
     },
   },
 };
-
-function validateRequestBody(body, callback) {
-  logger.info(`Validating request "${JSON.stringify(body, null, 4)}"`);
-  return jsonSchemaValidator.validate(body, expectedBodySchema, callback);
-}
-
-const validateJson = promisify(validateRequestBody);
 
 function findWithUsernameAndPassword(model, username, password) {
   logger.info(`Querying database for entry with username "${username}" and password "${password}"`);
@@ -84,8 +73,7 @@ function successfulAdminTokenGeneration(admin, response) {
 }
 
 const generateToken = (req, res) => {
-  logger.info('POST /api/tokens');
-  return validateJson(req.body)
+  return common.validateRequestBody(req.body, expectedBodySchema)
     .then(() => {
       findWithUsernameAndPassword(models.users, req.body.userName, req.body.password)
         .then((users) => {
@@ -98,8 +86,7 @@ const generateToken = (req, res) => {
 };
 
 const generateAdminToken = (req, res) => {
-  logger.info('POST /api/tokens/admins');
-  return validateJson(req.body)
+  return common.validateRequestBody(req.body, expectedBodySchema)
     .then(() => {
       findWithUsernameAndPassword(models.admins, req.body.userName, req.body.password)
         .then((admins) => {
