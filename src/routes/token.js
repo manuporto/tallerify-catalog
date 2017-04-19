@@ -41,7 +41,7 @@ function resultIsValid(result, response) {
 }
 
 function successfulTokenGeneration(result, response) {
-  logger.info(`Response: ${result}`);
+  logger.info('Successful token generation');
   response.status(201).json(result);
 }
 

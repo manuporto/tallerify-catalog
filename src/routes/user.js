@@ -39,60 +39,50 @@ const userExpectedBodySchema = {
 };
 
 const updateUserExpectedBodySchema = {
-    type: 'object',
-    properties: {
-        userName: {
-            required: true,
-            type: 'string',
-        },
-        password: {
-            required: true,
-            type: 'string',
-        },
-        firstName: {
-            required: true,
-            type: 'string',
-        },
-        lastName: {
-            required: true,
-            type: 'string',
-        },
-        country: {
-            required: true,
-            type: 'string',
-        },
-        email: {
-            required: true,
-            type: 'string',
-            format: 'email',
-        },
-        birthdate: {
-            required: true,
-            type: 'string',
-        },
-        images: {
-            required: true,
-            type: 'array',
-            items: {
-                type: 'string',
-            },
-        },
+  type: 'object',
+  properties: {
+    userName: {
+      required: true,
+      type: 'string',
     },
+    password: {
+      required: true,
+      type: 'string',
+    },
+    firstName: {
+      required: true,
+      type: 'string',
+    },
+    lastName: {
+      required: true,
+      type: 'string',
+    },
+    country: {
+      required: true,
+      type: 'string',
+    },
+    email: {
+      required: true,
+      type: 'string',
+      format: 'email',
+    },
+    birthdate: {
+      required: true,
+      type: 'string',
+    },
+    images: {
+      required: true,
+      type: 'array',
+      items: {
+        type: 'string',
+      },
+    },
+  },
 };
 
 function findAllUsers() {
   logger.debug('Getting all users.');
   return models.users.findAll({});
-}
-
-function successfulUsersFetch(users, response) {
-  return response.status(200).json({
-    metadata: {
-      count: users.length,
-      version: constants.API_VERSION,
-    },
-    users,
-  });
 }
 
 function findUserWithId(id) {
@@ -113,10 +103,6 @@ function userExists(id, user, response) {
   return true;
 }
 
-function successfulUserFetch(user, response) {
-  return response.status(200).json(user);
-}
-
 function createNewUser(body) {
   logger.info('Creating user');
   return models.users.create({
@@ -129,10 +115,6 @@ function createNewUser(body) {
     birthdate: body.birthdate,
     images: [constants.DEFAULT_IMAGE],
   });
-}
-
-function successfulUserCreation(user, response) {
-  response.status(201).json(user);
 }
 
 function updateUserInfo(user, body) {
@@ -149,10 +131,6 @@ function updateUserInfo(user, body) {
   });
 }
 
-function successfulUserUpdate(user, response) {
-  response.status(200).json(user);
-}
-
 function deleteUserWithId(id) {
   logger.info(`Deleting user ${id}`);
   return models.users.destroy({
@@ -160,6 +138,32 @@ function deleteUserWithId(id) {
       id: id,
     },
   });
+}
+
+function successfulUsersFetch(users, response) {
+  logger.info('Successful users fetch');
+  return response.status(200).json({
+    metadata: {
+      count: users.length,
+      version: constants.API_VERSION,
+    },
+    users,
+  });
+}
+
+function successfulUserFetch(user, response) {
+  logger.info('Successful user fetch');
+  response.status(200).json(user);
+}
+
+function successfulUserCreation(user, response) {
+  logger.info('Successful user creation');
+  response.status(201).json(user);
+}
+
+function successfulUserUpdate(user, response) {
+  logger.info('Successful user update');
+  response.status(200).json(user);
 }
 
 function successfulUserDeletion(response) {

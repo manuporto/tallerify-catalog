@@ -17,8 +17,9 @@ function validateJson(body, schema, callback) {
 const validateRequestBody = promisify(validateJson);
 
 function invalidRequestBodyError(reasons, response) {
-  logger.warn(`Request body is invalid: ${reasons[0].message}`);
-  return response.status(400).json({ code: 400, message: `Invalid body: ${reasons[0].message}` });
+  const message = `Request body is invalid: ${reasons[0].message}`;
+  logger.warn(message);
+  return response.status(400).json({ code: 400, message: message });
 }
 
 module.exports = { internalServerError, validateRequestBody, invalidRequestBodyError };
