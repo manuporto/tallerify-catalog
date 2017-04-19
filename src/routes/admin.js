@@ -34,7 +34,7 @@ const adminExpectedBodySchema = {
 
 const getAdmins = (req, res) => {
   logger.debug('Getting all admins.');
-  return models.users.findAll({}).then(admins => { // eslint-disable-line arrow-body-style
+  return models.admins.findAll({}).then(admins => { // eslint-disable-line arrow-body-style
     return res.status(200).json({
       metadata: {
         count: admins.length,
