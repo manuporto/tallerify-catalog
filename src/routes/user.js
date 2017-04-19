@@ -1,9 +1,7 @@
 const logger = require('../utils/logger');
-const amanda = require('amanda');
 const models = require('../models/index');
+const common = require('./common');
 const constants = require('./constants.json');
-
-const jsonSchemaValidator = amanda('json');
 
 const userExpectedBodySchema = {
   type: 'object',
@@ -41,183 +39,187 @@ const userExpectedBodySchema = {
 };
 
 const updateUserExpectedBodySchema = {
-    type: 'object',
-    properties: {
-        userName: {
-            required: true,
-            type: 'string',
-        },
-        password: {
-            required: true,
-            type: 'string',
-        },
-        firstName: {
-            required: true,
-            type: 'string',
-        },
-        lastName: {
-            required: true,
-            type: 'string',
-        },
-        country: {
-            required: true,
-            type: 'string',
-        },
-        email: {
-            required: true,
-            type: 'string',
-            format: 'email',
-        },
-        birthdate: {
-            required: true,
-            type: 'string',
-        },
-        images: {
-            required: true,
-            type: 'array',
-            items: {
-                type: 'string',
-            },
-        },
+  type: 'object',
+  properties: {
+    userName: {
+      required: true,
+      type: 'string',
     },
+    password: {
+      required: true,
+      type: 'string',
+    },
+    firstName: {
+      required: true,
+      type: 'string',
+    },
+    lastName: {
+      required: true,
+      type: 'string',
+    },
+    country: {
+      required: true,
+      type: 'string',
+    },
+    email: {
+      required: true,
+      type: 'string',
+      format: 'email',
+    },
+    birthdate: {
+      required: true,
+      type: 'string',
+    },
+    images: {
+      required: true,
+      type: 'array',
+      items: {
+        type: 'string',
+      },
+    },
+  },
 };
 
-const getUsers = (req, res) => {
+function findAllUsers() {
   logger.debug('Getting all users.');
-  return models.users.findAll({}).then((users) => { // eslint-disable-line arrow-body-style
-    return res.status(200).json({
-      metadata: {
-        count: users.length,
-        version: constants.API_VERSION,
-      },
-      users,
-    });
-  }).catch((reason) => {
-    const message = `Unexpected error: ${reason}`;
-    logger.warn(message);
-    return res.status(500).json({ code: 500, message });
+  return models.users.findAll({});
+}
+
+function findUserWithId(id) {
+  logger.info(`Searching for user ${id}`);
+  return models.users.find({
+    where: {
+      id: id,
+    },
   });
+}
+
+function userExists(id, user, response) {
+  if (!user) {
+    logger.warn(`No user with id ${id}`);
+    response.status(404).json({ code: 404, message: `No user with id ${id}` });
+    return false;
+  }
+  return true;
+}
+
+function createNewUser(body) {
+  logger.info('Creating user');
+  return models.users.create({
+    userName: body.userName,
+    password: body.password,
+    firstName: body.firstName,
+    lastName: body.lastName,
+    country: body.country,
+    email: body.email,
+    birthdate: body.birthdate,
+    images: [constants.DEFAULT_IMAGE],
+  });
+}
+
+function updateUserInfo(user, body) {
+  logger.info('Updating user');
+  return user.updateAttributes({
+    userName: body.userName,
+    password: body.password,
+    firstName: body.firstName,
+    lastName: body.lastName,
+    country: body.country,
+    email: body.email,
+    birthdate: body.birthdate,
+    images: body.images,
+  });
+}
+
+function deleteUserWithId(id) {
+  logger.info(`Deleting user ${id}`);
+  return models.users.destroy({
+    where: {
+      id: id,
+    },
+  });
+}
+
+function successfulUsersFetch(users, response) {
+  logger.info('Successful users fetch');
+  return response.status(200).json({
+    metadata: {
+      count: users.length,
+      version: constants.API_VERSION,
+    },
+    users,
+  });
+}
+
+function successfulUserFetch(user, response) {
+  logger.info('Successful user fetch');
+  response.status(200).json(user);
+}
+
+function successfulUserCreation(user, response) {
+  logger.info('Successful user creation');
+  response.status(201).json(user);
+}
+
+function successfulUserUpdate(user, response) {
+  logger.info('Successful user update');
+  response.status(200).json(user);
+}
+
+function successfulUserDeletion(response) {
+  logger.info('Successful user deletion');
+  response.sendStatus(204);
+}
+
+const getUsers = (req, res) => {
+  findAllUsers()
+    .then(users => successfulUsersFetch(users, res))
+    .catch(error => common.internalServerError(error, res));
 };
 
 const getUser = (req, res) => {
-  logger.info(`Searching for user ${req.params.id}`);
-  return models.users.find({
-    where: {
-      id: req.params.id,
-    },
-  }).then((user) => {
-    if (!user) {
-      const message = `No user with id ${req.params.id}`;
-      logger.warn(message);
-      return res.status(404).json({ code: 404, message });
-    }
-    return res.status(200).json(user);
-  }).catch((reason) => {
-    const message = `Unexpected error: ${reason}`;
-    logger.warn(message);
-    return res.status(500).json({ code: 500, message });
-  });
+  findUserWithId(req.params.id)
+    .then((user) => {
+      if (!userExists(req.params.id, user, res)) return;
+      successfulUserFetch(user, res);
+    })
+    .catch(error => common.internalServerError(error, res));
 };
 
 const newUser = (req, res) => {
-  logger.info(`Validating request body "${JSON.stringify(req.body, null, 4)}"`);
-  return jsonSchemaValidator.validate(req.body, userExpectedBodySchema, (error) => {
-    if (error) {
-      logger.warn(`Request body is invalid: ${error[0].message}`);
-      return res.status(400).json({ code: 400, message: `Invalid body: ${error[0].message}` });
-    }
-    return models.users.create({
-      userName: req.body.userName,
-      password: req.body.password,
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      country: req.body.country,
-      email: req.body.email,
-      birthdate: req.body.birthdate,
-      images: [ constants.DEFAULT_IMAGE ],
-    }).then(user => res.status(201).json(user))
-    .catch((reason) => {
-      const message = `Unexpected error: ${reason}`;
-      logger.warn(message);
-      return res.status(500).json({ code: 500, message });
-    });
-  });
+  common.validateRequestBody(req.body, userExpectedBodySchema)
+    .then(() => {
+      createNewUser(req.body)
+        .then(user => successfulUserCreation(user, res))
+        .catch(error => common.internalServerError(error, res));
+    })
+    .catch(error => common.invalidRequestBodyError(error, res));
 };
 
-
 const updateUser = (req, res) => {
-  logger.info(`Validating request body "${JSON.stringify(req.body, null, 4)}"`);
-  return jsonSchemaValidator.validate(req.body, updateUserExpectedBodySchema, (error) => {
-    if (error) {
-      logger.warn(`Request body is invalid: ${error[0].message}`);
-      return res.status(400).json({ code: 400, message: `Invalid body: ${error[0].message}` });
-    }
-    logger.info(`Searching for user ${req.params.id}`);
-    return models.users.find({
-      where: {
-        id: req.params.id,
-      },
-    }).then((user) => {
-      if (!user) {
-        logger.warn(`No user with id ${req.params.id}`);
-        return res.status(404).json({ code: 404, message: `No user with id ${req.params.id}` });
-      }
-      logger.info(`Found, updating user ${req.params.id}`);
-
-      return user.updateAttributes({
-        userName: req.body.userName,
-        password: req.body.password,
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        country: req.body.country,
-        email: req.body.email,
-        birthdate: req.body.birthdate,
-        images: req.body.images,
-      }).then((user) => { // eslint-disable-line no-shadow
-        res.status(200).json(user);
-      }).catch((reason) => {
-        const message = `Unexpected error: ${reason}`;
-        logger.warn(message);
-        return res.status(500).json({ code: 500, message });
-      });
-    }).catch((reason) => {
-      const message = `Unexpected error: ${reason}`;
-      logger.warn(message);
-      return res.status(500).json({ code: 500, message });
-    });
-  });
+  common.validateRequestBody(req.body, updateUserExpectedBodySchema)
+    .then(() => {
+      findUserWithId(req.params.id)
+        .then((user) => {
+          if (!userExists(req.params.id, user, res)) return;
+          updateUserInfo(user, req.body)
+          .then(updatedUser => successfulUserUpdate(updatedUser, res))
+          .catch(error => common.internalServerError(error, res));
+        })
+        .catch(error => common.internalServerError(error, res));
+    })
+    .catch(error => common.invalidRequestBodyError(error, res));
 };
 
 const deleteUser = (req, res) => {
-  logger.info(`Searching for user ${req.params.id}`);
-  return models.users.find({
-    where: {
-      id: req.params.id,
-    },
-  }).then((user) => {
-    if (!user) {
-      logger.warn(`No user with id ${req.params.id}`);
-      return res.status(404).json({ code: 404, message: `No user with id ${req.params.id}` });
-    }
-
-    logger.info(`Found, deleting user ${req.params.id}`);
-    return models.users.destroy({
-      where: {
-        id: req.params.id,
-      },
-    }).then(() => {
-      logger.info('Successful user deletion');
-      return res.sendStatus(204);
-    }).catch((reason) => {
-      const message = `Unexpected error: ${reason}`;
-      logger.warn(message);
-      return res.status(500).json({ code: 500, message });
-    });
-  }).catch((reason) => {
-    const message = `Unexpected error: ${reason}`;
-    logger.warn(message);
-    return res.status(500).json({ code: 500, message });
-  });
+  findUserWithId(req.params.id)
+    .then((user) => {
+      if (!userExists(req.params.id, user, res)) return;
+      deleteUserWithId(req.params.id)
+        .then(() => successfulUserDeletion(res))
+        .catch(error => common.internalServerError(error, res));
+    })
+    .catch(error => common.internalServerError(error, res));
 };
 
 module.exports = { getUsers, getUser, newUser, updateUser, deleteUser };
