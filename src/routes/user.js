@@ -83,34 +83,58 @@ const updateUserExpectedBodySchema = {
     },
 };
 
-const getUsers = (req, res) => {
+function findAllUsers() {
   logger.debug('Getting all users.');
-  return models.users.findAll({}).then((users) => { // eslint-disable-line arrow-body-style
-    return res.status(200).json({
-      metadata: {
-        count: users.length,
-        version: constants.API_VERSION,
-      },
-      users,
-    });
-  }).catch((reason) => {
+  return models.users.findAll({})
+}
+
+function successfulUsersFetch(users, response) {
+  return response.status(200).json({
+    metadata: {
+      count: users.length,
+      version: constants.API_VERSION,
+    },
+    users,
+  });
+}
+
+function findUserWithId(id) {
+  logger.info(`Searching for user ${id}`);
+  return models.users.find({
+    where: {
+      id: id,
+    },
+  });
+}
+
+function userExists(id, user, response) {
+  if (!user) {
+    logger.warn(`No user with id ${id}`);
+    response.status(404).json({ code: 404, message: `No user with id ${id}` });
+    return false;
+  }
+  return true;
+}
+
+function successfulUserFetch(user, response) {
+  return response.status(200).json(user);
+}
+
+const getUsers = (req, res) => {
+  findAllUsers()
+  .then((users) => {
+    successfulUsersFetch(users, res);
+  })
+  .catch((reason) => {
     common.internalServerError(reason, res);
   });
 };
 
 const getUser = (req, res) => {
-  logger.info(`Searching for user ${req.params.id}`);
-  return models.users.find({
-    where: {
-      id: req.params.id,
-    },
-  }).then((user) => {
-    if (!user) {
-      const message = `No user with id ${req.params.id}`;
-      logger.warn(message);
-      return res.status(404).json({ code: 404, message });
-    }
-    return res.status(200).json(user);
+  findUserWithId(req.params.id)
+  .then((user) => {
+    if (!userExists(req.params.id, user, res)) return;
+    successfulUserFetch(user, res);
   }).catch((reason) => {
     common.internalServerError(reason, res);
   });
@@ -178,24 +202,6 @@ const updateUser = (req, res) => {
     });
   });
 };
-
-function findUserWithId(id) {
-  logger.info(`Searching for user ${id}`);
-  return models.users.find({
-    where: {
-      id: id,
-    },
-  });
-}
-
-function userExists(id, user, response) {
-  if (!user) {
-    logger.warn(`No user with id ${id}`);
-    response.status(404).json({ code: 404, message: `No user with id ${id}` });
-    return false;
-  }
-  return true;
-}
 
 function deleteUserWithId(id) {
   logger.info(`Deleting user ${id}`);
