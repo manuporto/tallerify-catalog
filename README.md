@@ -1,5 +1,5 @@
-# tallerify-catalog-server
-[![Build Status](https://travis-ci.org/tallerify/tallerify-catalog.svg?branch=develop)](https://travis-ci.org/tallerify/tallerify-catalog)
+# Shared Server
+[![Build Status](https://travis-ci.org/tallerify/shared-server.svg?branch=develop)](https://travis-ci.org/tallerify/shared-server)
 [![Coverage Status](https://coveralls.io/repos/github/tallerify/tallerify-catalog/badge.svg?branch=develop)](https://coveralls.io/github/tallerify/tallerify-catalog?branch=develop)
 
 ## Installation
@@ -20,8 +20,6 @@
   * `$ postgres=# CREATE DATABASE dbname;`
 3. Install the node packages via:
   * `$ npm install`
-4. Create database table:
-  * `$ ./node_modules/.bin/sequelize db:migrate`
   
 #### Start
 To start the application (server and client) run:
