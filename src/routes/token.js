@@ -91,13 +91,10 @@ const generateToken = (req, res) => {
         .then((users) => {
           if (!resultIsValid(users, res)) return;
           successfulUserTokenGeneration(users[0], res);
-        }).catch((reason) => {
-          common.internalServerError(reason, res);
-        });
+        })
+        .catch(reason => common.internalServerError(reason, res));
     })
-    .catch((error) => {
-      common.invalidRequestBodyError(error, res);
-    });
+    .catch(error => common.invalidRequestBodyError(error, res));
 };
 
 const generateAdminToken = (req, res) => {
@@ -108,13 +105,9 @@ const generateAdminToken = (req, res) => {
         .then((admins) => {
           if (!resultIsValid(admins, res)) return;
           successfulAdminTokenGeneration(admins[0], res);
-        }).catch((reason) => {
-          common.internalServerError(reason, res);
-        });
+        }).catch(reason => common.internalServerError(reason, res));
     })
-    .catch((error) => {
-      common.invalidRequestBodyError(error, res);
-    });
+    .catch(error => common.invalidRequestBodyError(error, res));
 };
 
 module.exports = { generateToken, generateAdminToken };

@@ -180,12 +180,8 @@ function successfulUserDeletion(response) {
 
 const getUsers = (req, res) => {
   findAllUsers()
-    .then((users) => {
-      successfulUsersFetch(users, res);
-    })
-    .catch((error) => {
-      common.internalServerError(error, res);
-    });
+    .then(users => successfulUsersFetch(users, res))
+    .catch(error => common.internalServerError(error, res));
 };
 
 const getUser = (req, res) => {
@@ -193,9 +189,8 @@ const getUser = (req, res) => {
     .then((user) => {
       if (!userExists(req.params.id, user, res)) return;
       successfulUserFetch(user, res);
-    }).catch((error) => {
-    common.internalServerError(error, res);
-  });
+    })
+    .catch(error => common.internalServerError(error, res));
 };
 
 const newUser = (req, res) => {
@@ -205,9 +200,7 @@ const newUser = (req, res) => {
         .then(user => successfulUserCreation(user, res))
         .catch(error => common.internalServerError(error, res));
     })
-    .catch((error) => {
-      common.invalidRequestBodyError(error, res);
-    });
+    .catch(error => common.invalidRequestBodyError(error, res));
 };
 
 const updateUser = (req, res) => {
@@ -219,7 +212,7 @@ const updateUser = (req, res) => {
           updateUserInfo(user, req.body)
           .then(updatedUser => successfulUserUpdate(updatedUser, res))
           .catch(error => common.internalServerError(error, res));
-      })
+        })
         .catch(error => common.internalServerError(error, res));
     })
     .catch(error => common.invalidRequestBodyError(error, res));
@@ -227,17 +220,13 @@ const updateUser = (req, res) => {
 
 const deleteUser = (req, res) => {
   findUserWithId(req.params.id)
-  .then((user) => {
-    if (!userExists(req.params.id, user, res)) return;
-    deleteUserWithId(req.params.id)
-    .then(() => {
-      successfulUserDeletion(res);
-    }).catch((error) => {
-      common.internalServerError(error, res);
-    });
-  }).catch((error) => {
-    common.internalServerError(error, res);
-  });
+    .then((user) => {
+      if (!userExists(req.params.id, user, res)) return;
+      deleteUserWithId(req.params.id)
+        .then(() => successfulUserDeletion(res))
+        .catch(error => common.internalServerError(error, res));
+    })
+    .catch(error => common.internalServerError(error, res));
 };
 
 module.exports = { getUsers, getUser, newUser, updateUser, deleteUser };
