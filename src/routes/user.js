@@ -1,6 +1,7 @@
 const logger = require('../utils/logger');
 const amanda = require('amanda');
 const models = require('../models/index');
+const common = require('./common');
 const constants = require('./constants.json');
 
 const jsonSchemaValidator = amanda('json');
@@ -93,9 +94,7 @@ const getUsers = (req, res) => {
       users,
     });
   }).catch((reason) => {
-    const message = `Unexpected error: ${reason}`;
-    logger.warn(message);
-    return res.status(500).json({ code: 500, message });
+    common.internalServerError(reason, res);
   });
 };
 
@@ -113,9 +112,7 @@ const getUser = (req, res) => {
     }
     return res.status(200).json(user);
   }).catch((reason) => {
-    const message = `Unexpected error: ${reason}`;
-    logger.warn(message);
-    return res.status(500).json({ code: 500, message });
+    common.internalServerError(reason, res);
   });
 };
 
@@ -137,9 +134,7 @@ const newUser = (req, res) => {
       images: [ constants.DEFAULT_IMAGE ],
     }).then(user => res.status(201).json(user))
     .catch((reason) => {
-      const message = `Unexpected error: ${reason}`;
-      logger.warn(message);
-      return res.status(500).json({ code: 500, message });
+      common.internalServerError(reason, res);
     });
   });
 };
@@ -176,47 +171,58 @@ const updateUser = (req, res) => {
       }).then((user) => { // eslint-disable-line no-shadow
         res.status(200).json(user);
       }).catch((reason) => {
-        const message = `Unexpected error: ${reason}`;
-        logger.warn(message);
-        return res.status(500).json({ code: 500, message });
+        common.internalServerError(reason, res);
       });
     }).catch((reason) => {
-      const message = `Unexpected error: ${reason}`;
-      logger.warn(message);
-      return res.status(500).json({ code: 500, message });
+      common.internalServerError(reason, res);
     });
   });
 };
 
-const deleteUser = (req, res) => {
-  logger.info(`Searching for user ${req.params.id}`);
+function findUserWithId(id) {
+  logger.info(`Searching for user ${id}`);
   return models.users.find({
     where: {
-      id: req.params.id,
+      id: id,
     },
-  }).then((user) => {
-    if (!user) {
-      logger.warn(`No user with id ${req.params.id}`);
-      return res.status(404).json({ code: 404, message: `No user with id ${req.params.id}` });
-    }
+  });
+}
 
-    logger.info(`Found, deleting user ${req.params.id}`);
-    return models.users.destroy({
-      where: {
-        id: req.params.id,
-      },
-    }).then(() => {
-      logger.info('Successful user deletion');
-      return res.sendStatus(204);
+function userExists(id, user, response) {
+  if (!user) {
+    logger.warn(`No user with id ${id}`);
+    response.status(404).json({ code: 404, message: `No user with id ${id}` });
+    return false;
+  }
+  return true;
+}
+
+function deleteUserWithId(id) {
+  logger.info(`Deleting user ${id}`);
+  return models.users.destroy({
+    where: {
+      id: id,
+    },
+  });
+}
+
+function successfulUserDeletion(response) {
+  logger.info('Successful user deletion');
+  response.sendStatus(204);
+}
+
+const deleteUser = (req, res) => {
+  findUserWithId(req.params.id)
+  .then((user) => {
+    if (!userExists(req.params.id, user, res)) return;
+    deleteUserWithId(req.params.id)
+    .then(() => {
+      successfulUserDeletion(res);
     }).catch((reason) => {
-      const message = `Unexpected error: ${reason}`;
-      logger.warn(message);
-      return res.status(500).json({ code: 500, message });
+      common.internalServerError(reason, res);
     });
   }).catch((reason) => {
-    const message = `Unexpected error: ${reason}`;
-    logger.warn(message);
-    return res.status(500).json({ code: 500, message });
+    common.internalServerError(reason, res);
   });
 };
 
