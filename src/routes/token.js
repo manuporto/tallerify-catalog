@@ -2,6 +2,7 @@ const logger = require('../utils/logger');
 const promisify = require('promisify-node');
 const amanda = require('amanda');
 const models = require('../models/index');
+const common = require('./common');
 
 const jsonSchemaValidator = amanda('json');
 
@@ -87,12 +88,6 @@ function successfulAdminTokenGeneration(admin, response) {
   successfulTokenGeneration(result, response);
 }
 
-function internalServerError(reason, response) {
-  const message = `Unexpected error: ${reason}`;
-  logger.warn(message);
-  return response.status(500).json({ code: 500, message });
-}
-
 const generateToken = (req, res) => {
   logger.info('POST /api/tokens');
   return validateJson(req.body)
@@ -102,7 +97,7 @@ const generateToken = (req, res) => {
           if (!resultIsValid(users, res)) return;
           successfulUserTokenGeneration(users[0], res);
         }).catch((reason) => {
-          internalServerError(reason, res);
+          common.internalServerError(reason, res);
         });
     })
     .catch((error) => {
@@ -119,7 +114,7 @@ const generateAdminToken = (req, res) => {
           if (!resultIsValid(admins, res)) return;
           successfulAdminTokenGeneration(admins[0], res);
         }).catch((reason) => {
-          internalServerError(reason, res);
+          common.internalServerError(reason, res);
         });
     })
     .catch((error) => {
