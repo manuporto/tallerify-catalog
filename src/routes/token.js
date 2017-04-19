@@ -1,4 +1,4 @@
-const winston = require('winston');
+const logger = require('../utils/logger');
 const promisify = require('promisify-node');
 const amanda = require('amanda');
 const models = require('../models/index');
@@ -20,19 +20,19 @@ const expectedBodySchema = {
 };
 
 function validateRequestBody(body, callback) {
-  winston.log('info', `Validating request "${JSON.stringify(body, null, 4)}"`);
+  logger.info(`Validating request "${JSON.stringify(body, null, 4)}"`);
   return jsonSchemaValidator.validate(body, expectedBodySchema, callback);
 }
 
 const validateJson = promisify(validateRequestBody);
 
 function invalidRequestBodyError(reasons, response) {
-  winston.log('warn', `Request body is invalid: ${reasons[0].message}`);
+  logger.warn(`Request body is invalid: ${reasons[0].message}`);
   return response.status(400).json({ code: 400, message: `Invalid body: ${reasons[0].message}` });
 }
 
 function findWithUsernameAndPassword(model, username, password) {
-  winston.log('info', `Querying database for entry with username "${username}" and password "${password}"`);
+  logger.info(`Querying database for entry with username "${username}" and password "${password}"`);
   return model.findAll({
     where: {
       userName: username,
@@ -43,12 +43,12 @@ function findWithUsernameAndPassword(model, username, password) {
 
 function resultIsValid(result, response) {
   if (result.length === 0) {
-    winston.log('warn', 'No entry with such credentials');
+    logger.warn('No entry with such credentials');
     response.status(500).json({ code: 500, message: 'No entry with such credentials' });
     return false;
   }
   if (result.length > 1) {
-    winston.log('warn', `There is more than one entry with those credentials "${result}"`);
+    logger.warn(`There is more than one entry with those credentials "${result}"`);
     response.status(500).json({ code: 500, message: 'There is more than one entry with those credentials' });
     return false;
   }
@@ -56,7 +56,7 @@ function resultIsValid(result, response) {
 }
 
 function successfulTokenGeneration(result, response) {
-  winston.log('info', `Response: ${result}`);
+  logger.info(`Response: ${result}`);
   response.status(201).json(result);
 }
 
@@ -88,12 +88,13 @@ function successfulAdminTokenGeneration(admin, response) {
 }
 
 function internalServerError(reason, response) {
-  winston.log('warn', `Unexpected error: ${reason}`);
-  return response.status(500).json({ code: 500, message: `Unexpected error: ${reason}` });
+  const message = `Unexpected error: ${reason}`;
+  logger.warn(message);
+  return response.status(500).json({ code: 500, message });
 }
 
 const generateToken = (req, res) => {
-  winston.log('info', 'POST /api/tokens');
+  logger.info('POST /api/tokens');
   return validateJson(req.body)
     .then(() => {
       findWithUsernameAndPassword(models.users, req.body.userName, req.body.password)
@@ -110,7 +111,7 @@ const generateToken = (req, res) => {
 };
 
 const generateAdminToken = (req, res) => {
-  winston.log('info', 'POST /api/tokens/admins');
+  logger.info('POST /api/tokens/admins');
   return validateJson(req.body)
     .then(() => {
       findWithUsernameAndPassword(models.admins, req.body.userName, req.body.password)
