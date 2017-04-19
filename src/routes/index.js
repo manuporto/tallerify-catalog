@@ -42,7 +42,7 @@ router.get('/', (req, res) => {
 
 router.get('/api/artists', artist.getArtists);
 
-router.post('/api/artists', artist.postArtist);
+router.post('/api/artists', artist.newArtist);
 
 // /* Albums */
 

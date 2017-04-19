@@ -1,38 +1,39 @@
 const logger = require('../utils/logger');
-// const models = require('../models/index');
-
-// const getArtists = (req, res) => {
-//   models.artists.findAll({}).then((artists) => {
-//     res.status(200).json(artists);
-//   }).catch((reason) => {
-//     const message = `Unexpected error: ${reason}`;
-//     logger.warn(message);
-//     res.status(500).json({ code: 500, message });
-//   });
-// };
-
-// const postArtist = (req, res) => {
-//   logger.info(`Post /artists with query ${JSON.stringify(req.body, null, 4)}`);
-//   models.artists.create({
-//     name: req.body.name,
-//     description: req.body.description,
-//     genres: req.body.genres,
-//     images: req.body.images,
-//   }).then((artist) => {
-//     res.status(200).json(artist);
-//   });
-// };
-
+const common = require('./common');
+const constants = require('./constants.json');
 const db = require('../database/');
 const tables = require('../database/tableNames');
 
-function getArtists(req, res) {
-  db.select().from(tables.artists).then(artists => {
-    res.status(200).json(artists);
+const artistExpectedBodySchema = {
+  type: 'object',
+  properties: {
+    name: {
+      required: true,
+      type: 'string',
+    },
+    popularity: {
+      required: true,
+      type: 'integer',
+    }
+  }
+};
+
+function successfulArtistsFetch(artists, response) {
+  logger.info('Successful artists fetch');
+  return response.status(200).json({
+    metadata: {
+      count: artists.length,
+      version: constants.API_VERSION,
+    },
+    artists,
   });
 }
 
-function postArtist(req, res) {
+function getArtists(req, res) {
+  db.select().from(tables.artists).then(artists => successfulArtistsFetch(artists, res));
+}
+
+function newArtist(req, res) {
   db(tables.artists).returning('*').insert({
     name: req.body.name,
     popularity: req.body.popularity
@@ -41,4 +42,4 @@ function postArtist(req, res) {
   })
 }
 
-module.exports = { getArtists, postArtist };
+module.exports = { getArtists, newArtist };
