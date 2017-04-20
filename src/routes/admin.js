@@ -38,16 +38,7 @@ function createNewAdmin(body) {
     password: body.password,
     firstName: body.firstName,
     lastName: body.lastName,
-    email: body.email
-  });
-}
-
-function deleteAdminWithId(id) {
-  logger.info(`Deleting admin ${id}`);
-  return models.admins.destroy({
-    where: {
-      id: id,
-    },
+    email: body.email,
   });
 }
 
@@ -105,7 +96,7 @@ const deleteAdmin = (req, res) => {
   db.findEntryWithId(models.admins, req.params.id)
     .then((admin) => {
       if (!adminExists(req.params.id, admin, res)) return;
-      deleteAdminWithId(req.params.id)
+      db.deleteEntryWithId(models.admins, req.params.id)
         .then(() => successfulAdminDeletion(res))
         .catch(error => common.internalServerError(error, res));
     })

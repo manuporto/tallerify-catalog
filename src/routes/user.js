@@ -118,15 +118,6 @@ function updateUserInfo(user, body) {
   });
 }
 
-function deleteUserWithId(id) {
-  logger.info(`Deleting user ${id}`);
-  return models.users.destroy({
-    where: {
-      id: id,
-    },
-  });
-}
-
 function successfulUsersFetch(users, response) {
   logger.info('Successful users fetch');
   return response.status(200).json({
@@ -204,7 +195,7 @@ const deleteUser = (req, res) => {
   db.findEntryWithId(models.users, req.params.id)
     .then((user) => {
       if (!userExists(req.params.id, user, res)) return;
-      deleteUserWithId(req.params.id)
+      db.deleteEntryWithId(models.users, req.params.id)
         .then(() => successfulUserDeletion(res))
         .catch(error => common.internalServerError(error, res));
     })
