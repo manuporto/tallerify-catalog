@@ -50,6 +50,8 @@ router.post('/api/artists', artist.newArtist);
 
 /* Tracks */
 
-router.post('/api/tracks', track.postTrack);
+router.get('/api/tracks', track.getTracks);
+
+router.post('/api/tracks', track.newTrack);
 
 module.exports = router;
