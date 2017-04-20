@@ -5,6 +5,10 @@ function selectAllArtists() {
   return db.select().from(tables.artists);
 }
 
+function selectAllArtistsIdsWithNames(names) {
+  return db(tables.artists).whereIn('name', names).select('id');
+}
+
 function insertArtist(artist) {
   return db(tables.artists).returning('*').insert({
     name: artist.name,
@@ -12,4 +16,4 @@ function insertArtist(artist) {
   })
 }
 
-module.exports = { selectAllArtists, insertArtist };
+module.exports = { selectAllArtists, selectAllArtistsIdsWithNames, insertArtist };
