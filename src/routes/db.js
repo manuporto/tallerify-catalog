@@ -14,6 +14,16 @@ const findEntryWithId = (table, id) => {
   });
 };
 
+const findWithUsernameAndPassword = (table, username, password) => {
+  logger.info(`Querying database for entry with username "${username}" and password "${password}"`);
+  return table.findAll({
+    where: {
+      userName: username,
+      password: password,
+    },
+  });
+};
+
 const createNewEntry = (table, entry) => {
   logger.info('Creating entry');
   return table.create(entry);
@@ -33,4 +43,11 @@ const deleteEntryWithId = (table, id) => {
   });
 };
 
-module.exports = { findAllEntries, findEntryWithId, createNewEntry, updateEntry, deleteEntryWithId };
+module.exports = {
+  findAllEntries,
+  findEntryWithId,
+  findWithUsernameAndPassword,
+  createNewEntry,
+  updateEntry,
+  deleteEntryWithId,
+};

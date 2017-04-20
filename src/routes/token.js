@@ -1,5 +1,6 @@
 const logger = require('../utils/logger');
 const models = require('../models/index');
+const db = require('./db');
 const common = require('./common');
 
 const expectedBodySchema = {
@@ -15,16 +16,6 @@ const expectedBodySchema = {
     },
   },
 };
-
-function findWithUsernameAndPassword(model, username, password) {
-  logger.info(`Querying database for entry with username "${username}" and password "${password}"`);
-  return model.findAll({
-    where: {
-      userName: username,
-      password: password,
-    },
-  });
-}
 
 function resultIsValid(result, response) {
   if (result.length === 0) {
@@ -77,7 +68,7 @@ function successfulAdminTokenGeneration(admin, response) {
 const generateToken = (req, res) => {
   return common.validateRequestBody(req.body, expectedBodySchema)
     .then(() => {
-      findWithUsernameAndPassword(models.users, req.body.userName, req.body.password)
+      db.findWithUsernameAndPassword(models.users, req.body.userName, req.body.password)
         .then((users) => {
           if (!resultIsValid(users, res)) return;
           successfulUserTokenGeneration(users[0], res);
@@ -90,7 +81,7 @@ const generateToken = (req, res) => {
 const generateAdminToken = (req, res) => {
   return common.validateRequestBody(req.body, expectedBodySchema)
     .then(() => {
-      findWithUsernameAndPassword(models.admins, req.body.userName, req.body.password)
+      db.findWithUsernameAndPassword(models.admins, req.body.userName, req.body.password)
         .then((admins) => {
           if (!resultIsValid(admins, res)) return;
           successfulAdminTokenGeneration(admins[0], res);
