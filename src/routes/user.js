@@ -1,5 +1,6 @@
 const logger = require('../utils/logger');
 const models = require('../models/index');
+const db = require('./db');
 const common = require('./common');
 const constants = require('./constants.json');
 
@@ -79,20 +80,6 @@ const updateUserExpectedBodySchema = {
     },
   },
 };
-
-function findAllUsers() {
-  logger.debug('Getting all users.');
-  return models.users.findAll({});
-}
-
-function findUserWithId(id) {
-  logger.info(`Searching for user ${id}`);
-  return models.users.find({
-    where: {
-      id: id,
-    },
-  });
-}
 
 function userExists(id, user, response) {
   if (!user) {
@@ -174,13 +161,13 @@ function successfulUserDeletion(response) {
 /* Routes */
 
 const getUsers = (req, res) => {
-  findAllUsers()
+  db.findAllEntries(models.users)
     .then(users => successfulUsersFetch(users, res))
     .catch(error => common.internalServerError(error, res));
 };
 
 const getUser = (req, res) => {
-  findUserWithId(req.params.id)
+  db.findEntryWithId(models.users, req.params.id)
     .then((user) => {
       if (!userExists(req.params.id, user, res)) return;
       successfulUserFetch(user, res);
@@ -201,7 +188,7 @@ const newUser = (req, res) => {
 const updateUser = (req, res) => {
   common.validateRequestBody(req.body, updateUserExpectedBodySchema)
     .then(() => {
-      findUserWithId(req.params.id)
+      db.findEntryWithId(models.users, req.params.id)
         .then((user) => {
           if (!userExists(req.params.id, user, res)) return;
           updateUserInfo(user, req.body)
@@ -214,7 +201,7 @@ const updateUser = (req, res) => {
 };
 
 const deleteUser = (req, res) => {
-  findUserWithId(req.params.id)
+  db.findEntryWithId(models.users, req.params.id)
     .then((user) => {
       if (!userExists(req.params.id, user, res)) return;
       deleteUserWithId(req.params.id)

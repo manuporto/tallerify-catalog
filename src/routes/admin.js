@@ -1,10 +1,8 @@
 const logger = require('../utils/logger');
-const amanda = require('amanda');
 const models = require('../models/index');
 const constants = require('./constants.json');
+const db = require('./db');
 const common = require('./common');
-
-const jsonSchemaValidator = amanda('json');
 
 const adminExpectedBodySchema = {
   type: 'object',
@@ -32,20 +30,6 @@ const adminExpectedBodySchema = {
     },
   },
 };
-
-function findAllAdmins() {
-  logger.debug('Getting all admins.');
-  return models.admins.findAll({});
-}
-
-function findAdminWithId(id) {
-  logger.info(`Searching for admin ${id}`);
-  return models.admins.find({
-    where: {
-      id: id,
-    },
-  });
-}
 
 function createNewAdmin(body) {
   logger.info('Creating admin');
@@ -101,7 +85,7 @@ function successfulAdminDeletion(response) {
 /* Routes */
 
 const getAdmins = (req, res) => {
-  findAllAdmins()
+  db.findAllEntries(models.admins)
     .then(admins => successfulAdminsFetch(admins, res))
     .catch(error => common.internalServerError(error, res));
 };
@@ -118,7 +102,7 @@ const newAdmin = (req, res) => {
 };
 
 const deleteAdmin = (req, res) => {
-  findAdminWithId(req.params.id)
+  db.findEntryWithId(models.admins, req.params.id)
     .then((admin) => {
       if (!adminExists(req.params.id, admin, res)) return;
       deleteAdminWithId(req.params.id)
