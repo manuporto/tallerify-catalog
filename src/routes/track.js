@@ -1,34 +1,29 @@
 const logger = require('../utils/logger');
 const db = require('../database/');
 const tables = require('../database/tableNames');
-const tracksTable = require('./constants.json')["TRACKS_TABLE_NAME"]
 
 function postTrack(req, res) {
 	db(tables.tracks).returning('*').insert({
 		name: req.body.name,
 		duration: req.body.duration
 	}).then(track => {
-		let count = 0;
-		let currentArtist = 0;
-		const artistsLenght = req.body.artists.length;
-		while(count < artistsLenght) {
-			if (currentArtist < artistsLenght) {
-				db(tables.artists).
-					where({name: req.body.artists[currentArtist]}).
-					select('id').
-					then(id => {
-						logger.info(`Artist ID: ${JSON.stringify(id, null, 4)}`);
-						logger.info(`Track ID: ${JSON.stringify(track, null, 4)}`);
-						db(tables.artists_tracks).insert({
-							track_id: track[0].id,
-							artist_id: id[0].id
-						}).then(() => {
-							count++;
-						})
+		db(tables.artists).
+			whereIn('name', req.body.artists).select('id').then(ids => {
+				const trackId = track[0].id;
+				let rowValues = [];
+				// ex ids = {"id": 1, "id": 6}
+				ids.forEach(id => {
+					rowValues.push(
+						{
+							track_id: trackId,
+							artist_id: id.id
+						}
+					);
 				});
-			}
-		}
-		res.status(201).json(track);
+				db(tables.artists_tracks).insert(rowValues).then(() => {
+					res.status(201).json(track);
+				})
+		});
 	})
 }
 
