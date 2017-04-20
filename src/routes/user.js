@@ -92,7 +92,7 @@ function userExists(id, user, response) {
 
 function createNewUser(body) {
   logger.info('Creating user');
-  return models.users.create({
+  let user = {
     userName: body.userName,
     password: body.password,
     firstName: body.firstName,
@@ -101,12 +101,13 @@ function createNewUser(body) {
     email: body.email,
     birthdate: body.birthdate,
     images: [constants.DEFAULT_IMAGE],
-  });
+  };
+  return db.createNewEntry(models.users, user);
 }
 
 function updateUserInfo(user, body) {
   logger.info('Updating user');
-  return user.updateAttributes({
+  let updatedUser = {
     userName: body.userName,
     password: body.password,
     firstName: body.firstName,
@@ -115,7 +116,8 @@ function updateUserInfo(user, body) {
     email: body.email,
     birthdate: body.birthdate,
     images: body.images,
-  });
+  };
+  return db.updateEntry(user, updatedUser);
 }
 
 function successfulUsersFetch(users, response) {

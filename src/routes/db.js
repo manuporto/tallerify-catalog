@@ -14,6 +14,16 @@ const findEntryWithId = (table, id) => {
   });
 };
 
+const createNewEntry = (table, entry) => {
+  logger.info('Creating entry');
+  return table.create(entry);
+};
+
+function updateEntry(entry, newEntry) {
+  logger.info('Updating entry');
+  return entry.updateAttributes(newEntry);
+}
+
 const deleteEntryWithId = (table, id) => {
   logger.info(`Deleting entry ${id}`);
   return table.destroy({
@@ -23,4 +33,4 @@ const deleteEntryWithId = (table, id) => {
   });
 };
 
-module.exports = { findAllEntries, findEntryWithId, deleteEntryWithId };
+module.exports = { findAllEntries, findEntryWithId, createNewEntry, updateEntry, deleteEntryWithId };

@@ -33,13 +33,14 @@ const adminExpectedBodySchema = {
 
 function createNewAdmin(body) {
   logger.info('Creating admin');
-  return models.admins.create({
+  let admin = {
     userName: body.userName,
     password: body.password,
     firstName: body.firstName,
     lastName: body.lastName,
     email: body.email,
-  });
+  };
+  return db.createNewEntry(models.admins, admin);
 }
 
 function adminExists(id, admin, response) {
