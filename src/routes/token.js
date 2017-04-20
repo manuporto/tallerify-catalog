@@ -1,4 +1,4 @@
-const db = require('./../dbHandlers/db');
+const db = require('./../dbHandlers/handler');
 const respond = require('./response');
 
 const expectedBodySchema = {
