@@ -1,4 +1,3 @@
-const logger = require('../utils/logger');
 const constants = require('./constants.json');
 const db = require('./db');
 const common = require('./common');
@@ -31,7 +30,6 @@ const adminExpectedBodySchema = {
 };
 
 function createNewAdmin(body) {
-  logger.info('Creating admin');
   let admin = {
     userName: body.userName,
     password: body.password,
@@ -42,33 +40,11 @@ function createNewAdmin(body) {
   return db.createNewEntry('admins', admin);
 }
 
-function successfulAdminsFetch(admins, response) {
-  logger.info('Successful admins fetch');
-  return response.status(200).json({
-    metadata: {
-      count: admins.length,
-      version: constants.API_VERSION,
-    },
-    admins,
-  });
-}
-
-function successfulAdminCreation(admin, response) {
-  logger.info('Successful admin creation');
-  response.status(201).json(admin);
-}
-
-
-function successfulAdminDeletion(response) {
-  logger.info('Successful admin deletion');
-  response.sendStatus(204);
-}
-
 /* Routes */
 
 const getAdmins = (req, res) => {
   db.findAllEntries('admins')
-    .then(admins => successfulAdminsFetch(admins, res))
+    .then(admins => common.successfulAdminsFetch(admins, res))
     .catch(error => common.internalServerError(error, res));
 };
 
@@ -77,7 +53,7 @@ const newAdmin = (req, res) => {
   common.validateRequestBody(req.body, adminExpectedBodySchema)
     .then(() => {
       createNewAdmin(req.body)
-        .then(admin => successfulAdminCreation(admin, res))
+        .then(admin => common.successfulAdminCreation(admin, res))
         .catch(error => common.internalServerError(error, res));
     })
     .catch(error => common.invalidRequestBodyError(error, res));
@@ -88,7 +64,7 @@ const deleteAdmin = (req, res) => {
     .then((admin) => {
       if (!common.entryExists(req.params.id, admin, res)) return;
       db.deleteEntryWithId('admins', req.params.id)
-        .then(() => successfulAdminDeletion(res))
+        .then(() => common.successfulAdminDeletion(res))
         .catch(error => common.internalServerError(error, res));
     })
     .catch(error => common.internalServerError(error, res));

@@ -1,4 +1,3 @@
-const logger = require('../utils/logger');
 const db = require('./db');
 const common = require('./common');
 const constants = require('./constants.json');
@@ -81,7 +80,6 @@ const updateUserExpectedBodySchema = {
 };
 
 function createNewUser(body) {
-  logger.info('Creating user');
   let user = {
     userName: body.userName,
     password: body.password,
@@ -96,7 +94,6 @@ function createNewUser(body) {
 }
 
 function updateUserInfo(user, body) {
-  logger.info('Updating user');
   let updatedUser = {
     userName: body.userName,
     password: body.password,
@@ -110,42 +107,11 @@ function updateUserInfo(user, body) {
   return db.updateEntry(user, updatedUser);
 }
 
-function successfulUsersFetch(users, response) {
-  logger.info('Successful users fetch');
-  return response.status(200).json({
-    metadata: {
-      count: users.length,
-      version: constants.API_VERSION,
-    },
-    users,
-  });
-}
-
-function successfulUserFetch(user, response) {
-  logger.info('Successful user fetch');
-  response.status(200).json(user);
-}
-
-function successfulUserCreation(user, response) {
-  logger.info('Successful user creation');
-  response.status(201).json(user);
-}
-
-function successfulUserUpdate(user, response) {
-  logger.info('Successful user update');
-  response.status(200).json(user);
-}
-
-function successfulUserDeletion(response) {
-  logger.info('Successful user deletion');
-  response.sendStatus(204);
-}
-
 /* Routes */
 
 const getUsers = (req, res) => {
   db.findAllEntries('users')
-    .then(users => successfulUsersFetch(users, res))
+    .then(users => common.successfulUsersFetch(users, res))
     .catch(error => common.internalServerError(error, res));
 };
 
@@ -153,7 +119,7 @@ const getUser = (req, res) => {
   db.findEntryWithId('users', req.params.id)
     .then((user) => {
       if (!common.entryExists(req.params.id, user, res)) return;
-      successfulUserFetch(user, res);
+      common.successfulUserFetch(user, res);
     })
     .catch(error => common.internalServerError(error, res));
 };
@@ -162,7 +128,7 @@ const newUser = (req, res) => {
   common.validateRequestBody(req.body, userExpectedBodySchema)
     .then(() => {
       createNewUser(req.body)
-        .then(user => successfulUserCreation(user, res))
+        .then(user => common.successfulUserCreation(user, res))
         .catch(error => common.internalServerError(error, res));
     })
     .catch(error => common.invalidRequestBodyError(error, res));
@@ -175,7 +141,7 @@ const updateUser = (req, res) => {
         .then((user) => {
           if (!common.entryExists(req.params.id, user, res)) return;
           updateUserInfo(user, req.body)
-          .then(updatedUser => successfulUserUpdate(updatedUser, res))
+          .then(updatedUser => common.successfulUserUpdate(updatedUser, res))
           .catch(error => common.internalServerError(error, res));
         })
         .catch(error => common.internalServerError(error, res));
@@ -188,7 +154,7 @@ const deleteUser = (req, res) => {
     .then((user) => {
       if (!common.entryExists(req.params.id, user, res)) return;
       db.deleteEntryWithId('users', req.params.id)
-        .then(() => successfulUserDeletion(res))
+        .then(() => common.successfulUserDeletion(res))
         .catch(error => common.internalServerError(error, res));
     })
     .catch(error => common.internalServerError(error, res));
