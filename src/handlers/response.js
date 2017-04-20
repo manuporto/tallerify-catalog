@@ -1,4 +1,4 @@
-const constants = require('./constants.json');
+const constants = require('./../routes/constants.json');
 const logger = require('../utils/logger');
 const promisify = require('promisify-node');
 const amanda = require('amanda');

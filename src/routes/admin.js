@@ -1,5 +1,5 @@
-const db = require('./../dbHandlers/handler');
-const respond = require('./response');
+const db = require('./../handlers/db');
+const respond = require('./../handlers/response');
 
 const adminExpectedBodySchema = {
   type: 'object',
