@@ -1,5 +1,5 @@
 const db = require('./db');
-const common = require('./common');
+const respond = require('./response');
 
 const expectedBodySchema = {
   type: 'object',
@@ -17,11 +17,11 @@ const expectedBodySchema = {
 
 const resultIsValid = (result, response) => {
   if (result.length === 0) {
-    common.nonexistentCredentials(response);
+    respond.nonexistentCredentials(response);
     return false;
   }
   if (result.length > 1) {
-    common.inconsistentCredentials(response);
+    respond.inconsistentCredentials(response);
     return false;
   }
   return true;
@@ -30,28 +30,28 @@ const resultIsValid = (result, response) => {
 /* Routes */
 
 const generateToken = (req, res) => {
-  return common.validateRequestBody(req.body, expectedBodySchema)
+  return respond.validateRequestBody(req.body, expectedBodySchema)
     .then(() => {
       db.findWithUsernameAndPassword('users', req.body.userName, req.body.password)
         .then((users) => {
           if (!resultIsValid(users, res)) return;
-          common.successfulUserTokenGeneration(users[0], res);
+          respond.successfulUserTokenGeneration(users[0], res);
         })
-        .catch(reason => common.internalServerError(reason, res));
+        .catch(reason => respond.internalServerError(reason, res));
     })
-    .catch(error => common.invalidRequestBodyError(error, res));
+    .catch(error => respond.invalidRequestBodyError(error, res));
 };
 
 const generateAdminToken = (req, res) => {
-  return common.validateRequestBody(req.body, expectedBodySchema)
+  return respond.validateRequestBody(req.body, expectedBodySchema)
     .then(() => {
       db.findWithUsernameAndPassword('admins', req.body.userName, req.body.password)
         .then((admins) => {
           if (!resultIsValid(admins, res)) return;
-          common.successfulAdminTokenGeneration(admins[0], res);
-        }).catch(reason => common.internalServerError(reason, res));
+          respond.successfulAdminTokenGeneration(admins[0], res);
+        }).catch(reason => respond.internalServerError(reason, res));
     })
-    .catch(error => common.invalidRequestBodyError(error, res));
+    .catch(error => respond.invalidRequestBodyError(error, res));
 };
 
 module.exports = { generateToken, generateAdminToken };

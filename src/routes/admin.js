@@ -1,6 +1,5 @@
-const constants = require('./constants.json');
 const db = require('./db');
-const common = require('./common');
+const respond = require('./response');
 
 const adminExpectedBodySchema = {
   type: 'object',
@@ -44,30 +43,30 @@ function createNewAdmin(body) {
 
 const getAdmins = (req, res) => {
   db.findAllEntries('admins')
-    .then(admins => common.successfulAdminsFetch(admins, res))
-    .catch(error => common.internalServerError(error, res));
+    .then(admins => respond.successfulAdminsFetch(admins, res))
+    .catch(error => respond.internalServerError(error, res));
 };
 
 
 const newAdmin = (req, res) => {
-  common.validateRequestBody(req.body, adminExpectedBodySchema)
+  respond.validateRequestBody(req.body, adminExpectedBodySchema)
     .then(() => {
       createNewAdmin(req.body)
-        .then(admin => common.successfulAdminCreation(admin, res))
-        .catch(error => common.internalServerError(error, res));
+        .then(admin => respond.successfulAdminCreation(admin, res))
+        .catch(error => respond.internalServerError(error, res));
     })
-    .catch(error => common.invalidRequestBodyError(error, res));
+    .catch(error => respond.invalidRequestBodyError(error, res));
 };
 
 const deleteAdmin = (req, res) => {
   db.findEntryWithId('admins', req.params.id)
     .then((admin) => {
-      if (!common.entryExists(req.params.id, admin, res)) return;
+      if (!respond.entryExists(req.params.id, admin, res)) return;
       db.deleteEntryWithId('admins', req.params.id)
-        .then(() => common.successfulAdminDeletion(res))
-        .catch(error => common.internalServerError(error, res));
+        .then(() => respond.successfulAdminDeletion(res))
+        .catch(error => respond.internalServerError(error, res));
     })
-    .catch(error => common.internalServerError(error, res));
+    .catch(error => respond.internalServerError(error, res));
 };
 
 module.exports = { getAdmins, newAdmin, deleteAdmin };

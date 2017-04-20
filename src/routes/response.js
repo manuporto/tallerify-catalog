@@ -18,6 +18,12 @@ function validateJson(body, schema, callback) {
 
 const validateRequestBody = promisify(validateJson);
 
+const invalidRequestBodyError = (reasons, response) => {
+  const message = `Request body is invalid: ${reasons[0].message}`;
+  logger.warn(message);
+  return response.status(400).json({ code: 400, message: message });
+};
+
 const entryExists = (id, entry, response) => {
   if (!entry) {
     logger.warn(`No entry with id ${id}`);
@@ -25,12 +31,6 @@ const entryExists = (id, entry, response) => {
     return false;
   }
   return true;
-};
-
-const invalidRequestBodyError = (reasons, response) => {
-  const message = `Request body is invalid: ${reasons[0].message}`;
-  logger.warn(message);
-  return response.status(400).json({ code: 400, message: message });
 };
 
 /* Users */

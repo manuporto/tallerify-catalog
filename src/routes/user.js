@@ -1,5 +1,5 @@
 const db = require('./db');
-const common = require('./common');
+const respond = require('./response');
 const constants = require('./constants.json');
 
 const userExpectedBodySchema = {
@@ -111,53 +111,53 @@ function updateUserInfo(user, body) {
 
 const getUsers = (req, res) => {
   db.findAllEntries('users')
-    .then(users => common.successfulUsersFetch(users, res))
-    .catch(error => common.internalServerError(error, res));
+    .then(users => respond.successfulUsersFetch(users, res))
+    .catch(error => respond.internalServerError(error, res));
 };
 
 const getUser = (req, res) => {
   db.findEntryWithId('users', req.params.id)
     .then((user) => {
-      if (!common.entryExists(req.params.id, user, res)) return;
-      common.successfulUserFetch(user, res);
+      if (!respond.entryExists(req.params.id, user, res)) return;
+      respond.successfulUserFetch(user, res);
     })
-    .catch(error => common.internalServerError(error, res));
+    .catch(error => respond.internalServerError(error, res));
 };
 
 const newUser = (req, res) => {
-  common.validateRequestBody(req.body, userExpectedBodySchema)
+  respond.validateRequestBody(req.body, userExpectedBodySchema)
     .then(() => {
       createNewUser(req.body)
-        .then(user => common.successfulUserCreation(user, res))
-        .catch(error => common.internalServerError(error, res));
+        .then(user => respond.successfulUserCreation(user, res))
+        .catch(error => respond.internalServerError(error, res));
     })
-    .catch(error => common.invalidRequestBodyError(error, res));
+    .catch(error => respond.invalidRequestBodyError(error, res));
 };
 
 const updateUser = (req, res) => {
-  common.validateRequestBody(req.body, updateUserExpectedBodySchema)
+  respond.validateRequestBody(req.body, updateUserExpectedBodySchema)
     .then(() => {
       db.findEntryWithId('users', req.params.id)
         .then((user) => {
-          if (!common.entryExists(req.params.id, user, res)) return;
+          if (!respond.entryExists(req.params.id, user, res)) return;
           updateUserInfo(user, req.body)
-          .then(updatedUser => common.successfulUserUpdate(updatedUser, res))
-          .catch(error => common.internalServerError(error, res));
+          .then(updatedUser => respond.successfulUserUpdate(updatedUser, res))
+          .catch(error => respond.internalServerError(error, res));
         })
-        .catch(error => common.internalServerError(error, res));
+        .catch(error => respond.internalServerError(error, res));
     })
-    .catch(error => common.invalidRequestBodyError(error, res));
+    .catch(error => respond.invalidRequestBodyError(error, res));
 };
 
 const deleteUser = (req, res) => {
   db.findEntryWithId('users', req.params.id)
     .then((user) => {
-      if (!common.entryExists(req.params.id, user, res)) return;
+      if (!respond.entryExists(req.params.id, user, res)) return;
       db.deleteEntryWithId('users', req.params.id)
-        .then(() => common.successfulUserDeletion(res))
-        .catch(error => common.internalServerError(error, res));
+        .then(() => respond.successfulUserDeletion(res))
+        .catch(error => respond.internalServerError(error, res));
     })
-    .catch(error => common.internalServerError(error, res));
+    .catch(error => respond.internalServerError(error, res));
 };
 
 module.exports = { getUsers, getUser, newUser, updateUser, deleteUser };
