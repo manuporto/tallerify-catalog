@@ -2,6 +2,7 @@ const logger = require('../utils/logger');
 const common = require('./common');
 const constants = require('./constants.json');
 const db = require('../database/');
+const dbHandler = require('../dbHandler');
 const tables = require('../database/tableNames');
 
 const artistExpectedBodySchema = {
@@ -30,14 +31,11 @@ function successfulArtistsFetch(artists, response) {
 }
 
 function getArtists(req, res) {
-  db.select().from(tables.artists).then(artists => successfulArtistsFetch(artists, res));
+  dbHandler.artist.selectAllArtists().then(artists => successfulArtistsFetch(artists, res));
 }
 
 function newArtist(req, res) {
-  db(tables.artists).returning('*').insert({
-    name: req.body.name,
-    popularity: req.body.popularity
-  }).then(artist => {
+  dbHandler.artist.insertArtist(req.body).then(artist => {
     res.status(200).json(artist);
   })
 }
