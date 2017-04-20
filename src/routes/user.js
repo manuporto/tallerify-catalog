@@ -171,6 +171,8 @@ function successfulUserDeletion(response) {
   response.sendStatus(204);
 }
 
+/* Routes */
+
 const getUsers = (req, res) => {
   findAllUsers()
     .then(users => successfulUsersFetch(users, res))

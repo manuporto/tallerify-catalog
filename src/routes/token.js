@@ -72,6 +72,8 @@ function successfulAdminTokenGeneration(admin, response) {
   successfulTokenGeneration(result, response);
 }
 
+/* Routes */
+
 const generateToken = (req, res) => {
   return common.validateRequestBody(req.body, expectedBodySchema)
     .then(() => {

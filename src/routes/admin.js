@@ -38,22 +38,14 @@ function findAllAdmins() {
   return models.admins.findAll({});
 }
 
-function successfulAdminsFetch(admins, response) {
-  logger.info('Successful admins fetch');
-  return response.status(200).json({
-    metadata: {
-      count: admins.length,
-      version: constants.API_VERSION,
+function findAdminWithId(id) {
+  logger.info(`Searching for admin ${id}`);
+  return models.admins.find({
+    where: {
+      id: id,
     },
-    admins,
   });
 }
-
-const getAdmins = (req, res) => {
-  findAllAdmins()
-    .then(admins => successfulAdminsFetch(admins, res))
-    .catch(error => common.internalServerError(error, res));
-};
 
 function createNewAdmin(body) {
   logger.info('Creating admin');
@@ -66,20 +58,14 @@ function createNewAdmin(body) {
   });
 }
 
-function successfulAdminCreation(admin, response) {
-  logger.info('Successful admin creation');
-  response.status(201).json(admin);
+function deleteAdminWithId(id) {
+  logger.info(`Deleting admin ${id}`);
+  return models.admins.destroy({
+    where: {
+      id: id,
+    },
+  });
 }
-
-const newAdmin = (req, res) => {
-  common.validateRequestBody(req.body, adminExpectedBodySchema)
-    .then(() => {
-      createNewAdmin(req.body)
-        .then(admin => successfulAdminCreation(admin, res))
-        .catch(error => common.internalServerError(error, res));
-    })
-    .catch(error => common.invalidRequestBodyError(error, res));
-};
 
 function adminExists(id, admin, response) {
   if (!admin) {
@@ -90,29 +76,46 @@ function adminExists(id, admin, response) {
   return true;
 }
 
-function findAdminWithId(id) {
-  logger.info(`Searching for admin ${id}`);
-  return models.admins.find({
-    where: {
-      id: id,
+function successfulAdminsFetch(admins, response) {
+  logger.info('Successful admins fetch');
+  return response.status(200).json({
+    metadata: {
+      count: admins.length,
+      version: constants.API_VERSION,
     },
+    admins,
   });
 }
 
-function deleteAdminWithId(id) {
-  logger.info(`Deleting admin ${id}`);
-  return models.admins.destroy({
-    where: {
-      id: id,
-    },
-  });
+function successfulAdminCreation(admin, response) {
+  logger.info('Successful admin creation');
+  response.status(201).json(admin);
 }
+
 
 function successfulAdminDeletion(response) {
   logger.info('Successful admin deletion');
   response.sendStatus(204);
 }
 
+/* Routes */
+
+const getAdmins = (req, res) => {
+  findAllAdmins()
+    .then(admins => successfulAdminsFetch(admins, res))
+    .catch(error => common.internalServerError(error, res));
+};
+
+
+const newAdmin = (req, res) => {
+  common.validateRequestBody(req.body, adminExpectedBodySchema)
+    .then(() => {
+      createNewAdmin(req.body)
+        .then(admin => successfulAdminCreation(admin, res))
+        .catch(error => common.internalServerError(error, res));
+    })
+    .catch(error => common.invalidRequestBodyError(error, res));
+};
 
 const deleteAdmin = (req, res) => {
   findAdminWithId(req.params.id)
