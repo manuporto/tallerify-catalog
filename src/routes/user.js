@@ -1,5 +1,4 @@
 const logger = require('../utils/logger');
-const models = require('../models/index');
 const db = require('./db');
 const common = require('./common');
 const constants = require('./constants.json');
@@ -102,7 +101,7 @@ function createNewUser(body) {
     birthdate: body.birthdate,
     images: [constants.DEFAULT_IMAGE],
   };
-  return db.createNewEntry(models.users, user);
+  return db.createNewEntry('users', user);
 }
 
 function updateUserInfo(user, body) {
@@ -154,13 +153,13 @@ function successfulUserDeletion(response) {
 /* Routes */
 
 const getUsers = (req, res) => {
-  db.findAllEntries(models.users)
+  db.findAllEntries('users')
     .then(users => successfulUsersFetch(users, res))
     .catch(error => common.internalServerError(error, res));
 };
 
 const getUser = (req, res) => {
-  db.findEntryWithId(models.users, req.params.id)
+  db.findEntryWithId('users', req.params.id)
     .then((user) => {
       if (!userExists(req.params.id, user, res)) return;
       successfulUserFetch(user, res);
@@ -181,7 +180,7 @@ const newUser = (req, res) => {
 const updateUser = (req, res) => {
   common.validateRequestBody(req.body, updateUserExpectedBodySchema)
     .then(() => {
-      db.findEntryWithId(models.users, req.params.id)
+      db.findEntryWithId('users', req.params.id)
         .then((user) => {
           if (!userExists(req.params.id, user, res)) return;
           updateUserInfo(user, req.body)
@@ -194,10 +193,10 @@ const updateUser = (req, res) => {
 };
 
 const deleteUser = (req, res) => {
-  db.findEntryWithId(models.users, req.params.id)
+  db.findEntryWithId('users', req.params.id)
     .then((user) => {
       if (!userExists(req.params.id, user, res)) return;
-      db.deleteEntryWithId(models.users, req.params.id)
+      db.deleteEntryWithId('users', req.params.id)
         .then(() => successfulUserDeletion(res))
         .catch(error => common.internalServerError(error, res));
     })

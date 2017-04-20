@@ -1,22 +1,28 @@
 const logger = require('../utils/logger');
+const models = require('../models/index');
 
-const findAllEntries = (table) => {
-  logger.debug('Getting all entries.');
-  return table.findAll({});
+const tables = {
+  users: models.users,
+  admins: models.admins,
 };
 
-const findEntryWithId = (table, id) => {
+const findAllEntries = (tableName) => {
+  logger.debug('Getting all entries.');
+  return tables[tableName].findAll({});
+};
+
+const findEntryWithId = (tableName, id) => {
   logger.info(`Searching for entry ${id}`);
-  return table.find({
+  return tables[tableName].find({
     where: {
       id: id,
     },
   });
 };
 
-const findWithUsernameAndPassword = (table, username, password) => {
+const findWithUsernameAndPassword = (tableName, username, password) => {
   logger.info(`Querying database for entry with username "${username}" and password "${password}"`);
-  return table.findAll({
+  return tables[tableName].findAll({
     where: {
       userName: username,
       password: password,
@@ -24,9 +30,9 @@ const findWithUsernameAndPassword = (table, username, password) => {
   });
 };
 
-const createNewEntry = (table, entry) => {
+const createNewEntry = (tableName, entry) => {
   logger.info('Creating entry');
-  return table.create(entry);
+  return tables[tableName].create(entry);
 };
 
 function updateEntry(entry, newEntry) {
@@ -34,9 +40,9 @@ function updateEntry(entry, newEntry) {
   return entry.updateAttributes(newEntry);
 }
 
-const deleteEntryWithId = (table, id) => {
+const deleteEntryWithId = (tableName, id) => {
   logger.info(`Deleting entry ${id}`);
-  return table.destroy({
+  return tables[tableName].destroy({
     where: {
       id: id,
     },

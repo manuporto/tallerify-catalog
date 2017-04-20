@@ -1,5 +1,4 @@
 const logger = require('../utils/logger');
-const models = require('../models/index');
 const db = require('./db');
 const common = require('./common');
 
@@ -68,7 +67,7 @@ function successfulAdminTokenGeneration(admin, response) {
 const generateToken = (req, res) => {
   return common.validateRequestBody(req.body, expectedBodySchema)
     .then(() => {
-      db.findWithUsernameAndPassword(models.users, req.body.userName, req.body.password)
+      db.findWithUsernameAndPassword('users', req.body.userName, req.body.password)
         .then((users) => {
           if (!resultIsValid(users, res)) return;
           successfulUserTokenGeneration(users[0], res);
@@ -81,7 +80,7 @@ const generateToken = (req, res) => {
 const generateAdminToken = (req, res) => {
   return common.validateRequestBody(req.body, expectedBodySchema)
     .then(() => {
-      db.findWithUsernameAndPassword(models.admins, req.body.userName, req.body.password)
+      db.findWithUsernameAndPassword('admins', req.body.userName, req.body.password)
         .then((admins) => {
           if (!resultIsValid(admins, res)) return;
           successfulAdminTokenGeneration(admins[0], res);

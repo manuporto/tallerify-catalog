@@ -1,5 +1,4 @@
 const logger = require('../utils/logger');
-const models = require('../models/index');
 const constants = require('./constants.json');
 const db = require('./db');
 const common = require('./common');
@@ -40,7 +39,7 @@ function createNewAdmin(body) {
     lastName: body.lastName,
     email: body.email,
   };
-  return db.createNewEntry(models.admins, admin);
+  return db.createNewEntry('admins', admin);
 }
 
 function adminExists(id, admin, response) {
@@ -77,7 +76,7 @@ function successfulAdminDeletion(response) {
 /* Routes */
 
 const getAdmins = (req, res) => {
-  db.findAllEntries(models.admins)
+  db.findAllEntries('admins')
     .then(admins => successfulAdminsFetch(admins, res))
     .catch(error => common.internalServerError(error, res));
 };
@@ -94,10 +93,10 @@ const newAdmin = (req, res) => {
 };
 
 const deleteAdmin = (req, res) => {
-  db.findEntryWithId(models.admins, req.params.id)
+  db.findEntryWithId('admins', req.params.id)
     .then((admin) => {
       if (!adminExists(req.params.id, admin, res)) return;
-      db.deleteEntryWithId(models.admins, req.params.id)
+      db.deleteEntryWithId('admins', req.params.id)
         .then(() => successfulAdminDeletion(res))
         .catch(error => common.internalServerError(error, res));
     })
