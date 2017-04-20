@@ -80,15 +80,6 @@ const updateUserExpectedBodySchema = {
   },
 };
 
-function userExists(id, user, response) {
-  if (!user) {
-    logger.warn(`No user with id ${id}`);
-    response.status(404).json({ code: 404, message: `No user with id ${id}` });
-    return false;
-  }
-  return true;
-}
-
 function createNewUser(body) {
   logger.info('Creating user');
   let user = {
@@ -161,7 +152,7 @@ const getUsers = (req, res) => {
 const getUser = (req, res) => {
   db.findEntryWithId('users', req.params.id)
     .then((user) => {
-      if (!userExists(req.params.id, user, res)) return;
+      if (!common.entryExists(req.params.id, user, res)) return;
       successfulUserFetch(user, res);
     })
     .catch(error => common.internalServerError(error, res));
@@ -182,7 +173,7 @@ const updateUser = (req, res) => {
     .then(() => {
       db.findEntryWithId('users', req.params.id)
         .then((user) => {
-          if (!userExists(req.params.id, user, res)) return;
+          if (!common.entryExists(req.params.id, user, res)) return;
           updateUserInfo(user, req.body)
           .then(updatedUser => successfulUserUpdate(updatedUser, res))
           .catch(error => common.internalServerError(error, res));
@@ -195,7 +186,7 @@ const updateUser = (req, res) => {
 const deleteUser = (req, res) => {
   db.findEntryWithId('users', req.params.id)
     .then((user) => {
-      if (!userExists(req.params.id, user, res)) return;
+      if (!common.entryExists(req.params.id, user, res)) return;
       db.deleteEntryWithId('users', req.params.id)
         .then(() => successfulUserDeletion(res))
         .catch(error => common.internalServerError(error, res));

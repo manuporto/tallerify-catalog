@@ -42,15 +42,6 @@ function createNewAdmin(body) {
   return db.createNewEntry('admins', admin);
 }
 
-function adminExists(id, admin, response) {
-  if (!admin) {
-    logger.warn(`No admin with id ${id}`);
-    response.status(404).json({ code: 404, message: `No admin with id ${id}` });
-    return false;
-  }
-  return true;
-}
-
 function successfulAdminsFetch(admins, response) {
   logger.info('Successful admins fetch');
   return response.status(200).json({
@@ -95,7 +86,7 @@ const newAdmin = (req, res) => {
 const deleteAdmin = (req, res) => {
   db.findEntryWithId('admins', req.params.id)
     .then((admin) => {
-      if (!adminExists(req.params.id, admin, res)) return;
+      if (!common.entryExists(req.params.id, admin, res)) return;
       db.deleteEntryWithId('admins', req.params.id)
         .then(() => successfulAdminDeletion(res))
         .catch(error => common.internalServerError(error, res));
