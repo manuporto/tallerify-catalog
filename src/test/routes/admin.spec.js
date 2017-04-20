@@ -11,7 +11,7 @@ chai.use(chaiHttp);
 
 const constants = require('./admin.constants.json');
 
-describe('Admin', () => {
+describe.skip('Admin', () => {
   beforeEach((done) => {
     db.sequelize
       .sync({ force: true })

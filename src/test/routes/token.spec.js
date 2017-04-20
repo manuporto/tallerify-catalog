@@ -10,7 +10,7 @@ const constants = require('./token.constants.json');
 chai.should();
 chai.use(chaiHttp);
 
-describe('Token', () => {
+describe.skip('Token', () => {
   beforeEach((done) => {
     const INITIAL_DATA_AMOUNT = 2;
     let i = 0;
