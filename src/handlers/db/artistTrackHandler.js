@@ -1,5 +1,5 @@
 const logger = require('../../utils/logger');
-const mainHandler = require('../db');
+const generalHandler = require('./generalHandler');
 const tables = require('../../database/tableNames');
 
 function insertAssociations(trackId, artistsIds) {
@@ -12,7 +12,7 @@ function insertAssociations(trackId, artistsIds) {
       artist_id: id.id,
     });
   });
-  return mainHandler.createNewEntry(tables.artists_tracks, rowValues);
+  return generalHandler.createNewEntry(tables.artists_tracks, rowValues);
 }
 
 module.exports = { insertAssociations };

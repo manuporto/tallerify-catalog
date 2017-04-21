@@ -150,7 +150,7 @@ const successfulArtistsFetch = (artists, res) => {
 
 const successfulArtistCreation = (artist, res) => {
   logger.info('Successful artist creation');
-  res.status(201).json(artist);
+  res.status(201).json(artist[0]);
 };
 
 /* Tracks */

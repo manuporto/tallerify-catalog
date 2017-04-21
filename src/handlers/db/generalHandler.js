@@ -1,6 +1,6 @@
-const logger = require('../utils/logger');
-const models = require('../models/index');
-const db = require('../database/');
+const logger = require('../../utils/logger');
+const models = require('../../models/index');
+const db = require('../../database/index');
 
 const tables = {
   users: models.users,

@@ -1,4 +1,4 @@
-const db = require('./../handlers/db');
+const db = require('./../handlers/db/generalHandler');
 const tables = require('../database/tableNames');
 const respond = require('./../handlers/response');
 
