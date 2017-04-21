@@ -33,6 +33,7 @@ const findWithUsernameAndPassword = (tableName, username, password) => {
 
 const createNewEntry = (tableName, entry) => {
   logger.info('Creating entry');
+  logger.info(`${JSON.stringify(entry)}`);
   return db(tableName).returning('*').insert(entry);
 };
 

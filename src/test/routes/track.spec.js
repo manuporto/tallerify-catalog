@@ -3,7 +3,7 @@ process.env.NODE_ENV = 'test';
 const app = require('../../app');
 const db = require('../../database');
 const tables = require('../../database/tableNames');
-const dbHandler = require('../../handlers/db/index');
+const dbHandler = require('../../handlers/db/generalHandler');
 const request = require('supertest');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
@@ -78,8 +78,7 @@ describe('Track', () => {
     });
 
     it('should return status code 201 when correct parameters are sent', (done) => {
-      console.log(``);
-      dbHandler.general.createNewEntry(tables.artists, artistsConstants.trackTestArtist)
+      dbHandler.createNewEntry(tables.artists, artistsConstants.trackTestArtist)
       .then(() => {
         request(app)
           .post('/api/tracks')
