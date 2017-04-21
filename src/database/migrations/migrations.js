@@ -32,8 +32,10 @@ exports.up = (knex, Promise) => {
       table.string('firstName');
       table.string('lastName');
       table.string('country');
+      table.string('birthdate');
       table.string('email');
       table.specificType('images', 'text ARRAY');
+      table.string('href');
     }),
    ]);
 };

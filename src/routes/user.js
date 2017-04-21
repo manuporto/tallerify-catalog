@@ -91,7 +91,7 @@ function createNewUser(body) {
     birthdate: body.birthdate,
     images: [constants.DEFAULT_IMAGE],
   };
-  return db.general.general.createNewEntry(tables.users, user);
+  return db.general.createNewEntry(tables.users, user);
 }
 
 function updateUserInfo(user, body) {
