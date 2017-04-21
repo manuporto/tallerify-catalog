@@ -28,7 +28,7 @@ router.delete('/api/users/:id', user.deleteUser);
 
 router.get('/api/admins', admin.getAdmins);
 
-// router.post('/api/admins', admin.newAdmin);
+router.post('/api/admins', admin.newAdmin);
 
 router.delete('/api/admins/:id', admin.deleteAdmin);
 
