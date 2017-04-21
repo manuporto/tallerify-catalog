@@ -13,7 +13,7 @@ const constants = require('./artist.constants.json');
 
 describe('Artist', () => {
 
-  before(done => {
+  beforeEach(done => {
     db.migrate.rollback()
     .then(() => {
       db.migrate.latest()
@@ -22,7 +22,7 @@ describe('Artist', () => {
     });
   });
 
-  after(done => {
+  afterEach(done => {
     db.migrate.rollback()
     .then(() => done());
   });
