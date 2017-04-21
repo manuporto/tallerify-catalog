@@ -13,7 +13,7 @@ chai.use(chaiHttp);
 
 const constants = require('./admin.constants.json');
 
-describe.skip('Admin', () => {
+describe('Admin', () => {
   beforeEach((done) => {
     db.migrate.rollback()
       .then(() => {

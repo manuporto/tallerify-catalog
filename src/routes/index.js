@@ -30,7 +30,7 @@ router.get('/api/admins', admin.getAdmins);
 
 // router.post('/api/admins', admin.newAdmin);
 
-// router.delete('/api/admins/:id', admin.deleteAdmin);
+router.delete('/api/admins/:id', admin.deleteAdmin);
 
 // /* Tokens */
 
