@@ -1,5 +1,6 @@
 const logger = require('../utils/logger');
 const models = require('../models/index');
+const db = require('../database/');
 
 const tables = {
   users: models.users,
@@ -8,7 +9,7 @@ const tables = {
 
 const findAllEntries = (tableName) => {
   logger.debug('Getting all entries.');
-  return tables[tableName].findAll({});
+  return db.select().from(tableName);
 };
 
 const findEntryWithId = (tableName, id) => {
@@ -32,7 +33,7 @@ const findWithUsernameAndPassword = (tableName, username, password) => {
 
 const createNewEntry = (tableName, entry) => {
   logger.info('Creating entry');
-  return tables[tableName].create(entry);
+  return db(tableName).returning('*').insert(entry);
 };
 
 function updateEntry(entry, newEntry) {

@@ -135,6 +135,37 @@ const successfulAdminTokenGeneration = (admin, response) => {
   successfulTokenGeneration(result, response);
 };
 
+/* Artists */
+
+const successfulArtistsFetch = (artists, res) => {
+  logger.info('Successful artists fetch');
+  return res.status(200).json({
+    metadata: {
+      count: artists.length,
+      version: constants.API_VERSION,
+    },
+    artists,
+  });
+};
+
+const successfulArtistCreation = (artist, res) => {
+  logger.info('Successful artist creation');
+  res.status(201).json(artist);
+};
+
+/* Tracks */
+
+const succesfulTracksFetch = (tracks, res) => {
+  logger.info('Successful tracks fetch');
+  return res.status(200).json({
+    metadata: {
+      count: tracks.length,
+      version: constants.API_VERSION,
+    },
+    tracks,
+  });
+};
+
 module.exports = {
   internalServerError,
   validateRequestBody,
@@ -152,4 +183,7 @@ module.exports = {
   inconsistentCredentials,
   successfulUserTokenGeneration,
   successfulAdminTokenGeneration,
+  successfulArtistsFetch,
+  successfulArtistCreation,
+  succesfulTracksFetch,
 };
