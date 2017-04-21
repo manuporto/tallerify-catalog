@@ -1,6 +1,5 @@
-const logger = require('../utils/logger');
-const models = require('../models/index');
-const common = require('./common');
+const db = require('./../handlers/db');
+const respond = require('./../handlers/response');
 
 const expectedBodySchema = {
   type: 'object',
@@ -16,85 +15,43 @@ const expectedBodySchema = {
   },
 };
 
-function findWithUsernameAndPassword(model, username, password) {
-  logger.info(`Querying database for entry with username "${username}" and password "${password}"`);
-  return model.findAll({
-    where: {
-      userName: username,
-      password: password,
-    },
-  });
-}
-
-function resultIsValid(result, response) {
+const resultIsValid = (result, response) => {
   if (result.length === 0) {
-    logger.warn('No entry with such credentials');
-    response.status(500).json({ code: 500, message: 'No entry with such credentials' });
+    respond.nonexistentCredentials(response);
     return false;
   }
   if (result.length > 1) {
-    logger.warn(`There is more than one entry with those credentials "${result}"`);
-    response.status(500).json({ code: 500, message: 'There is more than one entry with those credentials' });
+    respond.inconsistentCredentials(response);
     return false;
   }
   return true;
-}
+};
 
-function successfulTokenGeneration(result, response) {
-  logger.info('Successful token generation');
-  response.status(201).json(result);
-}
-
-function successfulUserTokenGeneration(user, response) {
-  const result = Object.assign(
-    {},
-    {
-      token: user.id.toString(),
-      user: {
-        id: user.id,
-        href: user.href,
-        userName: user.userName,
-      },
-    });
-  successfulTokenGeneration(result, response);
-}
-
-function successfulAdminTokenGeneration(admin, response) {
-  const result = Object.assign(
-    {},
-    {
-      token: admin.id.toString(),
-      admin: {
-        id: admin.id,
-        userName: admin.userName,
-      },
-    });
-  successfulTokenGeneration(result, response);
-}
+/* Routes */
 
 const generateToken = (req, res) => {
-  return common.validateRequestBody(req.body, expectedBodySchema)
+  return respond.validateRequestBody(req.body, expectedBodySchema)
     .then(() => {
-      findWithUsernameAndPassword(models.users, req.body.userName, req.body.password)
+      db.findWithUsernameAndPassword('users', req.body.userName, req.body.password)
         .then((users) => {
           if (!resultIsValid(users, res)) return;
-          successfulUserTokenGeneration(users[0], res);
+          respond.successfulUserTokenGeneration(users[0], res);
         })
-        .catch(reason => common.internalServerError(reason, res));
+        .catch(reason => respond.internalServerError(reason, res));
     })
-    .catch(error => common.invalidRequestBodyError(error, res));
+    .catch(error => respond.invalidRequestBodyError(error, res));
 };
 
 const generateAdminToken = (req, res) => {
-  return common.validateRequestBody(req.body, expectedBodySchema)
+  return respond.validateRequestBody(req.body, expectedBodySchema)
     .then(() => {
-      findWithUsernameAndPassword(models.admins, req.body.userName, req.body.password)
+      db.findWithUsernameAndPassword('admins', req.body.userName, req.body.password)
         .then((admins) => {
           if (!resultIsValid(admins, res)) return;
-          successfulAdminTokenGeneration(admins[0], res);
-        }).catch(reason => common.internalServerError(reason, res));
+          respond.successfulAdminTokenGeneration(admins[0], res);
+        }).catch(reason => respond.internalServerError(reason, res));
     })
-    .catch(error => common.invalidRequestBodyError(error, res));
+    .catch(error => respond.invalidRequestBodyError(error, res));
 };
 
 module.exports = { generateToken, generateAdminToken };
