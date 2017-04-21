@@ -1,5 +1,5 @@
 const express = require('express');
-// const user = require('./user');
+const user = require('./user');
 // const token = require('./token');
 const artist = require('./artist');
 const track = require('./track');
@@ -14,11 +14,11 @@ router.get('/', (req, res) => {
 
 /* Users */
 
-// router.get('/api/users', user.getUsers);
+router.get('/api/users', user.getUsers);
 
 // router.get('/api/users/:id', user.getUser);
 
-// router.post('/api/users', user.newUser);
+router.post('/api/users', user.newUser);
 
 // router.put('/api/users/:id', user.updateUser);
 
