@@ -1,6 +1,5 @@
-const logger = require('../utils/logger');
-const models = require('../models/index');
-const common = require('./common');
+const db = require('./../handlers/db/generalHandler');
+const respond = require('./../handlers/response');
 const constants = require('./constants.json');
 
 const userExpectedBodySchema = {
@@ -80,32 +79,8 @@ const updateUserExpectedBodySchema = {
   },
 };
 
-function findAllUsers() {
-  logger.debug('Getting all users.');
-  return models.users.findAll({});
-}
-
-function findUserWithId(id) {
-  logger.info(`Searching for user ${id}`);
-  return models.users.find({
-    where: {
-      id: id,
-    },
-  });
-}
-
-function userExists(id, user, response) {
-  if (!user) {
-    logger.warn(`No user with id ${id}`);
-    response.status(404).json({ code: 404, message: `No user with id ${id}` });
-    return false;
-  }
-  return true;
-}
-
 function createNewUser(body) {
-  logger.info('Creating user');
-  return models.users.create({
+  let user = {
     userName: body.userName,
     password: body.password,
     firstName: body.firstName,
@@ -114,12 +89,12 @@ function createNewUser(body) {
     email: body.email,
     birthdate: body.birthdate,
     images: [constants.DEFAULT_IMAGE],
-  });
+  };
+  return db.createNewEntry('users', user);
 }
 
 function updateUserInfo(user, body) {
-  logger.info('Updating user');
-  return user.updateAttributes({
+  let updatedUser = {
     userName: body.userName,
     password: body.password,
     firstName: body.firstName,
@@ -128,98 +103,61 @@ function updateUserInfo(user, body) {
     email: body.email,
     birthdate: body.birthdate,
     images: body.images,
-  });
+  };
+  return db.updateEntry(user, updatedUser);
 }
 
-function deleteUserWithId(id) {
-  logger.info(`Deleting user ${id}`);
-  return models.users.destroy({
-    where: {
-      id: id,
-    },
-  });
-}
-
-function successfulUsersFetch(users, response) {
-  logger.info('Successful users fetch');
-  return response.status(200).json({
-    metadata: {
-      count: users.length,
-      version: constants.API_VERSION,
-    },
-    users,
-  });
-}
-
-function successfulUserFetch(user, response) {
-  logger.info('Successful user fetch');
-  response.status(200).json(user);
-}
-
-function successfulUserCreation(user, response) {
-  logger.info('Successful user creation');
-  response.status(201).json(user);
-}
-
-function successfulUserUpdate(user, response) {
-  logger.info('Successful user update');
-  response.status(200).json(user);
-}
-
-function successfulUserDeletion(response) {
-  logger.info('Successful user deletion');
-  response.sendStatus(204);
-}
+/* Routes */
 
 const getUsers = (req, res) => {
-  findAllUsers()
-    .then(users => successfulUsersFetch(users, res))
-    .catch(error => common.internalServerError(error, res));
+  db.findAllEntries('users')
+    .then(users => respond.successfulUsersFetch(users, res))
+    .catch(error => respond.internalServerError(error, res));
 };
 
 const getUser = (req, res) => {
-  findUserWithId(req.params.id)
+  db.findEntryWithId('users', req.params.id)
     .then((user) => {
-      if (!userExists(req.params.id, user, res)) return;
-      successfulUserFetch(user, res);
+      if (!respond.entryExists(req.params.id, user, res)) return;
+      respond.successfulUserFetch(user, res);
     })
-    .catch(error => common.internalServerError(error, res));
+    .catch(error => respond.internalServerError(error, res));
 };
 
 const newUser = (req, res) => {
-  common.validateRequestBody(req.body, userExpectedBodySchema)
+  respond.validateRequestBody(req.body, userExpectedBodySchema)
     .then(() => {
       createNewUser(req.body)
-        .then(user => successfulUserCreation(user, res))
-        .catch(error => common.internalServerError(error, res));
+        .then(user => respond.successfulUserCreation(user, res))
+        .catch(error => respond.internalServerError(error, res));
     })
-    .catch(error => common.invalidRequestBodyError(error, res));
+    .catch(error => respond.invalidRequestBodyError(error, res));
 };
 
 const updateUser = (req, res) => {
-  common.validateRequestBody(req.body, updateUserExpectedBodySchema)
+  respond.validateRequestBody(req.body, updateUserExpectedBodySchema)
     .then(() => {
-      findUserWithId(req.params.id)
+      db.findEntryWithId('users', req.params.id)
         .then((user) => {
-          if (!userExists(req.params.id, user, res)) return;
+          if (!respond.entryExists(req.params.id, user, res)) return;
           updateUserInfo(user, req.body)
-          .then(updatedUser => successfulUserUpdate(updatedUser, res))
-          .catch(error => common.internalServerError(error, res));
+          .then(updatedUser => respond.successfulUserUpdate(updatedUser, res))
+          .catch(error => respond.internalServerError(error, res));
         })
-        .catch(error => common.internalServerError(error, res));
+        .catch(error => respond.internalServerError(error, res));
     })
-    .catch(error => common.invalidRequestBodyError(error, res));
+    .catch(error => respond.invalidRequestBodyError(error, res));
 };
 
 const deleteUser = (req, res) => {
-  findUserWithId(req.params.id)
+  db.findEntryWithId('users', req.params.id)
     .then((user) => {
-      if (!userExists(req.params.id, user, res)) return;
-      deleteUserWithId(req.params.id)
-        .then(() => successfulUserDeletion(res))
-        .catch(error => common.internalServerError(error, res));
+      if (!respond.entryExists(req.params.id, user, res)) return;
+      db.deleteEntryWithId('users', req.params.id)
+        .then(() => respond.successfulUserDeletion(res))
+        .catch(error => respond.internalServerError(error, res));
     })
-    .catch(error => common.internalServerError(error, res));
+    .catch(error => respond.internalServerError(error, res));
 };
 
 module.exports = { getUsers, getUser, newUser, updateUser, deleteUser };

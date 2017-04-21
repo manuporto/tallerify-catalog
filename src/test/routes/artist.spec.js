@@ -1,6 +1,6 @@
 process.env.NODE_ENV = 'test';
 
-const app = require('../../app'); 
+const app = require('../../app');
 const db = require('../../database');
 const request = require('supertest');
 const chai = require('chai');
@@ -13,7 +13,7 @@ const constants = require('./artist.constants.json');
 
 describe('Artist', () => {
 
-  beforeEach(done => {
+  beforeEach((done) => {
     db.migrate.rollback()
     .then(() => {
       db.migrate.latest()
@@ -22,14 +22,14 @@ describe('Artist', () => {
     });
   });
 
-  afterEach(done => {
+  afterEach((done) => {
     db.migrate.rollback()
     .then(() => done());
   });
 
 	describe('/GET artists', () => {
 
-		it('should return status code 200', done => {
+		it('should return status code 200', (done) => {
       request(app)
         .get('/api/artists')
         .end((err, res) => {
@@ -38,7 +38,7 @@ describe('Artist', () => {
     		});
   	});
 
-    it('should return the expected body response when correct parameters are sent', done => {
+    it('should return the expected body response when correct parameters are sent', (done) => {
       request(app)
         .get('/api/artists')
         .end((err, res) => {
@@ -55,7 +55,7 @@ describe('Artist', () => {
 
   describe('/POST artists', () => {
 
-    it('should return status code 400 when parameters are missing', done => {
+    it('should return status code 400 when parameters are missing', (done) => {
       request(app)
         .post('/api/artists')
         .send(constants.newArtistWithMissingAttributes)
@@ -65,7 +65,7 @@ describe('Artist', () => {
         });
     });
 
-    it('should return status code 400 when parameters are invalid', done => {
+    it('should return status code 400 when parameters are invalid', (done) => {
       request(app)
         .post('/api/artists')
         .send(constants.invalidArtist)
@@ -75,7 +75,7 @@ describe('Artist', () => {
         });
     });
 
-    it('should return status code 201 when correct parameters are sent', done => {
+    it('should return status code 201 when correct parameters are sent', (done) => {
       request(app)
         .post('/api/artists')
         .send(constants.testArtist)
@@ -85,7 +85,7 @@ describe('Artist', () => {
         });
     });
 
-    it('should return the expected body response when correct parameters are sent', done => {
+    it('should return the expected body response when correct parameters are sent', (done) => {
       request(app)
         .post('/api/artists')
         .send(constants.testArtist)

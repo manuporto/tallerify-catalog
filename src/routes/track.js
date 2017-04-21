@@ -1,11 +1,9 @@
 const logger = require('../utils/logger');
-const common = require('./common');
-const constants = require('./constants.json');
-const db = require('../database');
-const dbHandler = require('../dbHandler');
+const db = require('./../handlers/db/index');
 const tables = require('../database/tableNames');
+const respond = require('./../handlers/response');
 
-const trackExpectedBodySchema = {
+const trackExpectedBodySchema = { // FIXME incomplete schema
   type: 'object',
   properties: {
     name: {
@@ -14,7 +12,7 @@ const trackExpectedBodySchema = {
     },
     duration: {
       required: true,
-      type: 'integer',      
+      type: 'integer',
     },
     artists: {
       required: true,
@@ -26,30 +24,23 @@ const trackExpectedBodySchema = {
   }
 };
 
-function succesfulTracksFetch(tracks, res) {
-  logger.info('Successful tracks fetch');
-  return res.status(200).json({
-    metadata: {
-      count: tracks.length,
-      version: constants.API_VERSION,
-    },
-    tracks,
-  });
-}
+const getTracks = (req, res) => {
+  db.general.findAllEntries(tables.tracks)
+    .then(tracks => respond.succesfulTracksFetch(tracks, res))
+    .catch(error => respond.internalServerError(error, res));
+};
 
-function getTracks(req, res) {
-  dbHandler.track.selectAllTracks().then(tracks => succesfulTracksFetch(tracks, res));
-}
-
-function newTrack(req, res) {
-  common.validateRequestBody(req.body, trackExpectedBodySchema)
+const newTrack = (req, res) => {
+  respond.validateRequestBody(req.body, trackExpectedBodySchema)
   .then(() => {
-    dbHandler.track.insertTrack(req.body)
-    .then(track => {
-      logger.info(`Track: ${JSON.stringify(track, null, 4)}`);
-      res.status(201).json(track);
-    }).catch(error => common.internalServerError(error, res));
-  }).catch(error => common.invalidRequestBodyError(error, res));
-}
+    db.track.insertTrack(req.body) // FIXME validate body
+      .then((track) => {
+        logger.info(`Track: ${JSON.stringify(track, null, 4)}`); // FIXME move this to response handler
+        res.status(201).json(track);
+      })
+      .catch(error => respond.internalServerError(error, res));
+  })
+  .catch(error => respond.invalidRequestBodyError(error, res));
+};
 
 module.exports = { getTracks, newTrack };
