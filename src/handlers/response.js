@@ -86,7 +86,7 @@ const successfulAdminsFetch = (admins, response) => {
 
 const successfulAdminCreation = (admin, response) => {
   logger.info('Successful admin creation');
-  response.status(201).json(admin);
+  response.status(201).json(admin[0]);
 };
 
 const successfulAdminDeletion = (response) => {

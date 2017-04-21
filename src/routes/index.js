@@ -4,7 +4,7 @@ const user = require('./user');
 const artist = require('./artist');
 const track = require('./track');
 // const album = require('./album');
-// const admin = require('./admin');
+const admin = require('./admin');
 
 const router = express.Router();
 
@@ -24,13 +24,13 @@ router.put('/api/users/:id', user.updateUser);
 
 router.delete('/api/users/:id', user.deleteUser);
 
-// /* Admins */
+/* Admins */
 
-// router.get('/api/admins', admin.getAdmins);
+router.get('/api/admins', admin.getAdmins);
 
-// router.post('/api/admins', admin.newAdmin);
+router.post('/api/admins', admin.newAdmin);
 
-// router.delete('/api/admins/:id', admin.deleteAdmin);
+router.delete('/api/admins/:id', admin.deleteAdmin);
 
 // /* Tokens */
 
