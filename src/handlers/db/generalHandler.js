@@ -13,11 +13,9 @@ const findEntryWithId = (tableName, id) => {
 
 const findWithUsernameAndPassword = (tableName, username, password) => {
   logger.info(`Querying database for entry with username "${username}" and password "${password}"`);
-  return tableName.findAll({
-    where: {
-      userName: username,
-      password: password,
-    },
+  return db(tableName).where({
+    userName: username,
+    password: password,
   });
 };
 

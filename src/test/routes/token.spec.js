@@ -1,16 +1,47 @@
 process.env.NODE_ENV = 'test';
 
 const app = require('../../app');
-//const db = require('../../models');
+const db = require('../../database');
+const tables = require('../../database/tableNames');
+const dbHandler = require('../../handlers/db/generalHandler');
 const request = require('supertest');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
-const constants = require('./token.constants.json');
 
 chai.should();
 chai.use(chaiHttp);
 
-describe.skip('Token', () => {
+const constants = require('./token.constants.json');
+
+describe('Token', () => {
+  beforeEach((done) => {
+    const INITIAL_DATA_AMOUNT = 2;
+    let i = 0;
+    db.migrate.rollback()
+      .then(() => {
+        db.migrate.latest()
+          .then(() => {
+            dbHandler.createNewEntry(tables.users, constants.initialUser)
+              .then(() => {
+                i++;
+                if (i === INITIAL_DATA_AMOUNT) done(); // FIXME perdon
+              })
+              .catch(error => done(error));
+            dbHandler.createNewEntry(tables.admins, constants.initialAdmin)
+              .then(() => {
+                i++;
+                if (i === INITIAL_DATA_AMOUNT) done(); // FIXME perdon
+              })
+              .catch(error => done(error));
+          })
+          .catch(error => done(error));
+      });
+  });
+
+  afterEach((done) => {
+    db.migrate.rollback()
+      .then(() => done());
+  });
   /*
   beforeEach((done) => {
     const INITIAL_DATA_AMOUNT = 2;

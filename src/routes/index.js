@@ -1,6 +1,6 @@
 const express = require('express');
 const user = require('./user');
-// const token = require('./token');
+const token = require('./token');
 const artist = require('./artist');
 const track = require('./track');
 // const album = require('./album');
@@ -34,7 +34,7 @@ router.delete('/api/admins/:id', admin.deleteAdmin);
 
 // /* Tokens */
 
-// router.post('/api/tokens', token.generateToken);
+router.post('/api/tokens', token.generateToken);
 
 // router.post('/api/admins/tokens', token.generateAdminToken);
 
