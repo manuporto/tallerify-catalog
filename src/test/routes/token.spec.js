@@ -42,47 +42,6 @@ describe('Token', () => {
     db.migrate.rollback()
       .then(() => done());
   });
-  /*
-  beforeEach((done) => {
-    const INITIAL_DATA_AMOUNT = 2;
-    let i = 0;
-    db.sequelize
-      .sync({ force: true })
-      .then(() => {
-        db.users
-          .create(constants.initialUser)
-          .then(() => {
-            i++;
-            if (i === INITIAL_DATA_AMOUNT) done(); // FIXME perdon
-          })
-          .catch((error) => {
-            done(error);
-          });
-        db.admins
-          .create(constants.initialAdmin)
-          .then(() => {
-            i++;
-            if (i === INITIAL_DATA_AMOUNT) done();
-          })
-          .catch((error) => {
-            done(error);
-          });
-      })
-      .catch((error) => {
-        done(error);
-      });
-  });
-
-  afterEach((done) => {
-    db.sequelize
-      .drop()
-      .then(() => {
-        done();
-      }).catch((error) => {
-        done(error);
-      });
-  });
-  */
 
   describe('/POST tokens', () => {
     it('should return status code 400 when parameters are missing', (done) => {
