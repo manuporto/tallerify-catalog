@@ -70,5 +70,18 @@ describe('Artist', () => {
           done();
         });
     });
+
+    it('should return the expected body response when correct parameters are sent', done => {
+      request(app)
+        .post('/api/artists')
+        .send(constants.testArtist)
+        .end((err, res) => {
+          res.body.should.be.a('object');
+          res.body.should.have.property('id');
+          res.body.should.have.property('name').eql(constants.testArtist.name);
+          res.body.should.have.property('popularity').eql(constants.testArtist.popularity);
+          done();
+        });
+    });
   });
 });

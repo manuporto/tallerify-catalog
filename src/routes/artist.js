@@ -32,7 +32,7 @@ function successfulArtistsFetch(artists, res) {
 
 function successfulArtistCreation(artist, res) {
   logger.info('Successful artist creation');
-  res.status(201).json(artist);
+  res.status(201).json(artist[0]);
 }
 
 function getArtists(req, res) {
