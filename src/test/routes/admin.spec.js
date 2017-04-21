@@ -1,7 +1,9 @@
 process.env.NODE_ENV = 'test';
 
 const app = require('../../app');
-//const db = require('../../models');
+const db = require('../../database');
+const tables = require('../../database/tableNames');
+const dbHandler = require('../../handlers/db/generalHandler');
 const request = require('supertest');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
@@ -12,35 +14,24 @@ chai.use(chaiHttp);
 const constants = require('./admin.constants.json');
 
 describe.skip('Admin', () => {
-  /*
   beforeEach((done) => {
-    db.sequelize
-      .sync({ force: true })
+    db.migrate.rollback()
       .then(() => {
-        db.admins
-          .create(constants.initialAdmin)
+        db.migrate.latest()
           .then(() => {
-            done();
+            dbHandler.createNewEntry(tables.admins, constants.initialAdmin)
+              .then(() => done())
+              .catch(error => done(error));
           })
-          .catch((error) => {
-            done(error);
-          });
-      })
-      .catch((error) => {
-        done(error);
+          .catch(error => done(error));
       });
   });
 
   afterEach((done) => {
-    db.sequelize
-      .drop()
-      .then(() => {
-        done();
-      }).catch((error) => {
-        done(error);
-      });
+    db.migrate.rollback()
+      .then(() => done());
   });
-*/
+
   describe('/GET admins', () => {
     it('should return status code 200', (done) => {
       request(app)

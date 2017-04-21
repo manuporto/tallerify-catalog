@@ -37,6 +37,16 @@ exports.up = (knex, Promise) => {
       table.specificType('images', 'text ARRAY');
       table.string('href');
     }),
+
+    knex.schema.createTableIfNotExists(tables.admins, table => {
+      logger.info('Creating admins table.');
+      table.increments('id').primary();
+      table.string('userName');
+      table.string('password');
+      table.string('firstName');
+      table.string('lastName');
+      table.string('email');
+    }),
    ]);
 };
 
@@ -46,5 +56,6 @@ exports.down = (knex, Promise) => {
 		knex.schema.dropTable(tables.artists),
 		knex.schema.dropTable(tables.artists_tracks),
     knex.schema.dropTable(tables.users),
+    knex.schema.dropTable(tables.admins),
    ]);
 };
