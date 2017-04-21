@@ -1,7 +1,7 @@
 const logger = require('../utils/logger');
-const models = require('../models/index');
 
 const postAlbum = (req, res) => {
+  /*
   logger.info(`Post /albums with query ${JSON.stringify(req.body, null, 4)}`);
 
   models.albums.create({
@@ -43,7 +43,8 @@ const postAlbum = (req, res) => {
     //   winston.log('info', `New album created: ${album}`);
     //   res.status(200).json(result);
     // });
-  });
+
+  });*/
 };
 
 module.exports = { postAlbum };

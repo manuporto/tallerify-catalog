@@ -1,6 +1,5 @@
 const constants = require('./../routes/constants.json');
 const logger = require('../utils/logger');
-const promisify = require('promisify-node');
 const amanda = require('amanda');
 
 const jsonSchemaValidator = amanda('json');
@@ -14,15 +13,15 @@ const internalServerError = (reason, response) => {
 function validateRequestBody(body, schema) {
   logger.info(`Validating request "${JSON.stringify(body, null, 4)}"`);
   return new Promise((resolve, reject) => {
-    jsonSchemaValidator.validate(body, schema, error => {
+    jsonSchemaValidator.validate(body, schema, (error) => {
       if (error) {
         reject(error);
       } else {
         resolve();
-      };
-    })
+      }
+    });
   });
-};
+}
 
 const invalidRequestBodyError = (reasons, response) => {
   const message = `Request body is invalid: ${reasons[0].message}`;
@@ -31,7 +30,7 @@ const invalidRequestBodyError = (reasons, response) => {
 };
 
 const entryExists = (id, entry, response) => {
-  if (!entry) {
+  if (!entry.length) {
     logger.warn(`No entry with id ${id}`);
     response.status(404).json({ code: 404, message: `No entry with id ${id}` });
     return false;
@@ -54,17 +53,17 @@ const successfulUsersFetch = (users, response) => {
 
 const successfulUserFetch = (user, response) => {
   logger.info('Successful user fetch');
-  response.status(200).json(user);
+  response.status(200).json(user[0]);
 };
 
 const successfulUserCreation = (user, response) => {
   logger.info('Successful user creation');
-  response.status(201).json(user);
+  response.status(201).json(user[0]);
 };
 
 const successfulUserUpdate = (user, response) => {
   logger.info('Successful user update');
-  response.status(200).json(user);
+  response.status(200).json(user[0]);
 };
 
 const successfulUserDeletion = (response) => {

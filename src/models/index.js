@@ -1,3 +1,4 @@
+/*
 const env = process.env.NODE_ENV || 'development';
 
 const logger = require('../utils/logger');
@@ -41,3 +42,4 @@ logger.info('Finished associating models');
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 module.exports = db;
+*/
