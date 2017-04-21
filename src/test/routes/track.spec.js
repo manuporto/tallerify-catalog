@@ -15,7 +15,7 @@ const artistsConstants = require('./artist.constants.json');
 
 describe('Track', () => {
 
-  beforeEach(done => {
+  beforeEach((done) => {
     db.migrate.rollback()
     .then(() => {
       db.migrate.latest()
@@ -24,7 +24,7 @@ describe('Track', () => {
     });
   });
 
-  afterEach(done => {
+  afterEach((done) => {
     db.migrate.rollback()
     .then(() => done());
   });

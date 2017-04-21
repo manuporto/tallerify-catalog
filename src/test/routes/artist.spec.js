@@ -22,14 +22,14 @@ describe('Artist', () => {
     });
   });
 
-  afterEach(done => {
+  afterEach((done) => {
     db.migrate.rollback()
     .then(() => done());
   });
 
 	describe('/GET artists', () => {
 
-		it('should return status code 200', done => {
+		it('should return status code 200', (done) => {
       request(app)
         .get('/api/artists')
         .end((err, res) => {
