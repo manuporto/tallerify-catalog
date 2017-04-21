@@ -1,4 +1,5 @@
 const db = require('./../handlers/db/generalHandler');
+const tables = require('../database/tableNames');
 const respond = require('./../handlers/response');
 
 const expectedBodySchema = {
@@ -32,7 +33,7 @@ const resultIsValid = (result, response) => {
 const generateToken = (req, res) => {
   return respond.validateRequestBody(req.body, expectedBodySchema)
     .then(() => {
-      db.findWithUsernameAndPassword('users', req.body.userName, req.body.password)
+      db.findWithUsernameAndPassword(tables.users, req.body.userName, req.body.password)
         .then((users) => {
           if (!resultIsValid(users, res)) return;
           respond.successfulUserTokenGeneration(users[0], res);
@@ -45,7 +46,7 @@ const generateToken = (req, res) => {
 const generateAdminToken = (req, res) => {
   return respond.validateRequestBody(req.body, expectedBodySchema)
     .then(() => {
-      db.findWithUsernameAndPassword('admins', req.body.userName, req.body.password)
+      db.findWithUsernameAndPassword(tables.admins, req.body.userName, req.body.password)
         .then((admins) => {
           if (!resultIsValid(admins, res)) return;
           respond.successfulAdminTokenGeneration(admins[0], res);
