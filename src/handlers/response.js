@@ -11,12 +11,18 @@ const internalServerError = (reason, response) => {
   return response.status(500).json({ code: 500, message });
 };
 
-function validateJson(body, schema, callback) {
+function validateRequestBody(body, schema) {
   logger.info(`Validating request "${JSON.stringify(body, null, 4)}"`);
-  return jsonSchemaValidator.validate(body, schema, callback);
-}
-
-const validateRequestBody = promisify(validateJson);
+  return new Promise((resolve, reject) => {
+    jsonSchemaValidator.validate(body, schema, error => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve();
+      };
+    })
+  });
+};
 
 const invalidRequestBodyError = (reasons, response) => {
   const message = `Request body is invalid: ${reasons[0].message}`;
