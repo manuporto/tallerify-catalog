@@ -16,7 +16,7 @@ router.get('/', (req, res) => {
 
 router.get('/api/users', user.getUsers);
 
-// router.get('/api/users/:id', user.getUser);
+router.get('/api/users/:id', user.getUser);
 
 router.post('/api/users', user.newUser);
 

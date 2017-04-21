@@ -14,19 +14,15 @@ const internalServerError = (reason, response) => {
 function validateRequestBody(body, schema) {
   logger.info(`Validating request "${JSON.stringify(body, null, 4)}"`);
   return new Promise((resolve, reject) => {
-    logger.info(`1`);
     jsonSchemaValidator.validate(body, schema, (error) => {
-      logger.info(`2`);
       if (error) {
-        logger.info(`reject`);
         reject(error);
       } else {
-        logger.info(`resolve`);
         resolve();
-      };
-    })
+      }
+    });
   });
-};
+}
 
 const invalidRequestBodyError = (reasons, response) => {
   const message = `Request body is invalid: ${reasons[0].message}`;
@@ -35,7 +31,7 @@ const invalidRequestBodyError = (reasons, response) => {
 };
 
 const entryExists = (id, entry, response) => {
-  if (!entry) {
+  if (!entry.length) {
     logger.warn(`No entry with id ${id}`);
     response.status(404).json({ code: 404, message: `No entry with id ${id}` });
     return false;
@@ -58,7 +54,7 @@ const successfulUsersFetch = (users, response) => {
 
 const successfulUserFetch = (user, response) => {
   logger.info('Successful user fetch');
-  response.status(200).json(user);
+  response.status(200).json(user[0]);
 };
 
 const successfulUserCreation = (user, response) => {
