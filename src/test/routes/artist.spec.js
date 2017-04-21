@@ -1,7 +1,7 @@
 process.env.NODE_ENV = 'test';
 
 const app = require('../../app');
-const db = require('../../models');
+const db = require('../../database');
 const request = require('supertest');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
@@ -12,7 +12,9 @@ chai.use(chaiHttp);
 const constants = require('./artist.constants.json');
 
 describe('Artist', () => {
+
 	describe('/GET artists', () => {
+
 		it('should return status code 200', done => {
       request(app)
         .get('/api/artists')
@@ -38,6 +40,7 @@ describe('Artist', () => {
   });
 
   describe('/POST artists', () => {
+
     it('should return status code 400 when parameters are missing', done => {
       request(app)
         .post('/api/artists')
@@ -54,6 +57,16 @@ describe('Artist', () => {
         .send(constants.invalidArtist)
         .end((err, res) => {
           res.should.have.status(400);
+          done();
+        });
+    });
+
+    it('should return status code 201 when correct parameters are sent', done => {
+      request(app)
+        .post('/api/artists')
+        .send(constants.testArtist)
+        .end((err, res) => {
+          res.should.have.status(201);
           done();
         });
     });

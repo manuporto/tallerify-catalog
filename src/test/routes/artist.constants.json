@@ -1,6 +1,10 @@
 {
 	"initialArtist": {
 		"name": "Papa Baute",
+		"popularity": 2
+	},
+	"testArtist": {
+		"name": "Ricky Fort",
 		"popularity": 1
 	},
 	"newArtistWithMissingAttributes": {
