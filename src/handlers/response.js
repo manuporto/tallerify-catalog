@@ -11,9 +11,17 @@ const internalServerError = (reason, response) => {
   return response.status(500).json({ code: 500, message });
 };
 
-function validateJson(body, schema, callback) {
+function validateJson(body, schema) {
   logger.info(`Validating request "${JSON.stringify(body, null, 4)}"`);
-  return jsonSchemaValidator.validate(body, schema, callback);
+  return new Promise((resolve, reject) => {
+    jsonSchemaValidator.validate(body, schema, error => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve();
+      };
+    })
+  });
 }
 
 const validateRequestBody = promisify(validateJson);
@@ -168,6 +176,7 @@ const succesfulTracksFetch = (tracks, res) => {
 
 module.exports = {
   internalServerError,
+  validateJson,
   validateRequestBody,
   entryExists,
   invalidRequestBodyError,
