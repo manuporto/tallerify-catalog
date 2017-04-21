@@ -1,0 +1,13 @@
+{
+	"initialArtist": {
+		"name": "Papa Baute",
+		"popularity": 1
+	},
+	"newArtistWithMissingAttributes": {
+		"name": "Christian de Lugano"
+	},
+	"invalidArtist": {
+		"name": "Alexander Cannigia",
+		"popularity": "#SiempreAlTop"
+	}
+}

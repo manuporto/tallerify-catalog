@@ -19,9 +19,9 @@ const artistExpectedBodySchema = {
   }
 };
 
-function successfulArtistsFetch(artists, response) {
+function successfulArtistsFetch(artists, res) {
   logger.info('Successful artists fetch');
-  return response.status(200).json({
+  return res.status(200).json({
     metadata: {
       count: artists.length,
       version: constants.API_VERSION,
@@ -30,14 +30,23 @@ function successfulArtistsFetch(artists, response) {
   });
 }
 
+function successfulArtistCreation(artist, res) {
+  logger.info('Successful artist creation');
+  res.status(201).json(artist);
+}
+
 function getArtists(req, res) {
-  dbHandler.artist.selectAllArtists().then(artists => successfulArtistsFetch(artists, res));
+  dbHandler.artist.selectAllArtists()
+    .then(artists => successfulArtistsFetch(artists, res))
+    .catch(error => common.internalServerError(error, res));
 }
 
 function newArtist(req, res) {
-  dbHandler.artist.insertArtist(req.body).then(artist => {
-    res.status(200).json(artist);
-  })
+  common.validateRequestBody(req.body, artistExpectedBodySchema).then(() => {
+    dbHandler.artist.insertArtist(req.body)
+      .then(artist => successfulArtistCreation(artist, res))
+      .catch(error => common.internalServerError(error, res));
+  }).catch(error => common.invalidRequestBodyError(error, res));
 }
 
 module.exports = { getArtists, newArtist };
