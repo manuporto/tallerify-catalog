@@ -94,7 +94,7 @@ function createNewUser(body) {
   return db.general.createNewEntry(tables.users, user);
 }
 
-function updateUserInfo(user, body) {
+function updateUserInfo(body) {
   let updatedUser = {
     userName: body.userName,
     password: body.password,
@@ -105,7 +105,7 @@ function updateUserInfo(user, body) {
     birthdate: body.birthdate,
     images: body.images,
   };
-  return db.general.updateEntry(user, updatedUser);
+  return db.general.updateEntry(tables.users, updatedUser);
 }
 
 /* Routes */
@@ -141,7 +141,7 @@ const updateUser = (req, res) => {
       db.general.findEntryWithId(tables.users, req.params.id)
         .then((user) => {
           if (!respond.entryExists(req.params.id, user, res)) return;
-          updateUserInfo(user, req.body)
+          updateUserInfo(req.body)
           .then(updatedUser => respond.successfulUserUpdate(updatedUser, res))
           .catch(error => respond.internalServerError(error, res));
         })

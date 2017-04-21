@@ -1,6 +1,5 @@
 const constants = require('./../routes/constants.json');
 const logger = require('../utils/logger');
-const promisify = require('promisify-node');
 const amanda = require('amanda');
 
 const jsonSchemaValidator = amanda('json');
@@ -64,7 +63,7 @@ const successfulUserCreation = (user, response) => {
 
 const successfulUserUpdate = (user, response) => {
   logger.info('Successful user update');
-  response.status(200).json(user);
+  response.status(200).json(user[0]);
 };
 
 const successfulUserDeletion = (response) => {
