@@ -1,0 +1,21 @@
+{
+	"initialTrack": {
+		"name": "Despacito",
+		"duration": 240,
+		"artists": ["Luis Fonsi", "Papa Baute"]
+	},
+	"testTrack": {
+		"name": "Come a Little Closer",
+		"duration": 229,
+		"artists": ["Cage The Elephant"]
+	},
+	"newTrackWithMissingAttributes": {
+		"duration": 123,
+		"artists": ["Alexander Cannigia"]
+	},
+	"invalidTrack": {
+		"name": "Machu Picchu",
+		"duration": 187,
+		"artists": "The Strokes"
+	}
+}

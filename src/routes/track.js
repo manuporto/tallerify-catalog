@@ -1,15 +1,46 @@
 const logger = require('../utils/logger');
-const models = require('../models/index');
+const db = require('./../handlers/db/index');
+const tables = require('../database/tableNames');
+const respond = require('./../handlers/response');
 
-const postTrack = (req, res) => {
-  logger.info(`Post /tracks with query ${JSON.stringify(req.body, null, 4)}`);
-  models.tracks.create({
-    albumId: req.body.albumId,
-    artists: req.body.artists,
-    name: req.body.name,
-  }).then((track) => {
-    res.status(200).json(track);
-  });
+const trackExpectedBodySchema = { // FIXME incomplete schema
+  type: 'object',
+  properties: {
+    name: {
+      required: true,
+      type: 'string',
+    },
+    duration: {
+      required: true,
+      type: 'integer',
+    },
+    artists: {
+      required: true,
+      type: 'array',
+      items: {
+        type: 'string'
+      }
+    }
+  }
 };
 
-module.exports = { postTrack };
+const getTracks = (req, res) => {
+  db.general.findAllEntries(tables.tracks)
+    .then(tracks => respond.succesfulTracksFetch(tracks, res))
+    .catch(error => respond.internalServerError(error, res));
+};
+
+const newTrack = (req, res) => {
+  respond.validateRequestBody(req.body, trackExpectedBodySchema)
+  .then(() => {
+    db.track.insertTrack(req.body)
+      .then((track) => {
+        logger.info(`Track: ${JSON.stringify(track, null, 4)}`); // FIXME move this to response handler
+        res.status(201).json(track);
+      })
+      .catch(error => respond.internalServerError(error, res));
+  })
+  .catch(error => respond.invalidRequestBodyError(error, res));
+};
+
+module.exports = { getTracks, newTrack };

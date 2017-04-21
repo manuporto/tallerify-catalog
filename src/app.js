@@ -13,6 +13,7 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const ejs = require('ejs');
 
+const db = require('./database/database');
 
 // *** routes *** //
 const routes = require('./routes/index.js');

@@ -3,7 +3,6 @@ const user = require('./user');
 const token = require('./token');
 const artist = require('./artist');
 const track = require('./track');
-const album = require('./album');
 const admin = require('./admin');
 
 const router = express.Router();
@@ -42,14 +41,12 @@ router.post('/api/admins/tokens', token.generateAdminToken);
 
 router.get('/api/artists', artist.getArtists);
 
-router.post('/api/artists', artist.postArtist);
-
-/* Albums */
-
-router.post('/api/albums', album.postAlbum);
+router.post('/api/artists', artist.newArtist);
 
 /* Tracks */
 
-router.post('/api/tracks', track.postTrack);
+router.get('/api/tracks', track.getTracks);
+
+router.post('/api/tracks', track.newTrack);
 
 module.exports = router;

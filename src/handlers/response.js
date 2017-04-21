@@ -1,6 +1,5 @@
 const constants = require('./../routes/constants.json');
 const logger = require('../utils/logger');
-const promisify = require('promisify-node');
 const amanda = require('amanda');
 
 const jsonSchemaValidator = amanda('json');
@@ -11,12 +10,18 @@ const internalServerError = (reason, response) => {
   return response.status(500).json({ code: 500, message });
 };
 
-function validateJson(body, schema, callback) {
+const validateRequestBody = (body, schema) => {
   logger.info(`Validating request "${JSON.stringify(body, null, 4)}"`);
-  return jsonSchemaValidator.validate(body, schema, callback);
+  return new Promise((resolve, reject) => {
+    jsonSchemaValidator.validate(body, schema, (error) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve();
+      }
+    });
+  });
 }
-
-const validateRequestBody = promisify(validateJson);
 
 const invalidRequestBodyError = (reasons, response) => {
   const message = `Request body is invalid: ${reasons[0].message}`;
@@ -25,7 +30,7 @@ const invalidRequestBodyError = (reasons, response) => {
 };
 
 const entryExists = (id, entry, response) => {
-  if (!entry) {
+  if (!entry.length) {
     logger.warn(`No entry with id ${id}`);
     response.status(404).json({ code: 404, message: `No entry with id ${id}` });
     return false;
@@ -48,17 +53,17 @@ const successfulUsersFetch = (users, response) => {
 
 const successfulUserFetch = (user, response) => {
   logger.info('Successful user fetch');
-  response.status(200).json(user);
+  response.status(200).json(user[0]);
 };
 
 const successfulUserCreation = (user, response) => {
   logger.info('Successful user creation');
-  response.status(201).json(user);
+  response.status(201).json(user[0]);
 };
 
 const successfulUserUpdate = (user, response) => {
   logger.info('Successful user update');
-  response.status(200).json(user);
+  response.status(200).json(user[0]);
 };
 
 const successfulUserDeletion = (response) => {
@@ -81,7 +86,7 @@ const successfulAdminsFetch = (admins, response) => {
 
 const successfulAdminCreation = (admin, response) => {
   logger.info('Successful admin creation');
-  response.status(201).json(admin);
+  response.status(201).json(admin[0]);
 };
 
 const successfulAdminDeletion = (response) => {
@@ -135,6 +140,37 @@ const successfulAdminTokenGeneration = (admin, response) => {
   successfulTokenGeneration(result, response);
 };
 
+/* Artists */
+
+const successfulArtistsFetch = (artists, res) => {
+  logger.info('Successful artists fetch');
+  return res.status(200).json({
+    metadata: {
+      count: artists.length,
+      version: constants.API_VERSION,
+    },
+    artists,
+  });
+};
+
+const successfulArtistCreation = (artist, res) => {
+  logger.info('Successful artist creation');
+  res.status(201).json(artist[0]);
+};
+
+/* Tracks */
+
+const succesfulTracksFetch = (tracks, res) => {
+  logger.info('Successful tracks fetch');
+  return res.status(200).json({
+    metadata: {
+      count: tracks.length,
+      version: constants.API_VERSION,
+    },
+    tracks,
+  });
+};
+
 module.exports = {
   internalServerError,
   validateRequestBody,
@@ -152,4 +188,7 @@ module.exports = {
   inconsistentCredentials,
   successfulUserTokenGeneration,
   successfulAdminTokenGeneration,
+  successfulArtistsFetch,
+  successfulArtistCreation,
+  succesfulTracksFetch,
 };

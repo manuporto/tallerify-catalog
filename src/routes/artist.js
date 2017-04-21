@@ -1,26 +1,36 @@
-const logger = require('../utils/logger');
-const models = require('../models/index');
+const db = require('./../handlers/db/generalHandler');
+const tables = require('../database/tableNames');
+const respond = require('./../handlers/response');
 
-const getArtists = (req, res) => {
-  models.artists.findAll({}).then((artists) => {
-    res.status(200).json(artists);
-  }).catch((reason) => {
-    const message = `Unexpected error: ${reason}`;
-    logger.warn(message);
-    res.status(500).json({ code: 500, message });
-  });
+const artistExpectedBodySchema = { // FIXME incomplete schema
+  type: 'object',
+  properties: {
+    name: {
+      required: true,
+      type: 'string',
+    },
+    popularity: {
+      required: true,
+      type: 'integer',
+    }
+  }
 };
 
-const postArtist = (req, res) => {
-  logger.info(`Post /artists with query ${JSON.stringify(req.body, null, 4)}`);
-  models.artists.create({
-    name: req.body.name,
-    description: req.body.description,
-    genres: req.body.genres,
-    images: req.body.images,
-  }).then((artist) => {
-    res.status(200).json(artist);
-  });
-};
+function getArtists(req, res) {
+  db.findAllEntries(tables.artists)
+    .then(artists => respond.successfulArtistsFetch(artists, res))
+    .catch(error => respond.internalServerError(error, res));
+}
 
-module.exports = { getArtists, postArtist };
+function newArtist(req, res) {
+  respond.validateRequestBody(req.body, artistExpectedBodySchema)
+    .then(() => {
+      db.createNewEntry(tables.artists, req.body) // FIXME request body could have extra fields
+        .then(artist => respond.successfulArtistCreation(artist, res))
+        .catch(error => respond.internalServerError(error, res));
+    }).catch(error => {
+      respond.invalidRequestBodyError(error, res);
+    });
+}
+
+module.exports = { getArtists, newArtist };

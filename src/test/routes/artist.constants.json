@@ -1,0 +1,21 @@
+{
+	"initialArtist": {
+		"name": "Papa Baute",
+		"popularity": 2
+	},
+	"testArtist": {
+		"name": "Luis Fonsi",
+		"popularity": 1
+	},
+	"trackTestArtist": {
+		"name": "Cage The Elephant",
+		"popularity": 3
+	},
+	"newArtistWithMissingAttributes": {
+		"name": "Christian de Lugano"
+	},
+	"invalidArtist": {
+		"name": "Alexander Cannigia",
+		"popularity": "#SiempreAlTop"
+	}
+}
