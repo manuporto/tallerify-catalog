@@ -14,7 +14,7 @@ chai.use(chaiHttp);
 const constants = require('./track.constants.json');
 const artistsConstants = require('./artist.constants.json');
 
-describe('Track', () => {
+describe.skip('Track', () => {
 
   beforeEach((done) => {
     db.migrate.rollback()

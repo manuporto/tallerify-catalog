@@ -55,7 +55,7 @@ describe('Artist', () => {
 
   describe('/POST artists', () => {
 
-    it('should return status code 400 when parameters are missing', (done) => {
+    it.skip('should return status code 400 when parameters are missing', (done) => {
       request(app)
         .post('/api/artists')
         .send(constants.newArtistWithMissingAttributes)
@@ -65,7 +65,7 @@ describe('Artist', () => {
         });
     });
 
-    it('should return status code 400 when parameters are invalid', (done) => {
+    it.skip('should return status code 400 when parameters are invalid', (done) => {
       request(app)
         .post('/api/artists')
         .send(constants.invalidArtist)
