@@ -1,6 +1,6 @@
 process.env.NODE_ENV = 'test';
 
-const app = require('../../app');
+const app = require('../../app'); 
 const db = require('../../database');
 const request = require('supertest');
 const chai = require('chai');
@@ -12,6 +12,20 @@ chai.use(chaiHttp);
 const constants = require('./artist.constants.json');
 
 describe('Artist', () => {
+
+  before(done => {
+    db.migrate.rollback()
+    .then(() => {
+      db.migrate.latest()
+      .then(() => done())
+      .catch(error => done(error));
+    });
+  });
+
+  after(done => {
+    db.migrate.rollback()
+    .then(() => done());
+  });
 
 	describe('/GET artists', () => {
 
