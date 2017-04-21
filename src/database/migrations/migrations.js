@@ -3,21 +3,21 @@ const tables = require('../tableNames');
 
 exports.up = (knex, Promise) => {
 	return Promise.all([
-		knex.schema.createTable(tables.tracks, table => {
+		knex.schema.createTableIfNotExists(tables.tracks, table => {
 			logger.info('Creating tracks table.');
 			table.increments('id').primary();
 			table.string('name');
 			table.integer('duration')
 		}),
 
-		knex.schema.createTable(tables.artists, table => {
+		knex.schema.createTableIfNotExists(tables.artists, table => {
 			logger.info('Creating artists table.');
 			table.increments('id').primary();
 			table.string('name');
 			table.integer('popularity');
 		}),
 
-		knex.schema.createTable(tables.artists_tracks, table => {
+		knex.schema.createTableIfNotExists(tables.artists_tracks, table => {
 			logger.info('Creating artists_tracks table.');
 			table.increments('artist_track_id').primary();
 			table.integer('artist_id');

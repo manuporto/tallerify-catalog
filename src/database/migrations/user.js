@@ -2,7 +2,7 @@ const tables = require('../tableNames');
 
 exports.up = (knex, Promise) => {
 	return Promise.all([
-		knex.schema.createTable(tables.users, table => {
+		knex.schema.createTableIfNotExists(tables.users, table => {
 			table.increments('id').primary();
 			table.string('userName');
 			table.string('password');
