@@ -23,7 +23,7 @@ function getArtists(req, res) {
 }
 
 function newArtist(req, res) {
-  respond.validateJson(req.body, artistExpectedBodySchema)
+  respond.validateRequestBody(req.body, artistExpectedBodySchema)
     .then(() => {
       db.createNewEntry(tables.artists, req.body) // FIXME request body could have extra fields
         .then(artist => respond.successfulArtistCreation(artist, res))

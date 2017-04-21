@@ -11,7 +11,7 @@ const internalServerError = (reason, response) => {
   return response.status(500).json({ code: 500, message });
 };
 
-function validateJson(body, schema) {
+function validateRequestBody(body, schema) {
   logger.info(`Validating request "${JSON.stringify(body, null, 4)}"`);
   return new Promise((resolve, reject) => {
     jsonSchemaValidator.validate(body, schema, error => {
@@ -22,9 +22,7 @@ function validateJson(body, schema) {
       };
     })
   });
-}
-
-const validateRequestBody = promisify(validateJson);
+};
 
 const invalidRequestBodyError = (reasons, response) => {
   const message = `Request body is invalid: ${reasons[0].message}`;
@@ -176,7 +174,6 @@ const succesfulTracksFetch = (tracks, res) => {
 
 module.exports = {
   internalServerError,
-  validateJson,
   validateRequestBody,
   entryExists,
   invalidRequestBodyError,
