@@ -1,7 +1,7 @@
 process.env.NODE_ENV = 'test';
 
 const app = require('../../app');
-const db = require('../../models');
+const db = require('../../database');
 const request = require('supertest');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
@@ -11,33 +11,19 @@ chai.use(chaiHttp);
 
 const constants = require('./user.constants.json');
 
-describe.skip('User', () => {
+describe('User', () => {
   beforeEach((done) => {
-    db.sequelize
-      .sync({ force: true })
+    db.migrate.rollback()
       .then(() => {
-        db.users
-          .create(constants.initialUser)
-          .then(() => {
-            done();
-          })
-          .catch((error) => {
-            done(error);
-          });
-      })
-      .catch((error) => {
-        done(error);
+        db.migrate.latest()
+          .then(() => done())
+          .catch(error => done(error));
       });
   });
 
   afterEach((done) => {
-    db.sequelize
-      .drop()
-      .then(() => {
-        done();
-      }).catch((error) => {
-        done(error);
-      });
+    db.migrate.rollback()
+      .then(() => done());
   });
 
   describe('/GET users', () => {

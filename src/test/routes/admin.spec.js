@@ -1,7 +1,7 @@
 process.env.NODE_ENV = 'test';
 
 const app = require('../../app');
-const db = require('../../models');
+//const db = require('../../models');
 const request = require('supertest');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
@@ -12,6 +12,7 @@ chai.use(chaiHttp);
 const constants = require('./admin.constants.json');
 
 describe.skip('Admin', () => {
+  /*
   beforeEach((done) => {
     db.sequelize
       .sync({ force: true })
@@ -39,7 +40,7 @@ describe.skip('Admin', () => {
         done(error);
       });
   });
-
+*/
   describe('/GET admins', () => {
     it('should return status code 200', (done) => {
       request(app)

@@ -1,7 +1,7 @@
 process.env.NODE_ENV = 'test';
 
 const app = require('../../app');
-const db = require('../../models');
+//const db = require('../../models');
 const request = require('supertest');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
@@ -11,6 +11,7 @@ chai.should();
 chai.use(chaiHttp);
 
 describe.skip('Token', () => {
+  /*
   beforeEach((done) => {
     const INITIAL_DATA_AMOUNT = 2;
     let i = 0;
@@ -50,6 +51,7 @@ describe.skip('Token', () => {
         done(error);
       });
   });
+  */
 
   describe('/POST tokens', () => {
     it('should return status code 400 when parameters are missing', (done) => {

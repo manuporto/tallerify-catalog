@@ -1,4 +1,5 @@
-const db = require('./../handlers/db/generalHandler');
+const db = require('./../handlers/db/index');
+const tables = require('../database/tableNames');
 const respond = require('./../handlers/response');
 const constants = require('./constants.json');
 
@@ -90,7 +91,7 @@ function createNewUser(body) {
     birthdate: body.birthdate,
     images: [constants.DEFAULT_IMAGE],
   };
-  return db.createNewEntry('users', user);
+  return db.general.general.createNewEntry(tables.users, user);
 }
 
 function updateUserInfo(user, body) {
@@ -104,19 +105,19 @@ function updateUserInfo(user, body) {
     birthdate: body.birthdate,
     images: body.images,
   };
-  return db.updateEntry(user, updatedUser);
+  return db.general.updateEntry(user, updatedUser);
 }
 
 /* Routes */
 
 const getUsers = (req, res) => {
-  db.findAllEntries('users')
+  db.general.findAllEntries(tables.users)
     .then(users => respond.successfulUsersFetch(users, res))
     .catch(error => respond.internalServerError(error, res));
 };
 
 const getUser = (req, res) => {
-  db.findEntryWithId('users', req.params.id)
+  db.general.findEntryWithId(tables.users, req.params.id)
     .then((user) => {
       if (!respond.entryExists(req.params.id, user, res)) return;
       respond.successfulUserFetch(user, res);
@@ -137,7 +138,7 @@ const newUser = (req, res) => {
 const updateUser = (req, res) => {
   respond.validateRequestBody(req.body, updateUserExpectedBodySchema)
     .then(() => {
-      db.findEntryWithId('users', req.params.id)
+      db.general.findEntryWithId(tables.users, req.params.id)
         .then((user) => {
           if (!respond.entryExists(req.params.id, user, res)) return;
           updateUserInfo(user, req.body)
@@ -150,10 +151,10 @@ const updateUser = (req, res) => {
 };
 
 const deleteUser = (req, res) => {
-  db.findEntryWithId('users', req.params.id)
+  db.general.findEntryWithId(tables.users, req.params.id)
     .then((user) => {
       if (!respond.entryExists(req.params.id, user, res)) return;
-      db.deleteEntryWithId('users', req.params.id)
+      db.general.deleteEntryWithId(tables.users, req.params.id)
         .then(() => respond.successfulUserDeletion(res))
         .catch(error => respond.internalServerError(error, res));
     })
