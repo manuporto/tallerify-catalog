@@ -33,7 +33,7 @@ const getTracks = (req, res) => {
 const newTrack = (req, res) => {
   respond.validateRequestBody(req.body, trackExpectedBodySchema)
   .then(() => {
-    db.track.insertTrack(req.body) // FIXME validate body
+    db.track.insertTrack(req.body)
       .then((track) => {
         logger.info(`Track: ${JSON.stringify(track, null, 4)}`); // FIXME move this to response handler
         res.status(201).json(track);

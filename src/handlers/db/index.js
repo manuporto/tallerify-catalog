@@ -5,6 +5,6 @@ const track = require('./trackHandler');
 const dbHandler = {
   general,
   artist,
-	track,
+  track,
 };
 module.exports = dbHandler;

@@ -24,7 +24,7 @@ const createNewEntry = (tableName, entry) => {
   return db(tableName).insert(entry).returning('*');
 };
 
-function updateEntry(tableName, newEntry) {
+const updateEntry = (tableName, newEntry) => {
   logger.info('Updating entry');
   return db(tableName).update(newEntry).returning('*');
 }

@@ -3,6 +3,7 @@ const tables = require('../tableNames');
 
 exports.up = (knex, Promise) => {
 	return Promise.all([
+    
 		knex.schema.createTableIfNotExists(tables.tracks, table => {
 			logger.info('Creating tracks table.');
 			table.increments('id').primary();
@@ -47,7 +48,7 @@ exports.up = (knex, Promise) => {
       table.string('lastName');
       table.string('email');
     }),
-   ]);
+  ]);
 };
 
 exports.down = (knex, Promise) => {
@@ -57,5 +58,5 @@ exports.down = (knex, Promise) => {
 		knex.schema.dropTable(tables.artists_tracks),
     knex.schema.dropTable(tables.users),
     knex.schema.dropTable(tables.admins),
-   ]);
+  ]);
 };

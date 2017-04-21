@@ -27,16 +27,16 @@ describe('Artist', () => {
     .then(() => done());
   });
 
-	describe('/GET artists', () => {
+  describe('/GET artists', () => {
 
-		it('should return status code 200', (done) => {
+    it('should return status code 200', (done) => {
       request(app)
         .get('/api/artists')
         .end((err, res) => {
           res.should.have.status(200);
           done();
-    		});
-  	});
+        });
+    });
 
     it('should return the expected body response when correct parameters are sent', (done) => {
       request(app)
