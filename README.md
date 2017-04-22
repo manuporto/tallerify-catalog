@@ -1,7 +1,6 @@
 # Shared Server
 [![Build Status](https://travis-ci.org/tallerify/shared-server.svg?branch=develop)](https://travis-ci.org/tallerify/shared-server)
 [![codecov](https://codecov.io/gh/tallerify/shared-server/branch/develop/graph/badge.svg)](https://codecov.io/gh/tallerify/shared-server)
-[![Coverage Status](https://coveralls.io/repos/github/tallerify/tallerify-catalog/badge.svg?branch=develop)](https://coveralls.io/github/tallerify/tallerify-catalog?branch=develop)
 
 ## Installation
 
