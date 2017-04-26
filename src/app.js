@@ -12,8 +12,9 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const ejs = require('ejs');
-
-const db = require('./database/database');
+const jwt = require('jsonwebtoken');
+const expressJwt = require('express-jwt');
+const config = require('./config');
 
 // *** routes *** //
 const routes = require('./routes/index.js');
@@ -38,6 +39,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
+
+// *** jwt secret *** //
+app.use(expressJwt({ secret: config.secret }).unless({ path: ['/api/tokens', '/api/admins/tokens'] }));
+app.set('secret', config.secret);
 
 // *** main routes *** //
 app.use('/', routes);

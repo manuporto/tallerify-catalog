@@ -113,11 +113,11 @@ const successfulTokenGeneration = (result, response) => {
   response.status(201).json(result);
 };
 
-const successfulUserTokenGeneration = (user, response) => {
+const successfulUserTokenGeneration = (user, token, response) => {
   const result = Object.assign(
     {},
     {
-      token: user.id.toString(),
+      token: token,
       user: {
         id: user.id,
         href: user.href,
@@ -127,11 +127,11 @@ const successfulUserTokenGeneration = (user, response) => {
   successfulTokenGeneration(result, response);
 };
 
-const successfulAdminTokenGeneration = (admin, response) => {
+const successfulAdminTokenGeneration = (admin, token, response) => {
   const result = Object.assign(
     {},
     {
-      token: admin.id.toString(),
+      token: token,
       admin: {
         id: admin.id,
         userName: admin.userName,
