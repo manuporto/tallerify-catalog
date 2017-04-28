@@ -6,19 +6,20 @@ const track = require('./track');
 const admin = require('./admin');
 const passport = require('../handlers/auth/jwt');
 
+
 const router = express.Router();
 
 router.get('/', (req, res) => {
   res.render('index');
 });
 
-router.get('/secret', passport.authenticate('jwt', { session: false }), (req, err) => {
+router.get('/secret', passport.authenticate('jwt'), (req, res) => {
 	res.json({message: "Success! You can not see this without a token"});
 });
 
 /* Users */
 
-router.get('/api/users', user.getUsers);
+router.get('/api/users', passport.authenticate('jwt') , user.getUsers);
 
 router.get('/api/users/:id', user.getUser);
 

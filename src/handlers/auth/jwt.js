@@ -10,9 +10,9 @@ const extractJwt = passportJwt.ExtractJwt;
 
 const options = {jwtFromRequest: extractJwt.fromAuthHeader(), secretOrKey: config.secret};
 
-passport.use(new JwtStrategy(options, (payload, next) => {
-	logger.info(`Payload: ${JSON.stringify(payload, null, 4)}`);
-	db.findWithUsernameAndPassword(tables.admins, payload.username, payload.password)
+passport.use(new JwtStrategy(options, (jwt_payload, next) => {
+	logger.info(`Payload: ${JSON.stringify(jwt_payload, null, 4)}`);
+	db.findWithUsernameAndPassword(tables.admins, jwt_payload.username, jwt_payload.password)
 	.then(admin => {
 		if (admin) {
 			logger.info('Success');
