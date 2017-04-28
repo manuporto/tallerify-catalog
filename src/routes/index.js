@@ -1,3 +1,4 @@
+const logger = require('../utils/logger');
 const express = require('express');
 const user = require('./user');
 const token = require('./token');
@@ -13,8 +14,19 @@ router.get('/', (req, res) => {
   res.render('index');
 });
 
-router.get('/secret', passport.authenticate('jwt'), (req, res) => {
-	res.json({message: "Success! You can not see this without a token"});
+router.get('/secret', (req, res, next) => {
+  logger.info('===== Check');
+  passport.authenticate('jwt', (err, user, info) => {
+    logger.info(`Err: ${JSON.stringify(err, null, 4)}`);
+    logger.info(`User: ${JSON.stringify(user, null, 4)}`);
+    logger.info(`Info: ${JSON.stringify(info, null, 4)}`);
+    if (err || info) {
+      res.status(400).json({message: 'Invalid credentials'});
+      next(new Error('Unauthorized. !!! uno mil 1'));
+    } else {
+      res.json({message: "Success! You can not see this without a token"});
+    }
+  })(req, res, next);
 });
 
 /* Users */
