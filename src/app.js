@@ -42,8 +42,8 @@ app.use(cookieParser());
 
 
 // *** jwt secret *** //
-// app.use(expressJwt({ secret: config.secret }).unless({ path: ['/api/tokens', '/api/admins/tokens'] }));
-// app.set('secret', config.secret);
+app.use(expressJwt({ secret: config.secret }).unless({ path: ['/api/tokens', '/api/admins/tokens', '/api/users', '/secret'] }));
+app.set('secret', config.secret);
 
 // *** passport *** //
 app.use(passport.initialize());
