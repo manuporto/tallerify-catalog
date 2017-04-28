@@ -42,7 +42,7 @@ app.use(cookieParser());
 
 
 // *** jwt secret *** //
-app.use(expressJwt({ secret: config.secret }).unless({ path: ['/api/tokens', '/api/admins/tokens', '/api/users', '/secret'] }));
+// app.use(expressJwt({ secret: config.secret }).unless({ path: ['/api/tokens', '/api/admins/tokens', '/api/users', '/secret', '/'] }));
 app.set('secret', config.secret);
 
 // *** passport *** //
@@ -51,14 +51,12 @@ app.use(passport.initialize());
 // *** main routes *** //
 app.use('/', routes);
 
-
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
   const err = new Error('Not Found');
   err.status = 404;
   next(err);
 });
-
 
 // *** error handlers *** //
 
