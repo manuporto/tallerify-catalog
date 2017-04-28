@@ -4,11 +4,16 @@ const token = require('./token');
 const artist = require('./artist');
 const track = require('./track');
 const admin = require('./admin');
+const passport = require('../handlers/auth/jwt');
 
 const router = express.Router();
 
 router.get('/', (req, res) => {
   res.render('index');
+});
+
+router.get('/secret', passport.authenticate('jwt', { session: false }), (req, err) => {
+	res.json({message: "Success! You can not see this without a token"});
 });
 
 /* Users */
