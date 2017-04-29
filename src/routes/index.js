@@ -33,11 +33,11 @@ router.get('/secret', (req, res, next) => {
 
 router.get('/api/users', user.getUsers);
 
-//router.get('/api/users/:id', user.getUser);
+//router.get('/api/users/:id', user.getUser); FIXME collision between /me routes
 
 router.post('/api/users', user.newUser);
 
-router.put('/api/users/:id', user.updateUser);
+//router.put('/api/users/:id', user.updateUser);
 
 router.delete('/api/users/:id', user.deleteUser);
 
@@ -45,7 +45,7 @@ router.delete('/api/users/:id', user.deleteUser);
 
 router.get('/api/users/me', passport.authenticate('jwt'), user.meGetUser);
 
-//router.put('/api/users/me', passport.authenticate('jwt'), user.meUpdateUser);
+router.put('/api/users/me', passport.authenticate('jwt'), user.meUpdateUser);
 
 //router.get('/api/users/me/contacts', passport.authenticate('jwt'), user.meGetContacts);
 

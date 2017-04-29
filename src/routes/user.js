@@ -162,6 +162,8 @@ const deleteUser = (req, res) => {
     .catch(error => respond.internalServerError(error, res));
 };
 
+//FIXME code repetition
+
 const meGetUser = (req, res) => {
   const id = tokenDecoder.idFromToken(req.headers.authorization.split(' ')[1]);
   db.general.findEntryWithId(tables.users, id)
@@ -172,4 +174,20 @@ const meGetUser = (req, res) => {
     .catch(error => respond.internalServerError(error, res));
 };
 
-module.exports = { getUsers, getUser, newUser, updateUser, deleteUser, meGetUser };
+const meUpdateUser = (req, res) => {
+  const id = tokenDecoder.idFromToken(req.headers.authorization.split(' ')[1]);
+  respond.validateRequestBody(req.body, updateUserExpectedBodySchema)
+    .then(() => {
+      db.general.findEntryWithId(tables.users, id)
+        .then((user) => {
+          if (!respond.entryExists(id, user, res)) return;
+          updateUserInfo(req.body)
+            .then(updatedUser => respond.successfulUserUpdate(updatedUser, res))
+            .catch(error => respond.internalServerError(error, res));
+        })
+        .catch(error => respond.internalServerError(error, res));
+    })
+    .catch(error => respond.invalidRequestBodyError(error, res));
+};
+
+module.exports = { getUsers, getUser, newUser, updateUser, deleteUser, meGetUser, meUpdateUser };
