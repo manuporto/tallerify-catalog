@@ -23,18 +23,13 @@ passport.deserializeUser((user, done) => {
   done(null, user);
 });
 
-passport.use(new JwtStrategy(options, (jwtPayload, next) => {
+passport.use(new JwtStrategy(options, (jwtPayload, done) => {
   logger.info(`Payload: ${JSON.stringify(jwtPayload, null, 4)}`);
-  db.general.findWithUsernameAndPassword(tables.users, jwtPayload.userName, jwtPayload.password)
-  .then((user) => {
-    if (user) {
-      logger.info('Success');
-      next(null, user);
-    } else {
-      logger.info('Failure');
-      next(null, false, { message: 'kb gato' });
-    }
-  });
+  if (jwtPayload) {
+    done(null, jwtPayload);
+  } else {
+    done(null, false, {message: 'Unexpected error'});
+  }
 }));
 
 module.exports = passport;

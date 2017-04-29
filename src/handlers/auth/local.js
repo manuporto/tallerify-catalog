@@ -15,7 +15,7 @@ passport.use(new LocalStrategy(options, (req, username, password, done) => {
   logger.info(`Username: ${username}`);
   logger.info(`Password: ${password}`);
   // check to see if the username exists
-  db.findWithUsernameAndPassword(tables.users, username, password).first()
+  db.general.findWithUsernameAndPassword(tables.users, username, password).first()
   .then((user) => {
     if (!user) {
       return done(null, false);
