@@ -1,6 +1,7 @@
 const db = require('./../handlers/db/index');
 const tables = require('../database/tableNames');
 const respond = require('./../handlers/response');
+const tokenDecoder = require('./../handlers/token-decode');
 const constants = require('./constants.json');
 
 const userExpectedBodySchema = {
@@ -161,4 +162,14 @@ const deleteUser = (req, res) => {
     .catch(error => respond.internalServerError(error, res));
 };
 
-module.exports = { getUsers, getUser, newUser, updateUser, deleteUser };
+const meGetUser = (req, res) => {
+  const id = tokenDecoder.idFromToken(req.headers.authorization.split(' ')[1]);
+  db.general.findEntryWithId(tables.users, id)
+    .then((user) => {
+      if (!respond.entryExists(id, user, res)) return;
+      respond.successfulUserFetch(user, res);
+    })
+    .catch(error => respond.internalServerError(error, res));
+};
+
+module.exports = { getUsers, getUser, newUser, updateUser, deleteUser, meGetUser };
