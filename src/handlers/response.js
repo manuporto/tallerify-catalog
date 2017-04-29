@@ -10,6 +10,12 @@ const internalServerError = (reason, response) => {
   return response.status(500).json({ code: 500, message });
 };
 
+const unauthorizedError = (reason, response) => {
+  const message = `Unauthorized: ${reason}`;
+  logger.warn(message);
+  response.status(401).json({ code: 401, message: message });
+};
+
 const validateRequestBody = (body, schema) => {
   logger.info(`Validating request "${JSON.stringify(body, null, 4)}"`);
   return new Promise((resolve, reject) => {
@@ -178,6 +184,7 @@ const succesfulTracksFetch = (tracks, res) => {
 
 module.exports = {
   internalServerError,
+  unauthorizedError,
   validateRequestBody,
   entryExists,
   invalidRequestBodyError,
