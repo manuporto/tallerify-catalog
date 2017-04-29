@@ -14,6 +14,15 @@ const options = {
   session: false,
 };
 
+// not sure what this is 1j1j1j1
+passport.serializeUser((user, done) => {
+  done(null, user);
+});
+
+passport.deserializeUser((user, done) => {
+  done(null, user);
+});
+
 passport.use(new JwtStrategy(options, (jwtPayload, next) => {
   logger.info(`Payload: ${JSON.stringify(jwtPayload, null, 4)}`);
   db.general.findWithUsernameAndPassword(tables.users, jwtPayload.userName, jwtPayload.password)
