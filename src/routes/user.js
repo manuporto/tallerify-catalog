@@ -1,6 +1,7 @@
 const db = require('./../handlers/db/index');
 const tables = require('../database/tableNames');
 const respond = require('./../handlers/response');
+const tokenDecoder = require('./../handlers/token-decode');
 const constants = require('./constants.json');
 
 const userExpectedBodySchema = {
@@ -80,7 +81,7 @@ const updateUserExpectedBodySchema = {
   },
 };
 
-function createNewUser(body) {
+const createNewUser = (body) => {
   let user = {
     userName: body.userName,
     password: body.password,
@@ -92,9 +93,9 @@ function createNewUser(body) {
     images: [constants.DEFAULT_IMAGE],
   };
   return db.general.createNewEntry(tables.users, user);
-}
+};
 
-function updateUserInfo(body) {
+const updateUserInfo = (body) => {
   let updatedUser = {
     userName: body.userName,
     password: body.password,
@@ -106,7 +107,31 @@ function updateUserInfo(body) {
     images: body.images,
   };
   return db.general.updateEntry(tables.users, updatedUser);
-}
+};
+
+const _getUser = (id, response) => {
+  db.general.findEntryWithId(tables.users, id)
+    .then((user) => {
+      if (!respond.entryExists(id, user, response)) return;
+      respond.successfulUserFetch(user, response);
+    })
+    .catch(error => respond.internalServerError(error, response));
+};
+
+const _updateUser = (id, body, response) => {
+  respond.validateRequestBody(body, updateUserExpectedBodySchema)
+    .then(() => {
+      db.general.findEntryWithId(tables.users, id)
+        .then((user) => {
+          if (!respond.entryExists(id, user, response)) return;
+          updateUserInfo(body)
+            .then(updatedUser => respond.successfulUserUpdate(updatedUser, response))
+            .catch(error => respond.internalServerError(error, response));
+        })
+        .catch(error => respond.internalServerError(error, response));
+    })
+    .catch(error => respond.invalidRequestBodyError(error, response));
+};
 
 /* Routes */
 
@@ -117,12 +142,7 @@ const getUsers = (req, res) => {
 };
 
 const getUser = (req, res) => {
-  db.general.findEntryWithId(tables.users, req.params.id)
-    .then((user) => {
-      if (!respond.entryExists(req.params.id, user, res)) return;
-      respond.successfulUserFetch(user, res);
-    })
-    .catch(error => respond.internalServerError(error, res));
+  _getUser(req.params.id, res);
 };
 
 const newUser = (req, res) => {
@@ -136,18 +156,7 @@ const newUser = (req, res) => {
 };
 
 const updateUser = (req, res) => {
-  respond.validateRequestBody(req.body, updateUserExpectedBodySchema)
-    .then(() => {
-      db.general.findEntryWithId(tables.users, req.params.id)
-        .then((user) => {
-          if (!respond.entryExists(req.params.id, user, res)) return;
-          updateUserInfo(req.body)
-          .then(updatedUser => respond.successfulUserUpdate(updatedUser, res))
-          .catch(error => respond.internalServerError(error, res));
-        })
-        .catch(error => respond.internalServerError(error, res));
-    })
-    .catch(error => respond.invalidRequestBodyError(error, res));
+  _updateUser(req.params.id, req.body, res);
 };
 
 const deleteUser = (req, res) => {
@@ -161,4 +170,29 @@ const deleteUser = (req, res) => {
     .catch(error => respond.internalServerError(error, res));
 };
 
-module.exports = { getUsers, getUser, newUser, updateUser, deleteUser };
+const meGetUser = (req, res) => {
+  const id = tokenDecoder.idFromToken(req.headers.authorization.split(' ')[1]);
+  _getUser(id, res);
+};
+
+const meUpdateUser = (req, res) => {
+  const id = tokenDecoder.idFromToken(req.headers.authorization.split(' ')[1]);
+  _updateUser(id, req.body, res);
+};
+
+const meGetContacts = (req, res) => {
+  const id = tokenDecoder.idFromToken(req.headers.authorization.split(' ')[1]);
+  db.general.findEntryWithId(tables.users, id)
+    .then((user) => {
+      if (!respond.entryExists(id, user, res)) return;
+      const contacts = Object.assign(
+        {},
+        {
+          contacts: user[0].contacts,
+        });
+      respond.successfulUserContactsFetch(contacts, res);
+    })
+    .catch(error => respond.internalServerError(error, res));
+};
+
+module.exports = { getUsers, getUser, newUser, updateUser, deleteUser, meGetUser, meUpdateUser, meGetContacts };

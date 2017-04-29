@@ -21,17 +21,23 @@ router.get('/secret', (req, res, next) => {
     logger.info(`User: ${JSON.stringify(user, null, 4)}`);
     logger.info(`Info: ${JSON.stringify(info, null, 4)}`);
     if (err || info) {
-      res.status(400).json({message: 'Invalid credentials'});
+      res.status(400).json({ message: 'Invalid credentials' });
       next(new Error('Unauthorized. !!! uno mil 1'));
     } else {
-      res.json({message: "Success! You can not see this without a token"});
+      res.json({ message: "Success! You can not see this without a token" });
     }
   })(req, res, next);
 });
 
 /* Users */
 
-router.get('/api/users', passport.authenticate('jwt') , user.getUsers);
+router.get('/api/users/me', passport.authenticate('jwt'), user.meGetUser);
+
+router.put('/api/users/me', passport.authenticate('jwt'), user.meUpdateUser);
+
+router.get('/api/users/me/contacts', passport.authenticate('jwt'), user.meGetContacts);
+
+router.get('/api/users', user.getUsers);
 
 router.get('/api/users/:id', user.getUser);
 
