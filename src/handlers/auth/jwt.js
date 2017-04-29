@@ -28,7 +28,7 @@ passport.use(new JwtStrategy(options, (jwtPayload, done) => {
   if (jwtPayload) {
     done(null, jwtPayload);
   } else {
-    done(null, false, {message: 'Unexpected error'});
+    done(null, false, { message: 'Unexpected error' });
   }
 }));
 
