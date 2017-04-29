@@ -190,4 +190,19 @@ const meUpdateUser = (req, res) => {
     .catch(error => respond.invalidRequestBodyError(error, res));
 };
 
-module.exports = { getUsers, getUser, newUser, updateUser, deleteUser, meGetUser, meUpdateUser };
+const meGetContacts = (req, res) => {
+  const id = tokenDecoder.idFromToken(req.headers.authorization.split(' ')[1]);
+  db.general.findEntryWithId(tables.users, id)
+    .then((user) => {
+      if (!respond.entryExists(id, user, res)) return;
+      const contacts = Object.assign(
+        {},
+        {
+          contacts: user[0].contacts,
+        });
+      respond.successfulUserContactsFetch(contacts, res);
+    })
+    .catch(error => respond.internalServerError(error, res));
+};
+
+module.exports = { getUsers, getUser, newUser, updateUser, deleteUser, meGetUser, meUpdateUser, meGetContacts };

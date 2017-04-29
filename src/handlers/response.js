@@ -21,7 +21,7 @@ const validateRequestBody = (body, schema) => {
       }
     });
   });
-}
+};
 
 const invalidRequestBodyError = (reasons, response) => {
   const message = `Request body is invalid: ${reasons[0].message}`;
@@ -69,6 +69,11 @@ const successfulUserUpdate = (user, response) => {
 const successfulUserDeletion = (response) => {
   logger.info('Successful user deletion');
   response.sendStatus(204);
+};
+
+const successfulUserContactsFetch = (contacts, response) => {
+  logger.info('Successful contacts fetch');
+  response.status(200).json(contacts);
 };
 
 /* Admins */
@@ -181,6 +186,7 @@ module.exports = {
   successfulUserCreation,
   successfulUserUpdate,
   successfulUserDeletion,
+  successfulUserContactsFetch,
   successfulAdminsFetch,
   successfulAdminCreation,
   successfulAdminDeletion,

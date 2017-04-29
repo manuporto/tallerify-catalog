@@ -35,7 +35,7 @@ router.get('/api/users/me', passport.authenticate('jwt'), user.meGetUser);
 
 router.put('/api/users/me', passport.authenticate('jwt'), user.meUpdateUser);
 
-//router.get('/api/users/me/contacts', passport.authenticate('jwt'), user.meGetContacts);
+router.get('/api/users/me/contacts', passport.authenticate('jwt'), user.meGetContacts);
 
 router.get('/api/users', user.getUsers);
 
