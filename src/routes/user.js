@@ -171,20 +171,17 @@ const deleteUser = (req, res) => {
 };
 
 const meGetUser = (req, res) => {
-  const id = tokenDecoder.idFromToken(req.headers.authorization.split(' ')[1]);
-  _getUser(id, res);
+  _getUser(req.user.id, res);
 };
 
 const meUpdateUser = (req, res) => {
-  const id = tokenDecoder.idFromToken(req.headers.authorization.split(' ')[1]);
-  _updateUser(id, req.body, res);
+  _updateUser(req.user.id, req.body, res);
 };
 
 const meGetContacts = (req, res) => {
-  const id = tokenDecoder.idFromToken(req.headers.authorization.split(' ')[1]);
-  db.general.findEntryWithId(tables.users, id)
+  db.general.findEntryWithId(tables.users, req.user.id)
     .then((user) => {
-      if (!respond.entryExists(id, user, res)) return;
+      if (!respond.entryExists(req.user.id, user, res)) return;
       const contacts = Object.assign(
         {},
         {

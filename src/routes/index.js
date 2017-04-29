@@ -21,8 +21,7 @@ router.get('/secret', (req, res, next) => {
 
 /* Users */
 
-router.get('/api/users/me',
-  jwtAuthenticate, user.meGetUser);
+router.get('/api/users/me', jwtAuthenticate, user.meGetUser);
 
 router.put('/api/users/me', passport.authenticate('jwt'), user.meUpdateUser);
 
