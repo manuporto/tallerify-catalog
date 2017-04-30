@@ -1,13 +1,12 @@
-const logger = require('../utils/logger');
 const express = require('express');
+
 const user = require('./user');
 const token = require('./token');
 const artist = require('./artist');
 const track = require('./track');
 const admin = require('./admin');
-const passport = require('../handlers/auth/jwt');
-const jwtAuthenticate = require('../handlers/auth/authenticate');
 
+const loginRouter = require('../middlewares/login-router');
 
 const router = express.Router();
 
@@ -15,17 +14,13 @@ router.get('/', (req, res) => {
   res.render('index');
 });
 
-router.get('/secret', (req, res, next) => {
-  authenticate(req, res, next, ['jwt']);
-});
-
 /* Users */
 
-router.get('/api/users/me', jwtAuthenticate, user.meGetUser);
+router.get('/api/users/me', user.meGetUser);
 
-router.put('/api/users/me', passport.authenticate('jwt'), user.meUpdateUser);
+router.put('/api/users/me', user.meUpdateUser);
 
-router.get('/api/users/me/contacts', passport.authenticate('jwt'), user.meGetContacts);
+router.get('/api/users/me/contacts', user.meGetContacts);
 
 router.get('/api/users', user.getUsers);
 
@@ -47,7 +42,7 @@ router.delete('/api/admins/:id', admin.deleteAdmin);
 
 /* Tokens */
 
-router.post('/api/tokens', token.generateToken);
+router.post('/api/tokens', loginRouter, token.generateToken);
 
 router.post('/api/admins/tokens', token.generateAdminToken);
 
