@@ -38,16 +38,12 @@ const getToken = (secret, user) => {
 /* Routes */
 
 const generateToken = (req, res) => {
-  return respond.validateRequestBody(req.body, expectedBodySchema)
-    .then(() => {
-      db.findWithUsernameAndPassword(tables.users, req.body.userName, req.body.password)
-        .then((users) => {
-          if (!resultIsValid(users, res)) return;
-          respond.successfulUserTokenGeneration(users[0], getToken(req.app.get('secret'), users[0]), res);
-        })
-        .catch(reason => respond.internalServerError(reason, res));
+  db.findWithUsernameAndPassword(tables.users, req.body.userName, req.body.password)
+    .then((users) => {
+      if (!resultIsValid(users, res)) return;
+      respond.successfulUserTokenGeneration(users[0], getToken(req.app.get('secret'), users[0]), res);
     })
-    .catch(error => respond.invalidRequestBodyError(error, res));
+    .catch(reason => respond.internalServerError(reason, res));
 };
 
 const generateAdminToken = (req, res) => {
