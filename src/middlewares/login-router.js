@@ -39,8 +39,8 @@ const loginRouter = (req, res, next) => {
       respond.validateRequestBody(req.body, facebookLogin)
         .then(() => {
           req.facebookLogin = true;
-          facebook.checkCredentials(req.body);
-          next();
+          facebook.checkCredentials(req.body)
+          .then(() => next());
         })
         .catch(error => respond.invalidRequestBodyError(error, res));
     });

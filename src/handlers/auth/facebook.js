@@ -8,14 +8,14 @@ const validateWithProvider = (socialToken) => {
     // Send a GET request to Facebook with the token as query string
     request.get({
       url: provider,
-      oauth: socialToken,
-      json: true,
+      qs: {access_token: socialToken}
     },
       (error, response, body) => {
-        logger.warn(`FB GRAPH RESPONSE ${JSON.stringify(response)}`);
         if (!error && response.statusCode === 200) {
+          logger.info(`FB GRAPH RESPONSE ${JSON.stringify(response)}`);
           resolve(JSON.parse(body));
         } else {
+          logger.warn(`FB GRAPH RESPONSE ${JSON.stringify(response)}`);
           reject(error);
         }
       });
@@ -24,7 +24,7 @@ const validateWithProvider = (socialToken) => {
 
 const checkCredentials = (credentials) => {
   logger.info(`Validating credentials: ${JSON.stringify(credentials)}`);
-  logger.info('TODO oops'); // TODO
+  return validateWithProvider(credentials.authToken);
 };
 
 module.exports = { checkCredentials };
