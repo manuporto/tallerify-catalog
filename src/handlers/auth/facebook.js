@@ -8,11 +8,14 @@ const validateWithProvider = (socialToken) => {
     // Send a GET request to Facebook with the token as query string
     request.get({
       url: provider,
-      qs: {access_token: socialToken}
+      qs: {
+        access_token: socialToken,
+        fields: 'id, name, birthday, email ,location'  
+      }
     },
       (error, response, body) => {
         if (!error && response.statusCode === 200) {
-          logger.info(`FB GRAPH RESPONSE ${JSON.stringify(response)}`);
+          logger.info(`FB GRAPH RESPONSE ${JSON.stringify(response.body)}`);
           resolve(JSON.parse(body));
         } else {
           logger.warn(`FB GRAPH RESPONSE ${JSON.stringify(response)}`);
