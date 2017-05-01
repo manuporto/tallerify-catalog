@@ -38,12 +38,7 @@ const getToken = (secret, user) => {
 /* Routes */
 
 const generateToken = (req, res) => {
-  db.findWithUsernameAndPassword(tables.users, req.body.userName, req.body.password)
-    .then((users) => {
-      if (!resultIsValid(users, res)) return;
-      respond.successfulUserTokenGeneration(users[0], getToken(req.app.get('secret'), users[0]), res);
-    })
-    .catch(reason => respond.internalServerError(reason, res));
+  respond.successfulUserTokenGeneration(req.user, getToken(req.app.get('secret'), req.user), res);
 };
 
 const generateAdminToken = (req, res) => {
