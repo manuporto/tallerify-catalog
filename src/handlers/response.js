@@ -46,6 +46,52 @@ const entryExists = (id, entry, response) => {
 
 /* Users */
 
+const formatUserJson = (user) => {
+  return {
+    userName: user.userName,
+    password: user.password,
+    fb: {
+      userId: user.facebookUserId,
+      authToken: user.facebookAuthToken,
+    },
+    firstName: user.firstName,
+    lastName: user.lastName,
+    country: user.country,
+    email: user.email,
+    birthdate: user.birthdate,
+    images: user.images,
+  };
+};
+
+const formatUserShortJson = (user) => {
+  return {
+    id: user.id,
+    userName: user.userName,
+    images: user.images,
+    href: user.href,
+  };
+};
+
+const formatGetUserJson = (user) => {
+  return {
+    id: user.id,
+    userName: user.userName,
+    password: user.password,
+    fb: {
+      userId: user.facebookUserId,
+      authToken: user.facebookAuthToken,
+    },
+    firstName: user.firstName,
+    lastName: user.lastName,
+    country: user.country,
+    email: user.email,
+    birthdate: user.birthdate,
+    images: user.images,
+    href: user.href,
+    contacts: user.contacts, // user.contacts.map(formatUserShortJson),
+  };
+};
+
 const successfulUsersFetch = (users, response) => {
   logger.info('Successful users fetch');
   return response.status(200).json({
@@ -53,23 +99,29 @@ const successfulUsersFetch = (users, response) => {
       count: users.length,
       version: constants.API_VERSION,
     },
-    users,
+    users: users.map(formatGetUserJson),
   });
 };
 
 const successfulUserFetch = (user, response) => {
   logger.info('Successful user fetch');
-  response.status(200).json(user[0]);
+  response.status(200).json({
+    metadata: {
+      count: 1,
+      version: constants.API_VERSION,
+    },
+    user: formatGetUserJson(user[0]),
+  });
 };
 
 const successfulUserCreation = (user, response) => {
   logger.info('Successful user creation');
-  response.status(201).json(user[0]);
+  response.status(201).json(formatUserJson(user[0]));
 };
 
 const successfulUserUpdate = (user, response) => {
   logger.info('Successful user update');
-  response.status(200).json(user[0]);
+  response.status(200).json(formatUserJson(user[0]));
 };
 
 const successfulUserDeletion = (response) => {
@@ -79,7 +131,13 @@ const successfulUserDeletion = (response) => {
 
 const successfulUserContactsFetch = (contacts, response) => {
   logger.info('Successful contacts fetch');
-  response.status(200).json(contacts);
+  response.status(200).json({
+    metadata: {
+      count: contacts.length,
+      version: constants.API_VERSION,
+    },
+    contacts,
+  });
 };
 
 /* Admins */

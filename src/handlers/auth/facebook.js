@@ -13,7 +13,7 @@ const validateWithProvider = (socialToken) => {
       url: provider,
       qs: {
         access_token: socialToken,
-        fields: 'id, name, birthday, email ,location'
+        fields: 'id, name, birthday, email, location'
       }
     },
       (error, response, body) => {
@@ -35,16 +35,16 @@ const checkCredentials = (credentials) => {
 
 const handleLogin = (req, res, next, fUser) => {
   db.general.findOneWithAttributes(tables.users, {
-    facebook_id: fUser.id,
+    facebookUserId: fUser.id,
   }).then((user) => {
     if (user) {
       req.user = user;
       next();
     } else {
       db.general.createNewEntry(tables.users, {
-        facebook_id: fUser.id,
+        facebookUserId: fUser.id,
+        facebookAuthToken: req.body.authToken,
         userName: fUser.name,
-        password: 'customFbPw',
         firstName: fUser.name,
         lastName: fUser.name,
         email: fUser.email,

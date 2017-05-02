@@ -28,7 +28,8 @@ exports.up = (knex, Promise) => {
     knex.schema.createTableIfNotExists(tables.users, table => {
       logger.info('Creating users table.');
       table.increments('id').primary();
-      table.bigInteger('facebook_id');
+      table.bigInteger('facebookUserId');
+      table.bigInteger('facebookAuthToken');
       table.string('userName');
       table.string('password');
       table.string('firstName');
