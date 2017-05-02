@@ -61,6 +61,16 @@ describe('User', () => {
           done();
         });
     });
+
+    it('should return status code 401 if unauthorized', (done) => {
+      request(app)
+        .get('/api/users')
+        .set('Authorization', 'Bearer UNAUTHORIZED')
+        .end((err, res) => {
+          res.should.have.status(401);
+          done();
+        });
+    });
   });
 
   describe('/POST users', () => {
@@ -118,6 +128,17 @@ describe('User', () => {
           done();
         });
     });
+
+    it('should return status code 401 if unauthorized', (done) => {
+      request(app)
+        .post('/api/users')
+        .set('Authorization', 'Bearer UNAUTHORIZED')
+        .send(constants.testUser)
+        .end((err, res) => {
+          res.should.have.status(401);
+          done();
+        });
+    });
   });
 
   describe('/GET users/{id}', () => {
@@ -159,6 +180,16 @@ describe('User', () => {
         .set('Authorization', `Bearer ${testToken}`)
         .end((err, res) => {
           res.should.have.status(404);
+          done();
+        });
+    });
+
+    it('should return status code 401 if unauthorized', (done) => {
+      request(app)
+        .get(`/api/users/${constants.validUserId}`)
+        .set('Authorization', 'Bearer UNAUTHORIZED')
+        .end((err, res) => {
+          res.should.have.status(401);
           done();
         });
     });
@@ -231,6 +262,17 @@ describe('User', () => {
           done();
         });
     });
+
+    it('should return status code 401 if unauthorized', (done) => {
+      request(app)
+        .put(`/api/users/${constants.validUserId}`)
+        .set('Authorization', 'Bearer UNAUTHORIZED')
+        .send(constants.updatedUser)
+        .end((err, res) => {
+          res.should.have.status(401);
+          done();
+        });
+    });
   });
 
   describe('/DELETE users/{id}', () => {
@@ -250,6 +292,16 @@ describe('User', () => {
         .set('Authorization', `Bearer ${testToken}`)
         .end((err, res) => {
           res.should.have.status(404);
+          done();
+        });
+    });
+
+    it('should return status code 401 if unauthorized', (done) => {
+      request(app)
+        .post(`/api/users/${constants.validUserId}`)
+        .set('Authorization', 'Bearer UNAUTHORIZED')
+        .end((err, res) => {
+          res.should.have.status(401);
           done();
         });
     });
