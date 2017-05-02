@@ -114,16 +114,15 @@ describe('User', () => {
         .send(constants.testUser)
         .end((err, res) => {
           res.body.should.be.a('object');
-          res.body.should.have.property('id');
           res.body.should.have.property('userName').eql(constants.testUser.userName);
           res.body.should.have.property('password').eql(constants.testUser.password);
+          res.body.should.have.property('fb');
           res.body.should.have.property('firstName').eql(constants.testUser.firstName);
           res.body.should.have.property('lastName').eql(constants.testUser.lastName);
           res.body.should.have.property('country').eql(constants.testUser.country);
           res.body.should.have.property('email').eql(constants.testUser.email);
           res.body.should.have.property('birthdate').eql(constants.testUser.birthdate);
           res.body.should.have.property('images');
-          res.body.should.have.property('href');
           done();
         });
     });
@@ -217,17 +216,15 @@ describe('User', () => {
         .send(constants.updatedUser)
         .end((err, res) => {
           res.body.should.be.a('object');
-          res.body.should.be.a('object');
-          res.body.should.have.property('id').eql(constants.validUserId);
           res.body.should.have.property('userName').eql(constants.updatedUser.userName);
           res.body.should.have.property('password').eql(constants.updatedUser.password);
+          res.body.should.have.property('fb');
           res.body.should.have.property('firstName').eql(constants.updatedUser.firstName);
           res.body.should.have.property('lastName').eql(constants.updatedUser.lastName);
           res.body.should.have.property('country').eql(constants.updatedUser.country);
           res.body.should.have.property('email').eql(constants.updatedUser.email);
           res.body.should.have.property('birthdate').eql(constants.updatedUser.birthdate);
           res.body.should.have.property('images').eql(constants.updatedUser.images);
-          res.body.should.have.property('href');
           done();
         });
     });
@@ -300,7 +297,7 @@ describe('User', () => {
 
     it('should return status code 401 if unauthorized', (done) => {
       request(app)
-        .post(`/api/users/${constants.validUserId}`)
+        .delete(`/api/users/${constants.validUserId}`)
         .set('Authorization', 'Bearer UNAUTHORIZED')
         .end((err, res) => {
           res.should.have.status(401);

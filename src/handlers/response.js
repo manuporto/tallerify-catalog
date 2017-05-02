@@ -48,7 +48,7 @@ const entryExists = (id, entry, response) => {
 
 const formatUserJson = (user) => {
   return {
-    userNae: user.userName,
+    userName: user.userName,
     password: user.password,
     fb: {
       userId: user.facebookUserId,

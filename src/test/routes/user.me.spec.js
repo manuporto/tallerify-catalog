@@ -115,17 +115,15 @@ describe('User me', () => {
         .send(constants.updatedUser)
         .end((err, res) => {
           res.body.should.be.a('object');
-          res.body.should.have.property('id').eql(constants.validUserId);
           res.body.should.have.property('userName').eql(constants.updatedUser.userName);
           res.body.should.have.property('password').eql(constants.updatedUser.password);
+          res.body.should.have.property('fb');
           res.body.should.have.property('firstName').eql(constants.updatedUser.firstName);
           res.body.should.have.property('lastName').eql(constants.updatedUser.lastName);
           res.body.should.have.property('country').eql(constants.updatedUser.country);
           res.body.should.have.property('email').eql(constants.updatedUser.email);
           res.body.should.have.property('birthdate').eql(constants.updatedUser.birthdate);
           res.body.should.have.property('images').eql(constants.updatedUser.images);
-          // res.body.should.have.property('contacts'); FIXME add contacts assoc
-          res.body.should.have.property('href');
           done();
         });
     });
