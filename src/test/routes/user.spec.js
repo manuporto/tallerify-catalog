@@ -123,7 +123,6 @@ describe('User', () => {
           res.body.should.have.property('email').eql(constants.testUser.email);
           res.body.should.have.property('birthdate').eql(constants.testUser.birthdate);
           res.body.should.have.property('images');
-          // res.body.should.have.property('contacts'); FIXME add contacts assoc
           res.body.should.have.property('href');
           done();
         });
@@ -168,7 +167,6 @@ describe('User', () => {
           res.body.should.have.property('email').eql(constants.initialUser.email);
           res.body.should.have.property('birthdate').eql(constants.initialUser.birthdate);
           res.body.should.have.property('images').eql(constants.initialUser.images);
-          // res.body.should.have.property('contacts'); FIXME add contacts assoc
           res.body.should.have.property('href');
           done();
         });
@@ -224,7 +222,6 @@ describe('User', () => {
           res.body.should.have.property('email').eql(constants.updatedUser.email);
           res.body.should.have.property('birthdate').eql(constants.updatedUser.birthdate);
           res.body.should.have.property('images').eql(constants.updatedUser.images);
-          // res.body.should.have.property('contacts'); FIXME add contacts assoc
           res.body.should.have.property('href');
           done();
         });
