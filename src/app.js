@@ -14,7 +14,6 @@ const morgan = require('morgan');
 const ejs = require('ejs');
 const jwt = require('jsonwebtoken');
 const expressJwt = require('express-jwt');
-//const passport = require("passport");
 const config = require('./config');
 
 // *** routes *** //
@@ -42,7 +41,7 @@ app.use(cookieParser());
 
 
 // *** jwt secret *** //
-app.use(expressJwt({ secret: config.secret }).unless({ path: ['/api/tokens', '/api/admins/tokens', '/api/users', '/'] }));
+app.use(expressJwt({ secret: config.secret }).unless({ path: ['/api/tokens', '/api/admins/tokens', '/'] }));
 app.set('secret', config.secret);
 
 // *** passport *** //
