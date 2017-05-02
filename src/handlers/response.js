@@ -59,7 +59,13 @@ const successfulUsersFetch = (users, response) => {
 
 const successfulUserFetch = (user, response) => {
   logger.info('Successful user fetch');
-  response.status(200).json(user[0]);
+  response.status(200).json({
+    metadata: {
+      count: 1,
+      version: constants.API_VERSION,
+    },
+    user: user[0],
+  });
 };
 
 const successfulUserCreation = (user, response) => {
@@ -79,7 +85,13 @@ const successfulUserDeletion = (response) => {
 
 const successfulUserContactsFetch = (contacts, response) => {
   logger.info('Successful contacts fetch');
-  response.status(200).json(contacts);
+  response.status(200).json({
+    metadata: {
+      count: contacts.length,
+      version: constants.API_VERSION,
+    },
+    contacts,
+  });
 };
 
 /* Admins */
