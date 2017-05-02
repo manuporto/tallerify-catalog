@@ -46,6 +46,23 @@ const entryExists = (id, entry, response) => {
 
 /* Users */
 
+const formatUserJson = (user) => {
+  return {
+    userNae: user.userName,
+    password: user.password,
+    fb: {
+      userId: user.facebookUserId,
+      authToken: user.facebookAuthToken,
+    },
+    firstName: user.firstName,
+    lastName: user.lastName,
+    country: user.country,
+    email: user.email,
+    birthdate: user.birthdate,
+    images: user.images,
+  };
+};
+
 const successfulUsersFetch = (users, response) => {
   logger.info('Successful users fetch');
   return response.status(200).json({
@@ -70,12 +87,12 @@ const successfulUserFetch = (user, response) => {
 
 const successfulUserCreation = (user, response) => {
   logger.info('Successful user creation');
-  response.status(201).json(user[0]);
+  response.status(201).json(formatUserJson(user[0]));
 };
 
 const successfulUserUpdate = (user, response) => {
   logger.info('Successful user update');
-  response.status(200).json(user[0]);
+  response.status(200).json(formatUserJson(user[0]));
 };
 
 const successfulUserDeletion = (response) => {
