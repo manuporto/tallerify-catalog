@@ -63,6 +63,26 @@ const formatUserJson = (user) => {
   };
 };
 
+const formatGetUserJson = (user) => {
+  return {
+    id: user.id,
+    userName: user.userName,
+    password: user.password,
+    fb: {
+      userId: user.facebookUserId,
+      authToken: user.facebookAuthToken,
+    },
+    firstName: user.firstName,
+    lastName: user.lastName,
+    country: user.country,
+    email: user.email,
+    birthdate: user.birthdate,
+    images: user.images,
+    href: user.href,
+    contacts: user.contacts,
+  };
+};
+
 const successfulUsersFetch = (users, response) => {
   logger.info('Successful users fetch');
   return response.status(200).json({
@@ -70,7 +90,7 @@ const successfulUsersFetch = (users, response) => {
       count: users.length,
       version: constants.API_VERSION,
     },
-    users,
+    users: users.map(formatGetUserJson),
   });
 };
 
@@ -81,7 +101,7 @@ const successfulUserFetch = (user, response) => {
       count: 1,
       version: constants.API_VERSION,
     },
-    user: user[0],
+    user: formatGetUserJson(user[0]),
   });
 };
 
