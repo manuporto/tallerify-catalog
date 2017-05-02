@@ -15,9 +15,7 @@ chai.use(chaiHttp);
 const config = require('./../../config');
 const constants = require('./user.constants.json');
 
-const testToken = jwt.sign({admin: true}, config.secret, {
-  expiresIn: '24h',
-});
+const testToken = jwt.sign({ admin: true }, config.secret);
 
 describe('User', () => {
   beforeEach((done) => {
