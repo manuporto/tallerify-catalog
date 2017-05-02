@@ -2,6 +2,7 @@ const logger = require('../../utils/logger');
 const request = require('request');
 const db = require('../db');
 const tables = require('../../database/tableNames');
+const respond = require('./../response');
 
 const provider = 'https://graph.facebook.com/v2.9/me';
 
@@ -12,7 +13,7 @@ const validateWithProvider = (socialToken) => {
       url: provider,
       qs: {
         access_token: socialToken,
-        fields: 'id, name, birthday, email ,location'  
+        fields: 'id, name, birthday, email ,location'
       }
     },
       (error, response, body) => {
@@ -34,7 +35,7 @@ const checkCredentials = (credentials) => {
 
 const handleLogin = (req, res, next, fUser) => {
   db.general.findOneWithAttributes(tables.users, {
-    facebook_id: fUser.id
+    facebook_id: fUser.id,
   }).then((user) => {
     if (user) {
       req.user = user;
@@ -43,12 +44,12 @@ const handleLogin = (req, res, next, fUser) => {
       db.general.createNewEntry(tables.users, {
         facebook_id: fUser.id,
         userName: fUser.name,
-        password: "customFbPw",
+        password: 'customFbPw',
         firstName: fUser.name,
         lastName: fUser.name,
         email: fUser.email,
         country: fUser.location.name,
-        birthdate: fUser.birthday
+        birthdate: fUser.birthday,
       }).then((newUser) => {
         req.user = newUser[0];
         next();
