@@ -63,6 +63,15 @@ const formatUserJson = (user) => {
   };
 };
 
+const formatUserShortJson = (user) => {
+  return {
+    id: user.id,
+    userName: user.userName,
+    images: user.images,
+    href: user.href,
+  };
+};
+
 const formatGetUserJson = (user) => {
   return {
     id: user.id,
@@ -79,7 +88,7 @@ const formatGetUserJson = (user) => {
     birthdate: user.birthdate,
     images: user.images,
     href: user.href,
-    contacts: user.contacts,
+    contacts: user.contacts, // user.contacts.map(formatUserShortJson),
   };
 };
 
