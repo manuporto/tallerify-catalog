@@ -30,15 +30,20 @@ const validateWithProvider = (socialToken) => {
 };
 
 const createDbUserObject = (user) => {
+  const names = user.name.split(' ');
+  const defaultMissingValue = 'unknown';
+  const userName = names.join('_');
+  const defaultFirstName = names[0];
+  const defaultLastName = (names.length > 0) ? names[1] : defaultMissingValue;
   return {
+        userName,
         facebookUserId: user.id,
         facebookAuthToken: user.authToken,
-        userName: user.name,
-        firstName: user.name,
-        lastName: user.name,
-        email: user.email,
-        country: (user.hasOwnProperty('location')) ? user.location.name : '',
         birthdate: user.birthday,
+        firstName: (user.hasOwnProperty('first_name')) ? user.first_name : defaultFirstName,
+        lastName: (user.hasOwnProperty('last_name')) ? user.last_name : defaultLastName,
+        email: (user.hasOwnProperty('email')) ? user.email : defaultMissingValue,
+        country: (user.hasOwnProperty('location')) ? user.location.name : defaultMissingValue,
       };
 };
 
@@ -56,12 +61,14 @@ const handleLogin = (req, res, next, fUser) => {
       next();
     } else {
       fUser.authToken = req.body.authToken;
-      db.general.createNewEntry(tables.users, createDbUserObject(fUser)).then((newUser) => {
-        req.user = newUser[0];
-        next();
-      }).catch((error) => {
-        respond.internalServerError(error, res);
-      });
+      db.general.createNewEntry(tables.users, createDbUserObject(fUser))
+        .then((newUser) => {
+          req.user = newUser[0];
+          next();
+        })
+        .catch((error) => {
+          respond.internalServerError(error, res);
+        });
     }
   });
 };
