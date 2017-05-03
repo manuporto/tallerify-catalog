@@ -2,20 +2,20 @@
 	"initialTrack": {
 		"name": "Despacito",
 		"albumId": 240,
-		"artists": ["Luis Fonsi", "Papa Baute"]
+		"artists": [4, 1]
 	},
 	"testTrack": {
 		"name": "Come a Little Closer",
 		"albumId": 229,
-		"artists": ["Cage The Elephant"]
+		"artists": [20, 9]
 	},
 	"newTrackWithMissingAttributes": {
 		"albumId": 123,
-		"artists": ["Alexander Cannigia"]
+		"artists": [24, 9]
 	},
 	"invalidTrack": {
 		"name": "Machu Picchu",
 		"albumId": 187,
-		"artists": "The Strokes"
+		"artists": 12
 	}
 }
