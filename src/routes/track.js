@@ -3,14 +3,14 @@ const db = require('./../handlers/db/index');
 const tables = require('../database/tableNames');
 const respond = require('./../handlers/response');
 
-const trackExpectedBodySchema = { // FIXME incomplete schema
+const trackExpectedBodySchema = {
   type: 'object',
   properties: {
     name: {
       required: true,
       type: 'string',
     },
-    duration: {
+    albumId: {
       required: true,
       type: 'integer',
     },
@@ -18,10 +18,10 @@ const trackExpectedBodySchema = { // FIXME incomplete schema
       required: true,
       type: 'array',
       items: {
-        type: 'string'
-      }
-    }
-  }
+        type: 'string',
+      },
+    },
+  },
 };
 
 const getTracks = (req, res) => {
