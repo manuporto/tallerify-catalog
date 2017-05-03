@@ -10,7 +10,7 @@ exports.up = (knex, Promise) => {
 			table.string('name');
 			table.integer('duration');
       table.integer('albumId');
-      table.integer('href');
+      table.string('href');
       table.integer('popularity');
 		}),
 

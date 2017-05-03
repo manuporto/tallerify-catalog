@@ -240,6 +240,11 @@ const succesfulTracksFetch = (tracks, res) => {
   });
 };
 
+const successfulTrackCreation = (track, res) => {
+  logger.info('Successful track creation');
+  res.status(201).json(track[0]);
+};
+
 module.exports = {
   internalServerError,
   unauthorizedError,
@@ -262,4 +267,5 @@ module.exports = {
   successfulArtistsFetch,
   successfulArtistCreation,
   succesfulTracksFetch,
+  successfulTrackCreation,
 };

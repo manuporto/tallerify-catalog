@@ -18,10 +18,19 @@ const trackExpectedBodySchema = {
       required: true,
       type: 'array',
       items: {
-        type: 'string',
+        type: 'integer',
       },
     },
   },
+};
+
+const createNewTrack = (body) => {
+  let track = {
+    name: body.name,
+    albumId: body.albumId,
+    popularity: 0,
+  };
+  return db.track.createNewTrackEntry(track, body.artists);
 };
 
 const getTracks = (req, res) => {
@@ -33,11 +42,8 @@ const getTracks = (req, res) => {
 const newTrack = (req, res) => {
   respond.validateRequestBody(req.body, trackExpectedBodySchema)
   .then(() => {
-    db.track.insertTrack(req.body)
-      .then((track) => {
-        logger.info(`Track: ${JSON.stringify(track, null, 4)}`); // FIXME move this to response handler
-        res.status(201).json(track);
-      })
+    createNewTrack(req.body)
+      .then(track => respond.successfulTrackCreation(track, res))
       .catch(error => respond.internalServerError(error, res));
   })
   .catch(error => respond.invalidRequestBodyError(error, res));
