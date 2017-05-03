@@ -48,7 +48,7 @@ const handleLogin = (req, res, next, fUser) => {
         firstName: fUser.name,
         lastName: fUser.name,
         email: fUser.email,
-        country: fUser.location.name,
+        country: (fUser.hasOwnProperty('location')) ? fUser.location.name : '',
         birthdate: fUser.birthday,
       }).then((newUser) => {
         req.user = newUser[0];
