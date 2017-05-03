@@ -32,6 +32,24 @@ const nativeLogin = {
   },
 };
 
+const facebookUser = {
+  type: 'object',
+  properties: {
+    name: {
+      required: true,
+      type: 'string'
+    },
+    id: {
+      required: true,
+      type: 'string'
+    },
+    birthday: {
+      required: true,
+      type: 'string'
+    }
+  }
+};
+
 const getNativeUserToken = (req, res, next) => {
   db.general.findOneWithAttributes(tables.users, {
     userName: req.body.userName,
@@ -50,7 +68,11 @@ const getNativeUserToken = (req, res, next) => {
 
 const getFacebookUserToken = (req, res, next) => {
   facebook.checkCredentials(req.body)
-    .then(fUser => facebook.handleLogin(req, res, next, fUser))
+    .then(fUser => {
+      respond.validateRequestBody(fUser, facebookUser)
+        .then(() => facebook.handleLogin(req, res, next, fUser))
+        .catch(error => respond.invalidRequestBodyError(error, res));;
+    })
     .catch(error => respond.unauthorizedError(error, res));
 };
 
