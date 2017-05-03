@@ -12,17 +12,14 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const ejs = require('ejs');
-const jwt = require('jsonwebtoken');
 const expressJwt = require('express-jwt');
 const config = require('./config');
 
 // *** routes *** //
 const routes = require('./routes/index.js');
 
-
 // *** express instance *** //
 const app = express();
-
 
 // *** view engine *** //
 app.engine('html', ejs.renderFile);
@@ -39,13 +36,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-
 // *** jwt secret *** //
 app.use(expressJwt({ secret: config.secret }).unless({ path: ['/api/tokens', '/api/admins/tokens', '/'] }));
 app.set('secret', config.secret);
-
-// *** passport *** //
-// app.use(passport.initialize());
 
 // *** main routes *** //
 app.use('/', routes);
@@ -59,24 +52,11 @@ app.use((req, res, next) => {
 
 // *** error handlers *** //
 
-app.use((err, req, res, next) => {
-  if(err.name === 'UnauthorizedError') {
-    res.status(err.status).json({
-      message:err.message,
-      error: err
-    });
-    logger.warn(err);
-    return;
-  }
-  next();
-});
-
 // development and test error handler
 // will print stacktrace
-if (app.get('env') === 'development' || app.get('env') === 'test') {
-  app.use((err, req, res) => {
-    res.status(err.status || 500)
-    .json({
+if (app.get('env') === 'development') {
+  app.use((err, req, res, next) => {
+    res.status(err.status || 500).json({
       message: err.message,
       error: err,
     });

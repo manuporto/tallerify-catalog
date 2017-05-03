@@ -1,6 +1,6 @@
 const logger = require('../utils/logger');
 const respond = require('../handlers/response');
-const facebook = require('../handlers/auth/facebook');
+const facebook = require('./facebook');
 const db = require('../handlers/db');
 const tables = require('../database/tableNames');
 
