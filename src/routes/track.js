@@ -49,4 +49,24 @@ const newTrack = (req, res) => {
   .catch(error => respond.invalidRequestBodyError(error, res));
 };
 
-module.exports = { getTracks, newTrack };
+const getTrack = (req, res) => {
+  db.general.findEntryWithId(tables.tracks, req.params.id)
+    .then((track) => {
+      if (!respond.entryExists(req.params.id, track, res)) return;
+      respond.successfulTrackFetch(track, res);
+    })
+    .catch(error => respond.internalServerError(error, res));
+};
+
+const deleteTrack = (req, res) => {
+  db.general.findEntryWithId(tables.tracks, req.params.id)
+    .then((track) => {
+      if (!respond.entryExists(req.params.id, track, res)) return;
+      db.general.deleteEntryWithId(tables.tracks, req.params.id)
+        .then(() => respond.successfulTrackDeletion(res))
+        .catch(error => respond.internalServerError(error, res));
+    })
+    .catch(error => respond.internalServerError(error, res));
+};
+
+module.exports = { getTracks, newTrack, getTrack, deleteTrack };

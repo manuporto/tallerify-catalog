@@ -243,9 +243,9 @@ const formatTrackJson = (track) => {
   };
 };
 
-const succesfulTracksFetch = (tracks, res) => {
+const succesfulTracksFetch = (tracks, response) => {
   logger.info('Successful tracks fetch');
-  return res.status(200).json({
+  return response.status(200).json({
     metadata: {
       count: tracks.length,
       version: constants.API_VERSION,
@@ -254,9 +254,25 @@ const succesfulTracksFetch = (tracks, res) => {
   });
 };
 
-const successfulTrackCreation = (track, res) => {
+const successfulTrackCreation = (track, response) => {
   logger.info('Successful track creation');
-  res.status(201).json(formatTrackJson(track[0]));
+  response.status(201).json(formatTrackJson(track[0]));
+};
+
+const successfulTrackFetch = (track, response) => {
+  logger.info('Successful track fetch');
+  response.status(200).json({
+    metadata: {
+      count: 1,
+      version: constants.API_VERSION,
+    },
+    track: formatTrackJson(track[0]),
+  });
+};
+
+const successfulTrackDeletion = (response) => {
+  logger.info('Successful track deletion');
+  response.sendStatus(204);
 };
 
 module.exports = {
@@ -282,4 +298,6 @@ module.exports = {
   successfulArtistCreation,
   succesfulTracksFetch,
   successfulTrackCreation,
+  successfulTrackFetch,
+  successfulTrackDeletion,
 };
