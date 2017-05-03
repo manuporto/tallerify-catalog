@@ -59,6 +59,16 @@ describe('Track', () => {
           done();
         });
     });
+
+    it('should return status code 401 if unauthorized', (done) => {
+      request(app)
+        .get('/api/tracks')
+        .set('Authorization', 'Bearer UNAUTHORIZED')
+        .end((err, res) => {
+          res.should.have.status(401);
+          done();
+        });
+    });
   });
 
   describe('/POST tracks', () => {
@@ -97,6 +107,35 @@ describe('Track', () => {
             done();
           });
       });
+    });
+
+    it('should return the expected body response when correct parameters are sent', (done) => {
+      request(app)
+        .post('/api/tracks')
+        .set('Authorization', `Bearer ${testToken}`)
+        .send(constants.testTrack)
+        .end((err, res) => {
+          res.body.should.be.a('object');
+          res.body.should.have.property('id');
+          res.body.should.have.property('name').eql(constants.testTrack.name);
+          res.body.should.have.property('duration');
+          res.body.should.have.property('href');
+          res.body.should.have.property('album'); // TODO
+          // res.body.should.have.property('artists'); TODO
+          res.body.popularity.should.have.property('rate').eql(0);
+          done();
+        });
+    });
+
+    it('should return status code 401 if unauthorized', (done) => {
+      request(app)
+        .post('/api/tracks')
+        .set('Authorization', 'Bearer UNAUTHORIZED')
+        .send(constants.testTrack)
+        .end((err, res) => {
+          res.should.have.status(401);
+          done();
+        });
     });
   });
 });
