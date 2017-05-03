@@ -59,12 +59,24 @@ app.use((req, res, next) => {
 
 // *** error handlers *** //
 
+app.use((err, req, res, next) => {
+  if(err.name === 'UnauthorizedError') {
+    res.status(err.status).json({
+      message:err.message,
+      error: err
+    });
+    logger.warn(err);
+    return;
+  }
+  next();
+});
+
 // development and test error handler
 // will print stacktrace
 if (app.get('env') === 'development' || app.get('env') === 'test') {
   app.use((err, req, res) => {
-    res.status(err.status || 500);
-    res.render('index', {
+    res.status(err.status || 500)
+    .json({
       message: err.message,
       error: err,
     });
@@ -73,11 +85,10 @@ if (app.get('env') === 'development' || app.get('env') === 'test') {
 
 // production error handler
 // no stacktraces leaked to user
-app.use((err, req, res) => {
-  res.status(err.status || 500);
-  res.render('index', {
+app.use((err, req, res, next) => {
+  res.status(err.status || 500).json({
+    code: err.status,
     message: err.message,
-    error: {},
   });
 });
 
