@@ -15,7 +15,7 @@ const constants = require('./token.constants.json');
 
 describe('Token', () => {
   beforeEach((done) => {
-    const INITIAL_DATA_AMOUNT = 2;
+    const INITIAL_DATA_AMOUNT = 3;
     let i = 0;
     db.migrate.rollback()
       .then(() => {
@@ -27,6 +27,12 @@ describe('Token', () => {
                 if (i === INITIAL_DATA_AMOUNT) done(); // FIXME perdon
               })
               .catch(error => done(error));
+            dbHandler.createNewEntry(tables.users, constants.initialFacebookUser)
+              .then(() => {
+                i++;
+                if (i === INITIAL_DATA_AMOUNT) done(); // FIXME perdon
+              })
+              .catch(error => done(error));;
             dbHandler.createNewEntry(tables.admins, constants.initialAdmin)
               .then(() => {
                 i++;
@@ -133,6 +139,23 @@ describe('Token', () => {
           res.body.should.have.property('user');
           res.body.user.should.have.property('id');
           res.body.user.should.have.property('userName');
+          res.body.user.should.have.property('href');
+          done();
+        });
+    });
+
+    it('should return existing information when logging with existing user', (done) => {
+      request(app)
+        .post('/api/tokens')
+        .send(constants.existingFacebookTokenGeneration)
+        .end((err, res) => {
+          res.body.should.be.a('object');
+          res.body.should.have.property('token');
+          res.body.token.should.be.a('string');
+          res.body.should.have.property('user');
+          res.body.user.should.have.property('id');
+          res.body.user.should.have.property('userName');
+          res.body.user.userName.should.equal(constants.initialFacebookUser.userName);
           res.body.user.should.have.property('href');
           done();
         });

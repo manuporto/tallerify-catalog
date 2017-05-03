@@ -13,6 +13,17 @@
         "lili"
       ]
   },
+  "initialFacebookUser": {
+      "userName": "helen",
+      "password": "1234",
+      "firstName": "Helen",
+      "lastName": "Baosky",
+      "country": "unknown",
+      "email": "rzcbgnrtny_1493790274@tfbnw.net",
+      "birthdate": "050798",
+      "facebookUserId": "105325483373285",
+      "facebookAuthToken": "EAASgAO7FqwgBALatBbM3AqpXWSQLjysiQfvYhJ5Fazdi5yfyqdkIWUNWl2oQ5ytFXdz1lfdq04RhNg4FSpgorJgCPliBOLGWFXpR8zKYZBN82iI87JHkn5lcNCSPKTAzRnxREaLfEUAYkt3o2RinqZCS1zLasOHKwMqKyjYKDbaZCHHW7FrZAczalkQn2MqJwCGtZB4F0Jpm6TuNhvxDFQhS0OxKT0y8ZD"
+  },
   "initialAdmin": {
     "userName": "aisha",
     "password": "2589",
@@ -35,6 +46,10 @@
   "facebookTokenGeneration": {
     "userId": "114123439155756",
     "authToken": "EAASgAO7FqwgBANb1i5pdttU0EOBPfjCvP90Dn0yplUfyCDJwsmFpnZCcLyJHdNwbqYBpr4XedNAZCbGcZBryZCvw4P8VxEHrMNLXYYT35NSjJxmZB9IKnMoy9pgoG5kG2w0pmF1wJknGKo86v1ZBupqjPi21B8UuAgSic2pOX12d8Q1n7fd0cZCO7g95QJR4k0abW5TgVtUUZChpqDVGdHgftLqgnoa8pY0ZD"
+  },
+  "existingFacebookTokenGeneration": {
+    "userId": "105325483373285",
+    "authToken": "EAASgAO7FqwgBALatBbM3AqpXWSQLjysiQfvYhJ5Fazdi5yfyqdkIWUNWl2oQ5ytFXdz1lfdq04RhNg4FSpgorJgCPliBOLGWFXpR8zKYZBN82iI87JHkn5lcNCSPKTAzRnxREaLfEUAYkt3o2RinqZCS1zLasOHKwMqKyjYKDbaZCHHW7FrZAczalkQn2MqJwCGtZB4F0Jpm6TuNhvxDFQhS0OxKT0y8ZD"
   },
   "facebookTokenGenerationWithMissingAttributes": {
     "userId": "114123439155756"
