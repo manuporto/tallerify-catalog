@@ -61,12 +61,12 @@ app.use((req, res, next) => {
 
 app.use((err, req, res, next) => {
   if(err.name === 'UnauthorizedError') {
-   res.status(err.status).json({
-    message:err.message,
-    error: err
-  });
-   logger.warn(err);
-   return;
+    res.status(err.status).json({
+      message:err.message,
+      error: err
+    });
+    logger.warn(err);
+    return;
   }
   next();
 });
