@@ -43,7 +43,7 @@ describe('Token', () => {
       .then(() => done());
   });
 
-  describe('/POST tokens', () => {
+  describe('/POST tokens with native login', () => {
     it('should return status code 400 when parameters are missing', (done) => {
       request(app)
         .post('/api/tokens')
@@ -78,6 +78,54 @@ describe('Token', () => {
       request(app)
         .post('/api/tokens')
         .send(constants.tokenGeneration)
+        .end((err, res) => {
+          res.body.should.be.a('object');
+          res.body.should.have.property('token');
+          res.body.token.should.be.a('string');
+          res.body.should.have.property('user');
+          res.body.user.should.have.property('id');
+          res.body.user.should.have.property('userName');
+          res.body.user.should.have.property('href');
+          done();
+        });
+    });
+  });
+
+  describe('/POST tokens with facebook login', () => {
+    it('should return status code 400 when parameters are missing', (done) => {
+      request(app)
+        .post('/api/tokens')
+        .send(constants.facebookTokenGenerationWithMissingAttributes)
+        .end((err, res) => {
+          res.should.have.status(400);
+          done();
+        });
+    });
+
+    it('should return status code 500 when user token is invalid or expired', (done) => {
+      request(app)
+        .post('/api/tokens')
+        .send(constants.facebookTokenGenerationWithInvalidCredentials)
+        .end((err, res) => {
+          res.should.have.status(500);
+          done();
+        });
+    });
+
+    it('should return status code 201', (done) => {
+      request(app)
+        .post('/api/tokens')
+        .send(constants.facebookTokenGeneration)
+        .end((err, res) => {
+          res.should.have.status(201);
+          done();
+        });
+    });
+
+    it('should return the expected body response when correct credentials are sent', (done) => {
+      request(app)
+        .post('/api/tokens')
+        .send(constants.facebookTokenGeneration)
         .end((err, res) => {
           res.body.should.be.a('object');
           res.body.should.have.property('token');
