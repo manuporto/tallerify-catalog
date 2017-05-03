@@ -140,6 +140,59 @@ describe('Track', () => {
     });
   });
 
+  describe('/GET tracks/{id}', () => {
+    it('should return status code 200', (done) => {
+      request(app)
+        .get(`/api/tracks/${constants.validTrackId}`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.should.have.status(200);
+          done();
+        });
+    });
+
+    it('should return user data', (done) => {
+      request(app)
+        .get(`/api/tracks/${constants.validTrackId}`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.body.should.be.a('object');
+          res.body.should.have.property('metadata');
+          res.body.metadata.should.have.property('version');
+          res.body.metadata.should.have.property('count');
+          res.body.should.have.property('track');
+          res.body.track.should.have.property('id').eql(constants.validTrackId);
+          res.body.track.should.have.property('name').eql(constants.initialTrack.name);
+          res.body.track.should.have.property('duration');
+          res.body.track.should.have.property('href');
+          res.body.track.should.have.property('album'); // TODO
+          // res.body.track.should.have.property('artists'); TODO
+          res.body.track.popularity.should.have.property('rate').eql(0);
+          done();
+        });
+    });
+
+    it('should return status code 404 if id does not match a user', (done) => {
+      request(app)
+        .get(`/api/tracks/${constants.invalidTrackId}`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.should.have.status(404);
+          done();
+        });
+    });
+
+    it('should return status code 401 if unauthorized', (done) => {
+      request(app)
+        .get(`/api/tracks/${constants.invalidTrackId}`)
+        .set('Authorization', 'Bearer UNAUTHORIZED')
+        .end((err, res) => {
+          res.should.have.status(401);
+          done();
+        });
+    });
+  });
+
   describe('/DELETE tracks/{id}', () => {
     it('should return status code 204 when deletion is successful', (done) => {
       request(app)
