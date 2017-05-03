@@ -1,8 +1,8 @@
-const logger = require('../../utils/logger');
+const logger = require('../utils/logger');
 const request = require('request');
-const db = require('../db');
-const tables = require('../../database/tableNames');
-const respond = require('./../response');
+const db = require('../handlers/db/index');
+const tables = require('../database/tableNames');
+const respond = require('./../handlers/response');
 
 const provider = 'https://graph.facebook.com/v2.9/me';
 

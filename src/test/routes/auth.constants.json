@@ -1,0 +1,20 @@
+{
+  "expiredToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlck5hbWUiOiJhYnJkZW4iLCJwYXNzd29yZCI6IjExMTMiLCJmaXJzdE5hbWUiOiJBZ3VzdGluYSIsImxhc3ROYW1lIjoiQmFyYmV0dGEiLCJjb3VudHJ5IjoiQXJnZW50aW5hIiwiYmlydGhkYXRlIjoiMTIwODk0IiwiZW1haWwiOiJhQGEuY29tIiwiaW1hZ2VzIjpbImhpIl0sImhyZWYiOm51bGwsImlhdCI6MTQ5MzQ0NjcwMCwiZXhwIjoxNDkzNTMzMTAwfQ.0RUjUuJtkvgy4RMfu52t85kXFjXPD9pUQmdRE4x7L9U",
+  "expiredTokenResponse": {
+    "code": 401,
+    "message": "jwt expired"
+  },
+  "malformedAuthHeaderResponse" : {
+    "code": 401,
+    "message": "Format is Authorization: Bearer [token]"
+  },
+  "noAuthHeaderResponse": {
+    "code": 401,
+    "message": "No authorization token was found"
+  },
+  "malformedToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidXNlck5hbWUiOiJhYnJkZW4iLCJwYXNzd29yZCI6IjExMTMiLCJmaXJzdE5hbWUiOiJBZ3VzdGluYSIsImxhc3ROYW1lIjoiQmFyYmV0dGEiLCJjb3VudHJ5IjoiQXJnZW50aW5hIiwiYm",
+  "malformedTokenResponse": {
+    "code": 401,
+    "message": "jwt malformed"
+  }
+}
