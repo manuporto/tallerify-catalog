@@ -13,6 +13,14 @@
 		"albumId": 123,
 		"artists": [24, 9]
 	},
+	"updatedTrack": {
+		"name": "Andromeda",
+		"albumId": 321,
+		"artists": [12, 8, 94]
+	},
+	"updatedTrackWithMissingAttributes": {
+		"name": "Animus Vox"
+	},
 	"invalidTrack": {
 		"name": "Machu Picchu",
 		"albumId": 187,

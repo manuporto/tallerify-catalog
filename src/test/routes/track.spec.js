@@ -193,6 +193,81 @@ describe('Track', () => {
     });
   });
 
+  describe('/PUT tracks/{id}', () => {
+    it('should return status code 201 when correct parameters are sent', (done) => {
+      request(app)
+        .put(`/api/tracks/${constants.validTrackId}`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .send(constants.updatedTrack)
+        .end((err, res) => {
+          res.should.have.status(200);
+          done();
+        });
+    });
+
+    it('should return the expected body response when correct parameters are sent', (done) => {
+      request(app)
+        .put(`/api/tracks/${constants.validTrackId}`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .send(constants.updatedTrack)
+        .end((err, res) => {
+          res.body.should.be.a('object');
+          res.body.should.have.property('id');
+          res.body.should.have.property('name').eql(constants.updatedTrack.name);
+          res.body.should.have.property('duration');
+          res.body.should.have.property('href');
+          res.body.should.have.property('album'); // TODO
+          // res.body.should.have.property('artists'); TODO
+          res.body.popularity.should.have.property('rate').eql(0);
+          done();
+        });
+    });
+
+    it('should return status code 400 when parameters are missing', (done) => {
+      request(app)
+        .put(`/api/tracks/${constants.validTrackId}`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .send(constants.updatedTrackWithMissingAttributes)
+        .end((err, res) => {
+          res.should.have.status(400);
+          done();
+        });
+    });
+
+    it('should return status code 400 when parameters are invalid', (done) => {
+      request(app)
+        .put(`/api/tracks/${constants.validTrackId}`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .send(constants.invalidTrack)
+        .end((err, res) => {
+          res.should.have.status(400);
+          done();
+        });
+    });
+
+    it('should return status code 404 if id does not match a user', (done) => {
+      request(app)
+        .put(`/api/tracks/${constants.invalidTrackId}`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .send(constants.updatedTrack)
+        .end((err, res) => {
+          res.should.have.status(404);
+          done();
+        });
+    });
+
+    it('should return status code 401 if unauthorized', (done) => {
+      request(app)
+        .put(`/api/users/${constants.validTrackId}`)
+        .set('Authorization', 'Bearer UNAUTHORIZED')
+        .send(constants.updatedTrack)
+        .end((err, res) => {
+          res.should.have.status(401);
+          done();
+        });
+    });
+  });
+
   describe('/DELETE tracks/{id}', () => {
     it('should return status code 204 when deletion is successful', (done) => {
       request(app)
