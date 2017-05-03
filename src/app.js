@@ -74,7 +74,6 @@ app.use((err, req, res, next) => {
 // development and test error handler
 // will print stacktrace
 if (app.get('env') === 'development' || app.get('env') === 'test') {
-  logger.warn('Error handler');
   app.use((err, req, res) => {
     res.status(err.status || 500)
     .json({
