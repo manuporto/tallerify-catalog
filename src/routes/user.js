@@ -1,7 +1,6 @@
 const db = require('./../handlers/db/index');
 const tables = require('../database/tableNames');
 const respond = require('./../handlers/response');
-const tokenDecoder = require('./../handlers/token-decode');
 const constants = require('./constants.json');
 
 const userExpectedBodySchema = {
