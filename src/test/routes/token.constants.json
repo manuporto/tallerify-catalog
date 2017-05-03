@@ -32,6 +32,17 @@
     "userName": "abrden",
     "password": "1234"
   },
+  "facebookTokenGeneration": {
+    "userId": "114123439155756",
+    "authToken": "EAASgAO7FqwgBANb1i5pdttU0EOBPfjCvP90Dn0yplUfyCDJwsmFpnZCcLyJHdNwbqYBpr4XedNAZCbGcZBryZCvw4P8VxEHrMNLXYYT35NSjJxmZB9IKnMoy9pgoG5kG2w0pmF1wJknGKo86v1ZBupqjPi21B8UuAgSic2pOX12d8Q1n7fd0cZCO7g95QJR4k0abW5TgVtUUZChpqDVGdHgftLqgnoa8pY0ZD"
+  },
+  "facebookTokenGenerationWithMissingAttributes": {
+    "userId": "114123439155756"
+  },
+  "facebookTokenGenerationWithInvalidCredentials": {
+    "userId": "114123439155756",
+    "authToken": "invalid"
+  },
   "adminTokenGeneration": {
     "userName": "aisha",
     "password": "2589"
