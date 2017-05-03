@@ -30,19 +30,15 @@ const validateWithProvider = (socialToken) => {
 };
 
 const createDbUserObject = (user) => {
-  const names = user.name.split(' ');
   const defaultMissingValue = 'unknown';
-  const userName = names.join('_').toLowerCase();
-  const defaultFirstName = names[0];
-  const defaultLastName = (names.length > 0) ? names.slice(-1)[0] : defaultMissingValue;
   return {
-        userName,
+        userName: user.name.split(' ').join('_').toLowerCase(),
         facebookUserId: user.id,
         facebookAuthToken: user.authToken,
         birthdate: user.birthday,
-        firstName: (user.hasOwnProperty('first_name')) ? user.first_name : defaultFirstName,
-        lastName: (user.hasOwnProperty('last_name')) ? user.last_name : defaultLastName,
-        email: (user.hasOwnProperty('email')) ? user.email : defaultMissingValue,
+        firstName: user.first_name,
+        lastName: user.last_name,
+        email: user.email,
         country: (user.hasOwnProperty('location')) ? user.location.name : defaultMissingValue,
       };
 };

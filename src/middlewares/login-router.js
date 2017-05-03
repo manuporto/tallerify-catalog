@@ -35,13 +35,29 @@ const nativeLogin = {
 const facebookUser = {
   type: 'object',
   properties: {
+    id: {
+      required: true,
+      type: 'string'
+    },
     name: {
       required: true,
       type: 'string'
     },
-    id: {
+    first_name: {
       required: true,
       type: 'string'
+    },
+    last_name: {
+      required: true,
+      type: 'string'
+    },
+    email: {
+      required: true,
+      type: 'string'
+    },
+    location: {
+      required: false,
+      type: 'object'
     },
     birthday: {
       required: true,

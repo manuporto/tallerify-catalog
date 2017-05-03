@@ -14,15 +14,15 @@
       ]
   },
   "initialFacebookUser": {
-      "userName": "helen",
-      "password": "1234",
-      "firstName": "Helen",
-      "lastName": "Baosky",
-      "country": "unknown",
-      "email": "rzcbgnrtny_1493790274@tfbnw.net",
-      "birthdate": "050798",
-      "facebookUserId": "105325483373285",
-      "facebookAuthToken": "EAASgAO7FqwgBAPZC4zawuGmmhhp30sgDGANEWRbhN0Ul1CLj8wLh8HaiNoRiBOvOz7nlrkzKfhkn9DzoVMaN2FQwokusI2ZAvi7GDxMZB4pHhJNozleXyb0RnpK4ifuaYstgAxtYtmvfb6SXpZAFvqj7BjKrvHNYrRFRxIRSWIbk3cZA9LSIGnnUpfeZBT7ZAMmfy8bZCd3bxlCo09gDVoUywlE4mMBccdEZD"
+    "facebookUserId": "10212962185186379",
+    "facebookAuthToken": "EAATNy7zndu0BAOS8t2TkIgSgplSzJbuDOfez3zO1M7fguvLKsVZBq8y5c0NCtUc9bclth045H9wBfDVWZC8piEQ2KvP3nx3TVMUMfejtjsFGXjjZAmoCMA1rRsYejXXVVI5AsW7v2Cm8cb6VGAdYdcgzGOoVuwZD",
+    "userName": "agus_barbetta",
+    "password": "1234",
+    "firstName": "Agus",
+    "lastName": "Barbetta",
+    "birthdate": "08/12/1994",
+    "email": "agusb_204@hotmail.com",
+    "country":  "Argentina"
   },
   "initialAdmin": {
     "userName": "aisha",
@@ -44,18 +44,18 @@
     "password": "1234"
   },
   "facebookTokenGeneration": {
-    "userId": "114123439155756",
-    "authToken": "EAASgAO7FqwgBAJD10Tpb0sphMkYmoALPeJg8HhjGfz5JPzbH842uBeOeWZBgchC7t2apZALrI0LD9k3N4DoKAZAp0cTudZBopXUnvzulbqZBpP9KT2cdM6Islh7ZAxFxBPYMJeGHVO2YvcBKX5Qi5eBnAkbt6WRW4Yzycj82oZCvcl85GUKpZAheFqRx98OrLPOsEMDg5rRWdwMkewZCh6fob9ZC375SO7EtgZD"
+    "userId": "10213185901942190",
+    "authToken": "EAASgAO7FqwgBAOOVa29HMY6wVWcn9TARnGb3Wdi5usArZAQ0ZC6jDG8uZCWAuJIc4AjZCcDTTXFcJ8tw5ddrRzK4vXaVD3nwZBO2jvPK2C0B7Sn6ZAhrjlBROTsigvpgvDZBjUdS5PAYoRn2T3aZAbpg99ASXZCeJ3ZCMZD"
   },
   "existingFacebookTokenGeneration": {
-    "userId": "105325483373285",
-    "authToken": "EAASgAO7FqwgBAPZC4zawuGmmhhp30sgDGANEWRbhN0Ul1CLj8wLh8HaiNoRiBOvOz7nlrkzKfhkn9DzoVMaN2FQwokusI2ZAvi7GDxMZB4pHhJNozleXyb0RnpK4ifuaYstgAxtYtmvfb6SXpZAFvqj7BjKrvHNYrRFRxIRSWIbk3cZA9LSIGnnUpfeZBT7ZAMmfy8bZCd3bxlCo09gDVoUywlE4mMBccdEZD"
+    "userId": "10212962185186379",
+    "authToken": "EAATNy7zndu0BAOS8t2TkIgSgplSzJbuDOfez3zO1M7fguvLKsVZBq8y5c0NCtUc9bclth045H9wBfDVWZC8piEQ2KvP3nx3TVMUMfejtjsFGXjjZAmoCMA1rRsYejXXVVI5AsW7v2Cm8cb6VGAdYdcgzGOoVuwZD"
   },
   "facebookTokenGenerationWithMissingAttributes": {
-    "userId": "114123439155756"
+    "userId": "10213185901942190"
   },
   "facebookTokenGenerationWithInvalidCredentials": {
-    "userId": "114123439155756",
+    "userId": "10213185901942190",
     "authToken": "invalid"
   },
   "adminTokenGeneration": {
