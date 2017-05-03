@@ -59,18 +59,6 @@ app.use((req, res, next) => {
 
 // *** error handlers *** //
 
-app.use((err, req, res, next) => {
-  if(err.name === 'UnauthorizedError') {
-    res.status(err.status).json({
-      message:err.message,
-      error: err
-    });
-    logger.warn(err);
-    return;
-  }
-  next();
-});
-
 // development and test error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
