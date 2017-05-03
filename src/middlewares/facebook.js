@@ -21,11 +21,25 @@ const validateWithProvider = (socialToken) => {
           logger.info(`FB GRAPH RESPONSE ${JSON.stringify(response.body)}`);
           resolve(JSON.parse(body));
         } else {
-          logger.warn(`FB GRAPH RESPONSE ${JSON.stringify(response)}`);
-          reject(error);
+          const errMsg = JSON.parse(response.body).error.message;
+          logger.warn(`FB GRAPH RESPONSE ${errMsg}`);
+          reject(errMsg);
         }
       });
   });
+};
+
+const createDbUserObject = (user) => {
+  return {
+        facebookUserId: user.id,
+        facebookAuthToken: user.authToken,
+        userName: user.name,
+        firstName: user.name,
+        lastName: user.name,
+        email: user.email,
+        country: (user.hasOwnProperty('location')) ? user.location.name : '',
+        birthdate: user.birthday,
+      };
 };
 
 const checkCredentials = (credentials) => {
@@ -41,16 +55,8 @@ const handleLogin = (req, res, next, fUser) => {
       req.user = user;
       next();
     } else {
-      db.general.createNewEntry(tables.users, {
-        facebookUserId: fUser.id,
-        facebookAuthToken: req.body.authToken,
-        userName: fUser.name,
-        firstName: fUser.name,
-        lastName: fUser.name,
-        email: fUser.email,
-        country: (fUser.hasOwnProperty('location')) ? fUser.location.name : '',
-        birthdate: fUser.birthday,
-      }).then((newUser) => {
+      fUser.authToken = req.body.authToken;
+      db.general.createNewEntry(tables.users, createDbUserObject(fUser)).then((newUser) => {
         req.user = newUser[0];
         next();
       }).catch((error) => {

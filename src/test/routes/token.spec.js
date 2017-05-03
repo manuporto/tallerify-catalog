@@ -108,12 +108,12 @@ describe('Token', () => {
         });
     });
 
-    it('should return status code 500 when user token is invalid or expired', (done) => {
+    it('should return status code 401 when user token is invalid or expired', (done) => {
       request(app)
         .post('/api/tokens')
         .send(constants.facebookTokenGenerationWithInvalidCredentials)
         .end((err, res) => {
-          res.should.have.status(500);
+          res.should.have.status(401);
           done();
         });
     });

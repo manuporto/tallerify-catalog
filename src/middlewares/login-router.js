@@ -51,7 +51,7 @@ const getNativeUserToken = (req, res, next) => {
 const getFacebookUserToken = (req, res, next) => {
   facebook.checkCredentials(req.body)
     .then(fUser => facebook.handleLogin(req, res, next, fUser))
-    .catch(error => respond.internalServerError(error, res));
+    .catch(error => respond.unauthorizedError(error, res));
 };
 
 const loginRouter = (req, res, next) => {
