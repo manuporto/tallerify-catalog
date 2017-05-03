@@ -270,6 +270,11 @@ const successfulTrackFetch = (track, response) => {
   });
 };
 
+const successfulTrackUpdate = (track, response) => {
+  logger.info('Successful track update');
+  response.status(200).json(formatTrackJson(track[0]));
+};
+
 const successfulTrackDeletion = (response) => {
   logger.info('Successful track deletion');
   response.sendStatus(204);
@@ -299,5 +304,6 @@ module.exports = {
   succesfulTracksFetch,
   successfulTrackCreation,
   successfulTrackFetch,
+  successfulTrackUpdate,
   successfulTrackDeletion,
 };

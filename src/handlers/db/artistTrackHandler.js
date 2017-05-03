@@ -2,7 +2,7 @@ const logger = require('../../utils/logger');
 const generalHandler = require('./generalHandler');
 const tables = require('../../database/tableNames');
 
-function insertAssociations(trackId, artistsIds) {
+const insertAssociations = (trackId, artistsIds) => {
   logger.info(`Creating associations for track ${trackId} and artists ${artistsIds}`);
   let rowValues = [];
   // ex artistsIds = {"id": 1, "id": 6}
@@ -13,6 +13,10 @@ function insertAssociations(trackId, artistsIds) {
     });
   });
   return generalHandler.createNewEntry(tables.artists_tracks, rowValues);
-}
+};
+
+const updateAssociations = (trackId, artistsIds) => {
+  // TODO
+};
 
 module.exports = { insertAssociations };

@@ -33,6 +33,17 @@ const createNewTrack = (body) => {
   return db.track.createNewTrackEntry(track, body.artists);
 };
 
+const updateTrackInfo = (body) => {
+  let updatedTrack = {
+    name: body.name,
+    albumId: body.albumId,
+    popularity: 0,
+  };
+  return db.track.updateTrackEntry(updatedTrack, body.artists);
+};
+
+/* Routes */
+
 const getTracks = (req, res) => {
   db.general.findAllEntries(tables.tracks)
     .then(tracks => respond.succesfulTracksFetch(tracks, res))
@@ -58,6 +69,21 @@ const getTrack = (req, res) => {
     .catch(error => respond.internalServerError(error, res));
 };
 
+const updateTrack = (req, res) => {
+  respond.validateRequestBody(req.body, trackExpectedBodySchema)
+    .then(() => {
+      db.general.findEntryWithId(tables.tracks, req.params.id)
+        .then((track) => {
+          if (!respond.entryExists(req.params.id, track, res)) return;
+          updateTrackInfo(req.body)
+            .then(updatedTrack => respond.successfulTrackUpdate(updatedTrack, res))
+            .catch(error => respond.internalServerError(error, res));
+        })
+        .catch(error => respond.internalServerError(error, res));
+    })
+    .catch(error => respond.invalidRequestBodyError(error, res));
+};
+
 const deleteTrack = (req, res) => {
   db.general.findEntryWithId(tables.tracks, req.params.id)
     .then((track) => {
@@ -69,4 +95,4 @@ const deleteTrack = (req, res) => {
     .catch(error => respond.internalServerError(error, res));
 };
 
-module.exports = { getTracks, newTrack, getTrack, deleteTrack };
+module.exports = { getTracks, newTrack, getTrack, updateTrack, deleteTrack };

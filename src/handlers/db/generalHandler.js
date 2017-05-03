@@ -21,7 +21,7 @@ const findWithUsernameAndPassword = (tableName, username, password) => {
 
 const findOneWithAttributes = (tableName, attributes) => {
   return db(tableName).where(attributes).first('*');
-}
+};
 
 const createNewEntry = (tableName, entry) => {
   logger.info('Creating entry');
@@ -31,7 +31,7 @@ const createNewEntry = (tableName, entry) => {
 const updateEntry = (tableName, newEntry) => {
   logger.info('Updating entry');
   return db(tableName).update(newEntry).returning('*');
-}
+};
 
 const deleteEntryWithId = (tableName, id) => {
   logger.info(`Deleting entry ${id}`);
