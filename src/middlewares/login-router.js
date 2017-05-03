@@ -32,6 +32,40 @@ const nativeLogin = {
   },
 };
 
+const facebookUser = {
+  type: 'object',
+  properties: {
+    id: {
+      required: true,
+      type: 'string'
+    },
+    name: {
+      required: true,
+      type: 'string'
+    },
+    first_name: {
+      required: true,
+      type: 'string'
+    },
+    last_name: {
+      required: true,
+      type: 'string'
+    },
+    email: {
+      required: true,
+      type: 'string'
+    },
+    location: {
+      required: false,
+      type: 'object'
+    },
+    birthday: {
+      required: true,
+      type: 'string'
+    }
+  }
+};
+
 const getNativeUserToken = (req, res, next) => {
   db.general.findOneWithAttributes(tables.users, {
     userName: req.body.userName,
@@ -50,8 +84,12 @@ const getNativeUserToken = (req, res, next) => {
 
 const getFacebookUserToken = (req, res, next) => {
   facebook.checkCredentials(req.body)
-    .then(fUser => facebook.handleLogin(req, res, next, fUser))
-    .catch(error => respond.internalServerError(error, res));
+    .then(fUser => {
+      respond.validateRequestBody(fUser, facebookUser)
+        .then(() => facebook.handleLogin(req, res, next, fUser))
+        .catch(error => respond.invalidRequestBodyError(error, res));;
+    })
+    .catch(error => respond.unauthorizedError(error, res));
 };
 
 const loginRouter = (req, res, next) => {

@@ -13,19 +13,39 @@ const validateWithProvider = (socialToken) => {
       url: provider,
       qs: {
         access_token: socialToken,
-        fields: 'id, name, birthday, email, location'
+        fields: 'id, name, first_name, last_name, birthday, email, location'
       }
     },
       (error, response, body) => {
         if (!error && response.statusCode === 200) {
-          logger.info(`FB GRAPH RESPONSE ${JSON.stringify(response.body)}`);
+          const resBody = JSON.parse(response.body);
+          logger.debug(`Facebook graph response: ${JSON.stringify(resBody, null, 4)}`);
           resolve(JSON.parse(body));
         } else {
-          logger.warn(`FB GRAPH RESPONSE ${JSON.stringify(response)}`);
-          reject(error);
+          const errMsg = JSON.parse(response.body).error.message;
+          reject(errMsg);
         }
       });
   });
+};
+
+const createDbUserObject = (user) => {
+  const defaultMissingValue = 'unknown';
+  return {
+        userName: user.name.split(' ').join('_').toLowerCase(),
+        facebookUserId: user.id,
+        facebookAuthToken: user.authToken,
+        birthdate: user.birthday,
+        firstName: user.first_name,
+        lastName: user.last_name,
+        email: user.email,
+        country: (user.hasOwnProperty('location')) ? user.location.name : defaultMissingValue,
+      };
+};
+
+const createFacebookUser = (req, user) => {
+  user.authToken = req.body.authToken;
+  return db.general.createNewEntry(tables.users, createDbUserObject(user));
 };
 
 const checkCredentials = (credentials) => {
@@ -41,21 +61,14 @@ const handleLogin = (req, res, next, fUser) => {
       req.user = user;
       next();
     } else {
-      db.general.createNewEntry(tables.users, {
-        facebookUserId: fUser.id,
-        facebookAuthToken: req.body.authToken,
-        userName: fUser.name,
-        firstName: fUser.name,
-        lastName: fUser.name,
-        email: fUser.email,
-        country: fUser.location.name,
-        birthdate: fUser.birthday,
-      }).then((newUser) => {
-        req.user = newUser[0];
-        next();
-      }).catch((error) => {
-        respond.internalServerError(error, res);
-      });
+      createFacebookUser(req, fUser)
+        .then((newUser) => {
+          req.user = newUser[0];
+          next();
+        })
+        .catch((error) => {
+          respond.internalServerError(error, res);
+        });
     }
   });
 };

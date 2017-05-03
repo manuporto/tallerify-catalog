@@ -15,7 +15,7 @@ const constants = require('./token.constants.json');
 
 describe('Token', () => {
   beforeEach((done) => {
-    const INITIAL_DATA_AMOUNT = 2;
+    const INITIAL_DATA_AMOUNT = 3;
     let i = 0;
     db.migrate.rollback()
       .then(() => {
@@ -27,6 +27,12 @@ describe('Token', () => {
                 if (i === INITIAL_DATA_AMOUNT) done(); // FIXME perdon
               })
               .catch(error => done(error));
+            dbHandler.createNewEntry(tables.users, constants.initialFacebookUser)
+              .then(() => {
+                i++;
+                if (i === INITIAL_DATA_AMOUNT) done(); // FIXME perdon
+              })
+              .catch(error => done(error));;
             dbHandler.createNewEntry(tables.admins, constants.initialAdmin)
               .then(() => {
                 i++;
@@ -43,7 +49,7 @@ describe('Token', () => {
       .then(() => done());
   });
 
-  describe('/POST tokens', () => {
+  describe('/POST tokens with native login', () => {
     it('should return status code 400 when parameters are missing', (done) => {
       request(app)
         .post('/api/tokens')
@@ -85,6 +91,71 @@ describe('Token', () => {
           res.body.should.have.property('user');
           res.body.user.should.have.property('id');
           res.body.user.should.have.property('userName');
+          res.body.user.should.have.property('href');
+          done();
+        });
+    });
+  });
+
+  describe('/POST tokens with facebook login', () => {
+    it('should return status code 400 when parameters are missing', (done) => {
+      request(app)
+        .post('/api/tokens')
+        .send(constants.facebookTokenGenerationWithMissingAttributes)
+        .end((err, res) => {
+          res.should.have.status(400);
+          done();
+        });
+    });
+
+    it('should return status code 401 when user token is invalid or expired', (done) => {
+      request(app)
+        .post('/api/tokens')
+        .send(constants.facebookTokenGenerationWithInvalidCredentials)
+        .end((err, res) => {
+          res.should.have.status(401);
+          done();
+        });
+    });
+
+    it('should return status code 201', (done) => {
+      request(app)
+        .post('/api/tokens')
+        .send(constants.facebookTokenGeneration)
+        .end((err, res) => {
+          res.should.have.status(201);
+          done();
+        });
+    });
+
+    it('should return the expected body response when correct credentials are sent', (done) => {
+      request(app)
+        .post('/api/tokens')
+        .send(constants.facebookTokenGeneration)
+        .end((err, res) => {
+          res.body.should.be.a('object');
+          res.body.should.have.property('token');
+          res.body.token.should.be.a('string');
+          res.body.should.have.property('user');
+          res.body.user.should.have.property('id');
+          res.body.user.should.have.property('userName');
+          res.body.user.should.have.property('href');
+          done();
+        });
+    });
+
+    it('should return existing information when logging with existing user', (done) => {
+      request(app)
+        .post('/api/tokens')
+        .send(constants.existingFacebookTokenGeneration)
+        .end((err, res) => {
+          res.body.should.be.a('object');
+          res.body.should.have.property('token');
+          res.body.token.should.be.a('string');
+          res.body.should.have.property('user');
+          res.body.user.should.have.property('id');
+          res.body.user.should.have.property('userName');
+          res.body.user.userName.should.equal(constants.initialFacebookUser.userName);
           res.body.user.should.have.property('href');
           done();
         });

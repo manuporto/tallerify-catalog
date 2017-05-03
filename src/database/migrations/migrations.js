@@ -29,7 +29,7 @@ exports.up = (knex, Promise) => {
       logger.info('Creating users table.');
       table.increments('id').primary();
       table.bigInteger('facebookUserId');
-      table.bigInteger('facebookAuthToken');
+      table.string('facebookAuthToken');
       table.string('userName');
       table.string('password');
       table.string('firstName');

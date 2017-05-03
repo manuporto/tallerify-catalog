@@ -13,6 +13,17 @@
         "lili"
       ]
   },
+  "initialFacebookUser": {
+    "facebookUserId": "10212962185186379",
+    "facebookAuthToken": "EAATNy7zndu0BAOS8t2TkIgSgplSzJbuDOfez3zO1M7fguvLKsVZBq8y5c0NCtUc9bclth045H9wBfDVWZC8piEQ2KvP3nx3TVMUMfejtjsFGXjjZAmoCMA1rRsYejXXVVI5AsW7v2Cm8cb6VGAdYdcgzGOoVuwZD",
+    "userName": "agus_barbetta",
+    "password": "1234",
+    "firstName": "Agus",
+    "lastName": "Barbetta",
+    "birthdate": "08/12/1994",
+    "email": "agusb_204@hotmail.com",
+    "country":  "Argentina"
+  },
   "initialAdmin": {
     "userName": "aisha",
     "password": "2589",
@@ -31,6 +42,21 @@
   "tokenGeneration": {
     "userName": "abrden",
     "password": "1234"
+  },
+  "facebookTokenGeneration": {
+    "userId": "10213185901942190",
+    "authToken": "EAASgAO7FqwgBAOOVa29HMY6wVWcn9TARnGb3Wdi5usArZAQ0ZC6jDG8uZCWAuJIc4AjZCcDTTXFcJ8tw5ddrRzK4vXaVD3nwZBO2jvPK2C0B7Sn6ZAhrjlBROTsigvpgvDZBjUdS5PAYoRn2T3aZAbpg99ASXZCeJ3ZCMZD"
+  },
+  "existingFacebookTokenGeneration": {
+    "userId": "10212962185186379",
+    "authToken": "EAATNy7zndu0BAOS8t2TkIgSgplSzJbuDOfez3zO1M7fguvLKsVZBq8y5c0NCtUc9bclth045H9wBfDVWZC8piEQ2KvP3nx3TVMUMfejtjsFGXjjZAmoCMA1rRsYejXXVVI5AsW7v2Cm8cb6VGAdYdcgzGOoVuwZD"
+  },
+  "facebookTokenGenerationWithMissingAttributes": {
+    "userId": "10213185901942190"
+  },
+  "facebookTokenGenerationWithInvalidCredentials": {
+    "userId": "10213185901942190",
+    "authToken": "invalid"
   },
   "adminTokenGeneration": {
     "userName": "aisha",
