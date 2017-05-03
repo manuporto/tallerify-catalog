@@ -22,7 +22,7 @@
       "email": "rzcbgnrtny_1493790274@tfbnw.net",
       "birthdate": "050798",
       "facebookUserId": "105325483373285",
-      "facebookAuthToken": "EAASgAO7FqwgBADSYq7xsYJJ1ELZAhAcqaauLFZBUVJ4wsqNMGd85IFDqZCa6ho2Br7oYYYGlMfaVO8F5tzX7boOwFwORT4cJpNy96AoOHBTakiCY051LXxqn8EhH38STG7dCw69WqZAQKACQ5U5v9oMC4xrRIYRnCCDOZCBgRxdURMMjlhCur9lEBelnX0SsAkigqsLWiLbk9Ihqj8TFcYZC9yYVoWaJQZD"
+      "facebookAuthToken": "EAASgAO7FqwgBAPZC4zawuGmmhhp30sgDGANEWRbhN0Ul1CLj8wLh8HaiNoRiBOvOz7nlrkzKfhkn9DzoVMaN2FQwokusI2ZAvi7GDxMZB4pHhJNozleXyb0RnpK4ifuaYstgAxtYtmvfb6SXpZAFvqj7BjKrvHNYrRFRxIRSWIbk3cZA9LSIGnnUpfeZBT7ZAMmfy8bZCd3bxlCo09gDVoUywlE4mMBccdEZD"
   },
   "initialAdmin": {
     "userName": "aisha",
@@ -45,11 +45,11 @@
   },
   "facebookTokenGeneration": {
     "userId": "114123439155756",
-    "authToken": "EAASgAO7FqwgBAACxmmRG5nZB9nCUWDdYZC8j2z3VBVAVuhFwBPr9xzr4ByY9zFyji3D68JB8eHZBlFI3yf1J0DBIwPHsCVx6TiVqZC1iZCATtXtlBpPWmLoi3TNVis3VL6uHzzqKbHFZC8jcSoNQUC2bqoyafZBuCoEgSLTngZCIxXjb0xENZBUZBPUjrfD3JyXb791hJ3RhiKjZAg1Tkj1LwQyo9vB4i2Rs0EZD"
+    "authToken": "EAASgAO7FqwgBAJD10Tpb0sphMkYmoALPeJg8HhjGfz5JPzbH842uBeOeWZBgchC7t2apZALrI0LD9k3N4DoKAZAp0cTudZBopXUnvzulbqZBpP9KT2cdM6Islh7ZAxFxBPYMJeGHVO2YvcBKX5Qi5eBnAkbt6WRW4Yzycj82oZCvcl85GUKpZAheFqRx98OrLPOsEMDg5rRWdwMkewZCh6fob9ZC375SO7EtgZD"
   },
   "existingFacebookTokenGeneration": {
     "userId": "105325483373285",
-    "authToken": "EAASgAO7FqwgBADSYq7xsYJJ1ELZAhAcqaauLFZBUVJ4wsqNMGd85IFDqZCa6ho2Br7oYYYGlMfaVO8F5tzX7boOwFwORT4cJpNy96AoOHBTakiCY051LXxqn8EhH38STG7dCw69WqZAQKACQ5U5v9oMC4xrRIYRnCCDOZCBgRxdURMMjlhCur9lEBelnX0SsAkigqsLWiLbk9Ihqj8TFcYZC9yYVoWaJQZD"
+    "authToken": "EAASgAO7FqwgBAPZC4zawuGmmhhp30sgDGANEWRbhN0Ul1CLj8wLh8HaiNoRiBOvOz7nlrkzKfhkn9DzoVMaN2FQwokusI2ZAvi7GDxMZB4pHhJNozleXyb0RnpK4ifuaYstgAxtYtmvfb6SXpZAFvqj7BjKrvHNYrRFRxIRSWIbk3cZA9LSIGnnUpfeZBT7ZAMmfy8bZCd3bxlCo09gDVoUywlE4mMBccdEZD"
   },
   "facebookTokenGenerationWithMissingAttributes": {
     "userId": "114123439155756"

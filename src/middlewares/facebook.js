@@ -13,16 +13,16 @@ const validateWithProvider = (socialToken) => {
       url: provider,
       qs: {
         access_token: socialToken,
-        fields: 'id, name, birthday, email, location'
+        fields: 'id, name, first_name, last_name, birthday, email, location'
       }
     },
       (error, response, body) => {
         if (!error && response.statusCode === 200) {
-          logger.info(`FB GRAPH RESPONSE ${JSON.stringify(response.body)}`);
+          const resBody = JSON.parse(response.body);
+          logger.debug(`Facebook graph response: ${JSON.stringify(resBody, null, 4)}`);
           resolve(JSON.parse(body));
         } else {
           const errMsg = JSON.parse(response.body).error.message;
-          logger.warn(`FB GRAPH RESPONSE ${errMsg}`);
           reject(errMsg);
         }
       });
@@ -47,6 +47,11 @@ const createDbUserObject = (user) => {
       };
 };
 
+const createFacebookUser = (req, user) => {
+  user.authToken = req.body.authToken;
+  return db.general.createNewEntry(tables.users, createDbUserObject(user));
+};
+
 const checkCredentials = (credentials) => {
   logger.info(`Validating credentials: ${JSON.stringify(credentials)}`);
   return validateWithProvider(credentials.authToken);
@@ -60,8 +65,7 @@ const handleLogin = (req, res, next, fUser) => {
       req.user = user;
       next();
     } else {
-      fUser.authToken = req.body.authToken;
-      db.general.createNewEntry(tables.users, createDbUserObject(fUser))
+      createFacebookUser(req, fUser)
         .then((newUser) => {
           req.user = newUser[0];
           next();
