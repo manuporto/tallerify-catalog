@@ -229,6 +229,20 @@ const successfulArtistCreation = (artist, res) => {
 
 /* Tracks */
 
+const formatTrackJson = (track) => {
+  return {
+    id: track.id,
+    name: track.name,
+    href: track.href,
+    duration: track.duration,
+    popularity: {
+      rate: track.popularity,
+    },
+    album: track.albumId, // TODO complete artists and album short
+    artists: track.artists,
+  };
+};
+
 const succesfulTracksFetch = (tracks, res) => {
   logger.info('Successful tracks fetch');
   return res.status(200).json({
@@ -236,13 +250,13 @@ const succesfulTracksFetch = (tracks, res) => {
       count: tracks.length,
       version: constants.API_VERSION,
     },
-    tracks,
+    tracks: tracks.map(formatTrackJson),
   });
 };
 
 const successfulTrackCreation = (track, res) => {
   logger.info('Successful track creation');
-  res.status(201).json(track[0]);
+  res.status(201).json(formatTrackJson(track[0]));
 };
 
 module.exports = {
