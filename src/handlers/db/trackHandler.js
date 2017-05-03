@@ -3,11 +3,16 @@ const tables = require('../../database/tableNames');
 const generalHandler = require('./generalHandler');
 const artistTrackHandler = require('./artistTrackHandler');
 
-const createNewTrackEntry = (track, artistIds) => {
+const createNewTrackEntry = (body) => {
+  let track = {
+    name: body.name,
+    albumId: body.albumId,
+    popularity: 0,
+  };
   return generalHandler.createNewEntry(tables.tracks, track)
     .then((insertedTrack) => {
       logger.info(`Inserted track: ${JSON.stringify(insertedTrack, null, 4)}`);
-      artistTrackHandler.insertAssociations(insertedTrack[0].id, artistIds);
+      artistTrackHandler.insertAssociations(insertedTrack[0].id, body.artists);
       return insertedTrack;
     });
 };

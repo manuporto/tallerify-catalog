@@ -24,15 +24,6 @@ const trackExpectedBodySchema = {
   },
 };
 
-const createNewTrack = (body) => {
-  let track = {
-    name: body.name,
-    albumId: body.albumId,
-    popularity: 0,
-  };
-  return db.track.createNewTrackEntry(track, body.artists);
-};
-
 const updateTrackInfo = (body) => {
   let updatedTrack = {
     name: body.name,
@@ -53,7 +44,7 @@ const getTracks = (req, res) => {
 const newTrack = (req, res) => {
   respond.validateRequestBody(req.body, trackExpectedBodySchema)
   .then(() => {
-    createNewTrack(req.body)
+    db.track.createNewTrackEntry(req.body)
       .then(track => respond.successfulTrackCreation(track, res))
       .catch(error => respond.internalServerError(error, res));
   })

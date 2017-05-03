@@ -17,5 +17,7 @@
 		"name": "Machu Picchu",
 		"albumId": 187,
 		"artists": 12
-	}
+	},
+	"validTrackId": 1,
+	"invalidTrackId": 99999
 }

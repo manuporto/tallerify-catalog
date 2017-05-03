@@ -3,7 +3,7 @@ process.env.NODE_ENV = 'test';
 const app = require('../../app');
 const db = require('../../database');
 const tables = require('../../database/tableNames');
-const dbHandler = require('../../handlers/db/generalHandler');
+const dbHandler = require('../../handlers/db');
 const jwt = require('jsonwebtoken');
 const request = require('supertest');
 const chai = require('chai');
@@ -24,7 +24,11 @@ describe('Track', () => {
     db.migrate.rollback()
     .then(() => {
       db.migrate.latest()
-      .then(() => done())
+        .then(() => {
+          dbHandler.track.createNewTrackEntry(constants.initialTrack)
+            .then(() => done())
+            .catch(error => done(error));
+        })
       .catch(error => done(error));
     });
   });
@@ -96,17 +100,14 @@ describe('Track', () => {
     });
 
     it('should return status code 201 when correct parameters are sent', (done) => {
-      dbHandler.createNewEntry(tables.artists, artistsConstants.trackTestArtist)
-      .then(() => {
-        request(app)
-          .post('/api/tracks')
-          .set('Authorization', `Bearer ${testToken}`)
-          .send(constants.testTrack)
-          .end((err, res) => {
-            res.should.have.status(201);
-            done();
-          });
-      });
+      request(app)
+        .post('/api/tracks')
+        .set('Authorization', `Bearer ${testToken}`)
+        .send(constants.testTrack)
+        .end((err, res) => {
+          res.should.have.status(201);
+          done();
+        });
     });
 
     it('should return the expected body response when correct parameters are sent', (done) => {
@@ -132,6 +133,38 @@ describe('Track', () => {
         .post('/api/tracks')
         .set('Authorization', 'Bearer UNAUTHORIZED')
         .send(constants.testTrack)
+        .end((err, res) => {
+          res.should.have.status(401);
+          done();
+        });
+    });
+  });
+
+  describe('/DELETE tracks/{id}', () => {
+    it('should return status code 204 when deletion is successful', (done) => {
+      request(app)
+        .delete(`/api/tracks/${constants.validTrackId}`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.should.have.status(204);
+          done();
+        });
+    });
+
+    it('should return status code 404 if id does not match a user', (done) => {
+      request(app)
+        .delete(`/api/tracks/${constants.invalidTrackId}`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.should.have.status(404);
+          done();
+        });
+    });
+
+    it('should return status code 401 if unauthorized', (done) => {
+      request(app)
+        .delete(`/api/tracks/${constants.validTrackId}`)
+        .set('Authorization', 'Bearer UNAUTHORIZED')
         .end((err, res) => {
           res.should.have.status(401);
           done();
