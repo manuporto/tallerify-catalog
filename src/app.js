@@ -73,11 +73,10 @@ if (app.get('env') === 'development' || app.get('env') === 'test') {
 
 // production error handler
 // no stacktraces leaked to user
-app.use((err, req, res) => {
-  res.status(err.status || 500)
-  .json({
+app.use((err, req, res, next) => {
+  res.status(err.status || 500).json({
+    code: err.status,
     message: err.message,
-    error: {},
   });
 });
 
