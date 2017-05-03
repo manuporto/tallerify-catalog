@@ -32,9 +32,9 @@ const validateWithProvider = (socialToken) => {
 const createDbUserObject = (user) => {
   const names = user.name.split(' ');
   const defaultMissingValue = 'unknown';
-  const userName = names.join('_');
+  const userName = names.join('_').toLowerCase();
   const defaultFirstName = names[0];
-  const defaultLastName = (names.length > 0) ? names[1] : defaultMissingValue;
+  const defaultLastName = (names.length > 0) ? names.slice(-1)[0] : defaultMissingValue;
   return {
         userName,
         facebookUserId: user.id,
