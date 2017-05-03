@@ -58,4 +58,10 @@ router.get('/api/tracks', track.getTracks);
 
 router.post('/api/tracks', track.newTrack);
 
+router.get('/api/tracks/:id', track.getTrack);
+
+router.put('/api/tracks/:id', track.updateTrack);
+
+router.delete('/api/tracks/:id', track.deleteTrack);
+
 module.exports = router;
