@@ -1,5 +1,6 @@
 const logger = require('../../utils/logger');
 const tables = require('../../database/tableNames');
+const db = require('../../database/index');
 const generalHandler = require('./generalHandler');
 const artistTrackHandler = require('./artistTrackHandler');
 
@@ -31,4 +32,18 @@ const updateTrackEntry = (body, id) => {
     });
 };
 
-module.exports = { createNewTrackEntry, updateTrackEntry };
+const like = (userId, trackId) => {
+  return generalHandler.createNewEntry(tables.users_tracks, {
+    user_id: userId,
+    track_id: trackId,
+  });
+};
+
+const dislike = (userId, trackId) => {
+  return db(tables.users_tracks).where({
+    user_id: userId,
+    track_id: trackId,
+  }).del();
+};
+
+module.exports = { createNewTrackEntry, updateTrackEntry, like, dislike };

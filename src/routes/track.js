@@ -77,4 +77,26 @@ const deleteTrack = (req, res) => {
     .catch(error => respond.internalServerError(error, res));
 };
 
-module.exports = { getTracks, newTrack, getTrack, updateTrack, deleteTrack };
+const trackLike = (req, res) => {
+  db.general.findEntryWithId(tables.tracks, req.params.id)
+    .then((track) => {
+      if (!respond.entryExists(req.params.id, track, res)) return;
+      db.track.like(req.user.id, req.params.id)
+        .then(() => respond.successfulTrackLike(track, res))
+        .catch(error => respond.internalServerError(error, res));
+    })
+    .catch(error => respond.internalServerError(error, res));
+};
+
+const trackDislike = (req, res) => {
+  db.general.findEntryWithId(tables.tracks, req.params.id)
+    .then((track) => {
+      if (!respond.entryExists(req.params.id, track, res)) return;
+      db.track.dislike(req.user.id, req.params.id)
+        .then(() => respond.successfulTrackDislike(track, res))
+        .catch(error => respond.internalServerError(error, res));
+    })
+    .catch(error => respond.internalServerError(error, res));
+};
+
+module.exports = { getTracks, newTrack, getTrack, updateTrack, deleteTrack, trackLike, trackDislike };

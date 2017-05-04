@@ -53,6 +53,14 @@ exports.up = (knex, Promise) => {
       table.string('lastName');
       table.string('email');
     }),
+
+    knex.schema.createTableIfNotExists(tables.users_tracks, (table) => {
+      logger.info('Creating users_tracks table.');
+      table.increments('users_tracks_id').primary();
+      table.integer('user_id');
+      table.integer('track_id');
+    }),
+
   ]);
 };
 
@@ -63,5 +71,6 @@ exports.down = (knex, Promise) => {
     knex.schema.dropTable(tables.artists_tracks),
     knex.schema.dropTable(tables.users),
     knex.schema.dropTable(tables.admins),
+    knex.schema.dropTable(tables.users_tracks),
   ]);
 };

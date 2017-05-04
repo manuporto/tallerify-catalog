@@ -64,4 +64,8 @@ router.put('/api/tracks/:id', track.updateTrack);
 
 router.delete('/api/tracks/:id', track.deleteTrack);
 
+router.post('/api/tracks/:id/like', track.trackLike);
+
+router.delete('/api/tracks/:id/like', track.trackDislike);
+
 module.exports = router;

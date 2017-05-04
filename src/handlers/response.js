@@ -280,6 +280,16 @@ const successfulTrackDeletion = (response) => {
   response.sendStatus(204);
 };
 
+const successfulTrackLike = (track, response) => {
+  logger.info('Successful track like');
+  response.status(201).json(formatTrackJson(track[0]));
+};
+
+const successfulTrackDislike = (track, response) => {
+  logger.info('Successful track dislike');
+  response.status(201).json(formatTrackJson(track[0]));
+};
+
 module.exports = {
   internalServerError,
   unauthorizedError,
@@ -306,4 +316,6 @@ module.exports = {
   successfulTrackFetch,
   successfulTrackUpdate,
   successfulTrackDeletion,
+  successfulTrackLike,
+  successfulTrackDislike,
 };
