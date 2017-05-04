@@ -168,7 +168,7 @@ const successfulAdminDeletion = (response) => {
 const nonexistentCredentials = (response) => {
   const message = 'No entry with such credentials';
   logger.warn(message);
-  response.status(500).json({ code: 500, message: message });
+  response.status(400).json({ code: 400, message: message });
 };
 
 const inconsistentCredentials = (response) => {
