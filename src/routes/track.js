@@ -24,15 +24,6 @@ const trackExpectedBodySchema = {
   },
 };
 
-const updateTrackInfo = (body) => {
-  let updatedTrack = {
-    name: body.name,
-    albumId: body.albumId,
-    popularity: 0,
-  };
-  return db.track.updateTrackEntry(updatedTrack, body.artists);
-};
-
 /* Routes */
 
 const getTracks = (req, res) => {
@@ -66,7 +57,7 @@ const updateTrack = (req, res) => {
       db.general.findEntryWithId(tables.tracks, req.params.id)
         .then((track) => {
           if (!respond.entryExists(req.params.id, track, res)) return;
-          updateTrackInfo(req.body)
+          db.track.updateTrackEntry(req.body, req.params.id)
             .then(updatedTrack => respond.successfulTrackUpdate(updatedTrack, res))
             .catch(error => respond.internalServerError(error, res));
         })

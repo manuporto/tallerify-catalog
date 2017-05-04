@@ -33,6 +33,11 @@ const updateEntry = (tableName, newEntry) => {
   return db(tableName).update(newEntry).returning('*');
 };
 
+const updateEntryWithId = (tableName, id, newEntry) => {
+  logger.info('Updating entry');
+  return db(tableName).update(newEntry).where('id', id).returning('*');
+};
+
 const deleteEntryWithId = (tableName, id) => {
   logger.info(`Deleting entry ${id}`);
   return db(tableName).where('id', id).del();
@@ -45,5 +50,6 @@ module.exports = {
   findOneWithAttributes,
   createNewEntry,
   updateEntry,
+  updateEntryWithId,
   deleteEntryWithId,
 };
