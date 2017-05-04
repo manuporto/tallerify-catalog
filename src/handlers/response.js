@@ -303,6 +303,13 @@ const successfulTrackPopularityFetch = (track, response) => {
   });
 };
 
+const successfulTrackRate = (rate, response) => {
+  logger.info('Successful track rate');
+  response.status(201).json({
+    rate: rate,
+  });
+};
+
 module.exports = {
   internalServerError,
   unauthorizedError,
@@ -332,4 +339,5 @@ module.exports = {
   successfulTrackLike,
   successfulTrackDislike,
   successfulTrackPopularityFetch,
+  successfulTrackRate,
 };

@@ -70,4 +70,6 @@ router.delete('/api/tracks/:id/like', track.trackDislike);
 
 router.get('/api/tracks/:id/popularity', track.getTrackPopularity);
 
+router.post('/api/tracks/:id/popularity', track.rateTrack);
+
 module.exports = router;

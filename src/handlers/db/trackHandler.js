@@ -46,4 +46,9 @@ const dislike = (userId, trackId) => {
   }).del();
 };
 
-module.exports = { createNewTrackEntry, updateTrackEntry, like, dislike };
+const rate = (trackId, rate) => {
+  // TODO we have to count votes etcetc
+  return 5;
+};
+
+module.exports = { createNewTrackEntry, updateTrackEntry, like, dislike, rate };

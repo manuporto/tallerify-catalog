@@ -108,4 +108,16 @@ const getTrackPopularity = (req, res) => {
     .catch(error => respond.internalServerError(error, res));
 };
 
-module.exports = { getTracks, newTrack, getTrack, updateTrack, deleteTrack, trackLike, trackDislike, getTrackPopularity };
+const rateTrack = (req, res) => {
+  db.general.findEntryWithId(tables.tracks, req.params.id)
+    .then((track) => {
+      if (!respond.entryExists(req.params.id, track, res)) return;
+      db.track.rate(req.params.id, req.body.rate)
+        .then(rate => respond.successfulTrackRate(rate, res))
+        .catch(error => respond.internalServerError(error, res));
+    })
+    .catch(error => respond.internalServerError(error, res));
+};
+
+
+module.exports = { getTracks, newTrack, getTrack, updateTrack, deleteTrack, trackLike, trackDislike, getTrackPopularity, rateTrack };
