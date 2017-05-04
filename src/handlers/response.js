@@ -290,6 +290,19 @@ const successfulTrackDislike = (track, response) => {
   response.status(201).json(formatTrackJson(track[0]));
 };
 
+const successfulTrackPopularityFetch = (track, response) => {
+  logger.info('Successful track popularity fetch');
+  response.status(201).json({
+    metadata: {
+      count: 1,
+      version: constants.API_VERSION,
+    },
+    popularity: {
+      rate: track[0].popularity,
+    },
+  });
+};
+
 module.exports = {
   internalServerError,
   unauthorizedError,
@@ -318,4 +331,5 @@ module.exports = {
   successfulTrackDeletion,
   successfulTrackLike,
   successfulTrackDislike,
+  successfulTrackPopularityFetch,
 };

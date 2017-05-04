@@ -99,4 +99,13 @@ const trackDislike = (req, res) => {
     .catch(error => respond.internalServerError(error, res));
 };
 
-module.exports = { getTracks, newTrack, getTrack, updateTrack, deleteTrack, trackLike, trackDislike };
+const getTrackPopularity = (req, res) => {
+  db.general.findEntryWithId(tables.tracks, req.params.id)
+    .then((track) => {
+      if (!respond.entryExists(req.params.id, track, res)) return;
+      respond.successfulTrackPopularityFetch(track, res);
+    })
+    .catch(error => respond.internalServerError(error, res));
+};
+
+module.exports = { getTracks, newTrack, getTrack, updateTrack, deleteTrack, trackLike, trackDislike, getTrackPopularity };
