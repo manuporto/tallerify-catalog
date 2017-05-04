@@ -10,6 +10,12 @@ const internalServerError = (reason, response) => {
   return response.status(500).json({ code: 500, message });
 };
 
+const unauthorizedError = (reason, response) => {
+  const message = `Unauthorized: ${reason}`;
+  logger.warn(message);
+  response.status(401).json({ code: 401, message: message });
+};
+
 const validateRequestBody = (body, schema) => {
   logger.info(`Validating request "${JSON.stringify(body, null, 4)}"`);
   return new Promise((resolve, reject) => {
@@ -21,7 +27,7 @@ const validateRequestBody = (body, schema) => {
       }
     });
   });
-}
+};
 
 const invalidRequestBodyError = (reasons, response) => {
   const message = `Request body is invalid: ${reasons[0].message}`;
@@ -40,6 +46,52 @@ const entryExists = (id, entry, response) => {
 
 /* Users */
 
+const formatUserJson = (user) => {
+  return {
+    userName: user.userName,
+    password: user.password,
+    fb: {
+      userId: user.facebookUserId,
+      authToken: user.facebookAuthToken,
+    },
+    firstName: user.firstName,
+    lastName: user.lastName,
+    country: user.country,
+    email: user.email,
+    birthdate: user.birthdate,
+    images: user.images,
+  };
+};
+
+const formatUserShortJson = (user) => {
+  return {
+    id: user.id,
+    userName: user.userName,
+    images: user.images,
+    href: user.href,
+  };
+};
+
+const formatGetUserJson = (user) => {
+  return {
+    id: user.id,
+    userName: user.userName,
+    password: user.password,
+    fb: {
+      userId: user.facebookUserId,
+      authToken: user.facebookAuthToken,
+    },
+    firstName: user.firstName,
+    lastName: user.lastName,
+    country: user.country,
+    email: user.email,
+    birthdate: user.birthdate,
+    images: user.images,
+    href: user.href,
+    contacts: user.contacts, // user.contacts.map(formatUserShortJson),
+  };
+};
+
 const successfulUsersFetch = (users, response) => {
   logger.info('Successful users fetch');
   return response.status(200).json({
@@ -47,28 +99,45 @@ const successfulUsersFetch = (users, response) => {
       count: users.length,
       version: constants.API_VERSION,
     },
-    users,
+    users: users.map(formatGetUserJson),
   });
 };
 
 const successfulUserFetch = (user, response) => {
   logger.info('Successful user fetch');
-  response.status(200).json(user[0]);
+  response.status(200).json({
+    metadata: {
+      count: 1,
+      version: constants.API_VERSION,
+    },
+    user: formatGetUserJson(user[0]),
+  });
 };
 
 const successfulUserCreation = (user, response) => {
   logger.info('Successful user creation');
-  response.status(201).json(user[0]);
+  response.status(201).json(formatUserJson(user[0]));
 };
 
 const successfulUserUpdate = (user, response) => {
   logger.info('Successful user update');
-  response.status(200).json(user[0]);
+  response.status(200).json(formatUserJson(user[0]));
 };
 
 const successfulUserDeletion = (response) => {
   logger.info('Successful user deletion');
   response.sendStatus(204);
+};
+
+const successfulUserContactsFetch = (contacts, response) => {
+  logger.info('Successful contacts fetch');
+  response.status(200).json({
+    metadata: {
+      count: contacts.length,
+      version: constants.API_VERSION,
+    },
+    contacts,
+  });
 };
 
 /* Admins */
@@ -99,7 +168,7 @@ const successfulAdminDeletion = (response) => {
 const nonexistentCredentials = (response) => {
   const message = 'No entry with such credentials';
   logger.warn(message);
-  response.status(500).json({ code: 500, message: message });
+  response.status(400).json({ code: 400, message: message });
 };
 
 const inconsistentCredentials = (response) => {
@@ -113,11 +182,11 @@ const successfulTokenGeneration = (result, response) => {
   response.status(201).json(result);
 };
 
-const successfulUserTokenGeneration = (user, response) => {
+const successfulUserTokenGeneration = (user, token, response) => {
   const result = Object.assign(
     {},
     {
-      token: user.id.toString(),
+      token: token,
       user: {
         id: user.id,
         href: user.href,
@@ -127,11 +196,11 @@ const successfulUserTokenGeneration = (user, response) => {
   successfulTokenGeneration(result, response);
 };
 
-const successfulAdminTokenGeneration = (admin, response) => {
+const successfulAdminTokenGeneration = (admin, token, response) => {
   const result = Object.assign(
     {},
     {
-      token: admin.id.toString(),
+      token: token,
       admin: {
         id: admin.id,
         userName: admin.userName,
@@ -173,6 +242,7 @@ const succesfulTracksFetch = (tracks, res) => {
 
 module.exports = {
   internalServerError,
+  unauthorizedError,
   validateRequestBody,
   entryExists,
   invalidRequestBodyError,
@@ -181,6 +251,7 @@ module.exports = {
   successfulUserCreation,
   successfulUserUpdate,
   successfulUserDeletion,
+  successfulUserContactsFetch,
   successfulAdminsFetch,
   successfulAdminCreation,
   successfulAdminDeletion,

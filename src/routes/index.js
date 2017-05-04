@@ -1,9 +1,12 @@
 const express = require('express');
+
 const user = require('./user');
 const token = require('./token');
 const artist = require('./artist');
 const track = require('./track');
 const admin = require('./admin');
+
+const loginRouter = require('../middlewares/login-router');
 
 const router = express.Router();
 
@@ -12,6 +15,12 @@ router.get('/', (req, res) => {
 });
 
 /* Users */
+
+router.get('/api/users/me', user.meGetUser);
+
+router.put('/api/users/me', user.meUpdateUser);
+
+router.get('/api/users/me/contacts', user.meGetContacts);
 
 router.get('/api/users', user.getUsers);
 
@@ -33,7 +42,7 @@ router.delete('/api/admins/:id', admin.deleteAdmin);
 
 /* Tokens */
 
-router.post('/api/tokens', token.generateToken);
+router.post('/api/tokens', loginRouter, token.generateToken);
 
 router.post('/api/admins/tokens', token.generateAdminToken);
 

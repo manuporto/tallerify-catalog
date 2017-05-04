@@ -13,11 +13,13 @@ chai.should();
 chai.use(chaiHttp);
 
 const config = require('./../../config');
-const constants = require('./user.constants.json');
+const constants = require('./user.me.constants.json');
 
-const testToken = jwt.sign({ admin: true }, config.secret);
+const initialUserToken = jwt.sign(constants.initialUser, config.secret);
+const invalidUserToken = jwt.sign(constants.invalidUser, config.secret);
 
-describe('User', () => {
+describe('User me', () => {
+
   beforeEach((done) => {
     db.migrate.rollback()
       .then(() => {
@@ -36,114 +38,11 @@ describe('User', () => {
       .then(() => done());
   });
 
-  describe('/GET users', () => {
+  describe('/GET users/me', () => {
     it('should return status code 200', (done) => {
       request(app)
-      .get('/api/users')
-      .set('Authorization', `Bearer ${testToken}`)
-      .end((err, res) => {
-        res.should.have.status(200);
-        done();
-      });
-    });
-
-    it('should return the expected body response when correct parameters are sent', (done) => {
-      request(app)
-        .get('/api/users')
-        .set('Authorization', `Bearer ${testToken}`)
-        .end((err, res) => {
-          res.body.should.be.a('object');
-          res.body.should.have.property('metadata');
-          res.body.metadata.should.have.property('version');
-          res.body.metadata.should.have.property('count');
-          res.body.should.have.property('users');
-          res.body.users.should.be.a('array');
-          done();
-        });
-    });
-
-    it('should return status code 401 if unauthorized', (done) => {
-      request(app)
-        .get('/api/users')
-        .set('Authorization', 'Bearer UNAUTHORIZED')
-        .end((err, res) => {
-          res.should.have.status(401);
-          done();
-        });
-    });
-  });
-
-  describe('/POST users', () => {
-    it('should return status code 400 when parameters are missing', (done) => {
-      request(app)
-        .post('/api/users')
-        .set('Authorization', `Bearer ${testToken}`)
-        .send(constants.newUserWithMissingAttributes)
-        .end((err, res) => {
-          res.should.have.status(400);
-          done();
-        });
-    });
-
-    it('should return status code 400 when parameters are invalid', (done) => {
-      request(app)
-        .post('/api/users')
-        .set('Authorization', `Bearer ${testToken}`)
-        .send(constants.invalidUser)
-        .end((err, res) => {
-          res.should.have.status(400);
-          done();
-        });
-    });
-
-    it('should return status code 201 when correct parameters are sent', (done) => {
-      request(app)
-        .post('/api/users')
-        .set('Authorization', `Bearer ${testToken}`)
-        .send(constants.testUser)
-        .end((err, res) => {
-          res.should.have.status(201);
-          done();
-        });
-    });
-
-    it('should return the expected body response when correct parameters are sent', (done) => {
-      request(app)
-        .post('/api/users')
-        .set('Authorization', `Bearer ${testToken}`)
-        .send(constants.testUser)
-        .end((err, res) => {
-          res.body.should.be.a('object');
-          res.body.should.have.property('userName').eql(constants.testUser.userName);
-          res.body.should.have.property('password').eql(constants.testUser.password);
-          res.body.should.have.property('fb');
-          res.body.should.have.property('firstName').eql(constants.testUser.firstName);
-          res.body.should.have.property('lastName').eql(constants.testUser.lastName);
-          res.body.should.have.property('country').eql(constants.testUser.country);
-          res.body.should.have.property('email').eql(constants.testUser.email);
-          res.body.should.have.property('birthdate').eql(constants.testUser.birthdate);
-          res.body.should.have.property('images');
-          done();
-        });
-    });
-
-    it('should return status code 401 if unauthorized', (done) => {
-      request(app)
-        .post('/api/users')
-        .set('Authorization', 'Bearer UNAUTHORIZED')
-        .send(constants.testUser)
-        .end((err, res) => {
-          res.should.have.status(401);
-          done();
-        });
-    });
-  });
-
-  describe('/GET users/{id}', () => {
-    it('should return status code 200', (done) => {
-      request(app)
-        .get(`/api/users/${constants.validUserId}`)
-        .set('Authorization', `Bearer ${testToken}`)
+        .get('/api/users/me')
+        .set('Authorization', `Bearer ${initialUserToken}`)
         .end((err, res) => {
           res.should.have.status(200);
           done();
@@ -152,8 +51,8 @@ describe('User', () => {
 
     it('should return user data', (done) => {
       request(app)
-        .get(`/api/users/${constants.validUserId}`)
-        .set('Authorization', `Bearer ${testToken}`)
+        .get('/api/users/me')
+        .set('Authorization', `Bearer ${initialUserToken}`)
         .end((err, res) => {
           res.body.should.be.a('object');
           res.body.should.have.property('metadata');
@@ -176,10 +75,10 @@ describe('User', () => {
         });
     });
 
-    it('should return status code 404 if id does not match a user', (done) => {
+    it('should return status code 404 if token does not match a user', (done) => {
       request(app)
-        .get(`/api/users/${constants.invalidUserId}`)
-        .set('Authorization', `Bearer ${testToken}`)
+        .get('/api/users/me')
+        .set('Authorization', `Bearer ${invalidUserToken}`)
         .end((err, res) => {
           res.should.have.status(404);
           done();
@@ -188,7 +87,7 @@ describe('User', () => {
 
     it('should return status code 401 if unauthorized', (done) => {
       request(app)
-        .get(`/api/users/${constants.validUserId}`)
+        .get('/api/users/me')
         .set('Authorization', 'Bearer UNAUTHORIZED')
         .end((err, res) => {
           res.should.have.status(401);
@@ -197,11 +96,11 @@ describe('User', () => {
     });
   });
 
-  describe('/PUT users/{id}', () => {
+  describe('/PUT users/me', () => {
     it('should return status code 201 when correct parameters are sent', (done) => {
       request(app)
-        .put(`/api/users/${constants.validUserId}`)
-        .set('Authorization', `Bearer ${testToken}`)
+        .put('/api/users/me')
+        .set('Authorization', `Bearer ${initialUserToken}`)
         .send(constants.updatedUser)
         .end((err, res) => {
           res.should.have.status(200);
@@ -211,8 +110,8 @@ describe('User', () => {
 
     it('should return the expected body response when correct parameters are sent', (done) => {
       request(app)
-        .put(`/api/users/${constants.validUserId}`)
-        .set('Authorization', `Bearer ${testToken}`)
+        .put('/api/users/me')
+        .set('Authorization', `Bearer ${initialUserToken}`)
         .send(constants.updatedUser)
         .end((err, res) => {
           res.body.should.be.a('object');
@@ -231,8 +130,8 @@ describe('User', () => {
 
     it('should return status code 400 when parameters are missing', (done) => {
       request(app)
-        .put(`/api/users/${constants.validUserId}`)
-        .set('Authorization', `Bearer ${testToken}`)
+        .put('/api/users/me')
+        .set('Authorization', `Bearer ${initialUserToken}`)
         .send(constants.updatedUserWithMissingAttributes)
         .end((err, res) => {
           res.should.have.status(400);
@@ -242,8 +141,8 @@ describe('User', () => {
 
     it('should return status code 400 when parameters are invalid', (done) => {
       request(app)
-        .put(`/api/users/${constants.validUserId}`)
-        .set('Authorization', `Bearer ${testToken}`)
+        .put('/api/users/me')
+        .set('Authorization', `Bearer ${initialUserToken}`)
         .send(constants.invalidUser)
         .end((err, res) => {
           res.should.have.status(400);
@@ -253,8 +152,8 @@ describe('User', () => {
 
     it('should return status code 404 if id does not match a user', (done) => {
       request(app)
-        .put(`/api/users/${constants.invalidUserId}`)
-        .set('Authorization', `Bearer ${testToken}`)
+        .put('/api/users/me')
+        .set('Authorization', `Bearer ${invalidUserToken}`)
         .send(constants.updatedUser)
         .end((err, res) => {
           res.should.have.status(404);
@@ -264,9 +163,8 @@ describe('User', () => {
 
     it('should return status code 401 if unauthorized', (done) => {
       request(app)
-        .put(`/api/users/${constants.validUserId}`)
+        .get('/api/users/me')
         .set('Authorization', 'Bearer UNAUTHORIZED')
-        .send(constants.updatedUser)
         .end((err, res) => {
           res.should.have.status(401);
           done();
@@ -274,30 +172,22 @@ describe('User', () => {
     });
   });
 
-  describe('/DELETE users/{id}', () => {
-    it('should return status code 204 when deletion is successful', (done) => {
+  describe('/GET users/me/contacts', () => {
+    it('should return status code 200', (done) => {
       request(app)
-        .delete(`/api/users/${constants.validUserId}`)
-        .set('Authorization', `Bearer ${testToken}`)
+        .get('/api/users/me/contacts')
+        .set('Authorization', `Bearer ${initialUserToken}`)
         .end((err, res) => {
-          res.should.have.status(204);
+          res.should.have.status(200);
           done();
         });
     });
 
-    it('should return status code 404 if id does not match a user', (done) => {
-      request(app)
-        .delete(`/api/users/${constants.invalidUserId}`)
-        .set('Authorization', `Bearer ${testToken}`)
-        .end((err, res) => {
-          res.should.have.status(404);
-          done();
-        });
-    });
+    //TODO add tests
 
     it('should return status code 401 if unauthorized', (done) => {
       request(app)
-        .delete(`/api/users/${constants.validUserId}`)
+        .get('/api/users/me/contacts')
         .set('Authorization', 'Bearer UNAUTHORIZED')
         .end((err, res) => {
           res.should.have.status(401);

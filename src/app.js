@@ -12,16 +12,14 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const ejs = require('ejs');
-
-const db = require('./database/database');
+const expressJwt = require('express-jwt');
+const config = require('./config');
 
 // *** routes *** //
 const routes = require('./routes/index.js');
 
-
 // *** express instance *** //
 const app = express();
-
 
 // *** view engine *** //
 app.engine('html', ejs.renderFile);
@@ -38,10 +36,12 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
+// *** jwt secret *** //
+app.use(expressJwt({ secret: config.secret }).unless({ path: ['/api/tokens', '/api/admins/tokens', '/'] }));
+app.set('secret', config.secret);
 
 // *** main routes *** //
 app.use('/', routes);
-
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
@@ -50,28 +50,25 @@ app.use((req, res, next) => {
   next(err);
 });
 
-
 // *** error handlers *** //
 
 // development and test error handler
 // will print stacktrace
-if (app.get('env') === 'development' || app.get('env') === 'test') {
-  app.use((err, req, res) => {
-    res.status(err.status || 500);
-    res.render('index', {
+if (app.get('env') === 'development') {
+  app.use((err, req, res, next) => {
+    res.status(err.status || 500).json({
       message: err.message,
-      error: err
+      error: err,
     });
   });
 }
 
 // production error handler
 // no stacktraces leaked to user
-app.use((err, req, res) => {
-  res.status(err.status || 500);
-  res.render('index', {
+app.use((err, req, res, next) => {
+  res.status(err.status || 500).json({
+    code: err.status,
     message: err.message,
-    error: {}
   });
 });
 
