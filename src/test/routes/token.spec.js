@@ -60,12 +60,12 @@ describe('Token', () => {
         });
     });
 
-    it('should return status code 500 when credentials dont match', (done) => {
+    it('should return status code 400 when credentials dont match', (done) => {
       request(app)
         .post('/api/tokens')
         .send(constants.invalidCredentials)
         .end((err, res) => {
-          res.should.have.status(500);
+          res.should.have.status(400);
           done();
         });
     });
@@ -173,12 +173,12 @@ describe('Token', () => {
         });
     });
 
-    it('should return status code 500 when credentials dont match', (done) => {
+    it('should return status code 400 when credentials dont match', (done) => {
       request(app)
         .post('/api/admins/tokens')
         .send(constants.adminInvalidCredentials)
         .end((err, res) => {
-          res.should.have.status(500);
+          res.should.have.status(400);
           done();
         });
     });
