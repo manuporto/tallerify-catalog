@@ -1,0 +1,30 @@
+{
+  "initialAdmin": {
+      "userName": "abrden",
+      "password": "1234",
+      "firstName": "Agustina",
+      "lastName": "Barbetta",
+      "email": "agustina.barbetta@gmail.com"
+  },
+  "testAdmin": {
+    "userName": "mporto",
+    "password": "1234",
+    "firstName": "Manuel",
+    "lastName": "Porto",
+    "email": "manuel.porto94@gmail.com"
+  },
+  "newAdminWithMissingAttributes": {
+    "userName": "mporto",
+    "firstName": "Manuel",
+    "lastName": "Porto"
+  },
+  "invalidAdmin": {
+    "userName": "conto",
+    "password": 5555,
+    "firstName": "Conto",
+    "lastName": "Circense",
+    "email": "contoarrobacirco.com"
+  },
+  "validAdminId": 1,
+  "invalidAdminId": 999999
+}

@@ -8,7 +8,8 @@ env:
   - TEST_DATABASE_URL=postgres://postgres@localhost:5432/tallerify_travis
 after_success:
   - npm run coverage
-  - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
+  - npm run codecov
+  - npm run lint
 notifications:
   email: false
   slack: tallerify:3BddOwjmsqmpRjYFXvbRZu1r

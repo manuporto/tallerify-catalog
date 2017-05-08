@@ -1,0 +1,65 @@
+{
+  "initialUser": {
+      "id": 1,
+      "userName": "abrden",
+      "password": "1234",
+      "firstName": "Agustina",
+      "lastName": "Barbetta",
+      "country": "Argentina",
+      "email": "agustina.barbetta@gmail.com",
+      "birthdate": "120894",
+      "images": [
+        "lala",
+        "lolo",
+        "lili"
+      ]
+  },
+  "testUser": {
+    "userName": "mporto",
+    "password": "1234",
+    "firstName": "Manuel",
+    "lastName": "Porto",
+    "country": "Argentina",
+    "email": "manuel.porto94@gmail.com",
+    "birthdate": "240994",
+    "images": [
+      "lele",
+      "lulu"
+    ]
+  },
+  "newUserWithMissingAttributes": {
+    "userName": "mporto",
+    "firstName": "Manuel",
+    "lastName": "Porto"
+  },
+  "invalidUser": {
+    "id": 999999,
+    "userName": "conto",
+    "password": 5555,
+    "firstName": "Conto",
+    "lastName": "Circense",
+    "country": "Croacia",
+    "email": "contoarrobacirco.com",
+    "birthdate": 3,
+    "images": "muchas"
+  },
+  "validUserId": 1,
+  "updatedUser": {
+    "userName": "abrden",
+    "password": "4321",
+    "firstName": "Agustina",
+    "lastName": "Barbetta",
+    "country": "Argentina",
+    "email": "aibarbetta@fi.uba.ar",
+    "birthdate": "120894",
+    "images": [
+      "lele",
+      "lulu"
+    ]
+  },
+  "updatedUserWithMissingAttributes": {
+    "userName": "abrden",
+    "password": "4321",
+    "email": "aibarbetta@fi.uba.ar"
+  }
+}
