@@ -379,4 +379,53 @@ describe('Track', () => {
         });
     });
   });
+
+  describe('/GET tracks/{id}/popularity', () => {
+    it('should return status code 200', (done) => {
+      request(app)
+        .get(`/api/tracks/${constants.validTrackId}/popularity`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.should.have.status(200);
+          done();
+        });
+    });
+
+    it('should return track popularity', (done) => {
+      request(app)
+        .get(`/api/tracks/${constants.validTrackId}/popularity`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.body.should.be.a('object');
+          res.body.should.have.property('metadata');
+          res.body.metadata.should.have.property('version');
+          res.body.metadata.should.have.property('count');
+          res.body.should.have.property('popularity');
+          res.body.popularity.should.have.property('rate').eql(0);
+          done();
+        });
+    });
+
+    // TODO add test with ratings then popularity fetch
+
+    it('should return status code 404 if id does not match a track', (done) => {
+      request(app)
+        .get(`/api/tracks/${constants.invalidTrackId}/popularity`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.should.have.status(404);
+          done();
+        });
+    });
+
+    it('should return status code 401 if unauthorized', (done) => {
+      request(app)
+        .get(`/api/tracks/${constants.invalidTrackId}/popularity`)
+        .set('Authorization', 'Bearer UNAUTHORIZED')
+        .end((err, res) => {
+          res.should.have.status(401);
+          done();
+        });
+    });
+  });
 });

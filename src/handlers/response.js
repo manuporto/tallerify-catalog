@@ -292,7 +292,7 @@ const successfulTrackDislike = (track, response) => {
 
 const successfulTrackPopularityFetch = (track, response) => {
   logger.info('Successful track popularity fetch');
-  response.status(201).json({
+  response.status(200).json({
     metadata: {
       count: 1,
       version: constants.API_VERSION,
