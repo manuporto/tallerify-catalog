@@ -346,7 +346,17 @@ describe('Track', () => {
               res.should.have.status(204);
               done();
             });
-        })
+        });
+    });
+
+    it('should return status code 204 if disliked track was never liked', (done) => {
+      request(app)
+        .delete(`/api/tracks/${constants.validTrackId}/like`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.should.have.status(204);
+          done();
+        });
     });
 
     it('should return status code 404 if id does not match a track', (done) => {
