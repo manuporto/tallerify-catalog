@@ -4,12 +4,12 @@ const db = require('../../database/index');
 const generalHandler = require('./generalHandler');
 const artistTrackHandler = require('./artistTrackHandler');
 
+const math = require('mathjs');
+
 const createNewTrackEntry = (body) => {
   let track = {
     name: body.name,
     albumId: body.albumId,
-    rating: 0,
-    votes: 0,
   };
   return generalHandler.createNewEntry(tables.tracks, track)
     .then((insertedTrack) => {
@@ -46,9 +46,19 @@ const dislike = (userId, trackId) => {
   }).del();
 };
 
+const calculateRate = (trackId) => {
+  return db(tables.tracks_rating).select('rating').where({
+    track_id: trackId,
+  })
+    .then((ratings) => {
+      if (!ratings.length) return 0;
+      return math.mean(ratings);
+    });
+};
+
 const rate = (trackId, rate) => {
   // TODO we have to count votes etcetc
   return 5;
 };
 
-module.exports = { createNewTrackEntry, updateTrackEntry, like, dislike, rate };
+module.exports = { createNewTrackEntry, updateTrackEntry, like, dislike, calculateRate, rate };

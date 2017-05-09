@@ -290,15 +290,15 @@ const successfulTrackDislike = (track, response) => {
   response.status(204).json(formatTrackJson(track[0]));
 };
 
-const successfulTrackPopularityFetch = (track, response) => {
-  logger.info('Successful track popularity fetch');
+const successfulTrackPopularityCalculation = (rating, response) => {
+  logger.info('Successful track popularity calculation');
   response.status(200).json({
     metadata: {
       count: 1,
       version: constants.API_VERSION,
     },
     popularity: {
-      rate: track[0].rating,
+      rate: rating,
     },
   });
 };
@@ -338,6 +338,6 @@ module.exports = {
   successfulTrackDeletion,
   successfulTrackLike,
   successfulTrackDislike,
-  successfulTrackPopularityFetch,
+  successfulTrackPopularityCalculation,
   successfulTrackRate,
 };
