@@ -111,6 +111,12 @@ const trackDislike = (req, res) => {
     .catch(error => respond.internalServerError(error, res));
 };
 
+const getFavoriteTracks = (req, res) => {
+  db.track.findUserFavorites(req.user.id)
+    .then(tracks => respond.succesfulTracksFetch(tracks, res))
+    .catch(error => respond.internalServerError(error, res));
+};
+
 const getTrackPopularity = (req, res) => {
   db.general.findEntryWithId(tables.tracks, req.params.id)
     .then((track) => {
@@ -138,4 +144,4 @@ const rateTrack = (req, res) => {
 };
 
 
-module.exports = { getTracks, newTrack, getTrack, updateTrack, deleteTrack, trackLike, trackDislike, getTrackPopularity, rateTrack };
+module.exports = { getTracks, newTrack, getTrack, updateTrack, deleteTrack, trackLike, trackDislike, getFavoriteTracks, getTrackPopularity, rateTrack };

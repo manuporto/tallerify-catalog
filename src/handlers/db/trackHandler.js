@@ -46,6 +46,17 @@ const dislike = (userId, trackId) => {
   }).del();
 };
 
+const findUserFavorites = (userId) => {
+  return db(tables.users_tracks).select('track_id').where({
+    user_id: userId,
+  })
+    .then((tracks) => {
+      db(tables.users_tracks).where({
+        id: tracks.map(track => track.track_id), // FIXME check if it works with arrays ¿?¿?¿
+      });
+    });
+};
+
 const calculateRate = (trackId) => {
   return db(tables.tracks_rating).select('rating').where({
     track_id: trackId,
@@ -69,4 +80,4 @@ const rate = (trackId, userId, rating) => {
     }));
 };
 
-module.exports = { createNewTrackEntry, updateTrackEntry, like, dislike, calculateRate, rate };
+module.exports = { createNewTrackEntry, updateTrackEntry, like, dislike, findUserFavorites, calculateRate, rate };
