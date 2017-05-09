@@ -51,8 +51,9 @@ const calculateRate = (trackId) => {
     track_id: trackId,
   })
     .then((ratings) => {
+      logger.info(`Ratings for track ${trackId}: ${JSON.stringify(ratings, null, 4)}`);
       if (!ratings.length) return 0;
-      return math.mean(ratings);
+      return math.mean(ratings.map((rating) => rating.rating));
     });
 };
 

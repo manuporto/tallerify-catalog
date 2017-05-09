@@ -394,7 +394,7 @@ describe('Track', () => {
         });
     });
 
-    it('should return track popularity', (done) => {
+    it('should return track popularity 0', (done) => {
       request(app)
         .get(`/api/tracks/${constants.validTrackId}/popularity`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -409,7 +409,27 @@ describe('Track', () => {
         });
     });
 
-    // TODO add test with ratings then popularity fetch
+    it('should return track popularity non 0', (done) => {
+      request(app)
+        .post(`/api/tracks/${constants.validTrackId}/popularity`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .send(constants.validTrackRate)
+        .end((err, res) => {
+          res.should.have.status(201);
+          request(app)
+            .get(`/api/tracks/${constants.validTrackId}/popularity`)
+            .set('Authorization', `Bearer ${testToken}`)
+            .end((err, res) => {
+              res.body.should.be.a('object');
+              res.body.should.have.property('metadata');
+              res.body.metadata.should.have.property('version');
+              res.body.metadata.should.have.property('count');
+              res.body.should.have.property('popularity');
+              res.body.popularity.should.have.property('rate').eql(constants.validTrackRate.rate);
+              done();
+            });
+        });
+    });
 
     it('should return status code 404 if id does not match a track', (done) => {
       request(app)
