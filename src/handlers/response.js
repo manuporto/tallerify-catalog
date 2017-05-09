@@ -287,7 +287,7 @@ const successfulTrackLike = (track, response) => {
 
 const successfulTrackDislike = (track, response) => {
   logger.info('Successful track dislike');
-  response.status(201).json(formatTrackJson(track[0]));
+  response.status(204).json(formatTrackJson(track[0]));
 };
 
 const successfulTrackPopularityFetch = (track, response) => {

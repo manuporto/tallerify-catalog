@@ -16,7 +16,7 @@ const config = require('./../../config');
 const constants = require('./track.constants.json');
 const artistsConstants = require('./artist.constants.json');
 
-const testToken = jwt.sign({ admin: true }, config.secret);
+const testToken = jwt.sign({ admin: true, id: 24 }, config.secret);
 
 describe('Track', () => {
 
@@ -301,7 +301,7 @@ describe('Track', () => {
   });
 
   describe('/POST tracks/{id}/like', () => {
-    it('should return status code 204 when deletion is successful', (done) => {
+    it('should return status code 201 when track like is successful', (done) => {
       request(app)
         .post(`/api/tracks/${constants.validTrackId}/like`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -324,6 +324,44 @@ describe('Track', () => {
     it('should return status code 401 if unauthorized', (done) => {
       request(app)
         .post(`/api/tracks/${constants.validTrackId}/like`)
+        .set('Authorization', 'Bearer UNAUTHORIZED')
+        .end((err, res) => {
+          res.should.have.status(401);
+          done();
+        });
+    });
+  });
+
+  describe('/DELETE tracks/{id}/like', () => {
+    it('should return status code 204 when deletion is successful', (done) => {
+      request(app)
+        .post(`/api/tracks/${constants.validTrackId}/like`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.should.have.status(201);
+          request(app)
+            .delete(`/api/tracks/${constants.validTrackId}/like`)
+            .set('Authorization', `Bearer ${testToken}`)
+            .end((err, res) => {
+              res.should.have.status(204);
+              done();
+            });
+        })
+    });
+
+    it('should return status code 404 if id does not match a track', (done) => {
+      request(app)
+        .delete(`/api/tracks/${constants.invalidTrackId}/like`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.should.have.status(404);
+          done();
+        });
+    });
+
+    it('should return status code 401 if unauthorized', (done) => {
+      request(app)
+        .delete(`/api/tracks/${constants.validTrackId}/like`)
         .set('Authorization', 'Bearer UNAUTHORIZED')
         .end((err, res) => {
           res.should.have.status(401);
