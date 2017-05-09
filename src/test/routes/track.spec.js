@@ -16,7 +16,7 @@ const config = require('./../../config');
 const constants = require('./track.constants.json');
 const artistsConstants = require('./artist.constants.json');
 
-const testToken = jwt.sign({ admin: true, id: 24 }, config.secret);
+const testToken = jwt.sign(constants.jwtTestUser, config.secret);
 
 describe('Track', () => {
 

@@ -1,4 +1,8 @@
 {
+	"jwtTestUser": {
+		"admin": true,
+		"id": 24
+	},
 	"initialTrack": {
 		"name": "Despacito",
 		"albumId": 240,
