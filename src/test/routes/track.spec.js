@@ -423,8 +423,76 @@ describe('Track', () => {
 
     it('should return status code 401 if unauthorized', (done) => {
       request(app)
-        .get(`/api/tracks/${constants.invalidTrackId}/popularity`)
+        .get(`/api/tracks/${constants.validTrackId}/popularity`)
         .set('Authorization', 'Bearer UNAUTHORIZED')
+        .end((err, res) => {
+          res.should.have.status(401);
+          done();
+        });
+    });
+  });
+
+  describe('/POST tracks/{id}/popularity', () => {
+    it('should return status code 201', (done) => {
+      request(app)
+        .post(`/api/tracks/${constants.validTrackId}/popularity`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .send(constants.validTrackRate)
+        .end((err, res) => {
+          res.should.have.status(201);
+          done();
+        });
+    });
+
+    it('should return user\'s track rate', (done) => {
+      request(app)
+        .post(`/api/tracks/${constants.validTrackId}/popularity`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .send(constants.validTrackRate)
+        .end((err, res) => {
+          res.body.should.have.property('rate').eql(constants.validTrackRate.rate);
+          done();
+        });
+    });
+
+    it('should return status code 400 when parameters are invalid', (done) => {
+      request(app)
+        .post(`/api/tracks/${constants.validTrackId}/popularity`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .send(constants.invalidTrackRate)
+        .end((err, res) => {
+          res.should.have.status(400);
+          done();
+        });
+    });
+
+    it('should return status code 400 when rate is out of range', (done) => {
+      request(app)
+        .post(`/api/tracks/${constants.validTrackId}/popularity`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .send(constants.outOfRangeTrackRate)
+        .end((err, res) => {
+          res.should.have.status(400);
+          done();
+        });
+    });
+
+    it('should return status code 404 if id does not match a track', (done) => {
+      request(app)
+        .post(`/api/tracks/${constants.invalidTrackId}/popularity`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .send(constants.validTrackRate)
+        .end((err, res) => {
+          res.should.have.status(404);
+          done();
+        });
+    });
+
+    it('should return status code 401 if unauthorized', (done) => {
+      request(app)
+        .post(`/api/tracks/${constants.validTrackIdTrackId}/popularity`)
+        .set('Authorization', 'Bearer UNAUTHORIZED')
+        .send(constants.validTrackRate)
         .end((err, res) => {
           res.should.have.status(401);
           done();

@@ -123,7 +123,7 @@ const getTrackPopularity = (req, res) => {
 };
 
 const rateTrack = (req, res) => {
-  respond.validateRequestBody(req.body, trackExpectedBodySchema)
+  respond.validateRequestBody(req.body, trackRatingExpectedBodySchema)
     .then(() => {
       db.general.findEntryWithId(tables.tracks, req.params.id)
         .then((track) => {

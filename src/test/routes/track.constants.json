@@ -31,5 +31,14 @@
 		"artists": 12
 	},
 	"validTrackId": 1,
-	"invalidTrackId": 99999
+	"invalidTrackId": 99999,
+    "validTrackRate": {
+      "rate": 3
+    },
+    "outOfRangeTrackRate": {
+      "rate": 12
+    },
+    "invalidTrackRate": {
+      "rating": 2
+    }
 }

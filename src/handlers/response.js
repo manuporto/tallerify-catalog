@@ -291,7 +291,7 @@ const successfulTrackDislike = (track, response) => {
 };
 
 const successfulTrackPopularityCalculation = (rating, response) => {
-  logger.info('Successful track popularity calculation');
+  logger.info(`Successful track popularity calculation (rate: ${rating})`);
   response.status(200).json({
     metadata: {
       count: 1,
@@ -304,7 +304,7 @@ const successfulTrackPopularityCalculation = (rating, response) => {
 };
 
 const successfulTrackRate = (rate, response) => {
-  logger.info('Successful track rate');
+  logger.info(`Successful track rate: ${rate}`);
   response.status(201).json({
     rate: rate,
   });
