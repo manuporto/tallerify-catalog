@@ -56,9 +56,16 @@ const calculateRate = (trackId) => {
     });
 };
 
-const rate = (trackId, rate) => {
-  // TODO we have to count votes etcetc
-  return 5;
+const rate = (trackId, userId, rating) => {
+  return db(tables.tracks_rating).where({
+    user_id: userId,
+    track_id: trackId,
+  }).del()
+    .then(() => generalHandler.createNewEntry(tables.tracks_rating, {
+      user_id: userId,
+      track_id: trackId,
+      rating: rating,
+    }));
 };
 
 module.exports = { createNewTrackEntry, updateTrackEntry, like, dislike, calculateRate, rate };

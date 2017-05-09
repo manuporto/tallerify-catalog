@@ -24,6 +24,18 @@ const trackExpectedBodySchema = {
   },
 };
 
+const trackRatingExpectedBodySchema = {
+  type: 'object',
+  properties: {
+    rate: {
+      required: true,
+      type: 'number',
+      minimum: 1,
+      maximum: 5,
+    },
+  },
+};
+
 /* Routes */
 
 const getTracks = (req, res) => {
@@ -111,14 +123,18 @@ const getTrackPopularity = (req, res) => {
 };
 
 const rateTrack = (req, res) => {
-  db.general.findEntryWithId(tables.tracks, req.params.id)
-    .then((track) => {
-      if (!respond.entryExists(req.params.id, track, res)) return;
-      db.track.rate(req.params.id, req.body.rate)
-        .then(rate => respond.successfulTrackRate(rate, res))
+  respond.validateRequestBody(req.body, trackExpectedBodySchema)
+    .then(() => {
+      db.general.findEntryWithId(tables.tracks, req.params.id)
+        .then((track) => {
+          if (!respond.entryExists(req.params.id, track, res)) return;
+          db.track.rate(req.params.id, req.user.id, req.body.rate)
+            .then(() => respond.successfulTrackRate(req.body.rate, res))
+            .catch(error => respond.internalServerError(error, res));
+        })
         .catch(error => respond.internalServerError(error, res));
     })
-    .catch(error => respond.internalServerError(error, res));
+    .catch(error => respond.invalidRequestBodyError(error, res));
 };
 
 
