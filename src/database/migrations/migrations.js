@@ -11,7 +11,8 @@ exports.up = (knex, Promise) => {
 			table.integer('duration');
       table.integer('albumId');
       table.string('href');
-      table.integer('popularity');
+      table.integer('rating');
+      table.integer('votes');
 		}),
 
 		knex.schema.createTableIfNotExists(tables.artists, (table) => {

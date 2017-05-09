@@ -8,7 +8,8 @@ const createNewTrackEntry = (body) => {
   let track = {
     name: body.name,
     albumId: body.albumId,
-    popularity: 0,
+    rating: 0,
+    votes: 0,
   };
   return generalHandler.createNewEntry(tables.tracks, track)
     .then((insertedTrack) => {
@@ -22,7 +23,6 @@ const updateTrackEntry = (body, id) => {
   let track = {
     name: body.name,
     albumId: body.albumId,
-    popularity: 0,
   };
   return generalHandler.updateEntryWithId(tables.tracks, id, track)
     .then((updatedTrack) => {

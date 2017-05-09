@@ -236,7 +236,7 @@ const formatTrackJson = (track) => {
     href: track.href,
     duration: track.duration,
     popularity: {
-      rate: track.popularity,
+      rate: track.rating,
     },
     album: track.albumId, // TODO complete artists and album short
     artists: track.artists,
@@ -298,7 +298,7 @@ const successfulTrackPopularityFetch = (track, response) => {
       version: constants.API_VERSION,
     },
     popularity: {
-      rate: track[0].popularity,
+      rate: track[0].rating,
     },
   });
 };
