@@ -80,28 +80,6 @@ const rate = (trackId, userId, rating) => {
       rating: rating,
     }));
 };
-
-const getTrackInfo = (trackId) => {
-  return generalHandler.findEntryWithId(tables.tracks, trackId)
-    .then((track) => {
-      logger.info(`Found track: ${JSON.stringify(track, null, 4)}`);
-      generalHandler.findAttributesOfEntryWithAttributes(tables.artists_tracks, {track_id: track[0].id}, 'artist_id')
-        .then((artistsIds) => {
-          logger.info(`Artists ids: ${JSON.stringify(artistsIds, null, 4)}`);
-          const ids = artistsIds.map((artistId) => artistId.artist_id);
-          artistHandler.selectAllArtistsShortInformationWithIds(ids)
-            .then((artists) => {
-              track.artists = artists;
-              logger.info(`Track: ${JSON.stringify(track, null, 4)}`);
-              return track;
-            });
-        });
-    })
-    .then((track) => {
-      logger.info(`FCKING THEN: ${JSON.stringify(track, null, 4)}`);
-      return track;
-    });
-}
 module.exports = { 
   createNewTrackEntry, 
   updateTrackEntry, 
@@ -109,6 +87,5 @@ module.exports = {
   dislike, 
   findUserFavorites, 
   calculateRate, 
-  rate,
-  getTrackInfo
+  rate
 };

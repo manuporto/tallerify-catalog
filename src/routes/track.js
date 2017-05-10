@@ -58,10 +58,10 @@ const getTrack = (req, res) => {
   db.general.findEntryWithId(tables.tracks, req.params.id)
     .then((track) => {
       if (!respond.entryExists(req.params.id, track, res)) return;
-      db.general.findAttributesOfEntryWithAttributes(tables.artists_tracks, {track_id: track.id}, 'artist_id')
+      db.artistTrack.findArtistsIdsFromTrack(track.id)
         .then((artistsIds) => {
           const ids = artistsIds.map((artistId) => artistId.artist_id);
-          db.artist.selectAllArtistsShortInformationWithIds(ids)
+          db.general.findEntriesWithIds(tables.artists, ids)
             .then((artists) => {
               track.artists = artists;
               respond.successfulTrackFetch(track, res);
