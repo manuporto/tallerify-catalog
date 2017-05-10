@@ -36,7 +36,8 @@ const invalidRequestBodyError = (reasons, response) => {
 };
 
 const entryExists = (id, entry, response) => {
-  if (!entry.length) {
+  logger.info(`Queried entry: ${JSON.stringify(entry, null, 4)}`);
+  if (!entry) {
     logger.warn(`No entry with id ${id}`);
     response.status(404).json({ code: 404, message: `No entry with id ${id}` });
     return false;
@@ -110,7 +111,7 @@ const successfulUserFetch = (user, response) => {
       count: 1,
       version: constants.API_VERSION,
     },
-    user: formatGetUserJson(user[0]),
+    user: formatGetUserJson(user),
   });
 };
 
@@ -243,6 +244,27 @@ const formatTrackJson = (track) => {
   };
 };
 
+const formatFetchTrackJson = (track) => {
+  return {
+    id: track.id,
+    name: track.name,
+    href: track.href,
+    duration: track.duration,
+    popularity: {
+      rate: track.rating,
+    },
+    album: track.albumId, // TODO complete artists and album short
+    artists: track.artists.map((artist) => formatArtistFromTrackJson(artist)),
+  };
+};
+
+const formatArtistFromTrackJson = (artist) => {
+  return {
+    id: artist.id,
+    name: artist.name
+  }
+};
+
 const succesfulTracksFetch = (tracks, response) => {
   logger.info('Successful tracks fetch');
   return response.status(200).json({
@@ -261,12 +283,13 @@ const successfulTrackCreation = (track, response) => {
 
 const successfulTrackFetch = (track, response) => {
   logger.info('Successful track fetch');
+  logger.info(`Track fetched: ${JSON.stringify(track, null, 4)}`);
   response.status(200).json({
     metadata: {
       count: 1,
       version: constants.API_VERSION,
     },
-    track: formatTrackJson(track[0]),
+    track: formatFetchTrackJson(track),
   });
 };
 
@@ -282,12 +305,12 @@ const successfulTrackDeletion = (response) => {
 
 const successfulTrackLike = (track, response) => {
   logger.info('Successful track like');
-  response.status(201).json(formatTrackJson(track[0]));
+  response.status(201).json(formatTrackJson(track));
 };
 
 const successfulTrackDislike = (track, response) => {
   logger.info('Successful track dislike');
-  response.status(204).json(formatTrackJson(track[0]));
+  response.status(204).json(formatTrackJson(track));
 };
 
 const successfulTrackPopularityCalculation = (rating, response) => {

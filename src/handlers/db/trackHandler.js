@@ -1,6 +1,7 @@
 const logger = require('../../utils/logger');
 const tables = require('../../database/tableNames');
 const db = require('../../database/index');
+const artistHandler = require('./artistHandler');
 const generalHandler = require('./generalHandler');
 const artistTrackHandler = require('./artistTrackHandler');
 
@@ -97,5 +98,12 @@ const rate = (trackId, userId, rating) => {
       rating: rating,
     }));
 };
-
-module.exports = { createNewTrackEntry, updateTrackEntry, like, dislike, findUserFavorites, calculateRate, rate };
+module.exports = { 
+  createNewTrackEntry, 
+  updateTrackEntry, 
+  like, 
+  dislike, 
+  findUserFavorites, 
+  calculateRate, 
+  rate
+};
