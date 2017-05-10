@@ -23,6 +23,10 @@ const findOneWithAttributes = (tableName, attributes) => {
   return db(tableName).where(attributes).first('*');
 };
 
+const findAllWithAttributes = (tableName, attributes) => {
+  return db(tableName).where(attributes);
+};
+
 const createNewEntry = (tableName, entry) => {
   logger.info('Creating entry');
   return db(tableName).insert(entry).returning('*');
@@ -48,6 +52,7 @@ module.exports = {
   findEntryWithId,
   findWithUsernameAndPassword,
   findOneWithAttributes,
+  findAllWithAttributes,
   createNewEntry,
   updateEntry,
   updateEntryWithId,
