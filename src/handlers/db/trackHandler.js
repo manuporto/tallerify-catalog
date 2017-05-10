@@ -7,6 +7,7 @@ const artistTrackHandler = require('./artistTrackHandler');
 const math = require('mathjs');
 
 const createNewTrackEntry = (body) => {
+  logger.info('Creating track');
   let track = {
     name: body.name,
     albumId: body.albumId,
@@ -35,10 +36,21 @@ const updateTrackEntry = (body, id) => {
 
 const like = (userId, trackId) => {
   logger.info(`User ${userId} liking track ${trackId}`);
-  return generalHandler.createNewEntry(tables.users_tracks, {
+  return db(tables.users_tracks).where({
     user_id: userId,
     track_id: trackId,
-  });
+  })
+    .then((result) => {
+      if (result.length) {
+        logger.info(`User ${userId} already liked track ${trackId}`);
+        return;
+      }
+      logger.info('Creating user-track association');
+      return generalHandler.createNewEntry(tables.users_tracks, {
+        user_id: userId,
+        track_id: trackId,
+      });
+    });
 };
 
 const dislike = (userId, trackId) => {

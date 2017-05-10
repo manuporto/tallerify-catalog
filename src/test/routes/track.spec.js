@@ -314,6 +314,22 @@ describe('Track', () => {
         });
     });
 
+    it('should return status code 201 when track like is duplicated', (done) => {
+      request(app)
+        .post(`/api/tracks/${constants.validTrackId}/like`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.should.have.status(201);
+          request(app)
+            .post(`/api/tracks/${constants.validTrackId}/like`)
+            .set('Authorization', `Bearer ${testToken}`)
+            .end((err, res) => {
+              res.should.have.status(201);
+              done();
+            });
+        });
+    });
+
     it('should return status code 404 if id does not match a track', (done) => {
       request(app)
         .post(`/api/tracks/${constants.invalidTrackId}/like`)
