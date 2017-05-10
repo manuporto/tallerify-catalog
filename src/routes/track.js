@@ -59,20 +59,20 @@ const getTrack = (req, res) => {
     .then((track) => {
       if (!respond.entryExists(req.params.id, track, res)) return;
       const getArtistsInfo = () => {
-        db.artistTrack.findArtistsIdsFromTrack(track.id)
+        return db.artistTrack.findArtistsIdsFromTrack(track.id)
           .then((artistsIds) => {
             const ids = artistsIds.map((artistId) => artistId.artist_id);
-            db.general.findEntriesWithIds(tables.artists, ids)
+            return db.general.findEntriesWithIds(tables.artists, ids)
               .then((artists) => {
-                // track.artists = artists;
+                logger.info(`Returning artists: ${JSON.stringify(artists, null, 4)}`);
                 return artists;
               });
           });
       };
       const getAlbumInfo = () => {
-        db.general.findEntryWithId(tables.artists, track.albumId)
+        return db.general.findEntryWithId(tables.artists, track.albumId)
           .then((album) => {
-            // track.album = album;
+            logger.info(`Returning album: ${JSON.stringify(album, null, 4)}`);
             return album;
           });
       };
@@ -81,7 +81,8 @@ const getTrack = (req, res) => {
         .then((results) => {
           logger.info(`Results: ${JSON.stringify(results, null, 4)}`);
           logger.info(`Pre fetch Track: ${JSON.stringify(track, null, 4)}`);
-          respond.successfulTrackFetch(track, res);
+          const finalTrack = Object.assign({}, track, { artists: results[0], album: results[1] });
+          respond.successfulTrackFetch(finalTrack, res);
         })
         .catch(error => respond.internalServerError(error, res));
     });
