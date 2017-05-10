@@ -8,7 +8,7 @@ const findAllEntries = (tableName) => {
 
 const findEntryWithId = (tableName, id) => {
   logger.info(`Searching for entry ${id}`);
-  return db(tableName).where('id', id);
+  return db(tableName).where('id', id).first('*');
 };
 
 const findWithUsernameAndPassword = (tableName, username, password) => {
