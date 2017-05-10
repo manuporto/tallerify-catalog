@@ -1,7 +1,7 @@
 const logger = require('../../utils/logger');
 const tables = require('../../database/tableNames');
 const db = require('../../database/index');
-const artistsHandler = require('./artistHandler');
+const artistHandler = require('./artistHandler');
 const generalHandler = require('./generalHandler');
 const artistTrackHandler = require('./artistTrackHandler');
 
@@ -82,15 +82,33 @@ const rate = (trackId, userId, rating) => {
 };
 
 const getTrackInfo = (trackId) => {
-  generalHandler.findEntryWithId(tables.tracks, trackId)
+  return generalHandler.findEntryWithId(tables.tracks, trackId)
     .then((track) => {
-      generalHandler.findAllWithAttributes(tables.artists_tracks, {track_id: track.id})
+      logger.info(`Found track: ${JSON.stringify(track, null, 4)}`);
+      generalHandler.findAttributesOfEntryWithAttributes(tables.artists_tracks, {track_id: track[0].id}, 'artist_id')
         .then((artistsIds) => {
-          artistHandler.selectAllArtistsShortInformationWithIds(artistsIds)
+          logger.info(`Artists ids: ${JSON.stringify(artistsIds, null, 4)}`);
+          const ids = artistsIds.map((artistId) => artistId.artist_id);
+          artistHandler.selectAllArtistsShortInformationWithIds(ids)
             .then((artists) => {
               track.artists = artists;
+              logger.info(`Track: ${JSON.stringify(track, null, 4)}`);
+              return track;
             });
         });
+    })
+    .then((track) => {
+      logger.info(`FCKING THEN: ${JSON.stringify(track, null, 4)}`);
+      return track;
     });
 }
-module.exports = { createNewTrackEntry, updateTrackEntry, like, dislike, findUserFavorites, calculateRate, rate };
+module.exports = { 
+  createNewTrackEntry, 
+  updateTrackEntry, 
+  like, 
+  dislike, 
+  findUserFavorites, 
+  calculateRate, 
+  rate,
+  getTrackInfo
+};

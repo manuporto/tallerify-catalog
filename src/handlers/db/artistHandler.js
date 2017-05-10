@@ -8,7 +8,7 @@ const selectAllArtistsIdsWithNames = (names) => {
 }
 
 const selectAllArtistsShortInformationWithIds = (ids) => {
-	return db(tables.artists).whereIn('id', ids).select('href', 'id', 'name');
+	return db(tables.artists).whereIn('id', ids).select('id', 'name');
 }
 
 module.exports = { 

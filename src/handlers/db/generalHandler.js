@@ -24,7 +24,12 @@ const findOneWithAttributes = (tableName, attributes) => {
 };
 
 const findAllWithAttributes = (tableName, attributes) => {
+  logger.info(`Querying table ${tableName} for entries with attributes ${JSON.stringify(attributes, null, 4)}`);
   return db(tableName).where(attributes);
+};
+
+const findAttributesOfEntryWithAttributes = (tableName, attributes, returningAtrributes) => {
+  return db(tableName).where(attributes).select(returningAtrributes);
 };
 
 const createNewEntry = (tableName, entry) => {
@@ -53,6 +58,7 @@ module.exports = {
   findWithUsernameAndPassword,
   findOneWithAttributes,
   findAllWithAttributes,
+  findAttributesOfEntryWithAttributes,
   createNewEntry,
   updateEntry,
   updateEntryWithId,
