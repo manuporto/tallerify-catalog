@@ -55,9 +55,9 @@ const findUserFavorites = (userId) => {
     user_id: userId,
   })
     .then((tracks) => {
-      const track_ids = tracks.map(track => track.track_id);
-      logger.info(`Liked track ids for user ${userId}: ${JSON.stringify(track_ids, null, 4)}`);
-      return db(tables.tracks).whereIn('id', track_ids);
+      const trackIds = tracks.map(track => track.track_id);
+      logger.info(`Liked track ids for user ${userId}: ${JSON.stringify(trackIds, null, 4)}`);
+      return db(tables.tracks).whereIn('id', trackIds);
     });
 };
 
