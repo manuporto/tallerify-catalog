@@ -191,4 +191,27 @@ const meGetContacts = (req, res) => {
     .catch(error => respond.internalServerError(error, res));
 };
 
-module.exports = { getUsers, getUser, newUser, updateUser, deleteUser, meGetUser, meUpdateUser, meGetContacts };
+const meAddContact = (req, res) => {
+  db.general.findEntryWithId(tables.users, req.params.id)
+    .then((user) => {
+      if (!respond.entryExists(req.params.id, user, res)) return;
+      db.user.friend(req.user.id, req.params.id)
+        .then(() => respond.successfulContactAddition(res))
+        .catch(error => respond.internalServerError(error, res));
+    })
+    .catch(error => respond.internalServerError(error, res));
+};
+
+const meDeleteContact = (req, res) => {
+  db.general.findEntryWithId(tables.users, req.params.id)
+    .then((user) => {
+      if (!respond.entryExists(req.params.id, user, res)) return;
+      db.user.unfriend(req.user.id, req.params.id)
+        .then(() => respond.successfulContactDeletion(res))
+        .catch(error => respond.internalServerError(error, res));
+    })
+    .catch(error => respond.internalServerError(error, res));
+};
+
+
+module.exports = { getUsers, getUser, newUser, updateUser, deleteUser, meGetUser, meUpdateUser, meGetContacts, meAddContact, meDeleteContact };

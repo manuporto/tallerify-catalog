@@ -140,6 +140,16 @@ const successfulUserContactsFetch = (contacts, response) => {
   });
 };
 
+const successfulContactAddition = (response) => {
+  logger.info('Successful contact addition');
+  response.sendStatus(204);
+};
+
+const successfulContactDeletion = (response) => {
+  logger.info('Successful contact deletion');
+  response.sendStatus(204);
+};
+
 /* Admins */
 
 const successfulAdminsFetch = (admins, response) => {
@@ -322,6 +332,8 @@ module.exports = {
   successfulUserUpdate,
   successfulUserDeletion,
   successfulUserContactsFetch,
+  successfulContactAddition,
+  successfulContactDeletion,
   successfulAdminsFetch,
   successfulAdminCreation,
   successfulAdminDeletion,
