@@ -253,9 +253,16 @@ const formatFetchTrackJson = (track) => {
     popularity: {
       rate: track.rating,
     },
-    album: track.albumId, // TODO complete artists and album short
+    album: formatAlbumFromTrackJson(track.album),
     artists: track.artists.map((artist) => formatArtistFromTrackJson(artist)),
   };
+};
+
+const formatAlbumFromTrackJson = (album) => {
+  return {
+    id: album.id,
+    name: album.name
+  }
 };
 
 const formatArtistFromTrackJson = (artist) => {
