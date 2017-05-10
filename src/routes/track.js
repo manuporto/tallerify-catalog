@@ -58,17 +58,34 @@ const getTrack = (req, res) => {
   db.general.findEntryWithId(tables.tracks, req.params.id)
     .then((track) => {
       if (!respond.entryExists(req.params.id, track, res)) return;
-      db.artistTrack.findArtistsIdsFromTrack(track.id)
-        .then((artistsIds) => {
-          const ids = artistsIds.map((artistId) => artistId.artist_id);
-          db.general.findEntriesWithIds(tables.artists, ids)
-            .then((artists) => {
-              track.artists = artists;
-              respond.successfulTrackFetch(track, res);
-            });
-        });
-    })
-    .catch(error => respond.internalServerError(error, res));
+      const getArtistsInfo = () => {
+        return db.artistTrack.findArtistsIdsFromTrack(track.id)
+          .then((artistsIds) => {
+            const ids = artistsIds.map((artistId) => artistId.artist_id);
+            return db.general.findEntriesWithIds(tables.artists, ids)
+              .then((artists) => {
+                logger.info(`Returning artists: ${JSON.stringify(artists, null, 4)}`);
+                return artists;
+              });
+          });
+      };
+      const getAlbumInfo = () => {
+        return db.general.findEntryWithId(tables.artists, track.albumId)
+          .then((album) => {
+            logger.info(`Returning album: ${JSON.stringify(album, null, 4)}`);
+            return album;
+          });
+      };
+      const getters = [getArtistsInfo(), getAlbumInfo()];
+      Promise.all(getters)
+        .then((results) => {
+          logger.info(`Results: ${JSON.stringify(results, null, 4)}`);
+          logger.info(`Pre fetch Track: ${JSON.stringify(track, null, 4)}`);
+          const finalTrack = Object.assign({}, track, { artists: results[0], album: results[1] });
+          respond.successfulTrackFetch(finalTrack, res);
+        })
+        .catch(error => respond.internalServerError(error, res));
+    });
 };
 
 const updateTrack = (req, res) => {

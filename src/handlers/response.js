@@ -244,6 +244,24 @@ const formatTrackJson = (track) => {
   };
 };
 
+const formatAlbumFromTrackJson = (album) => {
+  // TODO: catch null artist earlier
+  if (!album) {
+    return {};
+  }
+  return {
+    id: album.id,
+    name: album.name
+  };
+};
+
+const formatArtistFromTrackJson = (artist) => {
+  return {
+    id: artist.id,
+    name: artist.name
+  };
+};
+
 const formatFetchTrackJson = (track) => {
   return {
     id: track.id,
@@ -253,16 +271,9 @@ const formatFetchTrackJson = (track) => {
     popularity: {
       rate: track.rating,
     },
-    album: track.albumId, // TODO complete artists and album short
+    album: formatAlbumFromTrackJson(track.album),
     artists: track.artists.map((artist) => formatArtistFromTrackJson(artist)),
   };
-};
-
-const formatArtistFromTrackJson = (artist) => {
-  return {
-    id: artist.id,
-    name: artist.name
-  }
 };
 
 const succesfulTracksFetch = (tracks, response) => {
@@ -283,7 +294,6 @@ const successfulTrackCreation = (track, response) => {
 
 const successfulTrackFetch = (track, response) => {
   logger.info('Successful track fetch');
-  logger.info(`Track fetched: ${JSON.stringify(track, null, 4)}`);
   response.status(200).json({
     metadata: {
       count: 1,
