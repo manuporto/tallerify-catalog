@@ -94,7 +94,7 @@ const createNewUser = (body) => {
   return db.general.createNewEntry(tables.users, user);
 };
 
-const updateUserInfo = (body) => {
+const updateUserInfo = (id, body) => {
   let updatedUser = {
     userName: body.userName,
     password: body.password,
@@ -105,7 +105,7 @@ const updateUserInfo = (body) => {
     birthdate: body.birthdate,
     images: body.images,
   };
-  return db.general.updateEntry(tables.users, updatedUser);
+  return db.general.updateEntryWithId(tables.users, id, updatedUser);
 };
 
 const _getUser = (id, response) => {
@@ -123,7 +123,7 @@ const _updateUser = (id, body, response) => {
       db.general.findEntryWithId(tables.users, id)
         .then((user) => {
           if (!respond.entryExists(id, user, response)) return;
-          updateUserInfo(body)
+          updateUserInfo(id, body)
             .then(updatedUser => respond.successfulUserUpdate(updatedUser, response))
             .catch(error => respond.internalServerError(error, response));
         })

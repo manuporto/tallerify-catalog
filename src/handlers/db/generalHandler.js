@@ -28,11 +28,6 @@ const createNewEntry = (tableName, entry) => {
   return db(tableName).insert(entry).returning('*');
 };
 
-const updateEntry = (tableName, newEntry) => {
-  logger.info('Updating entry');
-  return db(tableName).update(newEntry).returning('*');
-};
-
 const updateEntryWithId = (tableName, id, newEntry) => {
   logger.info('Updating entry');
   return db(tableName).update(newEntry).where('id', id).returning('*');
@@ -49,7 +44,6 @@ module.exports = {
   findWithUsernameAndPassword,
   findOneWithAttributes,
   createNewEntry,
-  updateEntry,
   updateEntryWithId,
   deleteEntryWithId,
 };
