@@ -20,6 +20,7 @@ const createNewTrackEntry = (body) => {
 };
 
 const updateTrackEntry = (body, id) => {
+  logger.info(`Updating track ${id}`);
   let track = {
     name: body.name,
     albumId: body.albumId,
@@ -33,6 +34,7 @@ const updateTrackEntry = (body, id) => {
 };
 
 const like = (userId, trackId) => {
+  logger.info(`User ${userId} liking track ${trackId}`);
   return generalHandler.createNewEntry(tables.users_tracks, {
     user_id: userId,
     track_id: trackId,
@@ -40,6 +42,7 @@ const like = (userId, trackId) => {
 };
 
 const dislike = (userId, trackId) => {
+  logger.info(`User ${userId} disliking track ${trackId}`);
   return db(tables.users_tracks).where({
     user_id: userId,
     track_id: trackId,
@@ -47,28 +50,31 @@ const dislike = (userId, trackId) => {
 };
 
 const findUserFavorites = (userId) => {
+  logger.info('Searching for track favorites');
   return db(tables.users_tracks).select('track_id').where({
     user_id: userId,
   })
     .then((tracks) => {
-      db(tables.users_tracks).where({
-        id: tracks.map(track => track.track_id), // FIXME check if it works with arrays ¿?¿?¿
-      });
+      const track_ids = tracks.map(track => track.track_id);
+      logger.info(`Liked track ids for user ${userId}: ${JSON.stringify(track_ids, null, 4)}`);
+      return db(tables.tracks).whereIn('id', track_ids);
     });
 };
 
 const calculateRate = (trackId) => {
+  logger.info(`Calculating rating for track ${trackId}`);
   return db(tables.tracks_rating).select('rating').where({
     track_id: trackId,
   })
     .then((ratings) => {
       logger.info(`Ratings for track ${trackId}: ${JSON.stringify(ratings, null, 4)}`);
       if (!ratings.length) return 0;
-      return math.mean(ratings.map((rating) => rating.rating));
+      return math.mean(ratings.map(rating => rating.rating));
     });
 };
 
 const rate = (trackId, userId, rating) => {
+  logger.info(`User ${userId} rating track ${trackId} with rate: ${rating}`);
   return db(tables.tracks_rating).where({
     user_id: userId,
     track_id: trackId,
