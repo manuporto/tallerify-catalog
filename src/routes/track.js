@@ -63,7 +63,7 @@ const getTrack = (req, res) => {
           const ids = artistsIds.map((artistId) => artistId.artist_id);
           db.artist.selectAllArtistsShortInformationWithIds(ids)
             .then((artists) => {
-              track.artists = artists;
+              track[0].artists = artists;
               respond.successfulTrackFetch(track, res);
             });
         });
