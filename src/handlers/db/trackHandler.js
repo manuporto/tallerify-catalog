@@ -1,6 +1,7 @@
 const logger = require('../../utils/logger');
 const tables = require('../../database/tableNames');
 const db = require('../../database/index');
+const artistsHandler = require('./artistHandler');
 const generalHandler = require('./generalHandler');
 const artistTrackHandler = require('./artistTrackHandler');
 
@@ -80,4 +81,16 @@ const rate = (trackId, userId, rating) => {
     }));
 };
 
+const getTrackInfo = (trackId) => {
+  generalHandler.findEntryWithId(tables.tracks, trackId)
+    .then((track) => {
+      generalHandler.findAllWithAttributes(tables.artists_tracks, {track_id: track.id})
+        .then((artistsIds) => {
+          artistHandler.selectAllArtistsShortInformationWithIds(artistsIds)
+            .then((artists) => {
+              track.artists = artists;
+            });
+        });
+    });
+}
 module.exports = { createNewTrackEntry, updateTrackEntry, like, dislike, findUserFavorites, calculateRate, rate };
