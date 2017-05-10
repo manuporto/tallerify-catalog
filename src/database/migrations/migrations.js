@@ -63,9 +63,16 @@ exports.up = (knex, Promise) => {
 
     knex.schema.createTableIfNotExists(tables.users_tracks, (table) => {
       logger.info('Creating users_tracks table.');
-      table.increments('user_tracks_id').primary();
+      table.increments('user_track_id').primary();
       table.integer('user_id');
       table.integer('track_id');
+    }),
+
+    knex.schema.createTableIfNotExists(tables.users_users, (table) => {
+      logger.info('Creating users_users table.');
+      table.increments('user_friend_id').primary();
+      table.integer('user_id');
+      table.integer('friend_id');
     }),
 
   ]);
@@ -80,5 +87,6 @@ exports.down = (knex, Promise) => {
     knex.schema.dropTable(tables.users),
     knex.schema.dropTable(tables.admins),
     knex.schema.dropTable(tables.users_tracks),
+    knex.schema.dropTable(tables.users_users),
   ]);
 };

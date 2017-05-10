@@ -6,4 +6,5 @@ module.exports = {
   users: 'users',
   admins: 'admins',
   users_tracks: 'users_tracks',
+  users_users: 'users_users',
 };
