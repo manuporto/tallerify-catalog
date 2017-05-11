@@ -25,7 +25,8 @@ describe('User me', () => {
       .then(() => {
         db.migrate.latest()
           .then(() => {
-            dbHandler.createNewEntry(tables.users, constants.initialUser)
+
+            dbHandler.createNewEntry(tables.users, [ constants.initialUser, constants.initialContact ])
               .then(() => done())
               .catch(error => done(error));
           })
@@ -188,6 +189,102 @@ describe('User me', () => {
     it('should return status code 401 if unauthorized', (done) => {
       request(app)
         .get('/api/users/me/contacts')
+        .set('Authorization', 'Bearer UNAUTHORIZED')
+        .end((err, res) => {
+          res.should.have.status(401);
+          done();
+        });
+    });
+  });
+
+  describe('/POST users/me/contacts/{id}', () => {
+    it('should return status code 201 when contact addition is successful', (done) => {
+      request(app)
+        .post(`/api/users/me/contacts/${constants.validContactId}`)
+        .set('Authorization', `Bearer ${initialUserToken}`)
+        .end((err, res) => {
+          res.should.have.status(201);
+          done();
+        });
+    });
+
+    it('should return status code 201 when contact addition is duplicated', (done) => {
+      request(app)
+        .post(`/api/users/me/contacts/${constants.validContactId}`)
+        .set('Authorization', `Bearer ${initialUserToken}`)
+        .end((err, res) => {
+          res.should.have.status(201);
+          request(app)
+            .post(`/api/users/me/contacts/${constants.validContactId}`)
+            .set('Authorization', `Bearer ${initialUserToken}`)
+            .end((err, res) => {
+              res.should.have.status(201);
+              done();
+            });
+        });
+    });
+
+    it('should return status code 404 if id does not match a user', (done) => {
+      request(app)
+        .post(`/api/users/me/contacts/${constants.invalidContactId}`)
+        .set('Authorization', `Bearer ${initialUserToken}`)
+        .end((err, res) => {
+          res.should.have.status(404);
+          done();
+        });
+    });
+
+    it('should return status code 401 if unauthorized', (done) => {
+      request(app)
+        .post(`/api/users/me/contacts/${constants.validContactId}`)
+        .set('Authorization', 'Bearer UNAUTHORIZED')
+        .end((err, res) => {
+          res.should.have.status(401);
+          done();
+        });
+    });
+  });
+
+  describe('/DELETE users/me/contacts/{id}', () => {
+    it('should return status code 204 when contact deletion is successful', (done) => {
+      request(app)
+        .post(`/api/users/me/contacts/${constants.validContactId}`)
+        .set('Authorization', `Bearer ${initialUserToken}`)
+        .end((err, res) => {
+          res.should.have.status(201);
+          request(app)
+            .delete(`/api/users/me/contacts/${constants.validContactId}`)
+            .set('Authorization', `Bearer ${initialUserToken}`)
+            .end((err, res) => {
+              res.should.have.status(204);
+              done();
+            });
+        });
+    });
+
+    it('should return status code 204 if deleted contact was never added', (done) => {
+      request(app)
+        .delete(`/api/users/me/contacts/${constants.validContactId}`)
+        .set('Authorization', `Bearer ${initialUserToken}`)
+        .end((err, res) => {
+          res.should.have.status(204);
+          done();
+        });
+    });
+
+    it('should return status code 404 if id does not match a contact', (done) => {
+      request(app)
+        .delete(`/api/users/me/contacts/${constants.invalidContactId}`)
+        .set('Authorization', `Bearer ${initialUserToken}`)
+        .end((err, res) => {
+          res.should.have.status(404);
+          done();
+        });
+    });
+
+    it('should return status code 401 if unauthorized', (done) => {
+      request(app)
+        .delete(`/api/users/me/contacts/${constants.validContactId}`)
         .set('Authorization', 'Bearer UNAUTHORIZED')
         .end((err, res) => {
           res.should.have.status(401);

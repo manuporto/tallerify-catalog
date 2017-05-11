@@ -61,5 +61,21 @@
     "userName": "abrden",
     "password": "4321",
     "email": "aibarbetta@fi.uba.ar"
+  },
+  "validContactId": 2,
+  "invalidContactId": 88888,
+  "initialContact": {
+    "id": 2,
+    "userName": "mporto",
+    "password": "1234",
+    "firstName": "Manuel",
+    "lastName": "Porto",
+    "country": "Argentina",
+    "email": "manuel.porto94@gmail.com",
+    "birthdate": "240994",
+    "images": [
+      "lele",
+      "lulu"
+    ]
   }
 }

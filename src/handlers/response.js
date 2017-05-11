@@ -142,7 +142,7 @@ const successfulUserContactsFetch = (contacts, response) => {
 
 const successfulContactAddition = (response) => {
   logger.info('Successful contact addition');
-  response.sendStatus(204);
+  response.sendStatus(201);
 };
 
 const successfulContactDeletion = (response) => {
