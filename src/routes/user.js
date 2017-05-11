@@ -135,7 +135,7 @@ const _updateUser = (id, body, response) => {
 /* Routes */
 
 const getUsers = (req, res) => {
-  db.general.findAllEntries(tables.users)
+  db.user.findAllUsers()
     .then(users => respond.successfulUsersFetch(users, res))
     .catch(error => respond.internalServerError(error, res));
 };

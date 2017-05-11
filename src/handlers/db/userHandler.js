@@ -3,6 +3,10 @@ const tables = require('../../database/tableNames');
 const db = require('../../database/index');
 const generalHandler = require('./generalHandler');
 
+const findAllUsers = () => {
+  logger.debug('Getting all users.');
+  return db.from(tables.users).innerJoin(tables.users_users, 'users.id', 'users_users.user_id');
+};
 
 const friend = (userId, friendId) => {
   logger.info(`User ${userId} friending user ${friendId}`);
@@ -31,4 +35,4 @@ const unfriend = (userId, friendId) => {
   }).del();
 };
 
-module.exports = { friend, unfriend };
+module.exports = { findAllUsers, friend, unfriend };

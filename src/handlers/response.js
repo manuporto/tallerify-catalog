@@ -93,6 +93,7 @@ const formatGetUserJson = (user) => {
 };
 
 const successfulUsersFetch = (users, response) => {
+  logger.info(`INNER JOIN ${JSON.stringify(users)}`);
   logger.info('Successful users fetch');
   return response.status(200).json({
     metadata: {
