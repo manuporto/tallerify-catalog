@@ -4,11 +4,13 @@
 		"id": 24
 	},
 	"initialTrack": {
+		"id": 1,
 		"name": "Despacito",
 		"albumId": 240,
-		"artists": [4, 1]
+		"artists": [1, 2]
 	},
 	"testTrack": {
+		"id": 2,
 		"name": "Come a Little Closer",
 		"albumId": 229,
 		"artists": [20, 9]
