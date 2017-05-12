@@ -7,7 +7,7 @@ const findAllEntries = (tableName) => {
 };
 
 const findEntryWithId = (tableName, id) => {
-  logger.info(`Searching for entry ${id}`);
+  logger.info(`Searching for entry ${id} in ${tableName}`);
   return db(tableName).where('id', id).first('*');
 };
 
@@ -33,7 +33,7 @@ const findAllWithAttributes = (tableName, attributes) => {
 };
 
 const createNewEntry = (tableName, entry) => {
-  logger.info('Creating entry');
+  logger.info(`Creating entry ${JSON.stringify(entry, null, 4)} in ${tableName}'s table.`);
   return db(tableName).insert(entry).returning('*');
 };
 
