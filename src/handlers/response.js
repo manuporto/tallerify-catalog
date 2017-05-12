@@ -259,20 +259,6 @@ const formatTrackJson = (track) => {
     popularity: {
       rate: track.rating,
     },
-    album: track.albumId, // TODO complete artists and album short
-    artists: track.artists,
-  };
-};
-
-const formatFetchTrackJson = (track) => {
-  return {
-    id: track.id,
-    name: track.name,
-    href: track.href,
-    duration: track.duration,
-    popularity: {
-      rate: track.rating,
-    },
     album: formatAlbumShortJson(track.album),
     artists: track.artists.map((artist) => formatArtistShortJson(artist)),
   };
@@ -290,7 +276,7 @@ const successfulTracksFetch = (tracks, response) => {
 };
 
 const successfulTrackCreation = (track, response) => {
-  logger.info('Successful track creation');
+  logger.info(`Successful track creation ${JSON.stringify(track, null, 4)}`);
   response.status(201).json(formatTrackJson(track[0]));
 };
 
@@ -301,7 +287,7 @@ const successfulTrackFetch = (track, response) => {
       count: 1,
       version: constants.API_VERSION,
     },
-    track: formatFetchTrackJson(track),
+    track: formatTrackJson(track),
   });
 };
 
