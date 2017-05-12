@@ -77,7 +77,7 @@ describe('Track', () => {
           res.body.metadata.should.have.property('count');
           res.body.should.have.property('tracks');
           res.body.tracks.should.be.a('array');
-          // TODO res.body.tracks.should.have.length > 0
+          res.body.tracks.should.have.lengthOf(1); 
           done();
         });
     });
