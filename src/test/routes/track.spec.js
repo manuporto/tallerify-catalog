@@ -26,25 +26,27 @@ describe('Track', () => {
     .then(() => {
       db.migrate.latest()
         .then(() => {
-          const createArtists = () => {
-            dbHandler.general.createNewEntry(tables.artists, 
-              [
-                artistsConstants.initialArtist, 
-                artistsConstants.testArtist
-              ]
-            )
-              .then((artists) => logger.debug(`Tests Artists created: ${JSON.stringify(artists, null, 4)}`))
-              .catch((error) => logger.warn(`Test Artists creation Error: ${error}`));;
-          };
-          const createTracks = () => {
+          dbHandler.general.createNewEntry(tables.artists,
+            [
+              artistsConstants.initialArtist,
+              artistsConstants.testArtist
+            ])
+            .then((artists) => {
+            logger.info(`Tests artists created: ${JSON.stringify(artists, null, 4)}`);
             dbHandler.track.createNewTrackEntry(constants.initialTrack)
-              .then((tracks) => logger.debug(`Tests Tracks created: ${JSON.stringify(tracks, null, 4)}`))
-              .catch((error) => logger.warn(`Test Tracks creation Error: ${error}`));
-          };
-          const entryCreators = [createArtists(), createTracks()];
-          Promise.all(entryCreators)
-            .then(() => done())
-            .catch(error => done(error));
+              .then((tracks) => {
+              logger.info(`Tests tracks created: ${JSON.stringify(tracks, null, 4)}`);
+              done();
+            })
+              .catch((error) => {
+                logger.warn(`Test tracks creation error: ${error}`);
+                done(error);
+              });
+          })
+            .catch((error) => {
+              logger.warn(`Test artists creation error: ${error}`);
+              done(error);
+            });
         })
       .catch(error => done(error));
     });
@@ -71,6 +73,7 @@ describe('Track', () => {
         .get('/api/tracks')
         .set('Authorization', `Bearer ${testToken}`)
         .end((err, res) => {
+          logger.info(`Tracks: ${JSON.stringify(res.body.tracks, null, 4)}`);
           res.body.should.be.a('object');
           res.body.should.have.property('metadata');
           res.body.metadata.should.have.property('version');
