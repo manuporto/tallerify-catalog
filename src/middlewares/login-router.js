@@ -67,10 +67,7 @@ const facebookUser = {
 };
 
 const getNativeUserToken = (req, res, next) => {
-  db.general.findOneWithAttributes(tables.users, {
-    userName: req.body.userName,
-    password: req.body.password,
-  })
+  db.general.findWithUsernameAndPassword(tables.users, req.body.userName, req.body.password)
     .then((user) => {
       if (user) {
         req.user = user;
