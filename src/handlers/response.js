@@ -212,6 +212,13 @@ const successfulAdminTokenGeneration = (admin, token, response) => {
 
 /* Artists */
 
+const formatArtistShortJson = (artist) => {
+  return {
+    id: artist.id,
+    name: artist.name
+  };
+};
+
 const successfulArtistsFetch = (artists, res) => {
   logger.info('Successful artists fetch');
   return res.status(200).json({
@@ -226,6 +233,19 @@ const successfulArtistsFetch = (artists, res) => {
 const successfulArtistCreation = (artist, res) => {
   logger.info('Successful artist creation');
   res.status(201).json(artist[0]);
+};
+
+/* Albums */
+
+const formatAlbumShortJson = (album) => {
+  // TODO: catch null artist earlier
+  if (!album) {
+    return {};
+  }
+  return {
+    id: album.id,
+    name: album.name
+  };
 };
 
 /* Tracks */
@@ -244,24 +264,6 @@ const formatTrackJson = (track) => {
   };
 };
 
-const formatAlbumFromTrackJson = (album) => {
-  // TODO: catch null artist earlier
-  if (!album) {
-    return {};
-  }
-  return {
-    id: album.id,
-    name: album.name
-  };
-};
-
-const formatArtistFromTrackJson = (artist) => {
-  return {
-    id: artist.id,
-    name: artist.name
-  };
-};
-
 const formatFetchTrackJson = (track) => {
   return {
     id: track.id,
@@ -271,8 +273,8 @@ const formatFetchTrackJson = (track) => {
     popularity: {
       rate: track.rating,
     },
-    album: formatAlbumFromTrackJson(track.album),
-    artists: track.artists.map((artist) => formatArtistFromTrackJson(artist)),
+    album: formatAlbumShortJson(track.album),
+    artists: track.artists.map((artist) => formatArtistShortJson(artist)),
   };
 };
 
