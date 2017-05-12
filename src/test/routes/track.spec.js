@@ -8,6 +8,7 @@ const jwt = require('jsonwebtoken');
 const request = require('supertest');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
+const logger = require('../../utils/logger');
 
 chai.should();
 chai.use(chaiHttp);
@@ -25,7 +26,23 @@ describe('Track', () => {
     .then(() => {
       db.migrate.latest()
         .then(() => {
-          dbHandler.track.createNewTrackEntry(constants.initialTrack)
+          const createArtists = () => {
+            dbHandler.general.createNewEntry(tables.artists, 
+              [
+                artistsConstants.initialArtist, 
+                artistsConstants.testArtist
+              ]
+            )
+              .then((artists) => logger.debug(`Tests Artists created: ${JSON.stringify(artists, null, 4)}`))
+              .catch((error) => logger.warn(`Test Artists creation Error: ${error}`));;
+          };
+          const createTracks = () => {
+            dbHandler.track.createNewTrackEntry(constants.initialTrack)
+              .then((tracks) => logger.debug(`Tests Tracks created: ${JSON.stringify(tracks, null, 4)}`))
+              .catch((error) => logger.warn(`Test Tracks creation Error: ${error}`));
+          };
+          const entryCreators = [createArtists(), createTracks()];
+          Promise.all(entryCreators)
             .then(() => done())
             .catch(error => done(error));
         })
@@ -60,6 +77,7 @@ describe('Track', () => {
           res.body.metadata.should.have.property('count');
           res.body.should.have.property('tracks');
           res.body.tracks.should.be.a('array');
+          // TODO res.body.tracks.should.have.length > 0
           done();
         });
     });
@@ -166,7 +184,7 @@ describe('Track', () => {
           res.body.track.should.have.property('name').eql(constants.initialTrack.name);
           res.body.track.should.have.property('duration');
           res.body.track.should.have.property('href');
-          res.body.track.should.have.property('album'); // TODO
+          res.body.track.should.have.property('album');
           res.body.track.should.have.property('artists');
           res.body.track.should.have.property('popularity');
           // TODO add check for 'rate: int' inside popularity object
