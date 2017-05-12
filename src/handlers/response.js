@@ -260,12 +260,12 @@ const formatTrackJson = (track) => {
       rate: track.rating,
     },
     album: formatAlbumShortJson(track.album),
-    artists: track.artists.map((artist) => formatArtistShortJson(artist)),
+    artists: (track.hasOwnProperty('artists')) ? track.artists.map((artist) => formatArtistShortJson(artist)) : [],
   };
 };
 
 const successfulTracksFetch = (tracks, response) => {
-  logger.info('Successful tracks fetch');
+  logger.info(`Successful tracks fetch ${JSON.stringify(tracks, null, 4)}`);
   return response.status(200).json({
     metadata: {
       count: tracks.length,
