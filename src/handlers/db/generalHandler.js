@@ -16,15 +16,11 @@ const findEntriesWithIds = (tableName, ids) => {
 };
 
 const findWithUsernameAndPassword = (tableName, username, password) => {
-  logger.info(`Querying database for entry with username "${username}" and password "${password}"`);
+  logger.info(`Querying table ${tableName} for entry with username "${username}" and password "${password}"`);
   return db(tableName).where({
     userName: username,
     password: password,
   }).first('*');
-};
-
-const findOneWithAttributes = (tableName, attributes) => {
-  return db(tableName).where(attributes).first('*');
 };
 
 const createNewEntry = (tableName, entry) => {
@@ -47,7 +43,6 @@ module.exports = {
   findEntryWithId,
   findEntriesWithIds,
   findWithUsernameAndPassword,
-  findOneWithAttributes,
   createNewEntry,
   updateEntryWithId,
   deleteEntryWithId,

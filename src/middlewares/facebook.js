@@ -54,23 +54,22 @@ const checkCredentials = (credentials) => {
 };
 
 const handleLogin = (req, res, next, fUser) => {
-  db.general.findOneWithAttributes(tables.users, {
-    facebookUserId: fUser.id,
-  }).then((user) => {
-    if (user) {
-      req.user = user;
-      next();
-    } else {
-      createFacebookUser(req, fUser)
-        .then((newUser) => {
-          req.user = newUser[0];
-          next();
-        })
-        .catch((error) => {
-          respond.internalServerError(error, res);
-        });
-    }
-  });
+  db.user.findWithFacebookUserId(fUser.id)
+    .then((user) => {
+      if (user) {
+        req.user = user;
+        next();
+      } else {
+        createFacebookUser(req, fUser)
+          .then((newUser) => {
+            req.user = newUser[0];
+            next();
+          })
+          .catch((error) => {
+            respond.internalServerError(error, res);
+          });
+      }
+    });
 };
 
 module.exports = { checkCredentials, handleLogin };

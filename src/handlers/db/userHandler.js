@@ -3,6 +3,13 @@ const tables = require('../../database/tableNames');
 const db = require('../../database/index');
 const generalHandler = require('./generalHandler');
 
+const findWithFacebookUserId = (userId) => {
+    logger.info(`Querying database for entry with fb userId "${userId}"`);
+    return db(tables.users).where({
+        facebookUserId: userId,
+    }).first('*');
+};
+
 const findAllUsers = () => {
   logger.debug('Getting all users.');
   return db.from(tables.users).innerJoin(tables.users_users, 'users.id', 'users_users.user_id');
@@ -35,4 +42,4 @@ const unfriend = (userId, friendId) => {
   }).del();
 };
 
-module.exports = { findAllUsers, friend, unfriend };
+module.exports = { findWithFacebookUserId, findAllUsers, friend, unfriend };
