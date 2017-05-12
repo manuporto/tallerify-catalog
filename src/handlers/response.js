@@ -278,7 +278,7 @@ const formatFetchTrackJson = (track) => {
   };
 };
 
-const succesfulTracksFetch = (tracks, response) => {
+const successfulTracksFetch = (tracks, response) => {
   logger.info('Successful tracks fetch');
   return response.status(200).json({
     metadata: {
@@ -366,7 +366,7 @@ module.exports = {
   successfulAdminTokenGeneration,
   successfulArtistsFetch,
   successfulArtistCreation,
-  succesfulTracksFetch,
+  successfulTracksFetch,
   successfulTrackCreation,
   successfulTrackFetch,
   successfulTrackUpdate,
