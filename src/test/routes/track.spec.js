@@ -48,7 +48,7 @@ describe('Track', () => {
               done(error);
             });
         })
-      .catch(error => done(error));
+        .catch(error => done(error));
     });
   });
 
