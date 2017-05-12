@@ -58,25 +58,7 @@ const getTrack = (req, res) => {
   db.general.findEntryWithId(tables.tracks, req.params.id)
     .then((track) => {
       if (!respond.entryExists(req.params.id, track, res)) return;
-      const getArtistsInfo = () => {
-        return db.artistTrack.findArtistsIdsFromTrack(track.id)
-          .then((artistsIds) => {
-            const ids = artistsIds.map((artistId) => artistId.artist_id);
-            return db.general.findEntriesWithIds(tables.artists, ids)
-              .then((artists) => {
-                logger.info(`Returning artists: ${JSON.stringify(artists, null, 4)}`);
-                return artists;
-              });
-          });
-      };
-      const getAlbumInfo = () => {
-        return db.general.findEntryWithId(tables.artists, track.albumId)
-          .then((album) => {
-            logger.info(`Returning album: ${JSON.stringify(album, null, 4)}`);
-            return album;
-          });
-      };
-      const getters = [getArtistsInfo(), getAlbumInfo()];
+      const getters = [ db.track.getArtistsInfo(track) , db.track.getAlbumInfo(track) ];
       Promise.all(getters)
         .then((results) => {
           const finalTrack = Object.assign({}, track, { artists: results[0], album: results[1] });
