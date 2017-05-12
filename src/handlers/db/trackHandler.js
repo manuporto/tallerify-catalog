@@ -8,17 +8,23 @@ const artistTrackHandler = require('./artistTrackHandler');
 const math = require('mathjs');
 
 const createNewTrackEntry = (body) => {
-  logger.info('Creating track');
+  logger.info(`Creating track with info: ${JSON.stringify(body, null, 4)}`);
   let track = {
     name: body.name,
     albumId: body.albumId,
   };
-  return generalHandler.createNewEntry(tables.tracks, track)
-    .then((insertedTrack) => {
-      logger.info(`Inserted track: ${JSON.stringify(insertedTrack, null, 4)}`);
-      return artistTrackHandler.insertAssociations(insertedTrack[0].id, body.artists)
-        .then(() => insertedTrack);
-    });
+  return db(tables.artists).whereIn('id', body.artists).then((artists) => {
+    if (artists.length < body.artists.length) {
+      logger.warn(`Req artists: ${JSON.stringify(body.artists)} vs DB artists: ${JSON.stringify(artists)}`);
+      return Promise.reject(new Error('Non existing artists'));
+    }
+    generalHandler.createNewEntry(tables.tracks, track)
+      .then((insertedTrack) => {
+        logger.info(`Inserted track: ${JSON.stringify(insertedTrack, null, 4)}`);
+        return artistTrackHandler.insertAssociations(insertedTrack[0].id, body.artists)
+          .then(() => insertedTrack);
+      });
+  });
 };
 
 const updateTrackEntry = (body, id) => {
@@ -98,6 +104,7 @@ const rate = (trackId, userId, rating) => {
       rating: rating,
     }));
 };
+
 module.exports = { 
   createNewTrackEntry, 
   updateTrackEntry, 
