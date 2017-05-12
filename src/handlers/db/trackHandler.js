@@ -18,7 +18,7 @@ const createNewTrackEntry = (body) => {
       logger.warn(`Req artists: ${JSON.stringify(body.artists)} vs DB artists: ${JSON.stringify(artists)}`);
       return Promise.reject(new Error('Non existing artists'));
     }
-    generalHandler.createNewEntry(tables.tracks, track)
+    return generalHandler.createNewEntry(tables.tracks, track)
       .then((insertedTrack) => {
         logger.info(`Inserted track: ${JSON.stringify(insertedTrack, null, 4)}`);
         return artistTrackHandler.insertAssociations(insertedTrack[0].id, body.artists)
