@@ -79,8 +79,6 @@ const getTrack = (req, res) => {
       const getters = [getArtistsInfo(), getAlbumInfo()];
       Promise.all(getters)
         .then((results) => {
-          logger.info(`Results: ${JSON.stringify(results, null, 4)}`);
-          logger.info(`Pre fetch Track: ${JSON.stringify(track, null, 4)}`);
           const finalTrack = Object.assign({}, track, { artists: results[0], album: results[1] });
           respond.successfulTrackFetch(finalTrack, res);
         })
