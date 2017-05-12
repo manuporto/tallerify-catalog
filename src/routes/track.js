@@ -58,9 +58,14 @@ const getTrack = (req, res) => {
   db.general.findEntryWithId(tables.tracks, req.params.id)
     .then((track) => {
       if (!respond.entryExists(req.params.id, track, res)) return;
-      respond.successfulTrackFetch(track, res);
-    })
-    .catch(error => respond.internalServerError(error, res));
+      const getters = [ db.track.getArtistsInfo(track) , db.track.getAlbumInfo(track) ];
+      Promise.all(getters)
+        .then((results) => {
+          const finalTrack = Object.assign({}, track, { artists: results[0], album: results[1] });
+          respond.successfulTrackFetch(finalTrack, res);
+        })
+        .catch(error => respond.internalServerError(error, res));
+    });
 };
 
 const updateTrack = (req, res) => {

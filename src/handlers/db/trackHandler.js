@@ -1,6 +1,7 @@
 const logger = require('../../utils/logger');
 const tables = require('../../database/tableNames');
 const db = require('../../database/index');
+const artistHandler = require('./artistHandler');
 const generalHandler = require('./generalHandler');
 const artistTrackHandler = require('./artistTrackHandler');
 
@@ -34,6 +35,26 @@ const updateTrackEntry = (body, id) => {
     });
 };
 
+const getArtistsInfo = (track) => {
+    return artistTrackHandler.findArtistsIdsFromTrack(track.id)
+        .then((artistsIds) => {
+            const ids = artistsIds.map((artistId) => artistId.artist_id);
+            return generalHandler.findEntriesWithIds(tables.artists, ids)
+                .then((artists) => {
+                    logger.info(`Returning artists: ${JSON.stringify(artists, null, 4)}`);
+                    return artists;
+                });
+        });
+};
+
+const getAlbumInfo = (track) => {
+    return generalHandler.findEntryWithId(tables.artists, track.albumId)
+        .then((album) => {
+            logger.info(`Returning album: ${JSON.stringify(album, null, 4)}`);
+            return album;
+        });
+};
+
 const like = (userId, trackId) => {
   logger.info(`User ${userId} liking track ${trackId}`);
   return db(tables.users_tracks).where({
@@ -42,7 +63,7 @@ const like = (userId, trackId) => {
   })
     .then((result) => {
       if (result.length) {
-        logger.info(`User ${userId} already liked track ${trackId}`);
+        logger.warn(`User ${userId} already liked track ${trackId}`);
         return;
       }
       logger.info('Creating user-track association');
@@ -97,5 +118,14 @@ const rate = (trackId, userId, rating) => {
       rating: rating,
     }));
 };
-
-module.exports = { createNewTrackEntry, updateTrackEntry, like, dislike, findUserFavorites, calculateRate, rate };
+module.exports = { 
+  createNewTrackEntry, 
+  updateTrackEntry,
+  getArtistsInfo,
+  getAlbumInfo,
+  like, 
+  dislike, 
+  findUserFavorites, 
+  calculateRate, 
+  rate
+};

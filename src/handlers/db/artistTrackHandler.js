@@ -26,4 +26,8 @@ const updateAssociations = (trackId, artistsIds) => {
     .then(() => insertAssociations(trackId, artistsIds));
 };
 
-module.exports = { insertAssociations, updateAssociations };
+const findArtistsIdsFromTrack = (trackId) => {
+  return db(tables.artists_tracks).where('track_id', trackId).select('artist_id');
+};
+
+module.exports = { insertAssociations, updateAssociations, findArtistsIdsFromTrack };
