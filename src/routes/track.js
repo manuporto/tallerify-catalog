@@ -49,7 +49,12 @@ const newTrack = (req, res) => {
   .then(() => {
     db.track.createNewTrackEntry(req.body)
       .then(track => respond.successfulTrackCreation(track, res))
-      .catch(error => respond.internalServerError(error, res));
+      .catch((error) => {
+        if (error.name === 'NonExistentIdError') {
+          respond.nonExistentId(error.message, res);
+        }
+        respond.internalServerError(error, res);
+      });
   })
   .catch(error => respond.invalidRequestBodyError(error, res));
 };

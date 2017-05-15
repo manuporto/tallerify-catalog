@@ -1,9 +1,10 @@
 const logger = require('../../utils/logger');
 const tables = require('../../database/tableNames');
 const db = require('../../database/index');
-const artistHandler = require('./artistHandler');
 const generalHandler = require('./generalHandler');
 const artistTrackHandler = require('./artistTrackHandler');
+
+const NonExistentIdError = require('../../errors/NonExistentIdError');
 
 const math = require('mathjs');
 
@@ -13,17 +14,18 @@ const createNewTrackEntry = (body) => {
     name: body.name,
     albumId: body.albumId,
   };
+
   const findArtists = () => {
-    db(tables.artists).whereIn('id', body.artists).then((artists) => {
+    return db(tables.artists).whereIn('id', body.artists).then((artists) => {
       if (artists.length < body.artists.length) {
         logger.warn(`Req artists: ${JSON.stringify(body.artists)} vs DB artists: ${JSON.stringify(artists)}`);
-        return Promise.reject(new Error('Non existing artists'));
+        return Promise.reject(new NonExistentIdError('Non existing artist.'));
       }
       return artists;
     });
   };
-  // TODO
-  const findAlbum = () => -1;
+
+  const findAlbum = () => -1; // TODO
 
   const finders = [findArtists(), findAlbum()];
   return Promise.all(finders)

@@ -16,6 +16,11 @@ const unauthorizedError = (reason, response) => {
   response.status(401).json({ code: 401, message: message });
 };
 
+const nonExistentId = (message, response) => {
+  logger.warn(message);
+  response.status(400).json({ code: 400, message: message });
+};
+
 const validateRequestBody = (body, schema) => {
   logger.info(`Validating request "${JSON.stringify(body, null, 4)}"`);
   return new Promise((resolve, reject) => {
@@ -334,6 +339,7 @@ const successfulTrackRate = (rate, response) => {
 module.exports = {
   internalServerError,
   unauthorizedError,
+  nonExistentId,
   validateRequestBody,
   entryExists,
   invalidRequestBodyError,
