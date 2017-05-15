@@ -5,7 +5,7 @@
 	"initialTrack": {
 		"name": "Despacito",
 		"albumId": 240,
-		"artists": [4, 1]
+		"artists": [2, 1]
 	},
 	"validTrackId": 1
 }

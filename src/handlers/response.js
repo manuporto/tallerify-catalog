@@ -212,6 +212,13 @@ const successfulAdminTokenGeneration = (admin, token, response) => {
 
 /* Artists */
 
+const formatArtistShortJson = (artist) => {
+  return {
+    id: artist.id,
+    name: artist.name
+  };
+};
+
 const successfulArtistsFetch = (artists, res) => {
   logger.info('Successful artists fetch');
   return res.status(200).json({
@@ -228,6 +235,19 @@ const successfulArtistCreation = (artist, res) => {
   res.status(201).json(artist[0]);
 };
 
+/* Albums */
+
+const formatAlbumShortJson = (album) => {
+  // TODO: catch null artist earlier
+  if (!album) {
+    return {};
+  }
+  return {
+    id: album.id,
+    name: album.name
+  };
+};
+
 /* Tracks */
 
 const formatTrackJson = (track) => {
@@ -239,45 +259,13 @@ const formatTrackJson = (track) => {
     popularity: {
       rate: track.rating,
     },
-    album: track.albumId, // TODO complete artists and album short
-    artists: track.artists,
+    album: formatAlbumShortJson(track.album),
+    artists: (track.hasOwnProperty('artists')) ? track.artists.map((artist) => formatArtistShortJson(artist)) : [],
   };
 };
 
-const formatAlbumFromTrackJson = (album) => {
-  // TODO: catch null artist earlier
-  if (!album) {
-    return {};
-  }
-  return {
-    id: album.id,
-    name: album.name
-  };
-};
-
-const formatArtistFromTrackJson = (artist) => {
-  return {
-    id: artist.id,
-    name: artist.name
-  };
-};
-
-const formatFetchTrackJson = (track) => {
-  return {
-    id: track.id,
-    name: track.name,
-    href: track.href,
-    duration: track.duration,
-    popularity: {
-      rate: track.rating,
-    },
-    album: formatAlbumFromTrackJson(track.album),
-    artists: track.artists.map((artist) => formatArtistFromTrackJson(artist)),
-  };
-};
-
-const succesfulTracksFetch = (tracks, response) => {
-  logger.info('Successful tracks fetch');
+const successfulTracksFetch = (tracks, response) => {
+  logger.info(`Successful tracks fetch ${JSON.stringify(tracks, null, 4)}`);
   return response.status(200).json({
     metadata: {
       count: tracks.length,
@@ -288,7 +276,7 @@ const succesfulTracksFetch = (tracks, response) => {
 };
 
 const successfulTrackCreation = (track, response) => {
-  logger.info('Successful track creation');
+  logger.info(`Successful track creation ${JSON.stringify(track, null, 4)}`);
   response.status(201).json(formatTrackJson(track[0]));
 };
 
@@ -299,7 +287,7 @@ const successfulTrackFetch = (track, response) => {
       count: 1,
       version: constants.API_VERSION,
     },
-    track: formatFetchTrackJson(track),
+    track: formatTrackJson(track),
   });
 };
 
@@ -364,7 +352,7 @@ module.exports = {
   successfulAdminTokenGeneration,
   successfulArtistsFetch,
   successfulArtistCreation,
-  succesfulTracksFetch,
+  successfulTracksFetch,
   successfulTrackCreation,
   successfulTrackFetch,
   successfulTrackUpdate,

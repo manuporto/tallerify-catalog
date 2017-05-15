@@ -40,7 +40,7 @@ const trackRatingExpectedBodySchema = {
 
 const getTracks = (req, res) => {
   db.general.findAllEntries(tables.tracks)
-    .then(tracks => respond.succesfulTracksFetch(tracks, res))
+    .then(tracks => respond.successfulTracksFetch(tracks, res))
     .catch(error => respond.internalServerError(error, res));
 };
 
@@ -118,7 +118,7 @@ const trackDislike = (req, res) => {
 
 const getFavoriteTracks = (req, res) => {
   db.track.findUserFavorites(req.user.id)
-    .then(tracks => respond.succesfulTracksFetch(tracks, res))
+    .then(tracks => respond.successfulTracksFetch(tracks, res))
     .catch(error => respond.internalServerError(error, res));
 };
 

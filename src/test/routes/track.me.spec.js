@@ -3,6 +3,7 @@ process.env.NODE_ENV = 'test';
 const logger = require('../../utils/logger');
 const app = require('../../app');
 const db = require('../../database');
+const tables = require('../../database/tableNames');
 const dbHandler = require('../../handlers/db');
 const jwt = require('jsonwebtoken');
 const request = require('supertest');
@@ -14,6 +15,7 @@ chai.use(chaiHttp);
 
 const config = require('./../../config');
 const constants = require('./track.me.constants.json');
+const artistsConstants = require('./artist.constants.json');
 
 const testToken = jwt.sign(constants.jwtTestUser, config.secret);
 
@@ -22,13 +24,30 @@ describe('Track me', () => {
   beforeEach((done) => {
     db.migrate.rollback()
     .then(() => {
-      db.migrate.latest()
-        .then(() => {
-          dbHandler.track.createNewTrackEntry(constants.initialTrack)
-            .then(() => done())
-            .catch(error => done(error));
+      db.migrate.rollback().then(() => {
+        db.migrate.latest().then(() => {
+          dbHandler.general.createNewEntry(tables.artists,
+            [
+              artistsConstants.initialArtist,
+              artistsConstants.testArtist
+            ]).then((artists) => {
+              logger.info(`Tests artists created: ${JSON.stringify(artists, null, 4)}`);
+              dbHandler.track.createNewTrackEntry(constants.initialTrack)
+                .then((tracks) => {
+                  logger.info(`Tests tracks created: ${JSON.stringify(tracks, null, 4)}`);
+                  done();
+                })
+                .catch((error) => {
+                  logger.warn(`Test tracks creation error: ${error}`);
+                  done(error);
+                });
+            }).catch((error) => {
+              logger.warn(`Test artists creation error: ${error}`);
+              done(error);
+            });
         })
-      .catch(error => done(error));
+        .catch(error => done(error));
+      });
     });
   });
 
