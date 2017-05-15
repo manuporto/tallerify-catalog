@@ -184,7 +184,7 @@ const meGetContacts = (req, res) => {
       const contacts = Object.assign(
         {},
         {
-          contacts: user[0].contacts,
+          contacts: user.contacts,
         });
       respond.successfulUserContactsFetch(contacts, res);
     })

@@ -1,3 +1,4 @@
+const logger = require('../utils/logger');
 const db = require('./../handlers/db/generalHandler');
 const tables = require('../database/tableNames');
 const respond = require('./../handlers/response');
@@ -18,12 +19,9 @@ const expectedBodySchema = {
 };
 
 const resultIsValid = (result, response) => {
-  if (result.length === 0) {
+  logger.info(`Validating result ${JSON.stringify(result)}`);
+  if (!result) {
     respond.nonexistentCredentials(response);
-    return false;
-  }
-  if (result.length > 1) {
-    respond.inconsistentCredentials(response);
     return false;
   }
   return true;
@@ -45,9 +43,9 @@ const generateAdminToken = (req, res) => {
   return respond.validateRequestBody(req.body, expectedBodySchema)
     .then(() => {
       db.findWithUsernameAndPassword(tables.admins, req.body.userName, req.body.password)
-        .then((admins) => {
-          if (!resultIsValid(admins, res)) return;
-          respond.successfulAdminTokenGeneration(admins[0], getToken(req.app.get('secret'), admins[0]), res);
+        .then((admin) => {
+          if (!resultIsValid(admin, res)) return;
+          respond.successfulAdminTokenGeneration(admin, getToken(req.app.get('secret'), admin), res);
         }).catch(reason => respond.internalServerError(reason, res));
     })
     .catch(error => respond.invalidRequestBodyError(error, res));

@@ -7,8 +7,12 @@ const findAllEntries = (tableName) => {
 };
 
 const findEntryWithId = (tableName, id) => {
-  logger.info(`Searching for entry ${id}`);
-  return db(tableName).where('id', id);
+  logger.info(`Searching for entry ${id} in ${tableName}`);
+  return db(tableName).where('id', id).first('*');
+};
+
+const findEntriesWithIds = (tableName, ids) => {
+  return db(tableName).whereIn('id', ids);
 };
 
 const findWithUsernameAndPassword = (tableName, username, password) => {
@@ -16,22 +20,27 @@ const findWithUsernameAndPassword = (tableName, username, password) => {
   return db(tableName).where({
     userName: username,
     password: password,
-  });
+  }).first('*');
 };
 
 const findOneWithAttributes = (tableName, attributes) => {
   return db(tableName).where(attributes).first('*');
-}
+};
 
 const createNewEntry = (tableName, entry) => {
-  logger.info('Creating entry');
+  logger.info(`Creating entry ${JSON.stringify(entry, null, 4)} in ${tableName}'s table.`);
   return db(tableName).insert(entry).returning('*');
 };
 
 const updateEntry = (tableName, newEntry) => {
   logger.info('Updating entry');
   return db(tableName).update(newEntry).returning('*');
-}
+};
+
+const updateEntryWithId = (tableName, id, newEntry) => {
+  logger.info('Updating entry');
+  return db(tableName).update(newEntry).where('id', id).returning('*');
+};
 
 const deleteEntryWithId = (tableName, id) => {
   logger.info(`Deleting entry ${id}`);
@@ -41,9 +50,11 @@ const deleteEntryWithId = (tableName, id) => {
 module.exports = {
   findAllEntries,
   findEntryWithId,
+  findEntriesWithIds,
   findWithUsernameAndPassword,
   findOneWithAttributes,
   createNewEntry,
   updateEntry,
+  updateEntryWithId,
   deleteEntryWithId,
 };

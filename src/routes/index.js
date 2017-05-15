@@ -58,4 +58,20 @@ router.get('/api/tracks', track.getTracks);
 
 router.post('/api/tracks', track.newTrack);
 
+router.get('/api/tracks/:id', track.getTrack);
+
+router.put('/api/tracks/:id', track.updateTrack);
+
+router.delete('/api/tracks/:id', track.deleteTrack);
+
+router.post('/api/tracks/:id/like', track.trackLike);
+
+router.delete('/api/tracks/:id/like', track.trackDislike);
+
+router.get('/api/tracks/me/favorites', track.getFavoriteTracks);
+
+router.get('/api/tracks/:id/popularity', track.getTrackPopularity);
+
+router.post('/api/tracks/:id/popularity', track.rateTrack);
+
 module.exports = router;

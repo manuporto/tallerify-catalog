@@ -16,6 +16,11 @@ const unauthorizedError = (reason, response) => {
   response.status(401).json({ code: 401, message: message });
 };
 
+const nonExistentId = (message, response) => {
+  logger.warn(message);
+  response.status(400).json({ code: 400, message: message });
+};
+
 const validateRequestBody = (body, schema) => {
   logger.info(`Validating request "${JSON.stringify(body, null, 4)}"`);
   return new Promise((resolve, reject) => {
@@ -36,7 +41,8 @@ const invalidRequestBodyError = (reasons, response) => {
 };
 
 const entryExists = (id, entry, response) => {
-  if (!entry.length) {
+  logger.info(`Queried entry: ${JSON.stringify(entry, null, 4)}`);
+  if (!entry) {
     logger.warn(`No entry with id ${id}`);
     response.status(404).json({ code: 404, message: `No entry with id ${id}` });
     return false;
@@ -110,7 +116,7 @@ const successfulUserFetch = (user, response) => {
       count: 1,
       version: constants.API_VERSION,
     },
-    user: formatGetUserJson(user[0]),
+    user: formatGetUserJson(user),
   });
 };
 
@@ -211,6 +217,13 @@ const successfulAdminTokenGeneration = (admin, token, response) => {
 
 /* Artists */
 
+const formatArtistShortJson = (artist) => {
+  return {
+    id: artist.id,
+    name: artist.name
+  };
+};
+
 const successfulArtistsFetch = (artists, res) => {
   logger.info('Successful artists fetch');
   return res.status(200).json({
@@ -227,22 +240,106 @@ const successfulArtistCreation = (artist, res) => {
   res.status(201).json(artist[0]);
 };
 
+/* Albums */
+
+const formatAlbumShortJson = (album) => {
+  // TODO: catch null artist earlier
+  if (!album) {
+    return {};
+  }
+  return {
+    id: album.id,
+    name: album.name
+  };
+};
+
 /* Tracks */
 
-const succesfulTracksFetch = (tracks, res) => {
-  logger.info('Successful tracks fetch');
-  return res.status(200).json({
+const formatTrackJson = (track) => {
+  return {
+    id: track.id,
+    name: track.name,
+    href: track.href,
+    duration: track.duration,
+    popularity: {
+      rate: track.rating,
+    },
+    album: formatAlbumShortJson(track.album),
+    artists: (track.hasOwnProperty('artists')) ? track.artists.map((artist) => formatArtistShortJson(artist)) : [],
+  };
+};
+
+const successfulTracksFetch = (tracks, response) => {
+  logger.info(`Successful tracks fetch ${JSON.stringify(tracks, null, 4)}`);
+  return response.status(200).json({
     metadata: {
       count: tracks.length,
       version: constants.API_VERSION,
     },
-    tracks,
+    tracks: tracks.map(formatTrackJson),
+  });
+};
+
+const successfulTrackCreation = (track, response) => {
+  logger.info(`Successful track creation ${JSON.stringify(track, null, 4)}`);
+  response.status(201).json(formatTrackJson(track[0]));
+};
+
+const successfulTrackFetch = (track, response) => {
+  logger.info('Successful track fetch');
+  response.status(200).json({
+    metadata: {
+      count: 1,
+      version: constants.API_VERSION,
+    },
+    track: formatTrackJson(track),
+  });
+};
+
+const successfulTrackUpdate = (track, response) => {
+  logger.info('Successful track update');
+  response.status(200).json(formatTrackJson(track[0]));
+};
+
+const successfulTrackDeletion = (response) => {
+  logger.info('Successful track deletion');
+  response.sendStatus(204);
+};
+
+const successfulTrackLike = (track, response) => {
+  logger.info('Successful track like');
+  response.status(201).json(formatTrackJson(track));
+};
+
+const successfulTrackDislike = (track, response) => {
+  logger.info('Successful track dislike');
+  response.status(204).json(formatTrackJson(track));
+};
+
+const successfulTrackPopularityCalculation = (rating, response) => {
+  logger.info(`Successful track popularity calculation (rate: ${rating})`);
+  response.status(200).json({
+    metadata: {
+      count: 1,
+      version: constants.API_VERSION,
+    },
+    popularity: {
+      rate: rating,
+    },
+  });
+};
+
+const successfulTrackRate = (rate, response) => {
+  logger.info(`Successful track rate: ${rate}`);
+  response.status(201).json({
+    rate: rate,
   });
 };
 
 module.exports = {
   internalServerError,
   unauthorizedError,
+  nonExistentId,
   validateRequestBody,
   entryExists,
   invalidRequestBodyError,
@@ -261,5 +358,13 @@ module.exports = {
   successfulAdminTokenGeneration,
   successfulArtistsFetch,
   successfulArtistCreation,
-  succesfulTracksFetch,
+  successfulTracksFetch,
+  successfulTrackCreation,
+  successfulTrackFetch,
+  successfulTrackUpdate,
+  successfulTrackDeletion,
+  successfulTrackLike,
+  successfulTrackDislike,
+  successfulTrackPopularityCalculation,
+  successfulTrackRate,
 };

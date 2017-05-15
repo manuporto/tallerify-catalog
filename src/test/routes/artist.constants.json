@@ -1,9 +1,11 @@
 {
 	"initialArtist": {
+		"id": 1,
 		"name": "Papa Baute",
 		"popularity": 2
 	},
 	"testArtist": {
+		"id": 2,
 		"name": "Luis Fonsi",
 		"popularity": 1
 	},

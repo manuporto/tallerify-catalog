@@ -1,18 +1,33 @@
 const logger = require('../../utils/logger');
+const db = require('../../database/index');
 const generalHandler = require('./generalHandler');
 const tables = require('../../database/tableNames');
 
-function insertAssociations(trackId, artistsIds) {
+
+const insertAssociations = (trackId, artistsIds) => {
   logger.info(`Creating associations for track ${trackId} and artists ${artistsIds}`);
   let rowValues = [];
-  // ex artistsIds = {"id": 1, "id": 6}
   artistsIds.forEach((id) => {
     rowValues.push({
       track_id: trackId,
-      artist_id: id.id,
+      artist_id: id,
     });
   });
   return generalHandler.createNewEntry(tables.artists_tracks, rowValues);
-}
+};
 
-module.exports = { insertAssociations };
+const deleteAssociations = (trackId) => {
+  logger.info(`Deleting track ${trackId} associations`);
+  return db(tables.artists_tracks).where('track_id', trackId).del();
+};
+
+const updateAssociations = (trackId, artistsIds) => {
+  return deleteAssociations(trackId)
+    .then(() => insertAssociations(trackId, artistsIds));
+};
+
+const findArtistsIdsFromTrack = (trackId) => {
+  return db(tables.artists_tracks).where('track_id', trackId).select('artist_id');
+};
+
+module.exports = { insertAssociations, updateAssociations, findArtistsIdsFromTrack };
