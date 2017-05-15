@@ -15,7 +15,6 @@ chai.use(chaiHttp);
 
 const config = require('./../../config');
 const constants = require('./track.constants.json');
-const artistsConstants = require('./artist.constants.json');
 
 const testToken = jwt.sign(constants.jwtTestUser, config.secret);
 
@@ -28,8 +27,8 @@ describe('Track', () => {
         .then(() => {
           dbHandler.general.createNewEntry(tables.artists,
             [
-              artistsConstants.initialArtist,
-              artistsConstants.testArtist
+              constants.initialArtist,
+              constants.initialArtist2,
             ])
             .then((artists) => {
             logger.info(`Tests artists created: ${JSON.stringify(artists, null, 4)}`);
@@ -80,7 +79,7 @@ describe('Track', () => {
           res.body.metadata.should.have.property('count');
           res.body.should.have.property('tracks');
           res.body.tracks.should.be.a('array');
-          res.body.tracks.should.have.lengthOf(1); 
+          res.body.tracks.should.have.lengthOf(1);
           done();
         });
     });
@@ -127,6 +126,18 @@ describe('Track', () => {
         .send(constants.testTrack)
         .end((err, res) => {
           res.should.have.status(201);
+          done();
+        });
+    });
+
+    it('should return status code 400 with non existent artist id', (done) => {
+      request(app)
+        .post('/api/tracks')
+        .set('Authorization', `Bearer ${testToken}`)
+        .send(constants.newTrackWithNonExistentArtist)
+        .end((err, res) => {
+          res.should.have.status(400);
+          res.body.should.have.property('message').eql('Non existing artist.');
           done();
         });
     });
@@ -190,8 +201,8 @@ describe('Track', () => {
           res.body.track.should.have.property('album');
           res.body.track.should.have.property('artists')
             .eql([
-              artistsConstants.initialShortArtist,
-              artistsConstants.testShortArtist 
+              constants.initialShortArtist,
+              constants.initialShortArtist2,
             ]);
           res.body.track.should.have.property('popularity');
           // TODO add check for 'rate: int' inside popularity object

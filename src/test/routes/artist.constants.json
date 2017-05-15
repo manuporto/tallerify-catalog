@@ -4,18 +4,10 @@
 		"name": "Papa Baute",
 		"popularity": 2
 	},
-	"initialShortArtist": {
-		"id": 1,
-		"name": "Papa Baute"
-	},
 	"testArtist": {
 		"id": 2,
 		"name": "Luis Fonsi",
 		"popularity": 1
-	},
-	"testShortArtist": {
-		"id": 2,
-		"name": "Luis Fonsi"
 	},
 	"trackTestArtist": {
 		"name": "Cage The Elephant",

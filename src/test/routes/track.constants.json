@@ -3,6 +3,24 @@
 		"admin": true,
 		"id": 24
 	},
+	"initialArtist": {
+		"id": 1,
+		"name": "Papa Baute",
+		"popularity": 2
+	},
+	"initialShortArtist": {
+		"id": 1,
+		"name": "Papa Baute"
+	},
+	"initialArtist2": {
+		"id": 2,
+		"name": "Luis Fonsi",
+		"popularity": 1
+	},
+	"initialShortArtist2": {
+		"id": 2,
+		"name": "Luis Fonsi"
+	},
 	"initialTrack": {
 		"id": 1,
 		"name": "Despacito",
@@ -18,6 +36,11 @@
 	"newTrackWithMissingAttributes": {
 		"albumId": 123,
 		"artists": [24, 9]
+	},
+	"newTrackWithNonExistentArtist": {
+		"name": "Evermore",
+		"albumId": 229,
+		"artists": [28]
 	},
 	"updatedTrack": {
 		"name": "Andromeda",
