@@ -28,7 +28,7 @@ exports.up = (knex, Promise) => {
 			table.integer('popularity');
 		}),
 
-    knex.schema.createTableIfNotExists(tables.artists, (table) => {
+    knex.schema.createTableIfNotExists(tables.albums, (table) => {
       logger.debug('Creating albums table.');
       table.increments('id').primary();
       table.string('name');
