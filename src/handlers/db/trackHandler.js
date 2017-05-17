@@ -66,7 +66,7 @@ const getArtistsInfo = (track) => {
 };
 
 const getAlbumInfo = (track) => {
-    return generalHandler.findEntryWithId(tables.artists, track.albumId)
+    return generalHandler.findEntryWithId(tables.albums, track.album_id)
         .then((album) => {
             logger.info(`Returning album: ${JSON.stringify(album, null, 4)}`);
             return album;
