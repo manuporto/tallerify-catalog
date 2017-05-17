@@ -3,6 +3,7 @@ const express = require('express');
 const user = require('./user');
 const token = require('./token');
 const artist = require('./artist');
+const album = require('./album');
 const track = require('./track');
 const admin = require('./admin');
 
@@ -73,5 +74,17 @@ router.get('/api/tracks/me/favorites', track.getFavoriteTracks);
 router.get('/api/tracks/:id/popularity', track.getTrackPopularity);
 
 router.post('/api/tracks/:id/popularity', track.rateTrack);
+
+/* Albums */
+
+router.get('/api/albums', album.getAlbums);
+
+router.get('/api/albums/:id', album.getAlbum);
+
+router.post('/api/albums', album.newAlbum);
+
+router.put('/api/albums/:id', album.updateAlbum);
+
+router.delete('/api/albums/:id', album.deleteAlbum);
 
 module.exports = router;

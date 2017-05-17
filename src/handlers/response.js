@@ -249,11 +249,70 @@ const formatAlbumShortJson = (album) => {
   }
   return {
     id: album.id,
-    name: album.name
+    name: album.name,
   };
 };
 
+const formatAlbumJson = (album) => {
+  return {
+    id: album.id,
+    name: album.name,
+    release_date: album.release_date,
+    href: track.href,
+    popularity: album.popularity,
+    artists: album.artists.map(artist => formatArtistShortJson(artist)),
+    tracks: album.tracks.map(track => formatTrackShortJson(track)),
+    genres: album.genres,
+    images: album.images,
+  };
+};
+
+const successfulAlbumsFetch = (albums, response) => {
+  logger.info(`Successful albums fetch ${JSON.stringify(albums, null, 4)}`);
+  return response.status(200).json({
+    metadata: {
+      count: albums.length,
+      version: constants.API_VERSION,
+    },
+    albums: albums.map(formatAlbumJson),
+  });
+};
+
+const successfulAlbumCreation = (album, response) => {
+  logger.info(`Successful album creation ${JSON.stringify(album, null, 4)}`);
+  response.status(201).json(formatAlbumJson(track[0]));
+};
+
+const successfulAlbumFetch = (album, response) => {
+  logger.info('Successful album fetch');
+  response.status(200).json({
+    metadata: {
+      count: 1,
+      version: constants.API_VERSION,
+    },
+    track: formatAlbumJson(album),
+  });
+};
+
+const successfulAlbumUpdate = (album, response) => {
+  logger.info('Successful album update');
+  response.status(200).json(formatTrackJson(album[0]));
+};
+
+const successfulAlbumDeletion = (response) => {
+  logger.info('Successful album deletion');
+  response.sendStatus(204);
+};
+
 /* Tracks */
+
+const formatTrackShortJson = (track) => {
+  return {
+    id: track.id,
+    name: track.name,
+    href: track.href,
+  };
+};
 
 const formatTrackJson = (track) => {
   return {
@@ -358,6 +417,11 @@ module.exports = {
   successfulAdminTokenGeneration,
   successfulArtistsFetch,
   successfulArtistCreation,
+  successfulAlbumsFetch,
+  successfulAlbumCreation,
+  successfulAlbumFetch,
+  successfulAlbumUpdate,
+  successfulAlbumDeletion,
   successfulTracksFetch,
   successfulTrackCreation,
   successfulTrackFetch,
