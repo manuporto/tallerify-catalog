@@ -12,7 +12,7 @@ const createNewTrackEntry = (body) => {
   logger.info(`Creating track with info: ${JSON.stringify(body, null, 4)}`);
   const track = {
     name: body.name,
-    albumId: body.albumId,
+    album_id: body.albumId,
   };
 
   const findArtists = () => {
@@ -43,7 +43,7 @@ const updateTrackEntry = (body, id) => {
   logger.info(`Updating track ${id}`);
   let track = {
     name: body.name,
-    albumId: body.albumId,
+    album_id: body.albumId,
   };
   return generalHandler.updateEntryWithId(tables.tracks, id, track)
     .then((updatedTrack) => {
@@ -137,14 +137,20 @@ const rate = (trackId, userId, rating) => {
     }));
 };
 
+const deleteTracksInAlbum = (albumId) => {
+  logger.info(`Deleting tracks in album ${albumId}`);
+  return db(tables.tracks).where('album_id', albumId).del();
+};
+
 module.exports = { 
-  createNewTrackEntry, 
+  createNewTrackEntry,
   updateTrackEntry,
   getArtistsInfo,
   getAlbumInfo,
-  like, 
+  like,
   dislike, 
-  findUserFavorites, 
-  calculateRate, 
-  rate
+  findUserFavorites,
+  calculateRate,
+  rate,
+  deleteTracksInAlbum,
 };
