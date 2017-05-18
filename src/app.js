@@ -37,7 +37,16 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 // *** jwt secret *** //
-app.use(expressJwt({ secret: config.secret }).unless({ path: ['/api/tokens', '/api/admins/tokens', '/api/users', '/'] }));
+const unprotectedRoutes = (req) => {
+  if (req.path === '/' || req.path === '/api/tokens' || req.path === '/api/admins/tokens') {
+    return true;
+  }
+  if (req.path === '/api/users' && (req.method === 'POST' || req.method === 'PUT')) {
+    return true;
+  }
+  return false;
+};
+app.use(expressJwt({ secret: config.secret }).unless(unprotectedRoutes));
 app.set('secret', config.secret);
 
 // *** main routes *** //

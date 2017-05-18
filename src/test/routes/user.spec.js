@@ -77,7 +77,6 @@ describe('User', () => {
     it('should return status code 400 when parameters are missing', (done) => {
       request(app)
         .post('/api/users')
-        .set('Authorization', `Bearer ${testToken}`)
         .send(constants.newUserWithMissingAttributes)
         .end((err, res) => {
           res.should.have.status(400);
@@ -88,7 +87,6 @@ describe('User', () => {
     it('should return status code 400 when parameters are invalid', (done) => {
       request(app)
         .post('/api/users')
-        .set('Authorization', `Bearer ${testToken}`)
         .send(constants.invalidUser)
         .end((err, res) => {
           res.should.have.status(400);
@@ -99,7 +97,6 @@ describe('User', () => {
     it('should return status code 201 when correct parameters are sent', (done) => {
       request(app)
         .post('/api/users')
-        .set('Authorization', `Bearer ${testToken}`)
         .send(constants.testUser)
         .end((err, res) => {
           res.should.have.status(201);
@@ -110,7 +107,6 @@ describe('User', () => {
     it('should return the expected body response when correct parameters are sent', (done) => {
       request(app)
         .post('/api/users')
-        .set('Authorization', `Bearer ${testToken}`)
         .send(constants.testUser)
         .end((err, res) => {
           res.body.should.be.a('object');
@@ -123,17 +119,6 @@ describe('User', () => {
           res.body.should.have.property('email').eql(constants.testUser.email);
           res.body.should.have.property('birthdate').eql(constants.testUser.birthdate);
           res.body.should.have.property('images');
-          done();
-        });
-    });
-
-    it('should return status code 401 if unauthorized', (done) => {
-      request(app)
-        .post('/api/users')
-        .set('Authorization', 'Bearer UNAUTHORIZED')
-        .send(constants.testUser)
-        .end((err, res) => {
-          res.should.have.status(401);
           done();
         });
     });
