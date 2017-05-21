@@ -151,7 +151,7 @@ const newUser = (req, res) => {
   }
   respond.validateRequestBody(req.body, userExpectedBodySchema)
     .then(() => {
-      createNewUser(req.body, process.env.BASE_URL + req.file.path)
+      createNewUser(req.body, process.env.BASE_URL + req.file.path.replace("public/", ""))
         .then(user => respond.successfulUserCreation(user, res))
         .catch(error => respond.internalServerError(error, res));
     })
