@@ -1,5 +1,4 @@
 const express = require('express');
-const logger = require('../utils/logger');
 const multer = require('multer');
 
 const user = require('./user');
