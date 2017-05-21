@@ -6,6 +6,7 @@ const token = require('./token');
 const artist = require('./artist');
 const track = require('./track');
 const admin = require('./admin');
+const playlist = require('./playlist');
 
 const loginRouter = require('../middlewares/login-router');
 const usersMediaLocation = multer({dest: 'media/users/'});
@@ -75,5 +76,15 @@ router.get('/api/tracks/me/favorites', track.getFavoriteTracks);
 router.get('/api/tracks/:id/popularity', track.getTrackPopularity);
 
 router.post('/api/tracks/:id/popularity', track.rateTrack);
+
+/* Playlists */
+
+router.get('/api/playlists', playlist.getPlaylists);
+
+router.post('/api/playlists', playlist.getPlaylist);
+
+router.get('/api/playlists/:id', playlist.getPlaylist);
+
+router.put('/api/playlists/:id', playlist.updatePlaylist);
 
 module.exports = router;
