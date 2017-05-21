@@ -142,9 +142,13 @@ const deleteTracksInAlbum = (albumId) => {
   return db(tables.tracks).where('album_id', albumId).del();
 };
 
-const deleteAlbumId = (trackId, albumId) => {
+const updateAlbumId = (trackId, albumId) => {
+  return db(tables.tracks).where('id', trackId).update({ album_id: albumId });
+};
+
+const deleteAlbumId = (trackId) => {
   // Leave track orphan
-  return db(tables.tracks).where('id', trackId).update({ album_id: -1 });
+  return updateAlbumId(trackId, -1);
 };
 
 module.exports = {
@@ -158,5 +162,6 @@ module.exports = {
   calculateRate,
   rate,
   deleteTracksInAlbum,
+  updateAlbumId,
   deleteAlbumId,
 };
