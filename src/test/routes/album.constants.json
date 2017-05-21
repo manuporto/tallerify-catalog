@@ -1,0 +1,70 @@
+{
+	"jwtTestUser": {
+		"admin": true,
+		"id": 24
+	},
+	"initialAlbum": {
+		"id": 1,
+		"name": "2nd law",
+		"images": ["Matt B", "Chris W"],
+		"artists": [1, 2, 3],
+		"release_date": "20091959"
+	},
+	"initialTrack": {
+		"id": 1,
+		"name": "Absolution",
+		"albumId": 1,
+		"artists": [1, 2, 3]
+	},
+	"initialArtist1": {
+		"id": 1,
+		"name": "Matthew Bellamy",
+	},
+	"initialArtist2": {
+		"id": 1,
+		"name": "Christopher Wolstenholme",
+	},
+	"initialArtist3": {
+		"id": 1,
+		"name": "Matthew Bellamy",
+	},
+	"testTrack": {
+		"id": 2,
+		"name": "Come a Little Closer",
+		"albumId": 229,
+		"artists": [2]
+	},
+	"newTrackWithMissingAttributes": {
+		"albumId": 123,
+		"artists": [24, 9]
+	},
+	"newTrackWithNonExistentArtist": {
+		"name": "Evermore",
+		"albumId": 229,
+		"artists": [28]
+	},
+	"updatedTrack": {
+		"name": "Andromeda",
+		"albumId": 321,
+		"artists": [12, 8, 94]
+	},
+	"updatedTrackWithMissingAttributes": {
+		"name": "Animus Vox"
+	},
+	"invalidTrack": {
+		"name": "Machu Picchu",
+		"albumId": 187,
+		"artists": 12
+	},
+	"validTrackId": 1,
+	"invalidTrackId": 99999,
+    "validTrackRate": {
+      "rate": 3
+    },
+    "outOfRangeTrackRate": {
+      "rate": 12
+    },
+    "invalidTrackRate": {
+      "rating": 2
+    }
+}
