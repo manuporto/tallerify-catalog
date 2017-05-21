@@ -146,6 +146,9 @@ const getUser = (req, res) => {
 };
 
 const newUser = (req, res) => {
+  if (!(req["file"])) {
+      req["file"] = {"path": ""};//{}["path"] = req["file"]["path"] || "";
+  }
   respond.validateRequestBody(req.body, userExpectedBodySchema)
     .then(() => {
       createNewUser(req.body, req.file.path)
