@@ -13,6 +13,7 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const ejs = require('ejs');
 const expressJwt = require('express-jwt');
+const pathToRegexp = require('path-to-regexp');
 const config = require('./config');
 
 // *** routes *** //
@@ -38,10 +39,20 @@ app.use(cookieParser());
 
 // *** jwt secret *** //
 const unprotectedRoutes = (req) => {
-  if (req.path === '/' || req.path === '/api/tokens' || req.path === '/api/admins/tokens') {
+  let baseRE = pathToRegexp('/');
+  let tokensRE = pathToRegexp('/api/tokens');
+  let adminTokensRE = pathToRegexp('/api/admins/tokens');
+  let usersRE = pathToRegexp('/api/users');
+  let userRE = pathToRegexp('/api/users/:id');
+  let usersMeRE = pathToRegexp('/api/users/me');
+
+  if (baseRE.exec(req.path) || tokensRE.exec(req.path) || adminTokensRE.exec(req.path)) {
     return true;
   }
-  if (req.path === '/api/users' && (req.method === 'POST' || req.method === 'PUT')) {
+  if (usersMeRE.exec(req.path)) {
+    return false;
+  }
+  if ((usersRE.exec(req.path) && req.method === 'POST') || (userRE.exec(req.path) && req.method === 'PUT')) {
     return true;
   }
   return false;

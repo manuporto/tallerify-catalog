@@ -186,7 +186,6 @@ describe('User', () => {
     it('should return status code 201 when correct parameters are sent', (done) => {
       request(app)
         .put(`/api/users/${constants.validUserId}`)
-        .set('Authorization', `Bearer ${testToken}`)
         .send(constants.updatedUser)
         .end((err, res) => {
           res.should.have.status(200);
@@ -197,7 +196,6 @@ describe('User', () => {
     it('should return the expected body response when correct parameters are sent', (done) => {
       request(app)
         .put(`/api/users/${constants.validUserId}`)
-        .set('Authorization', `Bearer ${testToken}`)
         .send(constants.updatedUser)
         .end((err, res) => {
           res.body.should.be.a('object');
@@ -217,7 +215,6 @@ describe('User', () => {
     it('should return status code 400 when parameters are missing', (done) => {
       request(app)
         .put(`/api/users/${constants.validUserId}`)
-        .set('Authorization', `Bearer ${testToken}`)
         .send(constants.updatedUserWithMissingAttributes)
         .end((err, res) => {
           res.should.have.status(400);
@@ -228,7 +225,6 @@ describe('User', () => {
     it('should return status code 400 when parameters are invalid', (done) => {
       request(app)
         .put(`/api/users/${constants.validUserId}`)
-        .set('Authorization', `Bearer ${testToken}`)
         .send(constants.invalidUser)
         .end((err, res) => {
           res.should.have.status(400);
@@ -239,21 +235,9 @@ describe('User', () => {
     it('should return status code 404 if id does not match a user', (done) => {
       request(app)
         .put(`/api/users/${constants.invalidUserId}`)
-        .set('Authorization', `Bearer ${testToken}`)
         .send(constants.updatedUser)
         .end((err, res) => {
           res.should.have.status(404);
-          done();
-        });
-    });
-
-    it('should return status code 401 if unauthorized', (done) => {
-      request(app)
-        .put(`/api/users/${constants.validUserId}`)
-        .set('Authorization', 'Bearer UNAUTHORIZED')
-        .send(constants.updatedUser)
-        .end((err, res) => {
-          res.should.have.status(401);
           done();
         });
     });
