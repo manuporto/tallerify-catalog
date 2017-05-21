@@ -28,7 +28,7 @@ app.set('view engine', 'html');
 app.set('views', path.join(__dirname, '../public'));
 
 // *** static directory *** //
-app.use(express.static(path.join(__dirname, '../dist')));
+app.use(express.static('public'));
 
 // *** config middleware *** //
 app.use(morgan('combined', { stream: logger.stream }));
