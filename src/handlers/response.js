@@ -65,7 +65,7 @@ const formatUserJson = (user) => {
     country: user.country,
     email: user.email,
     birthdate: user.birthdate,
-    images: user.images.map(function(e) {return (process.env.BASE_URL || 'localhost:3000') + e}),
+    images: user.images,
   };
 };
 
