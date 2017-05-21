@@ -43,3 +43,5 @@ Thumbs.db
 *.log
 
 /media/users/*
+/src/media/users/*
+
