@@ -27,6 +27,7 @@
     "knex": "0.12.9",
     "mathjs": "^3.12.3",
     "morgan": "^1.8.1",
+    "multer": "^1.3.0",
     "node-custom-errors": "^0.1.6",
     "passport": "0.3.2",
     "passport-jwt": "2.2.1",
