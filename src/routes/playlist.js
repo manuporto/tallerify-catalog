@@ -4,6 +4,34 @@ const respond = require('./../handlers/response');
 const constants = require('./constants.json');
 const logger = require('../utils/logger');
 
+const playlistExpectedBodySchema = {
+    type: 'object',
+    properties: {
+        // TODO: Fill me
+    },
+};
+
+const updatePlaylistExpectedBodySchema = {
+    type: 'object',
+    properties: {
+        // TODO: Fill me
+    },
+};
+
+const createPlaylist = (body) => {
+    let playlist = {
+        // TODO: Fill me
+    };
+    return db.general.createNewEntry(tables.playlists, playlist);
+};
+
+const updatePlaylistInfo = (body) => {
+    let updatedPlaylist = {
+        // TODO: Fill me
+    };
+    return db.general.updateEntry(tables.playlists, updatedPlaylist);
+};
+
 const _getPlaylist = (id, response) => {
   db.general.findEntryWithId(table.playlists, id)
       .then((playlist) => {
