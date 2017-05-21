@@ -45,12 +45,12 @@ const unprotectedRoutes = (req) => {
   let usersRE = pathToRegexp('/api/users');
   let userRE = pathToRegexp('/api/users/:id');
   let usersMeRE = pathToRegexp('/api/users/me');
-  let usersMediaRE = pathToRegexp('/media/users/*');
+  let usersMediaRE = pathToRegexp('/media/*');
 
-  if (usersMeRE.exec(req.path) || usersMediaRE.exec(req.path)) {
+  if (usersMeRE.exec(req.path)) {
     return false;
   }
-  if (baseRE.exec(req.path) || tokensRE.exec(req.path) || adminTokensRE.exec(req.path)) {
+  if (baseRE.exec(req.path) || usersMediaRE.exec(req.path) || tokensRE.exec(req.path) || adminTokensRE.exec(req.path)) {
     return true;
   }
   if ((usersRE.exec(req.path) && req.method === 'POST') || (userRE.exec(req.path) && req.method === 'PUT')) {
