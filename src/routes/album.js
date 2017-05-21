@@ -90,4 +90,21 @@ const deleteAlbum = (req, res) => {
     .catch(error => respond.internalServerError(error, res));
 };
 
-module.exports = { getAlbums, getAlbum, newAlbum, updateAlbum, deleteAlbum };
+const addTrackToAlbum = (req, res) => {
+
+};
+
+const deleteTrackFromAlbum = (req, res) => {
+  db.general.findEntryWithId(tables.tracks, req.params.trackId)
+    .then((track) => {
+      if (!respond.entryExists(req.params.trackId, track, res)) return;
+      if (track.albumId != req.params.albumId)
+        return respond.invalidTrackDeletionFromAlbum(req.params.trackId, req.params.albumId, res);
+      db.tracks.deleteAlbumId(req.params.trackId, req.params.albumId)
+        .then(() => respond.successfulTrackDeletionFromAlbum(req.params.trackId, req.params.albumId, res))
+        .catch(error => respond.internalServerError(error, res));
+      })
+    .catch(error => respond.internalServerError(error, res));
+};
+
+module.exports = { getAlbums, getAlbum, newAlbum, updateAlbum, deleteAlbum, addTrackToAlbum, deleteTrackFromAlbum };

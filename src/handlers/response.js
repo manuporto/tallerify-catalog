@@ -304,6 +304,18 @@ const successfulAlbumDeletion = (response) => {
   response.sendStatus(204);
 };
 
+const invalidTrackDeletionFromAlbum = (trackId, albumId, response) => {
+  const message = `Track (id: ${trackId}) does not belong to album (id: ${albumId})`;
+  logger.info(message);
+  response.status(400).json({ code: 400, message: message });
+
+};
+
+const successfulTrackDeletionFromAlbum = (trackId, albumId, response) => {
+  logger.info(`Successful track (id: ${trackId}) deletion from album (id: ${albumId})`);
+  response.sendStatus(204);
+};
+
 /* Tracks */
 
 const formatTrackShortJson = (track) => {
@@ -422,6 +434,8 @@ module.exports = {
   successfulAlbumFetch,
   successfulAlbumUpdate,
   successfulAlbumDeletion,
+  invalidTrackDeletionFromAlbum,
+  successfulTrackDeletionFromAlbum,
   successfulTracksFetch,
   successfulTrackCreation,
   successfulTrackFetch,
