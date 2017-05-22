@@ -48,7 +48,7 @@
 		"name": "Folie a deux",
 		"images": ["un oso", "otro oso"],
 		"genres": ["Rock"],
-		"artists": [33],
+		"artists": [33, 1, 2],
 		"release_date": "4011958"
 	},
 	"updatedAlbum": {

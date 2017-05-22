@@ -59,7 +59,12 @@ const newAlbum = (req, res) => {
     .then(() => {
       db.album.createNewAlbumEntry(req.body)
         .then(album => respond.successfulAlbumCreation(album, res))
-        .catch(error => respond.internalServerError(error, res));
+        .catch((error) => {
+          if (error.name === 'NonExistentIdError') {
+            respond.nonExistentId(error.message, res);
+          }
+          respond.internalServerError(error, res);
+        });
     })
     .catch(error => respond.invalidRequestBodyError(error, res));
 };

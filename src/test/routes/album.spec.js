@@ -124,6 +124,17 @@ describe('Album', () => {
         });
     });
 
+    it('should return status code 400 with non existent artist id', (done) => {
+      request(app)
+        .post('/api/albums')
+        .set('Authorization', `Bearer ${testToken}`)
+        .send(constants.newAlbumWithNonExistentArtist)
+        .end((err, res) => {
+          res.should.have.status(400);
+          done();
+        });
+    });
+
     it('should return status code 201 when correct parameters are sent', (done) => {
       request(app)
         .post('/api/albums')
