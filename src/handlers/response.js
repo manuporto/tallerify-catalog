@@ -290,7 +290,7 @@ const successfulAlbumFetch = (album, response) => {
       count: 1,
       version: constants.API_VERSION,
     },
-    track: formatAlbumJson(album),
+    album: formatAlbumJson(album),
   });
 };
 

@@ -162,7 +162,7 @@ describe('Album', () => {
   describe('/GET albums/{id}', () => {
     it('should return status code 200', (done) => {
       request(app)
-        .get(`/api/albums/${constants.validUserId}`)
+        .get(`/api/albums/${constants.validAlbumId}`)
         .set('Authorization', `Bearer ${testToken}`)
         .end((err, res) => {
           res.should.have.status(200);
@@ -172,33 +172,31 @@ describe('Album', () => {
 
     it('should return albums data', (done) => {
       request(app)
-        .get(`/api/albums/${constants.validUserId}`)
+        .get(`/api/albums/${constants.validAlbumId}`)
         .set('Authorization', `Bearer ${testToken}`)
         .end((err, res) => {
           res.body.should.be.a('object');
           res.body.should.have.property('metadata');
           res.body.metadata.should.have.property('version');
           res.body.metadata.should.have.property('count');
-          res.body.should.have.property('user');
-          res.body.user.should.be.a('object');
-          res.body.user.should.have.property('id').eql(constants.validUserId);
-          res.body.user.should.have.property('userName').eql(constants.initialUser.userName);
-          res.body.user.should.have.property('password').eql(constants.initialUser.password);
-          res.body.user.should.have.property('firstName').eql(constants.initialUser.firstName);
-          res.body.user.should.have.property('lastName').eql(constants.initialUser.lastName);
-          res.body.user.should.have.property('country').eql(constants.initialUser.country);
-          res.body.user.should.have.property('email').eql(constants.initialUser.email);
-          res.body.user.should.have.property('birthdate').eql(constants.initialUser.birthdate);
-          res.body.user.should.have.property('images').eql(constants.initialUser.images);
-          res.body.user.should.have.property('href');
-          // res.body.should.have.property('contacts'); FIXME add contacts assoc
+          res.body.should.have.property('album');
+          res.body.album.should.be.a('object');
+          res.body.album.should.have.property('id').eql(constants.validAlbumId);
+          res.body.album.should.have.property('name').eql(constants.initialAlbum.name);
+          res.body.album.should.have.property('images').eql(constants.initialAlbum.images);
+          res.body.album.should.have.property('href');
+          // TODO res.body.should.have.property('artists').eql(constants.testAlbum.artists);
+          // TODO res.body.should.have.property('tracks');
+          res.body.album.should.have.property('genres').eql(constants.initialAlbum.genres);
+          res.body.album.should.have.property('popularity');
+          res.body.album.should.have.property('release_date').eql(constants.initialAlbum.release_date);
           done();
         });
     });
 
     it('should return status code 404 if id does not match an album', (done) => {
       request(app)
-        .get(`/api/albums/${constants.invalidUserId}`)
+        .get(`/api/albums/${constants.invalidAlbumId}`)
         .set('Authorization', `Bearer ${testToken}`)
         .end((err, res) => {
           res.should.have.status(404);
@@ -208,7 +206,7 @@ describe('Album', () => {
 
     it('should return status code 401 if unauthorized', (done) => {
       request(app)
-        .get(`/api/albums/${constants.validUserId}`)
+        .get(`/api/albums/${constants.validAlbumId}`)
         .set('Authorization', 'Bearer UNAUTHORIZED')
         .end((err, res) => {
           res.should.have.status(401);
