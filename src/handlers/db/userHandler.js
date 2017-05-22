@@ -65,7 +65,13 @@ select uf.id,
     string_agg(DISTINCT uf.href, ',') as "href",
     json_agg(uf.contact) as contacts from user_friend uf
 where uf.id = ?
-group by uf.id;`, [id]).then((res) => res.rows[0]);
+group by uf.id;`, [id]).then((res) => {
+  if (res.rows[0]) {
+    const user = Object.assign({}, res.rows[0], {images: res.rows[0].images[0]});
+    return user;
+  }
+  return res.rows[0];
+});
 };
 
 const friend = (userId, friendId) => {
