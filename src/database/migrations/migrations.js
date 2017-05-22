@@ -31,8 +31,10 @@ exports.up = (knex, Promise) => {
     knex.schema.createTableIfNotExists(tables.albums, (table) => {
       logger.debug('Creating albums table.');
       table.increments('id').primary();
+      table.string('href');
       table.string('name');
-      table.integer('release_date');
+      table.string('release_date');
+      table.integer('popularity');
       table.specificType('images', 'text ARRAY');
       table.specificType('genres', 'text ARRAY');
     }),

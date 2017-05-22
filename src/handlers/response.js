@@ -280,7 +280,7 @@ const successfulAlbumsFetch = (albums, response) => {
 
 const successfulAlbumCreation = (album, response) => {
   logger.info(`Successful album creation ${JSON.stringify(album, null, 4)}`);
-  response.status(201).json(formatAlbumJson(track[0]));
+  response.status(201).json(formatAlbumJson(album[0]));
 };
 
 const successfulAlbumFetch = (album, response) => {

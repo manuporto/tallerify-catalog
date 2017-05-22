@@ -34,6 +34,7 @@ const createNewAlbumEntry = (body) => {
     release_date: body.release_date,
     genres: body.genres,
     images: body.images,
+    popularity: 0,
   };
 
   const checkers = [checkArtistsExistence(body)];

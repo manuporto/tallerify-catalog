@@ -98,7 +98,7 @@ describe('Album', () => {
       request(app)
         .post('/api/albums')
         .set('Authorization', `Bearer ${testToken}`)
-        .send(constants.newUserWithMissingAttributes)
+        .send(constants.newAlbumWithMissingAttributes)
         .end((err, res) => {
           res.should.have.status(400);
           done();
@@ -109,7 +109,7 @@ describe('Album', () => {
       request(app)
         .post('/api/albums')
         .set('Authorization', `Bearer ${testToken}`)
-        .send(constants.invalidUser)
+        .send(constants.invalidAlbum)
         .end((err, res) => {
           res.should.have.status(400);
           done();
@@ -120,7 +120,7 @@ describe('Album', () => {
       request(app)
         .post('/api/albums')
         .set('Authorization', `Bearer ${testToken}`)
-        .send(constants.testUser)
+        .send(constants.testAlbum)
         .end((err, res) => {
           res.should.have.status(201);
           done();
@@ -131,18 +131,18 @@ describe('Album', () => {
       request(app)
         .post('/api/albums')
         .set('Authorization', `Bearer ${testToken}`)
-        .send(constants.testUser)
+        .send(constants.testAlbum)
         .end((err, res) => {
           res.body.should.be.a('object');
-          res.body.should.have.property('userName').eql(constants.testUser.userName);
-          res.body.should.have.property('password').eql(constants.testUser.password);
-          res.body.should.have.property('fb');
-          res.body.should.have.property('firstName').eql(constants.testUser.firstName);
-          res.body.should.have.property('lastName').eql(constants.testUser.lastName);
-          res.body.should.have.property('country').eql(constants.testUser.country);
-          res.body.should.have.property('email').eql(constants.testUser.email);
-          res.body.should.have.property('birthdate').eql(constants.testUser.birthdate);
-          res.body.should.have.property('images');
+          res.body.should.have.property('id').eql(constants.testAlbum.id);
+          res.body.should.have.property('href');
+          res.body.should.have.property('name').eql(constants.testAlbum.name);
+          // TODO res.body.should.have.property('artists').eql(constants.testAlbum.artists);
+          res.body.should.have.property('genres').eql(constants.testAlbum.genres);
+          // TODO res.body.should.have.property('tracks');
+          res.body.should.have.property('popularity');
+          res.body.should.have.property('release_date').eql(constants.testAlbum.release_date);
+          res.body.should.have.property('images').eql(constants.testAlbum.images);
           done();
         });
     });
@@ -151,7 +151,7 @@ describe('Album', () => {
       request(app)
         .post('/api/albums')
         .set('Authorization', 'Bearer UNAUTHORIZED')
-        .send(constants.testUser)
+        .send(constants.testAlbum)
         .end((err, res) => {
           res.should.have.status(401);
           done();

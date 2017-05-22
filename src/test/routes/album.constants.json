@@ -37,7 +37,7 @@
 		"images": ["un oso", "otro oso"],
 		"genres": ["Rock"],
 		"artists": [3],
-		"release_date": "04011958"
+		"release_date": "4011958"
 	},
 	"newAlbumWithMissingAttributes": {
 		"artists": [1, 3],
@@ -49,12 +49,12 @@
 		"images": ["un oso", "otro oso"],
 		"genres": ["Rock"],
 		"artists": [33],
-		"release_date": "04011958"
+		"release_date": "4011958"
 	},
 	"updatedAlbum": {
 		"name": "October",
 		"artists": [2],
-		"release_date": "03121930",
+		"release_date": "3121930",
 		"genres": []
 	},
 	"updatedAlbumWithMissingAttributes": {
