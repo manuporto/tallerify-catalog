@@ -296,7 +296,7 @@ const successfulAlbumFetch = (album, response) => {
 
 const successfulAlbumUpdate = (album, response) => {
   logger.info('Successful album update');
-  response.status(200).json(formatTrackJson(album[0]));
+  response.status(200).json(formatAlbumJson(album[0]));
 };
 
 const successfulAlbumDeletion = (response) => {

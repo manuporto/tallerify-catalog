@@ -218,9 +218,9 @@ describe('Album', () => {
   describe('/PUT albums/{id}', () => {
     it('should return status code 201 when correct parameters are sent', (done) => {
       request(app)
-        .put(`/api/albums/${constants.validUserId}`)
+        .put(`/api/albums/${constants.validAlbumId}`)
         .set('Authorization', `Bearer ${testToken}`)
-        .send(constants.updatedUser)
+        .send(constants.updatedAlbum)
         .end((err, res) => {
           res.should.have.status(200);
           done();
@@ -229,29 +229,29 @@ describe('Album', () => {
 
     it('should return the expected body response when correct parameters are sent', (done) => {
       request(app)
-        .put(`/api/albums/${constants.validUserId}`)
+        .put(`/api/albums/${constants.validAlbumId}`)
         .set('Authorization', `Bearer ${testToken}`)
-        .send(constants.updatedUser)
+        .send(constants.updatedAlbum)
         .end((err, res) => {
           res.body.should.be.a('object');
-          res.body.should.have.property('userName').eql(constants.updatedUser.userName);
-          res.body.should.have.property('password').eql(constants.updatedUser.password);
-          res.body.should.have.property('fb');
-          res.body.should.have.property('firstName').eql(constants.updatedUser.firstName);
-          res.body.should.have.property('lastName').eql(constants.updatedUser.lastName);
-          res.body.should.have.property('country').eql(constants.updatedUser.country);
-          res.body.should.have.property('email').eql(constants.updatedUser.email);
-          res.body.should.have.property('birthdate').eql(constants.updatedUser.birthdate);
-          res.body.should.have.property('images').eql(constants.updatedUser.images);
+          res.body.should.have.property('id').eql(constants.validAlbumId);
+          res.body.should.have.property('href');
+          res.body.should.have.property('name').eql(constants.updatedAlbum.name);
+          // TODO res.body.should.have.property('artists').eql(constants.updatedAlbum.artists);
+          res.body.should.have.property('genres').eql(constants.updatedAlbum.genres);
+          // TODO res.body.should.have.property('tracks');
+          res.body.should.have.property('popularity');
+          res.body.should.have.property('release_date').eql(constants.updatedAlbum.release_date);
+          res.body.should.have.property('images').eql(constants.updatedAlbum.images);
           done();
         });
     });
 
     it('should return status code 400 when parameters are missing', (done) => {
       request(app)
-        .put(`/api/albums/${constants.validUserId}`)
+        .put(`/api/albums/${constants.validAlbumId}`)
         .set('Authorization', `Bearer ${testToken}`)
-        .send(constants.updatedUserWithMissingAttributes)
+        .send(constants.updatedAlbumWithMissingAttributes)
         .end((err, res) => {
           res.should.have.status(400);
           done();
@@ -260,20 +260,20 @@ describe('Album', () => {
 
     it('should return status code 400 when parameters are invalid', (done) => {
       request(app)
-        .put(`/api/albums/${constants.validUserId}`)
+        .put(`/api/albums/${constants.validAlbumId}`)
         .set('Authorization', `Bearer ${testToken}`)
-        .send(constants.invalidUser)
+        .send(constants.invalidAlbum)
         .end((err, res) => {
           res.should.have.status(400);
           done();
         });
     });
 
-    it('should return status code 404 if id does not match a user', (done) => {
+    it('should return status code 404 if id does not match an album', (done) => {
       request(app)
-        .put(`/api/albums/${constants.invalidUserId}`)
+        .put(`/api/albums/${constants.invalidAlbumId}`)
         .set('Authorization', `Bearer ${testToken}`)
-        .send(constants.updatedUser)
+        .send(constants.updatedAlbum)
         .end((err, res) => {
           res.should.have.status(404);
           done();
@@ -282,9 +282,9 @@ describe('Album', () => {
 
     it('should return status code 401 if unauthorized', (done) => {
       request(app)
-        .put(`/api/albums/${constants.validUserId}`)
+        .put(`/api/albums/${constants.validAlbumId}`)
         .set('Authorization', 'Bearer UNAUTHORIZED')
-        .send(constants.updatedUser)
+        .send(constants.updatedAlbum)
         .end((err, res) => {
           res.should.have.status(401);
           done();

@@ -55,7 +55,8 @@
 		"name": "October",
 		"artists": [2],
 		"release_date": "3121930",
-		"genres": []
+		"genres": ["Punk"],
+		"images": ["una oveja"]
 	},
 	"updatedAlbumWithMissingAttributes": {
 		"name": "Showbiz"
