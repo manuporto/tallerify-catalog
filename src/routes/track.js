@@ -40,7 +40,7 @@ const trackRatingExpectedBodySchema = {
 
 const getTracks = (req, res) => {
   db.general.findAllEntries(tables.tracks)
-    .then(tracks => respond.succesfulTracksFetch(tracks, res))
+    .then(tracks => respond.successfulTracksFetch(tracks, res))
     .catch(error => respond.internalServerError(error, res));
 };
 
@@ -49,7 +49,12 @@ const newTrack = (req, res) => {
   .then(() => {
     db.track.createNewTrackEntry(req.body)
       .then(track => respond.successfulTrackCreation(track, res))
-      .catch(error => respond.internalServerError(error, res));
+      .catch((error) => {
+        if (error.name === 'NonExistentIdError') {
+          respond.nonExistentId(error.message, res);
+        }
+        respond.internalServerError(error, res);
+      });
   })
   .catch(error => respond.invalidRequestBodyError(error, res));
 };
@@ -118,7 +123,7 @@ const trackDislike = (req, res) => {
 
 const getFavoriteTracks = (req, res) => {
   db.track.findUserFavorites(req.user.id)
-    .then(tracks => respond.succesfulTracksFetch(tracks, res))
+    .then(tracks => respond.successfulTracksFetch(tracks, res))
     .catch(error => respond.internalServerError(error, res));
 };
 

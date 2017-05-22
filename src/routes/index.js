@@ -1,4 +1,5 @@
 const express = require('express');
+const multer = require('multer');
 
 const user = require('./user');
 const token = require('./token');
@@ -7,6 +8,7 @@ const track = require('./track');
 const admin = require('./admin');
 
 const loginRouter = require('../middlewares/login-router');
+const usersMediaLocation = multer({dest: 'public/media/users/'});
 
 const router = express.Router();
 
@@ -30,7 +32,7 @@ router.get('/api/users', user.getUsers);
 
 router.get('/api/users/:id', user.getUser);
 
-router.post('/api/users', user.newUser);
+router.post('/api/users', usersMediaLocation.single('avatar'), user.newUser);
 
 router.put('/api/users/:id', user.updateUser);
 

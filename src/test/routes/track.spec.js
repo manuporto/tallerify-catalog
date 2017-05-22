@@ -8,13 +8,13 @@ const jwt = require('jsonwebtoken');
 const request = require('supertest');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
+const logger = require('../../utils/logger');
 
 chai.should();
 chai.use(chaiHttp);
 
 const config = require('./../../config');
 const constants = require('./track.constants.json');
-const artistsConstants = require('./artist.constants.json');
 
 const testToken = jwt.sign(constants.jwtTestUser, config.secret);
 
@@ -25,11 +25,29 @@ describe('Track', () => {
     .then(() => {
       db.migrate.latest()
         .then(() => {
-          dbHandler.track.createNewTrackEntry(constants.initialTrack)
-            .then(() => done())
-            .catch(error => done(error));
+          dbHandler.general.createNewEntry(tables.artists,
+            [
+              constants.initialArtist,
+              constants.initialArtist2,
+            ])
+            .then((artists) => {
+            logger.info(`Tests artists created: ${JSON.stringify(artists, null, 4)}`);
+            dbHandler.track.createNewTrackEntry(constants.initialTrack)
+              .then((tracks) => {
+              logger.info(`Tests tracks created: ${JSON.stringify(tracks, null, 4)}`);
+              done();
+            })
+              .catch((error) => {
+                logger.warn(`Test tracks creation error: ${error}`);
+                done(error);
+              });
+          })
+            .catch((error) => {
+              logger.warn(`Test artists creation error: ${error}`);
+              done(error);
+            });
         })
-      .catch(error => done(error));
+        .catch(error => done(error));
     });
   });
 
@@ -54,12 +72,14 @@ describe('Track', () => {
         .get('/api/tracks')
         .set('Authorization', `Bearer ${testToken}`)
         .end((err, res) => {
+          logger.info(`Tracks: ${JSON.stringify(res.body.tracks, null, 4)}`);
           res.body.should.be.a('object');
           res.body.should.have.property('metadata');
           res.body.metadata.should.have.property('version');
           res.body.metadata.should.have.property('count');
           res.body.should.have.property('tracks');
           res.body.tracks.should.be.a('array');
+          res.body.tracks.should.have.lengthOf(1);
           done();
         });
     });
@@ -106,6 +126,18 @@ describe('Track', () => {
         .send(constants.testTrack)
         .end((err, res) => {
           res.should.have.status(201);
+          done();
+        });
+    });
+
+    it('should return status code 400 with non existent artist id', (done) => {
+      request(app)
+        .post('/api/tracks')
+        .set('Authorization', `Bearer ${testToken}`)
+        .send(constants.newTrackWithNonExistentArtist)
+        .end((err, res) => {
+          res.should.have.status(400);
+          res.body.should.have.property('message').eql('Non existing artist.');
           done();
         });
     });
@@ -166,8 +198,12 @@ describe('Track', () => {
           res.body.track.should.have.property('name').eql(constants.initialTrack.name);
           res.body.track.should.have.property('duration');
           res.body.track.should.have.property('href');
-          res.body.track.should.have.property('album'); // TODO
-          res.body.track.should.have.property('artists');
+          res.body.track.should.have.property('album');
+          res.body.track.should.have.property('artists')
+            .eql([
+              constants.initialShortArtist,
+              constants.initialShortArtist2,
+            ]);
           res.body.track.should.have.property('popularity');
           // TODO add check for 'rate: int' inside popularity object
           done();

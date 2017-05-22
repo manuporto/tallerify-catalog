@@ -3,19 +3,44 @@
 		"admin": true,
 		"id": 24
 	},
+	"initialArtist": {
+		"id": 1,
+		"name": "Papa Baute",
+		"popularity": 2
+	},
+	"initialShortArtist": {
+		"id": 1,
+		"name": "Papa Baute"
+	},
+	"initialArtist2": {
+		"id": 2,
+		"name": "Luis Fonsi",
+		"popularity": 1
+	},
+	"initialShortArtist2": {
+		"id": 2,
+		"name": "Luis Fonsi"
+	},
 	"initialTrack": {
+		"id": 1,
 		"name": "Despacito",
 		"albumId": 240,
-		"artists": [4, 1]
+		"artists": [1, 2]
 	},
 	"testTrack": {
+		"id": 2,
 		"name": "Come a Little Closer",
 		"albumId": 229,
-		"artists": [20, 9]
+		"artists": [2]
 	},
 	"newTrackWithMissingAttributes": {
 		"albumId": 123,
 		"artists": [24, 9]
+	},
+	"newTrackWithNonExistentArtist": {
+		"name": "Evermore",
+		"albumId": 229,
+		"artists": [28]
 	},
 	"updatedTrack": {
 		"name": "Andromeda",

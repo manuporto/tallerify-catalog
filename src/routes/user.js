@@ -3,6 +3,7 @@ const dbRaw = require('./../database/index');
 const tables = require('../database/tableNames');
 const respond = require('./../handlers/response');
 const constants = require('./constants.json');
+const logger = require('../utils/logger');
 
 const userExpectedBodySchema = {
   type: 'object',
@@ -116,7 +117,7 @@ const updateUserExpectedBodySchema = {
 //     });
 // };
 
-const createNewUser = (body) => {
+const createNewUser = (body, avatarPath) => {
   let user = {
     userName: body.userName,
     password: body.password,
@@ -125,7 +126,7 @@ const createNewUser = (body) => {
     country: body.country,
     email: body.email,
     birthdate: body.birthdate,
-    images: [constants.DEFAULT_IMAGE],
+    images: [avatarPath],
   };
   return db.general.createNewEntry(tables.users, user);
 };
@@ -181,9 +182,12 @@ const getUser = (req, res) => {
 };
 
 const newUser = (req, res) => {
+  if (!(req["file"])) {
+      req["file"] = {"path": ""};
+  }
   respond.validateRequestBody(req.body, userExpectedBodySchema)
     .then(() => {
-      createNewUser(req.body)
+      createNewUser(req.body, process.env.BASE_URL + req.file.path.replace("public/", ""))
         .then(user => respond.successfulUserCreation(user, res))
         .catch(error => respond.internalServerError(error, res));
     })
