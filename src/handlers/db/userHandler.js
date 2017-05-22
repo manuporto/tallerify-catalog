@@ -70,7 +70,6 @@ group by uf.id;`, [id]).then((res) => {
     const user = Object.assign({}, res.rows[0], {images: res.rows[0].images[0]});
     return user;
   }
-  return res.rows[0];
 });
 };
 

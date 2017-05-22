@@ -82,41 +82,6 @@ const updateUserExpectedBodySchema = {
   },
 };
 
-// dbRaw
-//     .from(tables.users)
-//     .select('users.*', dbRaw.raw('array_agg(users_users."friend_id") as friends'))
-//     .where('id', 1)
-//     .leftJoin(tables.users_users, 'users.id', 'users_users.user_id')
-//     .groupBy('id')
-//     .then((user) => {
-//       res.status(200).json(user);
-//     });
-// const testUser = (req, res) => {
-//   dbRaw
-//     .with('user_friends', (qb) => {
-//       qb
-//         .with('friends_ids', (qb2) => {
-//           qb2
-//             .select('*')
-//             .from('users')
-//             .leftJoin(tables.users_users, 'users.id', 'users_users.user_id')
-//           })
-//         .select('*', dbRaw.raw('row_to_json(users.*) as contact'))
-//         .from('friends_ids')
-//         .leftJoin(tables.users, 'friends_ids.friend_id', 'users.id')
-//     })
-//     .from('user_friends')
-//     // .where('id', 1)
-//     .select('*')
-//     // .select('users.*', dbRaw.raw('array_agg(users_users."friend_id") as friends'))
-//     // .where('id', 1)
-//     // .leftJoin(tables.users_users, 'users.id', 'users_users.user_id')
-//     // .groupBy('id')
-//     .then((user) => {
-//       res.status(200).json(user);
-//     });
-// };
-
 const createNewUser = (body, avatarPath) => {
   let user = {
     userName: body.userName,
