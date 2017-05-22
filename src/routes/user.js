@@ -1,4 +1,5 @@
 const db = require('./../handlers/db/index');
+const dbRaw = require('./../database/index');
 const tables = require('../database/tableNames');
 const respond = require('./../handlers/response');
 const constants = require('./constants.json');
@@ -80,6 +81,41 @@ const updateUserExpectedBodySchema = {
   },
 };
 
+// dbRaw
+//     .from(tables.users)
+//     .select('users.*', dbRaw.raw('array_agg(users_users."friend_id") as friends'))
+//     .where('id', 1)
+//     .leftJoin(tables.users_users, 'users.id', 'users_users.user_id')
+//     .groupBy('id')
+//     .then((user) => {
+//       res.status(200).json(user);
+//     });
+// const testUser = (req, res) => {
+//   dbRaw
+//     .with('user_friends', (qb) => {
+//       qb
+//         .with('friends_ids', (qb2) => {
+//           qb2
+//             .select('*')
+//             .from('users')
+//             .leftJoin(tables.users_users, 'users.id', 'users_users.user_id')
+//           })
+//         .select('*', dbRaw.raw('row_to_json(users.*) as contact'))
+//         .from('friends_ids')
+//         .leftJoin(tables.users, 'friends_ids.friend_id', 'users.id')
+//     })
+//     .from('user_friends')
+//     // .where('id', 1)
+//     .select('*')
+//     // .select('users.*', dbRaw.raw('array_agg(users_users."friend_id") as friends'))
+//     // .where('id', 1)
+//     // .leftJoin(tables.users_users, 'users.id', 'users_users.user_id')
+//     // .groupBy('id')
+//     .then((user) => {
+//       res.status(200).json(user);
+//     });
+// };
+
 const createNewUser = (body) => {
   let user = {
     userName: body.userName,
@@ -141,7 +177,12 @@ const getUsers = (req, res) => {
 };
 
 const getUser = (req, res) => {
-  _getUser(req.params.id, res);
+  db.user.findUser(req.params.id)
+    .then((user) => {
+        if (!respond.entryExists(req.params.id, user, res)) return;
+        respond.successfulUserFetch(user, res);
+    })
+    .catch(error => respond.internalServerError(error, res));
 };
 
 const newUser = (req, res) => {

@@ -3,16 +3,7 @@ const tables = require('../../database/tableNames');
 const db = require('../../database/index');
 const generalHandler = require('./generalHandler');
 
-const findWithFacebookUserId = (userId) => {
-    logger.info(`Querying database for entry with fb userId "${userId}"`);
-    return db(tables.users).where({
-        facebookUserId: userId,
-    }).first('*');
-};
-
-const findAllUsers = () => {
-  logger.debug('Getting all users.');
-  return db.raw(`with user_friend as (
+const innerJoin = `with user_friend as (
     with friends_ids as (
     select *
       from users u
@@ -24,19 +15,57 @@ const findAllUsers = () => {
 )
 -- select * from user_friend;
 select uf.id, 
-  string_agg(uf."userName", ',') as "userName",
-    string_agg(uf."firstName", ',') as "firstName",
-    string_agg(uf."lastName", ',') as "lastName",
-    string_agg(uf.password, ',') as password,
-    string_agg(uf.country, ',') as country,
-    string_agg(uf.email, ',') as email,
-    string_agg(uf."birthdate", ',') as "birthdate",
-    array_agg(uf.images) as images,
-    array_agg(uf."facebookUserId") as "facebookUserId",
-    string_agg(uf.href, ',') as "href",
+  string_agg(DISTINCT uf."userName", ',') as "userName",
+    string_agg(DISTINCT uf."firstName", ',') as "firstName",
+    string_agg(DISTINCT uf."lastName", ',') as "lastName",
+    string_agg(DISTINCT uf.password, ',') as password,
+    string_agg(DISTINCT uf.country, ',') as country,
+    string_agg(DISTINCT uf.email, ',') as email,
+    string_agg(DISTINCT uf."birthdate", ',') as "birthdate",
+    array_agg(DISTINCT uf.images) as images,
+    array_agg(DISTINCT uf."facebookUserId") as "facebookUserId",
+    string_agg(DISTINCT uf.href, ',') as "href",
     json_agg(uf.contact) as contacts from user_friend uf
-group by uf.id;`).then((res) => res.rows);
-  //return db.from(tables.users).innerJoin(tables.users_users, 'users.id', 'users_users.user_id');
+group by uf.id;`
+
+const findWithFacebookUserId = (userId) => {
+    logger.info(`Querying database for entry with fb userId "${userId}"`);
+    return db(tables.users).where({
+        facebookUserId: userId,
+    }).first('*');
+};
+
+const findAllUsers = () => {
+  logger.debug('Getting all users.');
+  return db.raw(innerJoin).then((res) => res.rows);
+};
+
+const findUser = (id) => {
+  logger.info(`Finding user with id: ${id}`);
+  return db.raw(`with user_friend as (
+    with friends_ids as (
+    select *
+      from users u
+      left join "users_users" uu on u.id = uu.user_id
+  )
+  select fi.*,  row_to_json(u.*) as contact 
+  from friends_ids fi
+  left join "users" u on fi.friend_id = u.id
+)
+select uf.id, 
+  string_agg(DISTINCT uf."userName", ',') as "userName",
+    string_agg(DISTINCT uf."firstName", ',') as "firstName",
+    string_agg(DISTINCT uf."lastName", ',') as "lastName",
+    string_agg(DISTINCT uf.password, ',') as password,
+    string_agg(DISTINCT uf.country, ',') as country,
+    string_agg(DISTINCT uf.email, ',') as email,
+    string_agg(DISTINCT uf."birthdate", ',') as "birthdate",
+    array_agg(DISTINCT uf.images) as images,
+    array_agg(DISTINCT uf."facebookUserId") as "facebookUserId",
+    string_agg(DISTINCT uf.href, ',') as "href",
+    json_agg(uf.contact) as contacts from user_friend uf
+where uf.id = ?
+group by uf.id;`, [id]).then((res) => res.rows[0]);
 };
 
 const friend = (userId, friendId) => {
@@ -66,4 +95,4 @@ const unfriend = (userId, friendId) => {
   }).del();
 };
 
-module.exports = { findWithFacebookUserId, findAllUsers, friend, unfriend };
+module.exports = { findWithFacebookUserId, findUser, findAllUsers, friend, unfriend };
