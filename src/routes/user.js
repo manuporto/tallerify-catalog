@@ -144,13 +144,13 @@ const updateUserInfo = (id, body) => {
   return db.general.updateEntryWithId(tables.users, id, updatedUser);
 };
 
-const _getUser = (id, response) => {
-  db.general.findEntryWithId(tables.users, id)
+const _getUser = (id, res) => {
+  db.user.findUser(id)
     .then((user) => {
-      if (!respond.entryExists(id, user, response)) return;
-      respond.successfulUserFetch(user, response);
+        if (!respond.entryExists(id, user, res)) return;
+        respond.successfulUserFetch(user, res);
     })
-    .catch(error => respond.internalServerError(error, response));
+    .catch(error => respond.internalServerError(error, res));
 };
 
 const _updateUser = (id, body, response) => {
@@ -177,12 +177,13 @@ const getUsers = (req, res) => {
 };
 
 const getUser = (req, res) => {
-  db.user.findUser(req.params.id)
-    .then((user) => {
-        if (!respond.entryExists(req.params.id, user, res)) return;
-        respond.successfulUserFetch(user, res);
-    })
-    .catch(error => respond.internalServerError(error, res));
+  // db.user.findUser(req.params.id)
+  //   .then((user) => {
+  //       if (!respond.entryExists(req.params.id, user, res)) return;
+  //       respond.successfulUserFetch(user, res);
+  //   })
+  //   .catch(error => respond.internalServerError(error, res));
+  _getUser(req.params.id, res);
 };
 
 const newUser = (req, res) => {
@@ -211,6 +212,12 @@ const deleteUser = (req, res) => {
 };
 
 const meGetUser = (req, res) => {
+  // db.user.findUser(req.user.id)
+  //   .then((user) => {
+  //       if (!respond.entryExists(req.user.id, user, res)) return;
+  //       respond.successfulUserFetch(user, res);
+  //   })
+  //   .catch(error => respond.internalServerError(error, res));
   _getUser(req.user.id, res);
 };
 
