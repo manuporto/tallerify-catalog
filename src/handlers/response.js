@@ -243,9 +243,8 @@ const successfulArtistCreation = (artist, res) => {
 /* Albums */
 
 const formatAlbumShortJson = (album) => {
-  // TODO: catch null artist earlier
   if (!album) {
-    return {};
+    return;
   }
   return {
     id: album.id,

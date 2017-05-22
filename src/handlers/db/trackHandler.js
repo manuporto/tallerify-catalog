@@ -54,23 +54,25 @@ const updateTrackEntry = (body, id) => {
 };
 
 const getArtistsInfo = (track) => {
-    return artistTrackHandler.findArtistsIdsFromTrack(track.id)
-        .then((artistsIds) => {
-            const ids = artistsIds.map((artistId) => artistId.artist_id);
-            return generalHandler.findEntriesWithIds(tables.artists, ids)
-                .then((artists) => {
-                    logger.info(`Returning artists: ${JSON.stringify(artists, null, 4)}`);
-                    return artists;
-                });
-        });
+  return artistTrackHandler.findArtistsIdsFromTrack(track.id)
+    .then((artistsIds) => {
+      const ids = artistsIds.map((artistId) => artistId.artist_id);
+      return generalHandler.findEntriesWithIds(tables.artists, ids)
+       .then((artists) => {
+         logger.info(`Returning artists: ${JSON.stringify(artists, null, 4)}`);
+         return artists;
+       });
+    });
 };
 
 const getAlbumInfo = (track) => {
+  if (track.album_id !== -1) {
     return generalHandler.findEntryWithId(tables.albums, track.album_id)
-        .then((album) => {
-            logger.info(`Returning album: ${JSON.stringify(album, null, 4)}`);
-            return album;
-        });
+      .then((album) => {
+        logger.info(`Returning album: ${JSON.stringify(album, null, 4)}`);
+        return album;
+      });
+  }
 };
 
 const like = (userId, trackId) => {
@@ -137,13 +139,13 @@ const rate = (trackId, userId, rating) => {
     }));
 };
 
-const deleteTracksInAlbum = (albumId) => {
-  logger.info(`Deleting tracks in album ${albumId}`);
-  return db(tables.tracks).where('album_id', albumId).del();
-};
-
 const updateAlbumId = (trackId, albumId) => {
   return db(tables.tracks).where('id', trackId).update({ album_id: albumId });
+};
+
+const removeTracksFromAlbum = (albumId) => {
+  logger.info(`Removing tracks in album ${albumId}`);
+  return db(tables.tracks).where('album_id', albumId).update({ album_id: -1 });
 };
 
 const deleteAlbumId = (trackId) => {
@@ -161,7 +163,7 @@ module.exports = {
   findUserFavorites,
   calculateRate,
   rate,
-  deleteTracksInAlbum,
+  removeTracksFromAlbum,
   updateAlbumId,
   deleteAlbumId,
 };

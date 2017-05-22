@@ -34,7 +34,7 @@ const createNewAlbumEntry = (body) => {
     release_date: body.release_date,
     genres: body.genres,
     images: body.images,
-    popularity: 0,
+    popularity: 0
   };
 
   const checkers = [checkArtistsExistence(body)];
@@ -75,7 +75,7 @@ const deleteAlbumWithId = (id) => {
   const deleters = [
     generalHandler.deleteEntryWithId(tables.albums, id),
     albumArtistHandler.deleteAssociations(id),
-    trackHandler.deleteTracksInAlbum(id),
+    trackHandler.removeTracksFromAlbum(id),
   ];
   return Promise.all(deleters);
 };

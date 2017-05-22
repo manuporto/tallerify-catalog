@@ -33,9 +33,17 @@ describe('Album', () => {
               .then((artists) => {
                 logger.info(`Tests artists created: ${JSON.stringify(artists, null, 4)}`);
                 dbHandler.album.createNewAlbumEntry(constants.initialAlbum)
-                  .then((tracks) => {
-                    logger.info(`Tests album created: ${JSON.stringify(tracks, null, 4)}`);
-                    done();
+                  .then((album) => {
+                    logger.info(`Tests album created: ${JSON.stringify(album, null, 4)}`);
+                    dbHandler.track.createNewTrackEntry(constants.initialTrack)
+                      .then((track) => {
+                        logger.info(`Tests track created: ${JSON.stringify(track, null, 4)}`);
+                        done();
+                      })
+                      .catch((error) => {
+                        logger.warn(`Test track creation error: ${error}`);
+                        done(error);
+                      });
                   })
                   .catch((error) => {
                     logger.warn(`Test album creation error: ${error}`);
@@ -321,6 +329,25 @@ describe('Album', () => {
           res.should.have.status(401);
           done();
         });
+    });
+
+    it('should leave its tracks orphan', (done) => {
+      request(app)
+        .delete(`/api/albums/${constants.validAlbumId}`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.should.have.status(204);
+          request(app)
+            .get(`/api/tracks/${constants.initialTrack.id}`)
+            .set('Authorization', `Bearer ${testToken}`)
+            .end((err, res) => {
+              res.should.have.status(200);
+              logger.warn(`${JSON.stringify(res.body)}`);
+              res.body.track.should.not.have.property('album');
+              done();
+            });
+        });
+
     });
   });
 });
