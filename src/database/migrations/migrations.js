@@ -68,6 +68,15 @@ exports.up = (knex, Promise) => {
       table.integer('track_id');
     }),
 
+    knex.schema.createTableIfNotExists(tables.playlists, (table) => {
+        logger.debug('Creating playlists table.');
+        table.increments('id').primary();
+        table.string('name');
+        table.string('description');
+        table.integer('ownerId');
+        // TODO: Missing songs array
+    }),
+
   ]);
 };
 
@@ -80,5 +89,6 @@ exports.down = (knex, Promise) => {
     knex.schema.dropTable(tables.users),
     knex.schema.dropTable(tables.admins),
     knex.schema.dropTable(tables.users_tracks),
+    knex.schema.dropTable(tables.playlists),
   ]);
 };

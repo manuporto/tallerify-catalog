@@ -98,6 +98,17 @@ const formatGetUserJson = (user) => {
   };
 };
 
+const successfulPlaylistsFetch = (playlists, response) => {
+    logger.info('Successful playlists fetch');
+    return response.status(200).json({
+        metadata: {
+            count: playlists.length,
+            version: constants.API_VERSION,
+        },
+        playlists: playlists.map(formatGetPlaylistJson),
+    });
+};
+
 const successfulUsersFetch = (users, response) => {
   logger.info('Successful users fetch');
   return response.status(200).json({

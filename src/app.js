@@ -46,7 +46,7 @@ const unprotectedRoutes = (req) => {
   }
   return false;
 };
-app.use(expressJwt({ secret: config.secret }).unless(unprotectedRoutes));
+//app.use(expressJwt({ secret: config.secret }).unless(unprotectedRoutes));
 app.set('secret', config.secret);
 
 // *** main routes *** //
