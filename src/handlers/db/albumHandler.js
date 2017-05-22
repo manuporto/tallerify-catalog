@@ -9,12 +9,12 @@ const NonExistentIdError = require('../../errors/NonExistentIdError');
 
 const findAllAlbums = () => {
   logger.info('Fetching albums');
-  generalHandler.findAllEntries(tables.albums); // TODO full query to get artists and tracks
+  return generalHandler.findAllEntries(tables.albums); // TODO full query to get artists and tracks
 };
 
 const findAlbumWithId = (id) => {
   logger.info(`Fetching album with id: ${id}`);
-  generalHandler.findEntryWithId(tables.albums, id); // TODO full query to get artists and tracks
+  return generalHandler.findEntryWithId(tables.albums, id); // TODO full query to get artists and tracks
 };
 
 const checkArtistsExistence = (body) => {

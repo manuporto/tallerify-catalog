@@ -258,10 +258,10 @@ const formatAlbumJson = (album) => {
     id: album.id,
     name: album.name,
     release_date: album.release_date,
-    href: track.href,
+    href: album.href,
     popularity: album.popularity,
-    artists: album.artists.map(artist => formatArtistShortJson(artist)),
-    tracks: album.tracks.map(track => formatTrackShortJson(track)),
+    artists: album.artists, // TODO album.artists.map(artist => formatArtistShortJson(artist)),
+    tracks: album.tracks, // TODO album.tracks.map(track => formatTrackShortJson(track)),
     genres: album.genres,
     images: album.images,
   };

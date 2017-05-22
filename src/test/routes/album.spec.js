@@ -3,11 +3,12 @@ process.env.NODE_ENV = 'test';
 const app = require('../../app');
 const db = require('../../database');
 const tables = require('../../database/tableNames');
-const dbHandler = require('../../handlers/db/generalHandler');
+const dbHandler = require('../../handlers/db');
 const jwt = require('jsonwebtoken');
 const request = require('supertest');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
+const logger = require('../../utils/logger');
 
 chai.should();
 chai.use(chaiHttp);
@@ -15,7 +16,7 @@ chai.use(chaiHttp);
 const config = require('./../../config');
 const constants = require('./album.constants.json');
 
-const testToken = jwt.sign({ admin: true }, config.secret);
+const testToken = jwt.sign(constants.jwtTestUser, config.secret);
 
 describe('Album', () => {
   beforeEach((done) => {
@@ -23,9 +24,28 @@ describe('Album', () => {
       .then(() => {
         db.migrate.latest()
           .then(() => {
-            dbHandler.createNewEntry(tables.albums, constants.initialAlbum)
-              .then(() => done())
-              .catch(error => done(error));
+            dbHandler.general.createNewEntry(tables.artists,
+              [
+                constants.initialArtist1,
+                constants.initialArtist2,
+                constants.initialArtist3,
+              ])
+              .then((artists) => {
+                logger.info(`Tests artists created: ${JSON.stringify(artists, null, 4)}`);
+                dbHandler.album.createNewAlbumEntry(constants.initialAlbum)
+                  .then((tracks) => {
+                    logger.info(`Tests album created: ${JSON.stringify(tracks, null, 4)}`);
+                    done();
+                  })
+                  .catch((error) => {
+                    logger.warn(`Test album creation error: ${error}`);
+                    done(error);
+                  });
+              })
+              .catch((error) => {
+                logger.warn(`Test artists creation error: ${error}`);
+                done(error);
+              });
           })
           .catch(error => done(error));
       });
@@ -57,7 +77,7 @@ describe('Album', () => {
           res.body.metadata.should.have.property('version');
           res.body.metadata.should.have.property('count');
           res.body.should.have.property('albums');
-          res.body.users.should.be.a('array');
+          res.body.albums.should.be.a('array');
           done();
         });
     });
