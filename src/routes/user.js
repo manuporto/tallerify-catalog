@@ -183,15 +183,10 @@ const meUpdateUser = (req, res) => {
 };
 
 const meGetContacts = (req, res) => {
-  db.general.findEntryWithId(tables.users, req.user.id)
+  db.user.findUser(req.user.id)
     .then((user) => {
       if (!respond.entryExists(req.user.id, user, res)) return;
-      const contacts = Object.assign(
-        {},
-        {
-          contacts: user.contacts,
-        });
-      respond.successfulUserContactsFetch(contacts, res);
+      respond.successfulUserContactsFetch(user.contacts, res);
     })
     .catch(error => respond.internalServerError(error, res));
 };

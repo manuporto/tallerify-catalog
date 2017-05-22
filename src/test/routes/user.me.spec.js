@@ -184,6 +184,20 @@ describe('User me', () => {
         });
     });
 
+    it('should return the expected body response when correct parameters are sent', (done) => {
+      request(app)
+        .get('/api/users/me/contacts')
+        .set('Authorization', `Bearer ${initialUserToken}`)
+        .end((err, res) => {
+          console.log(`Res: ${JSON.stringify(res.body, null, 4)}`);
+          res.body.should.be.a('object');
+          res.body.should.have.property('contacts');
+          res.body.contacts.should.be.a('array');
+          // res.body.contacts.should.have.lengthOf(1); TODO add contacts to test user
+          // res.body.contacts[0].should.be.a('object');
+          done();
+        });
+    })
     //TODO add tests
 
     it('should return status code 401 if unauthorized', (done) => {
