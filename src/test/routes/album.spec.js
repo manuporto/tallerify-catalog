@@ -295,7 +295,7 @@ describe('Album', () => {
   describe('/DELETE albums/{id}', () => {
     it('should return status code 204 when deletion is successful', (done) => {
       request(app)
-        .delete(`/api/albums/${constants.validUserId}`)
+        .delete(`/api/albums/${constants.validAlbumId}`)
         .set('Authorization', `Bearer ${testToken}`)
         .end((err, res) => {
           res.should.have.status(204);
@@ -305,7 +305,7 @@ describe('Album', () => {
 
     it('should return status code 404 if id does not match an album', (done) => {
       request(app)
-        .delete(`/api/albums/${constants.invalidUserId}`)
+        .delete(`/api/albums/${constants.invalidAlbumId}`)
         .set('Authorization', `Bearer ${testToken}`)
         .end((err, res) => {
           res.should.have.status(404);
@@ -315,7 +315,7 @@ describe('Album', () => {
 
     it('should return status code 401 if unauthorized', (done) => {
       request(app)
-        .delete(`/api/albums/${constants.validUserId}`)
+        .delete(`/api/albums/${constants.validAlbumId}`)
         .set('Authorization', 'Bearer UNAUTHORIZED')
         .end((err, res) => {
           res.should.have.status(401);
