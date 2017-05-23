@@ -225,7 +225,9 @@ const successfulAdminTokenGeneration = (admin, token, response) => {
 const formatArtistShortJson = (artist) => {
   return {
     id: artist.id,
-    name: artist.name
+    name: artist.name,
+    href: artist.href,
+    images: artist.images,
   };
 };
 
@@ -248,17 +250,94 @@ const successfulArtistCreation = (artist, res) => {
 /* Albums */
 
 const formatAlbumShortJson = (album) => {
-  // TODO: catch null artist earlier
   if (!album) {
-    return {};
+    return;
   }
   return {
     id: album.id,
-    name: album.name
+    name: album.name,
+    href: album.href,
+    images: album.images,
   };
 };
 
+const formatAlbumJson = (album) => {
+  return {
+    id: album.id,
+    name: album.name,
+    release_date: album.release_date,
+    href: album.href,
+    popularity: album.popularity,
+    artists: album.artists, // TODO album.artists.map(artist => formatArtistShortJson(artist)),
+    tracks: album.tracks, // TODO album.tracks.map(track => formatTrackShortJson(track)),
+    genres: album.genres,
+    images: album.images,
+  };
+};
+
+const successfulAlbumsFetch = (albums, response) => {
+  logger.info(`Successful albums fetch ${JSON.stringify(albums, null, 4)}`);
+  return response.status(200).json({
+    metadata: {
+      count: albums.length,
+      version: constants.API_VERSION,
+    },
+    albums: albums.map(formatAlbumJson),
+  });
+};
+
+const successfulAlbumCreation = (album, response) => {
+  logger.info(`Successful album creation ${JSON.stringify(album, null, 4)}`);
+  response.status(201).json(formatAlbumJson(album[0]));
+};
+
+const successfulAlbumFetch = (album, response) => {
+  logger.info('Successful album fetch');
+  response.status(200).json({
+    metadata: {
+      count: 1,
+      version: constants.API_VERSION,
+    },
+    album: formatAlbumJson(album),
+  });
+};
+
+const successfulAlbumUpdate = (album, response) => {
+  logger.info('Successful album update');
+  response.status(200).json(formatAlbumJson(album[0]));
+};
+
+const successfulAlbumDeletion = (response) => {
+  logger.info('Successful album deletion');
+  response.sendStatus(204);
+};
+
+const invalidTrackDeletionFromAlbum = (trackId, albumId, response) => {
+  const message = `Track (id: ${trackId}) does not belong to album (id: ${albumId})`;
+  logger.info(message);
+  response.status(400).json({ code: 400, message: message });
+};
+
+const successfulTrackDeletionFromAlbum = (trackId, albumId, response) => {
+  logger.info(`Successful track (id: ${trackId}) deletion from album (id: ${albumId})`);
+  response.sendStatus(204);
+};
+
+const successfulTrackAdditionToAlbum = (trackId, album, response) =>  {
+  logger.info(`Track (id: ${trackId}) now belongs to album (id: ${album.id})`);
+  response.status(200).json(formatAlbumJson(album));
+};
+
 /* Tracks */
+
+const formatTrackShortJson = (track) => {
+  return {
+    id: track.id,
+    name: track.name,
+    href: track.href,
+    images: track.images,
+  };
+};
 
 const formatTrackJson = (track) => {
   return {
@@ -365,6 +444,14 @@ module.exports = {
   successfulAdminTokenGeneration,
   successfulArtistsFetch,
   successfulArtistCreation,
+  successfulAlbumsFetch,
+  successfulAlbumCreation,
+  successfulAlbumFetch,
+  successfulAlbumUpdate,
+  successfulAlbumDeletion,
+  invalidTrackDeletionFromAlbum,
+  successfulTrackDeletionFromAlbum,
+  successfulTrackAdditionToAlbum,
   successfulTracksFetch,
   successfulTrackCreation,
   successfulTrackFetch,
