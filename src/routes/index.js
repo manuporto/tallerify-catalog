@@ -25,6 +25,10 @@ router.put('/api/users/me', user.meUpdateUser);
 
 router.get('/api/users/me/contacts', user.meGetContacts);
 
+router.post('/api/users/me/contacts/:id', user.meAddContact);
+
+router.delete('/api/users/me/contacts/:id', user.meDeleteContact);
+
 router.get('/api/users', user.getUsers);
 
 router.get('/api/users/:id', user.getUser);

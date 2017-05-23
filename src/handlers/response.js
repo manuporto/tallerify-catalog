@@ -52,6 +52,10 @@ const entryExists = (id, entry, response) => {
 
 /* Users */
 
+const formatUserContacts = (contacts) => {
+  return (contacts[0] === null) ? [] : contacts.map(formatUserShortJson);
+};
+
 const formatUserJson = (user) => {
   return {
     userName: user.userName,
@@ -66,6 +70,8 @@ const formatUserJson = (user) => {
     email: user.email,
     birthdate: user.birthdate,
     images: user.images,
+    href: user.href,
+    contacts: formatUserContacts(user.contacts)
   };
 };
 
@@ -73,8 +79,8 @@ const formatUserShortJson = (user) => {
   return {
     id: user.id,
     userName: user.userName,
-    images: user.images,
     href: user.href,
+    images: user.images,
   };
 };
 
@@ -94,7 +100,7 @@ const formatGetUserJson = (user) => {
     birthdate: user.birthdate,
     images: user.images,
     href: user.href,
-    contacts: user.contacts, // user.contacts.map(formatUserShortJson),
+    contacts: formatUserContacts(user.contacts),
   };
 };
 
@@ -122,12 +128,12 @@ const successfulUserFetch = (user, response) => {
 
 const successfulUserCreation = (user, response) => {
   logger.info('Successful user creation');
-  response.status(201).json(formatUserJson(user[0]));
+  response.status(201).json(formatUserJson(user));
 };
 
 const successfulUserUpdate = (user, response) => {
   logger.info('Successful user update');
-  response.status(200).json(formatUserJson(user[0]));
+  response.status(200).json(formatUserJson(user));
 };
 
 const successfulUserDeletion = (response) => {
@@ -142,8 +148,18 @@ const successfulUserContactsFetch = (contacts, response) => {
       count: contacts.length,
       version: constants.API_VERSION,
     },
-    contacts,
+    contacts: formatUserContacts(contacts),
   });
+};
+
+const successfulContactAddition = (response) => {
+  logger.info('Successful contact addition');
+  response.sendStatus(201);
+};
+
+const successfulContactDeletion = (response) => {
+  logger.info('Successful contact deletion');
+  response.sendStatus(204);
 };
 
 /* Admins */
@@ -419,6 +435,8 @@ module.exports = {
   successfulUserUpdate,
   successfulUserDeletion,
   successfulUserContactsFetch,
+  successfulContactAddition,
+  successfulContactDeletion,
   successfulAdminsFetch,
   successfulAdminCreation,
   successfulAdminDeletion,

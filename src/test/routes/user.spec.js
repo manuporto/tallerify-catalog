@@ -16,6 +16,8 @@ const config = require('./../../config');
 const constants = require('./user.constants.json');
 
 const testToken = jwt.sign({ admin: true }, config.secret);
+const initialUser = Object.assign({}, constants.initialUser, {id: 1});
+const initialUserToken = jwt.sign(initialUser, config.secret);
 
 describe('User', () => {
   beforeEach((done) => {
@@ -23,7 +25,7 @@ describe('User', () => {
       .then(() => {
         db.migrate.latest()
           .then(() => {
-            dbHandler.createNewEntry(tables.users, constants.initialUser)
+            dbHandler.createNewEntry(tables.users, [constants.initialUser, constants.initialContact])
               .then(() => done())
               .catch(error => done(error));
           })
@@ -156,8 +158,38 @@ describe('User', () => {
           res.body.user.should.have.property('birthdate').eql(constants.initialUser.birthdate);
           res.body.user.should.have.property('images').eql(constants.initialUser.images);
           res.body.user.should.have.property('href');
-          // res.body.should.have.property('contacts'); FIXME add contacts assoc
+          res.body.user.should.have.property('contacts').eql([]);
           done();
+        });
+    });
+
+    it('should return user data with existing contact', (done) => {
+      request(app)
+        .post(`/api/users/me/contacts/${constants.validContactId}`)
+        .set('Authorization', `Bearer ${initialUserToken}`)
+        .then(() => {
+          request(app)
+            .get(`/api/users/${constants.validUserId}`)
+            .set('Authorization', `Bearer ${testToken}`)
+            .end((err, res) => {
+              res.body.user.should.have.property('contacts').eql([constants.initialContactShort]);
+              done();
+            })
+        });
+    });
+
+    it('should return empty contacts array of user befriended', (done) => {
+      request(app)
+        .post(`/api/users/me/contacts/${constants.validContactId}`)
+        .set('Authorization', `Bearer ${initialUserToken}`)
+        .then(() => {
+          request(app)
+            .get(`/api/users/${constants.validContactId}`)
+            .set('Authorization', `Bearer ${testToken}`)
+            .end((err, res) => {
+              res.body.user.should.have.property('contacts').eql([]);
+              done();
+            })
         });
     });
 
@@ -207,7 +239,10 @@ describe('User', () => {
           res.body.should.have.property('country').eql(constants.updatedUser.country);
           res.body.should.have.property('email').eql(constants.updatedUser.email);
           res.body.should.have.property('birthdate').eql(constants.updatedUser.birthdate);
-          res.body.images.should.have.lengthOf(2);//res.body.should.have.property('images').eql(constants.updatedUser.images);
+          res.body.should.have.property('contacts');
+          res.body.contacts.should.be.a('array');
+          res.body.should.have.property('images');
+          res.body.images.should.have.lengthOf(2);
           done();
         });
     });
