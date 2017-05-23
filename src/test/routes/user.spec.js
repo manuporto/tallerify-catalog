@@ -207,7 +207,10 @@ describe('User', () => {
           res.body.should.have.property('country').eql(constants.updatedUser.country);
           res.body.should.have.property('email').eql(constants.updatedUser.email);
           res.body.should.have.property('birthdate').eql(constants.updatedUser.birthdate);
-          res.body.images.should.have.lengthOf(2);//res.body.should.have.property('images').eql(constants.updatedUser.images);
+          // res.body.should.have.property('contacts');
+          // res.body.contacts.should.be.a('array');
+          res.body.should.have.property('images');
+          res.body.images.should.have.lengthOf(2);
           done();
         });
     });
