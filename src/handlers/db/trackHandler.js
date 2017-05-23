@@ -12,7 +12,7 @@ const createNewTrackEntry = (body) => {
   logger.info(`Creating track with info: ${JSON.stringify(body, null, 4)}`);
   const track = {
     name: body.name,
-    albumId: body.albumId,
+    album_id: body.albumId,
   };
 
   const findArtists = () => {
@@ -43,7 +43,7 @@ const updateTrackEntry = (body, id) => {
   logger.info(`Updating track ${id}`);
   let track = {
     name: body.name,
-    albumId: body.albumId,
+    album_id: body.albumId,
   };
   return generalHandler.updateEntryWithId(tables.tracks, id, track)
     .then((updatedTrack) => {
@@ -54,23 +54,25 @@ const updateTrackEntry = (body, id) => {
 };
 
 const getArtistsInfo = (track) => {
-    return artistTrackHandler.findArtistsIdsFromTrack(track.id)
-        .then((artistsIds) => {
-            const ids = artistsIds.map((artistId) => artistId.artist_id);
-            return generalHandler.findEntriesWithIds(tables.artists, ids)
-                .then((artists) => {
-                    logger.info(`Returning artists: ${JSON.stringify(artists, null, 4)}`);
-                    return artists;
-                });
-        });
+  return artistTrackHandler.findArtistsIdsFromTrack(track.id)
+    .then((artistsIds) => {
+      const ids = artistsIds.map((artistId) => artistId.artist_id);
+      return generalHandler.findEntriesWithIds(tables.artists, ids)
+       .then((artists) => {
+         logger.info(`Returning artists: ${JSON.stringify(artists, null, 4)}`);
+         return artists;
+       });
+    });
 };
 
 const getAlbumInfo = (track) => {
-    return generalHandler.findEntryWithId(tables.artists, track.albumId)
-        .then((album) => {
-            logger.info(`Returning album: ${JSON.stringify(album, null, 4)}`);
-            return album;
-        });
+  if (track.album_id !== -1) {
+    return generalHandler.findEntryWithId(tables.albums, track.album_id)
+      .then((album) => {
+        logger.info(`Returning album: ${JSON.stringify(album, null, 4)}`);
+        return album;
+      });
+  }
 };
 
 const like = (userId, trackId) => {
@@ -137,14 +139,32 @@ const rate = (trackId, userId, rating) => {
     }));
 };
 
-module.exports = { 
-  createNewTrackEntry, 
+const updateAlbumId = (trackId, albumId) => {
+  logger.info(`Updating track ${trackId} albumId to ${albumId}`);
+  return db(tables.tracks).where('id', trackId).update({ album_id: albumId });
+};
+
+const removeTracksFromAlbum = (albumId) => {
+  logger.info(`Removing tracks in album ${albumId}`);
+  return db(tables.tracks).where('album_id', albumId).update({ album_id: -1 });
+};
+
+const deleteAlbumId = (trackId) => {
+  logger.info(`Leaving track ${trackId} orphan`);
+  return updateAlbumId(trackId, -1);
+};
+
+module.exports = {
+  createNewTrackEntry,
   updateTrackEntry,
   getArtistsInfo,
   getAlbumInfo,
-  like, 
-  dislike, 
-  findUserFavorites, 
-  calculateRate, 
-  rate
+  like,
+  dislike,
+  findUserFavorites,
+  calculateRate,
+  rate,
+  removeTracksFromAlbum,
+  updateAlbumId,
+  deleteAlbumId,
 };
