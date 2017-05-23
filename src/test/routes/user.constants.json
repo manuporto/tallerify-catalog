@@ -78,6 +78,10 @@
   "initialContactShort": {
     "id": 2,
     "href": null,
-    "userName": "mporto"
+    "userName": "mporto",
+    "images": [
+      "lele",
+      "lulu"
+    ]
   }
 }

@@ -80,6 +80,7 @@ const formatUserShortJson = (user) => {
     id: user.id,
     userName: user.userName,
     href: user.href,
+    images: user.images,
   };
 };
 
@@ -127,7 +128,6 @@ const successfulUserFetch = (user, response) => {
 
 const successfulUserCreation = (user, response) => {
   logger.info('Successful user creation');
-  logger.info(`user: ${JSON.stringify(user, null, 4)}`);
   response.status(201).json(formatUserJson(user));
 };
 
