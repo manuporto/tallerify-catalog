@@ -13,6 +13,7 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const ejs = require('ejs');
 const expressJwt = require('express-jwt');
+const pathToRegexp = require('path-to-regexp');
 const config = require('./config');
 
 // *** routes *** //
@@ -27,7 +28,7 @@ app.set('view engine', 'html');
 app.set('views', path.join(__dirname, '../public'));
 
 // *** static directory *** //
-app.use(express.static(path.join(__dirname, '../dist')));
+app.use(express.static('public'));
 
 // *** config middleware *** //
 app.use(morgan('combined', { stream: logger.stream }));
@@ -37,7 +38,27 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 // *** jwt secret *** //
-app.use(expressJwt({ secret: config.secret }).unless({ path: ['/api/tokens', '/api/admins/tokens', '/'] }));
+const unprotectedRoutes = (req) => {
+  let baseRE = pathToRegexp('/');
+  let tokensRE = pathToRegexp('/api/tokens');
+  let adminTokensRE = pathToRegexp('/api/admins/tokens');
+  let usersRE = pathToRegexp('/api/users');
+  let userRE = pathToRegexp('/api/users/:id');
+  let usersMeRE = pathToRegexp('/api/users/me');
+  let usersMediaRE = pathToRegexp('/media/*');
+
+  if (usersMeRE.exec(req.path)) {
+    return false;
+  }
+  if (baseRE.exec(req.path) || usersMediaRE.exec(req.path) || tokensRE.exec(req.path) || adminTokensRE.exec(req.path)) {
+    return true;
+  }
+  if ((usersRE.exec(req.path) && req.method === 'POST') || (userRE.exec(req.path) && req.method === 'PUT')) {
+    return true;
+  }
+  return false;
+};
+app.use(expressJwt({ secret: config.secret }).unless(unprotectedRoutes));
 app.set('secret', config.secret);
 
 // *** main routes *** //

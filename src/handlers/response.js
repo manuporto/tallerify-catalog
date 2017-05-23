@@ -189,16 +189,7 @@ const successfulTokenGeneration = (result, response) => {
 };
 
 const successfulUserTokenGeneration = (user, token, response) => {
-  const result = Object.assign(
-    {},
-    {
-      token: token,
-      user: {
-        id: user.id,
-        href: user.href,
-        userName: user.userName,
-      },
-    });
+  const result = { token: token };
   successfulTokenGeneration(result, response);
 };
 
