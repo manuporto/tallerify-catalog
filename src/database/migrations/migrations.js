@@ -25,7 +25,10 @@ exports.up = (knex, Promise) => {
 			logger.debug('Creating artists table.');
 			table.increments('id').primary();
 			table.string('name');
+      table.string('description');
 			table.integer('popularity');
+      table.specificType('images', 'text ARRAY');
+      table.specificType('genres', 'text ARRAY');
 		}),
 
     knex.schema.createTableIfNotExists(tables.albums, (table) => {

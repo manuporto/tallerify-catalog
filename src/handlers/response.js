@@ -217,6 +217,18 @@ const formatArtistShortJson = (artist) => {
   };
 };
 
+const formatArtistJson = (artist) => {
+  return {
+    id: artist.id,
+    name: artist.name,
+    href: artist.href,
+    images: artist.images,
+    genres: artist.genres,
+    albums: artist.albums.map(formatAlbumShortJson),
+    popularity: artist.popularity,
+  };
+};
+
 const successfulArtistsFetch = (artists, res) => {
   logger.info('Successful artists fetch');
   return res.status(200).json({
@@ -224,7 +236,7 @@ const successfulArtistsFetch = (artists, res) => {
       count: artists.length,
       version: constants.API_VERSION,
     },
-    artists,
+    artists: artists.map(formatArtistJson),
   });
 };
 
@@ -262,7 +274,7 @@ const formatAlbumJson = (album) => {
 };
 
 const successfulAlbumsFetch = (albums, response) => {
-  logger.info(`Successful albums fetch ${JSON.stringify(albums, null, 4)}`);
+  logger.info('Successful albums fetch');
   return response.status(200).json({
     metadata: {
       count: albums.length,
