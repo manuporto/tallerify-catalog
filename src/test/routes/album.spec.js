@@ -159,7 +159,7 @@ describe('Album', () => {
           // TODO res.body.should.have.property('artists').eql(constants.testAlbum.artists);
           res.body.should.have.property('genres').eql(constants.testAlbum.genres);
           // TODO res.body.should.have.property('tracks');
-          res.body.should.have.property('popularity');
+          res.body.should.have.property('popularity').eql(0);
           res.body.should.have.property('release_date').eql(constants.testAlbum.release_date);
           res.body.should.have.property('images').eql(constants.testAlbum.images);
           done();
@@ -353,7 +353,6 @@ describe('Album', () => {
             .set('Authorization', `Bearer ${testToken}`)
             .end((err, res) => {
               res.should.have.status(200);
-              logger.warn(`${JSON.stringify(res.body)}`);
               res.body.track.should.not.have.property('album');
               done();
             });
