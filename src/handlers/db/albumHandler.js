@@ -56,8 +56,7 @@ const updateAlbumEntry = (body, id) => {
     images: body.images,
   };
 
-  const checkers = [checkArtistsExistence(body)];
-  return Promise.all(checkers)
+  return checkArtistsExistence(body)
     .then((results) => {
       return generalHandler.updateEntryWithId(tables.albums, id, album)
         .then((updatedAlbum) => {

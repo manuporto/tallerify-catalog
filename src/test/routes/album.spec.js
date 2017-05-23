@@ -288,6 +288,17 @@ describe('Album', () => {
         });
     });
 
+    it('should return status code 400 with non existent artist id', (done) => {
+      request(app)
+        .put(`/api/albums/${constants.validAlbumId}`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .send(constants.updatedAlbumWithNonExistentArtist)
+        .end((err, res) => {
+          res.should.have.status(400);
+          done();
+        });
+    });
+
     it('should return status code 404 if id does not match an album', (done) => {
       request(app)
         .put(`/api/albums/${constants.invalidAlbumId}`)
