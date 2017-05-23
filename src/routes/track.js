@@ -51,7 +51,7 @@ const newTrack = (req, res) => {
       .then(track => respond.successfulTrackCreation(track, res))
       .catch((error) => {
         if (error.name === 'NonExistentIdError') {
-          respond.nonExistentId(error.message, res);
+          return respond.nonExistentId(error.message, res);
         }
         respond.internalServerError(error, res);
       });

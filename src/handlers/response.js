@@ -344,8 +344,7 @@ const successfulTrackDeletionFromAlbum = (trackId, albumId, response) => {
 };
 
 const successfulTrackAdditionToAlbum = (trackId, album, response) =>  {
-  const message = `Track (id: ${trackId}) now belongs to album (id: ${album.id})`;
-  logger.info(message);
+  logger.info(`Track (id: ${trackId}) now belongs to album (id: ${album.id})`);
   response.status(200).json(formatAlbumJson(album));
 };
 

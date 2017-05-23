@@ -61,7 +61,7 @@ const newAlbum = (req, res) => {
         .then(album => respond.successfulAlbumCreation(album, res))
         .catch((error) => {
           if (error.name === 'NonExistentIdError') {
-            respond.nonExistentId(error.message, res);
+            return respond.nonExistentId(error.message, res);
           }
           respond.internalServerError(error, res);
         });
@@ -77,7 +77,12 @@ const updateAlbum = (req, res) => {
           if (!respond.entryExists(req.params.id, album, res)) return;
           db.album.updateAlbumEntry(req.body, req.params.id)
             .then(updatedAlbum => respond.successfulAlbumUpdate(updatedAlbum, res))
-            .catch(error => respond.internalServerError(error, res));
+            .catch((error) => {
+              if (error.name === 'NonExistentIdError') {
+                return respond.nonExistentId(error.message, res);
+              }
+              respond.internalServerError(error, res);
+            });
         })
         .catch(error => respond.internalServerError(error, res));
     })

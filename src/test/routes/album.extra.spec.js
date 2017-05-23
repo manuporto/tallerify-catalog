@@ -35,21 +35,17 @@ describe('Album', () => {
                 dbHandler.album.createNewAlbumEntry(constants.initialAlbum)
                   .then((album) => {
                     logger.debug(`Tests album created: ${JSON.stringify(album, null, 4)}`);
-                    dbHandler.track.createNewTrackEntry(constants.initialTrackInAlbum)
-                      .then((track) => {
-                        logger.debug(`Tests track in album created: ${JSON.stringify(track, null, 4)}`);
-                        dbHandler.track.createNewTrackEntry(constants.initialTrack)
-                          .then((track) => {
-                            logger.debug(`Tests track created: ${JSON.stringify(track, null, 4)}`);
-                            done();
-                          })
-                          .catch((error) => {
-                            logger.debug(`Test track creation error: ${error}`);
-                            done(error);
-                          });
+                    Promise.all([
+                      dbHandler.track.createNewTrackEntry(constants.initialTrackInAlbum),
+                      dbHandler.track.createNewTrackEntry(constants.initialTrack),
+                    ])
+                      .then((result) => {
+                        logger.debug(`Tests track in album created: ${JSON.stringify(result[0], null, 4)}`);
+                        logger.debug(`Tests track created: ${JSON.stringify(result[1], null, 4)}`);
+                        done();
                       })
                       .catch((error) => {
-                        logger.debug(`Test track in album creation error: ${error}`);
+                        logger.debug(`Test tracks creation error: ${error}`);
                         done(error);
                       });
                   })
