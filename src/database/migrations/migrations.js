@@ -26,6 +26,7 @@ exports.up = (knex, Promise) => {
 			table.increments('id').primary();
 			table.string('name');
       table.string('description');
+      table.string('href');
 			table.integer('popularity');
       table.specificType('images', 'text ARRAY');
       table.specificType('genres', 'text ARRAY');

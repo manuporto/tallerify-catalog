@@ -2,22 +2,25 @@
 	"initialArtist": {
 		"id": 1,
 		"name": "Papa Baute",
-		"popularity": 2
+		"description": "Tiene un implante coclear?",
+		"genres": ["Bachata"],
+		"images": ["una con guido", "otra con sergio"]
 	},
 	"testArtist": {
 		"id": 2,
 		"name": "Luis Fonsi",
-		"popularity": 1
-	},
-	"trackTestArtist": {
-		"name": "Cage The Elephant",
-		"popularity": 3
+		"description": "El que canta despacito",
+		"genres": ["pero que no es justin"],
+		"images": ["ni daddy yankee"]
 	},
 	"newArtistWithMissingAttributes": {
 		"name": "Christian de Lugano"
 	},
 	"invalidArtist": {
 		"name": "Alexander Cannigia",
+		"description": 4,
+		"genres": 3,
+		"images": "muchas",
 		"popularity": "#SiempreAlTop"
 	}
 }

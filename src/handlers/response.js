@@ -221,10 +221,11 @@ const formatArtistJson = (artist) => {
   return {
     id: artist.id,
     name: artist.name,
+    description: artist.description,
     href: artist.href,
     images: artist.images,
     genres: artist.genres,
-    albums: artist.albums.map(formatAlbumShortJson),
+    albums: artist.hasOwnProperty('albums') ? artist.albums.map(formatAlbumShortJson) : null,
     popularity: artist.popularity,
   };
 };
@@ -242,7 +243,7 @@ const successfulArtistsFetch = (artists, res) => {
 
 const successfulArtistCreation = (artist, res) => {
   logger.info('Successful artist creation');
-  res.status(201).json(artist[0]);
+  res.status(201).json(formatArtistJson(artist[0]));
 };
 
 /* Albums */
