@@ -177,6 +177,22 @@ describe('User', () => {
             })
         });
     });
+
+    it('should return empty contacts array of user befriended', (done) => {
+      request(app)
+        .post(`/api/users/me/contacts/${constants.validContactId}`)
+        .set('Authorization', `Bearer ${initialUserToken}`)
+        .then(() => {
+          request(app)
+            .get(`/api/users/${constants.validContactId}`)
+            .set('Authorization', `Bearer ${testToken}`)
+            .end((err, res) => {
+              res.body.user.should.have.property('contacts').eql([]);
+              done();
+            })
+        });
+    });
+
     it('should return status code 404 if id does not match a user', (done) => {
       request(app)
         .get(`/api/users/${constants.invalidUserId}`)
