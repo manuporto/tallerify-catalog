@@ -140,6 +140,7 @@ const rate = (trackId, userId, rating) => {
 };
 
 const updateAlbumId = (trackId, albumId) => {
+  logger.info(`Updating track ${trackId} albumId to ${albumId}`);
   return db(tables.tracks).where('id', trackId).update({ album_id: albumId });
 };
 
@@ -149,7 +150,7 @@ const removeTracksFromAlbum = (albumId) => {
 };
 
 const deleteAlbumId = (trackId) => {
-  // Leave track orphan
+  logger.info(`Leaving track ${trackId} orphan`);
   return updateAlbumId(trackId, -1);
 };
 
@@ -159,7 +160,7 @@ module.exports = {
   getArtistsInfo,
   getAlbumInfo,
   like,
-  dislike, 
+  dislike,
   findUserFavorites,
   calculateRate,
   rate,

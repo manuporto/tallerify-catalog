@@ -31,35 +31,35 @@ describe('Album', () => {
                 constants.initialArtist3,
               ])
               .then((artists) => {
-                logger.info(`Tests artists created: ${JSON.stringify(artists, null, 4)}`);
+                logger.debug(`Tests artists created: ${JSON.stringify(artists, null, 4)}`);
                 dbHandler.album.createNewAlbumEntry(constants.initialAlbum)
                   .then((album) => {
-                    logger.info(`Tests album created: ${JSON.stringify(album, null, 4)}`);
+                    logger.debug(`Tests album created: ${JSON.stringify(album, null, 4)}`);
                     dbHandler.track.createNewTrackEntry(constants.initialTrackInAlbum)
                       .then((track) => {
-                        logger.info(`Tests track in album created: ${JSON.stringify(track, null, 4)}`);
+                        logger.debug(`Tests track in album created: ${JSON.stringify(track, null, 4)}`);
                         dbHandler.track.createNewTrackEntry(constants.initialTrack)
                           .then((track) => {
-                            logger.info(`Tests track created: ${JSON.stringify(track, null, 4)}`);
+                            logger.debug(`Tests track created: ${JSON.stringify(track, null, 4)}`);
                             done();
                           })
                           .catch((error) => {
-                            logger.warn(`Test track creation error: ${error}`);
+                            logger.debug(`Test track creation error: ${error}`);
                             done(error);
                           });
                       })
                       .catch((error) => {
-                        logger.warn(`Test track in album creation error: ${error}`);
+                        logger.debug(`Test track in album creation error: ${error}`);
                         done(error);
                       });
                   })
                   .catch((error) => {
-                    logger.warn(`Test album creation error: ${error}`);
+                    logger.debug(`Test album creation error: ${error}`);
                     done(error);
                   });
               })
               .catch((error) => {
-                logger.warn(`Test artists creation error: ${error}`);
+                logger.debug(`Test artists creation error: ${error}`);
                 done(error);
               });
           })
@@ -78,7 +78,6 @@ describe('Album', () => {
         .put(`/api/albums/${constants.validAlbumId}/track/${constants.validTrackId}`)
         .set('Authorization', `Bearer ${testToken}`)
         .end((err, res) => {
-          logger.warn(res.body.message);
           res.should.have.status(200);
           done();
         });
@@ -95,7 +94,9 @@ describe('Album', () => {
             .set('Authorization', `Bearer ${testToken}`)
             .end((err, res) => {
               res.should.have.status(200);
-              res.body.track.should.have.property('album').eql();
+              res.body.track.should.have.property('album');
+              res.body.track.album.should.have.property('id').eql(constants.initialAlbum.id);
+              res.body.track.album.should.have.property('name').eql(constants.initialAlbum.name);
               done();
             });
         });
@@ -112,7 +113,6 @@ describe('Album', () => {
             .set('Authorization', `Bearer ${testToken}`)
             .end((err, res) => {
               res.should.have.status(200);
-              res.body.track.should.have.property('album').eql();
               done();
             });
         });
@@ -169,6 +169,7 @@ describe('Album', () => {
         .delete(`api/albums/${constants.validAlbumId}/track/${constants.initialTrackInAlbum.id}`)
         .set('Authorization', `Bearer ${testToken}`)
         .end((err, res) => {
+          logger.warn(JSON.stringify(res.body));
           res.should.have.status(204);
           done();
         });
@@ -184,6 +185,7 @@ describe('Album', () => {
             .get(`/api/tracks/${constants.initialTrackInAlbum.id}`)
             .set('Authorization', `Bearer ${testToken}`)
             .end((err, res) => {
+              logger.warn(JSON.stringify(res.body));
               res.should.have.status(200);
               res.body.track.should.not.have.property('album');
               done();
@@ -196,6 +198,7 @@ describe('Album', () => {
         .delete(`api/albums/${constants.invalidAlbumId}/track/${constants.validTrackId}`)
         .set('Authorization', `Bearer ${testToken}`)
         .end((err, res) => {
+          logger.warn(JSON.stringify(res.body));
           res.should.have.status(400);
           done();
         });
@@ -206,6 +209,7 @@ describe('Album', () => {
         .delete(`api/albums/${constants.invalidAlbumId}/track/${constants.initialTrackInAlbum.id}`)
         .set('Authorization', `Bearer ${testToken}`)
         .end((err, res) => {
+          logger.warn(JSON.stringify(res.body));
           res.should.have.status(404);
           done();
         });
@@ -216,6 +220,7 @@ describe('Album', () => {
         .delete(`api/albums/${constants.validAlbumId}/track/${constants.invalidTrackId}`)
         .set('Authorization', `Bearer ${testToken}`)
         .end((err, res) => {
+          logger.warn(JSON.stringify(res.body));
           res.should.have.status(404);
           done();
         });
@@ -227,6 +232,7 @@ describe('Album', () => {
         .set('Authorization', `Bearer ${testToken}`)
         .send(constants.updatedAlbum)
         .end((err, res) => {
+          logger.warn(JSON.stringify(res.body));
           res.should.have.status(404);
           done();
         });

@@ -1,6 +1,7 @@
 const db = require('./../handlers/db/index');
 const tables = require('../database/tableNames');
 const respond = require('./../handlers/response');
+const logger = require('../utils/logger');
 
 const albumExpectedBodySchema = {
   type: 'object',
@@ -96,24 +97,26 @@ const deleteAlbum = (req, res) => {
 };
 
 const addTrackToAlbum = (req, res) => {
-  const finders = [ db.general.findEntryWithId(tables.tracks,
-    req.params.trackId), db.general.findEntryWithId(tables.tracks, req.params.trackId)
+  const finders = [
+    db.general.findEntryWithId(tables.tracks, req.params.trackId),
+    db.general.findEntryWithId(tables.albums, req.params.albumId),
   ];
   Promise.all(finders)
     .then((results) => {
       if (!respond.entryExists(req.params.trackId, results[0], res)) return;
-      db.tracks.updateAlbumId(req.params.trackId, req.params.albumId)
+      if (!respond.entryExists(req.params.trackId, results[1], res)) return;
+      db.track.updateAlbumId(req.params.trackId, req.params.albumId)
         .then(() => respond.successfulTrackAdditionToAlbum(req.params.trackId, results[1], res))
         .catch(error => respond.internalServerError(error, res));
       })
-  .catch(error => respond.internalServerError(error, res));
+    .catch(error => respond.internalServerError(error, res));
 };
 
 const deleteTrackFromAlbum = (req, res) => {
   db.general.findEntryWithId(tables.tracks, req.params.trackId)
     .then((track) => {
       if (!respond.entryExists(req.params.trackId, track, res)) return;
-      if (track.albumId != req.params.albumId)
+      if (track.albumId !== req.params.albumId)
         return respond.invalidTrackDeletionFromAlbum(req.params.trackId, req.params.albumId, res);
       db.tracks.deleteAlbumId(req.params.trackId)
         .then(() => respond.successfulTrackDeletionFromAlbum(req.params.trackId, req.params.albumId, res))

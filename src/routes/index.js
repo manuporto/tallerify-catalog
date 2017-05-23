@@ -87,8 +87,8 @@ router.put('/api/albums/:id', album.updateAlbum);
 
 router.delete('/api/albums/:id', album.deleteAlbum);
 
-router.put('api/albums/:albumId/track/:trackId', album.addTrackToAlbum);
+router.put('/api/albums/:albumId/track/:trackId', album.addTrackToAlbum);
 
-router.delete('api/albums/:albumId/track/:trackId', album.deleteTrackFromAlbum);
+router.delete('/api/albums/:albumId/track/:trackId', album.deleteTrackFromAlbum);
 
 module.exports = router;
