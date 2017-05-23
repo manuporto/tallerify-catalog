@@ -126,7 +126,14 @@ const _updateUser = (id, body, response) => {
         .then((user) => {
           if (!respond.entryExists(id, user, response)) return;
           updateUserInfo(id, body)
-            .then(updatedUser => respond.successfulUserUpdate(updatedUser, response))
+            .then(updatedUser => {
+              // Ugly hack to get user's contacts
+              // No need to recheck if user exists
+              db.user.findUser(id)
+                .then((user) => {
+                  respond.successfulUserUpdate(user, response)
+                }); 
+            })
             .catch(error => respond.internalServerError(error, response));
         })
         .catch(error => respond.internalServerError(error, response));

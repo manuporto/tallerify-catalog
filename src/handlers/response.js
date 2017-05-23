@@ -66,6 +66,8 @@ const formatUserJson = (user) => {
     email: user.email,
     birthdate: user.birthdate,
     images: user.images,
+    href: user.href,
+    contacts: user.contacts
   };
 };
 
@@ -127,7 +129,7 @@ const successfulUserCreation = (user, response) => {
 
 const successfulUserUpdate = (user, response) => {
   logger.info('Successful user update');
-  response.status(200).json(formatUserJson(user[0]));
+  response.status(200).json(formatUserJson(user));
 };
 
 const successfulUserDeletion = (response) => {
