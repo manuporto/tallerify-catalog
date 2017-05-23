@@ -25,7 +25,6 @@ describe('User me', () => {
       .then(() => {
         db.migrate.latest()
           .then(() => {
-
             dbHandler.createNewEntry(tables.users, [ constants.initialUser, constants.initialContact ])
               .then(() => done())
               .catch(error => done(error));
