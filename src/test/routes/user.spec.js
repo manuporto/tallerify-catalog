@@ -16,6 +16,8 @@ const config = require('./../../config');
 const constants = require('./user.constants.json');
 
 const testToken = jwt.sign({ admin: true }, config.secret);
+const initialUser = Object.assign({}, constants.initialUser, {id: 1});
+const initialUserToken = jwt.sign(initialUser, config.secret);
 
 describe('User', () => {
   beforeEach((done) => {
@@ -23,7 +25,7 @@ describe('User', () => {
       .then(() => {
         db.migrate.latest()
           .then(() => {
-            dbHandler.createNewEntry(tables.users, constants.initialUser)
+            dbHandler.createNewEntry(tables.users, [constants.initialUser, constants.initialContact])
               .then(() => done())
               .catch(error => done(error));
           })
@@ -161,6 +163,20 @@ describe('User', () => {
         });
     });
 
+    it('should return user data with existing contact', (done) => {
+      request(app)
+        .post(`/api/users/me/contacts/${constants.validContactId}`)
+        .set('Authorization', `Bearer ${initialUserToken}`)
+        .then(() => {
+          request(app)
+            .get(`/api/users/${constants.validUserId}`)
+            .set('Authorization', `Bearer ${testToken}`)
+            .end((err, res) => {
+              res.body.user.should.have.property('contacts').eql([constants.initialContactShort]);
+              done();
+            })
+        });
+    });
     it('should return status code 404 if id does not match a user', (done) => {
       request(app)
         .get(`/api/users/${constants.invalidUserId}`)
