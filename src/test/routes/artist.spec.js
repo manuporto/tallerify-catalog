@@ -57,6 +57,16 @@ describe('Artist', () => {
           done();
         });
     });
+
+    it('should return status code 401 if unauthorized', (done) => {
+      request(app)
+        .get('/api/artists')
+        .set('Authorization', 'Bearer UNAUTHORIZED')
+        .end((err, res) => {
+          res.should.have.status(401);
+          done();
+        });
+    });
   });
 
   describe('/POST artists', () => {
@@ -109,6 +119,17 @@ describe('Artist', () => {
           res.body.should.have.property('images').eql(constants.testArtist.images);
           res.body.should.have.property('popularity').eql(0);
           // res.body.should.have.property('albums'); TODO
+          done();
+        });
+    });
+
+    it('should return status code 401 if unauthorized', (done) => {
+      request(app)
+        .post('/api/artists')
+        .set('Authorization', 'Bearer UNAUTHORIZED')
+        .send(constants.testArtist)
+        .end((err, res) => {
+          res.should.have.status(401);
           done();
         });
     });

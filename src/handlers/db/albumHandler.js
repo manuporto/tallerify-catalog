@@ -64,7 +64,7 @@ const updateAlbumEntry = (body, id) => {
       return generalHandler.updateEntryWithId(tables.albums, id, album)
         .then((updatedAlbum) => {
           logger.info(`Updated album: ${JSON.stringify(updatedAlbum, null, 4)}`);
-          return albumArtistHandler.updateAssociations(updatedAlbum[0].id, body.artists)
+          return albumArtistHandler.updateAssociationsOfAlbum(updatedAlbum[0].id, body.artists)
             .then(() => updatedAlbum);
         });
     });
@@ -74,7 +74,7 @@ const deleteAlbumWithId = (id) => {
   logger.info(`Deleting album ${id}`);
   const deleters = [
     generalHandler.deleteEntryWithId(tables.albums, id),
-    albumArtistHandler.deleteAssociations(id),
+    albumArtistHandler.deleteAssociationsOfAlbum(id),
     trackHandler.removeTracksFromAlbum(id),
   ];
   return Promise.all(deleters);

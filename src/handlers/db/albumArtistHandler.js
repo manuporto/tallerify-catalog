@@ -16,18 +16,29 @@ const insertAssociations = (albumId, artistsIds) => {
   return generalHandler.createNewEntry(tables.albums_artists, rowValues);
 };
 
-const deleteAssociations = (albumId) => {
+const deleteAssociationsOfAlbum = (albumId) => {
   logger.info(`Deleting album ${albumId} associations`);
   return db(tables.albums_artists).where('album_id', albumId).del();
 };
 
-const updateAssociations = (albumId, artistsIds) => {
-  return deleteAssociations(albumId)
+const updateAssociationsOfAlbum = (albumId, artistsIds) => {
+  return deleteAssociationsOfAlbum(albumId)
     .then(() => insertAssociations(albumId, artistsIds));
+};
+
+const deleteAssociationsOfArtist = (artistId) => {
+  logger.info(`Deleting artist ${artistId} associations`);
+  return db(tables.albums_artists).where('artist_id', artistId).del();
 };
 
 const findArtistsIdsFromAlbum = (albumId) => {
   return db(tables.albums_artists).where('album_id', albumId).select('artist_id');
 };
 
-module.exports = { insertAssociations, updateAssociations, deleteAssociations, findArtistsIdsFromAlbum };
+module.exports = {
+  insertAssociations,
+  updateAssociationsOfAlbum,
+  deleteAssociationsOfAlbum,
+  findArtistsIdsFromAlbum,
+  deleteAssociationsOfArtist,
+};

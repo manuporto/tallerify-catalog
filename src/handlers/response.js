@@ -230,9 +230,9 @@ const formatArtistJson = (artist) => {
   };
 };
 
-const successfulArtistsFetch = (artists, res) => {
+const successfulArtistsFetch = (artists, response) => {
   logger.info('Successful artists fetch');
-  return res.status(200).json({
+  return response.status(200).json({
     metadata: {
       count: artists.length,
       version: constants.API_VERSION,
@@ -241,9 +241,30 @@ const successfulArtistsFetch = (artists, res) => {
   });
 };
 
-const successfulArtistCreation = (artist, res) => {
+const successfulArtistCreation = (artist, response) => {
   logger.info('Successful artist creation');
-  res.status(201).json(formatArtistJson(artist[0]));
+  response.status(201).json(formatArtistJson(artist[0]));
+};
+
+const successfulArtistFetch = (artist, response) => {
+  logger.info('Successful artist fetch');
+  return response.status(200).json({
+    metadata: {
+      count: 1,
+      version: constants.API_VERSION,
+    },
+    artist: (formatArtistJson(artist)),
+  });
+};
+
+const successfulArtistUpdate = (artist, response) => {
+  logger.info('Successful artist update');
+  response.status(200).json(formatArtistJson(artist[0]));
+};
+
+const successfulArtistDeletion = (response) => {
+  logger.info('Successful artist deletion');
+  response.sendStatus(204);
 };
 
 /* Albums */
@@ -444,6 +465,9 @@ module.exports = {
   successfulArtistCreation,
   successfulAlbumsFetch,
   successfulAlbumCreation,
+  successfulArtistFetch,
+  successfulArtistUpdate,
+  successfulArtistDeletion,
   successfulAlbumFetch,
   successfulAlbumUpdate,
   successfulAlbumDeletion,
