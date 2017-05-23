@@ -78,7 +78,6 @@ const formatUserShortJson = (user) => {
   return {
     id: user.id,
     userName: user.userName,
-    images: user.images,
     href: user.href,
   };
 };
