@@ -211,7 +211,9 @@ const successfulAdminTokenGeneration = (admin, token, response) => {
 const formatArtistShortJson = (artist) => {
   return {
     id: artist.id,
-    name: artist.name
+    name: artist.name,
+    href: artist.href,
+    images: artist.images,
   };
 };
 
@@ -240,6 +242,8 @@ const formatAlbumShortJson = (album) => {
   return {
     id: album.id,
     name: album.name,
+    href: album.href,
+    images: album.images,
   };
 };
 
@@ -318,6 +322,7 @@ const formatTrackShortJson = (track) => {
     id: track.id,
     name: track.name,
     href: track.href,
+    images: track.images,
   };
 };
 
