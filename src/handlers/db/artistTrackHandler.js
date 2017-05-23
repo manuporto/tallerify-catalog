@@ -6,12 +6,8 @@ const tables = require('../../database/tableNames');
 
 const insertAssociations = (trackId, artistsIds) => {
   logger.info(`Creating associations for track ${trackId} and artists ${artistsIds}`);
-  let rowValues = [];
-  artistsIds.forEach((id) => {
-    rowValues.push({
-      track_id: trackId,
-      artist_id: id,
-    });
+  const rowValues = artistsIds.map(id => {
+    return { track_id: trackId, artist_id: id }
   });
   return generalHandler.createNewEntry(tables.artists_tracks, rowValues);
 };

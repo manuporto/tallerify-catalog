@@ -34,11 +34,9 @@ const createNewAlbumEntry = (body) => {
     release_date: body.release_date,
     genres: body.genres,
     images: body.images,
-    popularity: 0
+    popularity: 0,
   };
-
-  const checkers = [checkArtistsExistence(body)];
-  return Promise.all(checkers)
+  return checkArtistsExistence(body)
     .then((results) => {
       return generalHandler.createNewEntry(tables.albums, album)
         .then((insertedAlbum) => {
