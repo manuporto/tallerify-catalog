@@ -166,10 +166,9 @@ describe('Album', () => {
   describe('/DELETE api/albums/{albumId}/track/{trackId}', () => {
     it('should return status code 204 when deletion is successful', (done) => {
       request(app)
-        .delete(`api/albums/${constants.validAlbumId}/track/${constants.initialTrackInAlbum.id}`)
+        .delete(`/api/albums/${constants.validAlbumId}/track/${constants.initialTrackInAlbum.id}`)
         .set('Authorization', `Bearer ${testToken}`)
         .end((err, res) => {
-          logger.warn(JSON.stringify(res.body));
           res.should.have.status(204);
           done();
         });
@@ -177,7 +176,7 @@ describe('Album', () => {
 
     it('should leave track as orphan', (done) => {
       request(app)
-        .delete(`api/albums/${constants.validAlbumId}/track/${constants.initialTrackInAlbum.id}`)
+        .delete(`/api/albums/${constants.validAlbumId}/track/${constants.initialTrackInAlbum.id}`)
         .set('Authorization', `Bearer ${testToken}`)
         .end((err, res) => {
           res.should.have.status(204);
@@ -185,7 +184,6 @@ describe('Album', () => {
             .get(`/api/tracks/${constants.initialTrackInAlbum.id}`)
             .set('Authorization', `Bearer ${testToken}`)
             .end((err, res) => {
-              logger.warn(JSON.stringify(res.body));
               res.should.have.status(200);
               res.body.track.should.not.have.property('album');
               done();
@@ -195,10 +193,9 @@ describe('Album', () => {
 
     it('should return status code 400 if trackId does not belong to album', (done) => {
       request(app)
-        .delete(`api/albums/${constants.invalidAlbumId}/track/${constants.validTrackId}`)
+        .delete(`/api/albums/${constants.validAlbumId}/track/${constants.validTrackId}`)
         .set('Authorization', `Bearer ${testToken}`)
         .end((err, res) => {
-          logger.warn(JSON.stringify(res.body));
           res.should.have.status(400);
           done();
         });
@@ -206,10 +203,9 @@ describe('Album', () => {
 
     it('should return status code 404 if albumId does not match an album', (done) => {
       request(app)
-        .delete(`api/albums/${constants.invalidAlbumId}/track/${constants.initialTrackInAlbum.id}`)
+        .delete(`/api/albums/${constants.invalidAlbumId}/track/${constants.initialTrackInAlbum.id}`)
         .set('Authorization', `Bearer ${testToken}`)
         .end((err, res) => {
-          logger.warn(JSON.stringify(res.body));
           res.should.have.status(404);
           done();
         });
@@ -217,10 +213,9 @@ describe('Album', () => {
 
     it('should return status code 404 if trackId does not match a track', (done) => {
       request(app)
-        .delete(`api/albums/${constants.validAlbumId}/track/${constants.invalidTrackId}`)
+        .delete(`/api/albums/${constants.validAlbumId}/track/${constants.invalidTrackId}`)
         .set('Authorization', `Bearer ${testToken}`)
         .end((err, res) => {
-          logger.warn(JSON.stringify(res.body));
           res.should.have.status(404);
           done();
         });
@@ -232,7 +227,6 @@ describe('Album', () => {
         .set('Authorization', `Bearer ${testToken}`)
         .send(constants.updatedAlbum)
         .end((err, res) => {
-          logger.warn(JSON.stringify(res.body));
           res.should.have.status(404);
           done();
         });

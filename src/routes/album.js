@@ -1,7 +1,6 @@
 const db = require('./../handlers/db/index');
 const tables = require('../database/tableNames');
 const respond = require('./../handlers/response');
-const logger = require('../utils/logger');
 
 const albumExpectedBodySchema = {
   type: 'object',
@@ -104,7 +103,7 @@ const addTrackToAlbum = (req, res) => {
   Promise.all(finders)
     .then((results) => {
       if (!respond.entryExists(req.params.trackId, results[0], res)) return;
-      if (!respond.entryExists(req.params.trackId, results[1], res)) return;
+      if (!respond.entryExists(req.params.albumId, results[1], res)) return;
       db.track.updateAlbumId(req.params.trackId, req.params.albumId)
         .then(() => respond.successfulTrackAdditionToAlbum(req.params.trackId, results[1], res))
         .catch(error => respond.internalServerError(error, res));
@@ -113,15 +112,21 @@ const addTrackToAlbum = (req, res) => {
 };
 
 const deleteTrackFromAlbum = (req, res) => {
-  db.general.findEntryWithId(tables.tracks, req.params.trackId)
-    .then((track) => {
-      if (!respond.entryExists(req.params.trackId, track, res)) return;
-      if (track.albumId !== req.params.albumId)
+  const finders = [
+    db.general.findEntryWithId(tables.tracks, req.params.trackId),
+    db.general.findEntryWithId(tables.albums, req.params.albumId),
+  ];
+  Promise.all(finders)
+    .then((results) => {
+      if (!respond.entryExists(req.params.trackId, results[0], res)) return;
+      if (!respond.entryExists(req.params.albumId, results[1], res)) return;
+      if (results[0].album_id != req.params.albumId) {
         return respond.invalidTrackDeletionFromAlbum(req.params.trackId, req.params.albumId, res);
-      db.tracks.deleteAlbumId(req.params.trackId)
+      }
+      db.track.deleteAlbumId(req.params.trackId)
         .then(() => respond.successfulTrackDeletionFromAlbum(req.params.trackId, req.params.albumId, res))
         .catch(error => respond.internalServerError(error, res));
-      })
+    })
     .catch(error => respond.internalServerError(error, res));
 };
 
