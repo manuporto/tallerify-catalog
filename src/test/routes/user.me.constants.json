@@ -77,5 +77,10 @@
       "lele",
       "lulu"
     ]
+  },
+  "initialContactShort": {
+    "id": 2,
+    "href": null,
+    "userName": "mporto"
   }
 }

@@ -186,17 +186,30 @@ describe('User me', () => {
         });
     });
 
-    it('should return the expected body response when correct parameters are sent', (done) => {
+    it('should return empty array when user has no contacts', (done) => {
       request(app)
         .get('/api/users/me/contacts')
         .set('Authorization', `Bearer ${initialUserToken}`)
         .end((err, res) => {
-          console.log(`Res: ${JSON.stringify(res.body, null, 4)}`);
           res.body.should.be.a('object');
           res.body.should.have.property('contacts').eql([]);
-          // res.body.contacts.should.have.lengthOf(1); TODO add contacts to test user
-          // res.body.contacts[0].should.be.a('object');
           done();
+        });
+    });
+
+    it('should return array with unique contact when user has one', (done) => {
+      request(app)
+        .post(`/api/users/me/contacts/${constants.validContactId}`)
+        .set('Authorization', `Bearer ${initialUserToken}`)
+        .then(() => {
+          request(app)
+            .get('/api/users/me/contacts')
+            .set('Authorization', `Bearer ${initialUserToken}`)
+            .end((err, res) => {
+              res.body.should.be.a('object');
+              res.body.should.have.property('contacts').eql([constants.initialContactShort]);
+              done();
+            });
         });
     })
     //TODO add tests
