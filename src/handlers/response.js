@@ -71,6 +71,7 @@ const formatUserJson = (user) => {
     birthdate: user.birthdate,
     images: user.images,
     href: user.href,
+    contacts: formatUserContacts(user.contacts)
   };
 };
 
@@ -126,12 +127,13 @@ const successfulUserFetch = (user, response) => {
 
 const successfulUserCreation = (user, response) => {
   logger.info('Successful user creation');
-  response.status(201).json(formatUserJson(user[0]));
+  logger.info(`user: ${JSON.stringify(user, null, 4)}`);
+  response.status(201).json(formatUserJson(user));
 };
 
 const successfulUserUpdate = (user, response) => {
   logger.info('Successful user update');
-  response.status(200).json(formatGetUserJson(user));
+  response.status(200).json(formatUserJson(user));
 };
 
 const successfulUserDeletion = (response) => {
