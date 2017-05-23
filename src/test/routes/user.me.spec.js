@@ -71,7 +71,7 @@ describe('User me', () => {
           res.body.user.should.have.property('birthdate').eql(constants.initialUser.birthdate);
           res.body.user.images.should.have.lengthOf(3);
           res.body.user.should.have.property('href');
-          res.body.user.should.have.property('contacts'); //FIXME add contacts assoc
+          res.body.user.should.have.property('contacts').eql([]);
           done();
         });
     });
@@ -126,8 +126,7 @@ describe('User me', () => {
           res.body.should.have.property('birthdate').eql(constants.updatedUser.birthdate);
           res.body.should.have.property('images');
           res.body.images.should.have.lengthOf(2);//.eql(constants.updatedUser.images);
-          res.body.should.have.property('contacts');
-          res.body.contacts.should.be.a('array');
+          res.body.should.have.property('contacts').eql([]);
           done();
         });
     });
@@ -194,8 +193,7 @@ describe('User me', () => {
         .end((err, res) => {
           console.log(`Res: ${JSON.stringify(res.body, null, 4)}`);
           res.body.should.be.a('object');
-          res.body.should.have.property('contacts');
-          res.body.contacts.should.be.a('array');
+          res.body.should.have.property('contacts').eql([]);
           // res.body.contacts.should.have.lengthOf(1); TODO add contacts to test user
           // res.body.contacts[0].should.be.a('object');
           done();

@@ -52,6 +52,10 @@ const entryExists = (id, entry, response) => {
 
 /* Users */
 
+const formatUserContacts = (contacts) => {
+  return (contacts[0] === null) ? [] : contacts.map(formatUserShortJson);
+};
+
 const formatUserJson = (user) => {
   return {
     userName: user.userName,
@@ -67,7 +71,6 @@ const formatUserJson = (user) => {
     birthdate: user.birthdate,
     images: user.images,
     href: user.href,
-    contacts: user.contacts
   };
 };
 
@@ -96,7 +99,7 @@ const formatGetUserJson = (user) => {
     birthdate: user.birthdate,
     images: user.images,
     href: user.href,
-    contacts: user.contacts, // user.contacts.map(formatUserShortJson),
+    contacts: formatUserContacts(user.contacts),
   };
 };
 
@@ -129,7 +132,7 @@ const successfulUserCreation = (user, response) => {
 
 const successfulUserUpdate = (user, response) => {
   logger.info('Successful user update');
-  response.status(200).json(formatUserJson(user));
+  response.status(200).json(formatGetUserJson(user));
 };
 
 const successfulUserDeletion = (response) => {
@@ -144,7 +147,7 @@ const successfulUserContactsFetch = (contacts, response) => {
       count: contacts.length,
       version: constants.API_VERSION,
     },
-    contacts,
+    contacts: formatUserContacts(contacts),
   });
 };
 

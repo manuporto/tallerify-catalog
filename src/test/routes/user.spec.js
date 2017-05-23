@@ -156,7 +156,7 @@ describe('User', () => {
           res.body.user.should.have.property('birthdate').eql(constants.initialUser.birthdate);
           res.body.user.should.have.property('images').eql(constants.initialUser.images);
           res.body.user.should.have.property('href');
-          res.body.user.should.have.property('contacts');
+          res.body.user.should.have.property('contacts').eql([]);
           done();
         });
     });
