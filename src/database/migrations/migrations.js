@@ -98,16 +98,14 @@ exports.up = (knex, Promise) => {
       table.integer('artist_id');
     }),
 
+    knex.schema.createTableIfNotExists(tables.users_users, table => {
+      logger.debug('Creating users_users table.');
+      table.increments('user_friend_id').primary();
+      table.integer('user_id');
+      table.integer('friend_id');
+    }),
   ]);
 };
-  knex.schema.createTableIfNotExists(tables.users_users, table => {
-    logger.debug('Creating users_users table.');
-    table.increments('user_friend_id').primary();
-    table.integer('user_id');
-    table.integer('friend_id');
-  }),
-
-]);
 
 exports.down = (knex, Promise) => {
 	return Promise.all([
