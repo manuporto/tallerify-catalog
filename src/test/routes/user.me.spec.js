@@ -19,13 +19,13 @@ const initialUserToken = jwt.sign(constants.initialUser, config.secret);
 const invalidUserToken = jwt.sign(constants.invalidUser, config.secret);
 
 describe('User me', () => {
-
-  beforeEach((done) => {
+  beforeEach(done => {
     db.migrate.rollback()
       .then(() => {
         db.migrate.latest()
           .then(() => {
-            dbHandler.createNewEntry(tables.users, [ constants.initialUser, constants.initialContact ])
+            dbHandler.createNewEntry(tables.users,
+              [constants.initialUser, constants.initialContact])
               .then(() => done())
               .catch(error => done(error));
           })
@@ -33,13 +33,13 @@ describe('User me', () => {
       });
   });
 
-  afterEach((done) => {
+  afterEach(done => {
     db.migrate.rollback()
       .then(() => done());
   });
 
   describe('/GET users/me', () => {
-    it('should return status code 200', (done) => {
+    it('should return status code 200', done => {
       request(app)
         .get('/api/users/me')
         .set('Authorization', `Bearer ${initialUserToken}`)
@@ -49,7 +49,7 @@ describe('User me', () => {
         });
     });
 
-    it('should return user data', (done) => {
+    it('should return user data', done => {
       request(app)
         .get('/api/users/me')
         .set('Authorization', `Bearer ${initialUserToken}`)
@@ -75,7 +75,7 @@ describe('User me', () => {
         });
     });
 
-    it('should return status code 404 if token does not match a user', (done) => {
+    it('should return status code 404 if token does not match a user', done => {
       request(app)
         .get('/api/users/me')
         .set('Authorization', `Bearer ${invalidUserToken}`)
@@ -85,7 +85,7 @@ describe('User me', () => {
         });
     });
 
-    it('should return status code 401 if unauthorized', (done) => {
+    it('should return status code 401 if unauthorized', done => {
       request(app)
         .get('/api/users/me')
         .set('Authorization', 'Bearer UNAUTHORIZED')
@@ -97,7 +97,7 @@ describe('User me', () => {
   });
 
   describe('/PUT users/me', () => {
-    it('should return status code 201 when correct parameters are sent', (done) => {
+    it('should return status code 201 when correct parameters are sent', done => {
       request(app)
         .put('/api/users/me')
         .set('Authorization', `Bearer ${initialUserToken}`)
@@ -108,7 +108,7 @@ describe('User me', () => {
         });
     });
 
-    it('should return the expected body response when correct parameters are sent', (done) => {
+    it('should return the expected body response when correct parameters are sent', done => {
       request(app)
         .put('/api/users/me')
         .set('Authorization', `Bearer ${initialUserToken}`)
@@ -124,13 +124,13 @@ describe('User me', () => {
           res.body.should.have.property('email').eql(constants.updatedUser.email);
           res.body.should.have.property('birthdate').eql(constants.updatedUser.birthdate);
           res.body.should.have.property('images');
-          res.body.images.should.have.lengthOf(2);//.eql(constants.updatedUser.images);
+          res.body.images.should.have.lengthOf(2); // .eql(constants.updatedUser.images);
           res.body.should.have.property('contacts').eql([]);
           done();
         });
     });
 
-    it('should return status code 400 when parameters are missing', (done) => {
+    it('should return status code 400 when parameters are missing', done => {
       request(app)
         .put('/api/users/me')
         .set('Authorization', `Bearer ${initialUserToken}`)
@@ -141,7 +141,7 @@ describe('User me', () => {
         });
     });
 
-    it('should return status code 400 when parameters are invalid', (done) => {
+    it('should return status code 400 when parameters are invalid', done => {
       request(app)
         .put('/api/users/me')
         .set('Authorization', `Bearer ${initialUserToken}`)
@@ -152,7 +152,7 @@ describe('User me', () => {
         });
     });
 
-    it('should return status code 404 if id does not match a user', (done) => {
+    it('should return status code 404 if id does not match a user', done => {
       request(app)
         .put('/api/users/me')
         .set('Authorization', `Bearer ${invalidUserToken}`)
@@ -163,7 +163,7 @@ describe('User me', () => {
         });
     });
 
-    it('should return status code 401 if unauthorized', (done) => {
+    it('should return status code 401 if unauthorized', done => {
       request(app)
         .get('/api/users/me')
         .set('Authorization', 'Bearer UNAUTHORIZED')
@@ -175,7 +175,7 @@ describe('User me', () => {
   });
 
   describe('/GET users/me/contacts', () => {
-    it('should return status code 200', (done) => {
+    it('should return status code 200', done => {
       request(app)
         .get('/api/users/me/contacts')
         .set('Authorization', `Bearer ${initialUserToken}`)
@@ -185,7 +185,7 @@ describe('User me', () => {
         });
     });
 
-    it('should return empty array when user has no contacts', (done) => {
+    it('should return empty array when user has no contacts', done => {
       request(app)
         .get('/api/users/me/contacts')
         .set('Authorization', `Bearer ${initialUserToken}`)
@@ -196,7 +196,7 @@ describe('User me', () => {
         });
     });
 
-    it('should return array with unique contact when user has one', (done) => {
+    it('should return array with unique contact when user has one', done => {
       request(app)
         .post(`/api/users/me/contacts/${constants.validContactId}`)
         .set('Authorization', `Bearer ${initialUserToken}`)
@@ -210,10 +210,10 @@ describe('User me', () => {
               done();
             });
         });
-    })
-    //TODO add tests
+    });
+    // TODO add tests
 
-    it('should return status code 401 if unauthorized', (done) => {
+    it('should return status code 401 if unauthorized', done => {
       request(app)
         .get('/api/users/me/contacts')
         .set('Authorization', 'Bearer UNAUTHORIZED')
@@ -225,7 +225,7 @@ describe('User me', () => {
   });
 
   describe('/POST users/me/contacts/{id}', () => {
-    it('should return status code 201 when contact addition is successful', (done) => {
+    it('should return status code 201 when contact addition is successful', done => {
       request(app)
         .post(`/api/users/me/contacts/${constants.validContactId}`)
         .set('Authorization', `Bearer ${initialUserToken}`)
@@ -235,7 +235,7 @@ describe('User me', () => {
         });
     });
 
-    it('should return status code 201 when contact addition is duplicated', (done) => {
+    it('should return status code 201 when contact addition is duplicated', done => {
       request(app)
         .post(`/api/users/me/contacts/${constants.validContactId}`)
         .set('Authorization', `Bearer ${initialUserToken}`)
@@ -251,7 +251,7 @@ describe('User me', () => {
         });
     });
 
-    it('should return status code 404 if id does not match a user', (done) => {
+    it('should return status code 404 if id does not match a user', done => {
       request(app)
         .post(`/api/users/me/contacts/${constants.invalidContactId}`)
         .set('Authorization', `Bearer ${initialUserToken}`)
@@ -261,7 +261,7 @@ describe('User me', () => {
         });
     });
 
-    it('should return status code 401 if unauthorized', (done) => {
+    it('should return status code 401 if unauthorized', done => {
       request(app)
         .post(`/api/users/me/contacts/${constants.validContactId}`)
         .set('Authorization', 'Bearer UNAUTHORIZED')
@@ -273,7 +273,7 @@ describe('User me', () => {
   });
 
   describe('/DELETE users/me/contacts/{id}', () => {
-    it('should return status code 204 when contact deletion is successful', (done) => {
+    it('should return status code 204 when contact deletion is successful', done => {
       request(app)
         .post(`/api/users/me/contacts/${constants.validContactId}`)
         .set('Authorization', `Bearer ${initialUserToken}`)
@@ -289,7 +289,7 @@ describe('User me', () => {
         });
     });
 
-    it('should return status code 204 if deleted contact was never added', (done) => {
+    it('should return status code 204 if deleted contact was never added', done => {
       request(app)
         .delete(`/api/users/me/contacts/${constants.validContactId}`)
         .set('Authorization', `Bearer ${initialUserToken}`)
@@ -299,7 +299,7 @@ describe('User me', () => {
         });
     });
 
-    it('should return status code 404 if id does not match a contact', (done) => {
+    it('should return status code 404 if id does not match a contact', done => {
       request(app)
         .delete(`/api/users/me/contacts/${constants.invalidContactId}`)
         .set('Authorization', `Bearer ${initialUserToken}`)
@@ -309,7 +309,7 @@ describe('User me', () => {
         });
     });
 
-    it('should return status code 401 if unauthorized', (done) => {
+    it('should return status code 401 if unauthorized', done => {
       request(app)
         .delete(`/api/users/me/contacts/${constants.validContactId}`)
         .set('Authorization', 'Bearer UNAUTHORIZED')

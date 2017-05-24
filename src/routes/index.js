@@ -9,8 +9,8 @@ const track = require('./track');
 const admin = require('./admin');
 
 const loginRouter = require('../middlewares/login-router');
-const usersMediaLocation = multer({dest: 'public/media/users/'});
 
+const usersMediaLocation = multer({ dest: 'public/media/users/' });
 const router = express.Router();
 
 router.get('/', (req, res) => {

@@ -12,8 +12,8 @@ const artistExpectedBodySchema = { // FIXME incomplete schema
     popularity: {
       required: true,
       type: 'integer',
-    }
-  }
+    },
+  },
 };
 
 function getArtists(req, res) {
