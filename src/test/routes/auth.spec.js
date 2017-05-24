@@ -20,7 +20,7 @@ const expiredToken = constants.expiredToken;
 const malformedToken = constants.malformedToken;
 
 describe('Authentication', () => {
-  before((done) => {
+  before(done => {
     db.migrate.rollback()
       .then(() => {
         db.migrate.latest()
@@ -33,13 +33,13 @@ describe('Authentication', () => {
       });
   });
 
-  after((done) => {
+  after(done => {
     db.migrate.rollback()
       .then(() => done());
   });
 
   describe('/GET admins', () => {
-    it('should return status code 401 due to expired token', (done) => {
+    it('should return status code 401 due to expired token', done => {
       request(app)
         .get('/api/admins')
         .set('Authorization', `Bearer ${expiredToken}`)
@@ -52,7 +52,7 @@ describe('Authentication', () => {
         });
     });
 
-    it('should return status code 401 due to malformed token', (done) => {
+    it('should return status code 401 due to malformed token', done => {
       request(app)
         .get('/api/admins')
         .set('Authorization', `Bearer ${malformedToken}`)
@@ -65,7 +65,7 @@ describe('Authentication', () => {
         });
     });
 
-    it('should return status code 401 due to auth header absence', (done) => {
+    it('should return status code 401 due to auth header absence', done => {
       request(app)
         .get('/api/admins')
         .end((err, res) => {
@@ -77,7 +77,7 @@ describe('Authentication', () => {
         });
     });
 
-    it('should return status code 401 due to malformed token', (done) => {
+    it('should return status code 401 due to malformed token', done => {
       request(app)
         .get('/api/admins')
         .set('Authorization', `JWT ${validToken}`)
@@ -90,7 +90,7 @@ describe('Authentication', () => {
         });
     });
 
-    it('should return status code 200 due to valid token', (done) => {
+    it('should return status code 200 due to valid token', done => {
       request(app)
         .get('/api/admins')
         .set('Authorization', `Bearer ${validToken}`)

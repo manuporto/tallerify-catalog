@@ -6,9 +6,7 @@ const tables = require('../../database/tableNames');
 
 const insertAssociations = (albumId, artistsIds) => {
   logger.info(`Creating associations for album ${albumId} and artists ${artistsIds}`);
-  const rowValues = artistsIds.map(id => {
-    return { album_id: albumId, artist_id: id }
-  });
+  const rowValues = artistsIds.map(id => ({ album_id: albumId, artist_id: id }));
   return generalHandler.createNewEntry(tables.albums_artists, rowValues);
 };
 
@@ -27,9 +25,7 @@ const deleteAssociationsOfArtist = (artistId) => {
   return db(tables.albums_artists).where('artist_id', artistId).del();
 };
 
-const findArtistsIdsFromAlbum = (albumId) => {
-  return db(tables.albums_artists).where('album_id', albumId).select('artist_id');
-};
+const findArtistsIdsFromAlbum = albumId => db(tables.albums_artists).where('album_id', albumId).select('artist_id');
 
 const findAlbumsOfArtist = (artistId) => {
   return db(tables.albums_artists).where({ artist_id: artistId }).select('album_id')

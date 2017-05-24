@@ -19,8 +19,7 @@ const constants = require('./artist.constants.json');
 const testToken = jwt.sign(constants.jwtTestUser, config.secret);
 
 describe('Artist', () => {
-
-  beforeEach((done) => {
+  beforeEach(done => {
     db.migrate.rollback()
       .then(() => {
         db.migrate.latest()
@@ -55,14 +54,13 @@ describe('Artist', () => {
       });
   });
 
-  afterEach((done) => {
+  afterEach(done => {
     db.migrate.rollback()
     .then(() => done());
   });
 
   describe('/GET artists', () => {
-
-    it('should return status code 200', (done) => {
+    it('should return status code 200', done => {
       request(app)
         .get('/api/artists')
         .set('Authorization', `Bearer ${testToken}`)
@@ -72,7 +70,7 @@ describe('Artist', () => {
         });
     });
 
-    it('should return the expected body response when correct parameters are sent', (done) => {
+    it('should return the expected body response when correct parameters are sent', done => {
       request(app)
         .get('/api/artists')
         .set('Authorization', `Bearer ${testToken}`)
@@ -99,8 +97,7 @@ describe('Artist', () => {
   });
 
   describe('/POST artists', () => {
-
-    it('should return status code 400 when parameters are missing', (done) => {
+    it('should return status code 400 when parameters are missing', done => {
       request(app)
         .post('/api/artists')
         .set('Authorization', `Bearer ${testToken}`)
@@ -111,7 +108,7 @@ describe('Artist', () => {
         });
     });
 
-    it('should return status code 400 when parameters are invalid', (done) => {
+    it('should return status code 400 when parameters are invalid', done => {
       request(app)
         .post('/api/artists')
         .set('Authorization', `Bearer ${testToken}`)
@@ -122,7 +119,7 @@ describe('Artist', () => {
         });
     });
 
-    it('should return status code 201 when correct parameters are sent', (done) => {
+    it('should return status code 201 when correct parameters are sent', done => {
       request(app)
         .post('/api/artists')
         .set('Authorization', `Bearer ${testToken}`)
@@ -133,7 +130,7 @@ describe('Artist', () => {
         });
     });
 
-    it('should return the expected body response when correct parameters are sent', (done) => {
+    it('should return the expected body response when correct parameters are sent', done => {
       request(app)
         .post('/api/artists')
         .set('Authorization', `Bearer ${testToken}`)

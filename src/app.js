@@ -38,19 +38,20 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 // *** jwt secret *** //
-const unprotectedRoutes = (req) => {
-  let baseRE = pathToRegexp('/');
-  let tokensRE = pathToRegexp('/api/tokens');
-  let adminTokensRE = pathToRegexp('/api/admins/tokens');
-  let usersRE = pathToRegexp('/api/users');
-  let userRE = pathToRegexp('/api/users/:id');
-  let usersMeRE = pathToRegexp('/api/users/me');
-  let usersMediaRE = pathToRegexp('/media/*');
+const unprotectedRoutes = req => {
+  const baseRE = pathToRegexp('/');
+  const tokensRE = pathToRegexp('/api/tokens');
+  const adminTokensRE = pathToRegexp('/api/admins/tokens');
+  const usersRE = pathToRegexp('/api/users');
+  const userRE = pathToRegexp('/api/users/:id');
+  const usersMeRE = pathToRegexp('/api/users/me');
+  const usersMediaRE = pathToRegexp('/media/*');
 
   if (usersMeRE.exec(req.path)) {
     return false;
   }
-  if (baseRE.exec(req.path) || usersMediaRE.exec(req.path) || tokensRE.exec(req.path) || adminTokensRE.exec(req.path)) {
+  if (baseRE.exec(req.path) ||
+    usersMediaRE.exec(req.path) || tokensRE.exec(req.path) || adminTokensRE.exec(req.path)) {
     return true;
   }
   if ((usersRE.exec(req.path) && req.method === 'POST') || (userRE.exec(req.path) && req.method === 'PUT')) {
@@ -76,7 +77,7 @@ app.use((req, res, next) => {
 // development and test error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
-  app.use((err, req, res, next) => {
+  app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
     res.status(err.status || 500).json({
       message: err.message,
       error: err,
@@ -86,7 +87,7 @@ if (app.get('env') === 'development') {
 
 // production error handler
 // no stacktraces leaked to user
-app.use((err, req, res, next) => {
+app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
   res.status(err.status || 500).json({
     code: err.status,
     message: err.message,
