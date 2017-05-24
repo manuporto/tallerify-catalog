@@ -1,6 +1,10 @@
 extends: airbnb-base
 plugins:
   - import
+rules:
+  no-shadow: warn
+  spaced-comment: off
+  no-underscore-dangle: off
 env:
   es6: true
   node: true
