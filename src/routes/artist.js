@@ -114,7 +114,14 @@ const artistFollow = (req, res) => {
 };
 
 const getTracks = (req, res) => {
-
+  db.general.findEntryWithId(tables.artists, req.params.id)
+    .then((artist) => {
+      if (!respond.entryExists(req.params.id, artist, res)) return;
+      db.artist.getTracks(req.params.id)
+        .then(tracks => respond.successfulArtistTracksFetch(tracks, res))
+        .catch(error => respond.internalServerError(error, res));
+    })
+    .catch(error => respond.internalServerError(error, res));
 };
 
 

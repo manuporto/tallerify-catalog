@@ -277,6 +277,17 @@ const successfulArtistUnfollow = (artist, response) => {
   response.status(204).json(formatArtistJson(artist));
 };
 
+const successfulArtistTracksFetch = (tracks, response) => {
+  logger.info('Successful tracks fetch');
+  response.status(200).json({
+    metadata: {
+      count: tracks.length,
+      version: constants.API_VERSION,
+    },
+    tracks: tracks.map(formatTrackJson),
+  });
+};
+
 /* Albums */
 
 const formatAlbumShortJson = (album) => {
@@ -477,6 +488,7 @@ module.exports = {
   successfulArtistDeletion,
   successfulArtistFollow,
   successfulArtistUnfollow,
+  successfulArtistTracksFetch,
   successfulAlbumsFetch,
   successfulAlbumCreation,
   successfulAlbumFetch,

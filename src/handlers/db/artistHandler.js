@@ -79,6 +79,18 @@ const findUserFavorites = (userId) => {
     });
 };
 
+const getTracks = (artistId) => {
+  logger.info(`Searching for artist ${artistId} tracks`);
+  return db(tables.artists_tracks).select('track_id').where({
+    artist_id: artistId,
+  })
+    .then((tracks) => {
+      const trackIds = tracks.map(track => track.track_id);
+      logger.info(`Track ids for artist ${artistId}: ${JSON.stringify(trackIds, null, 4)}`);
+      return db(tables.tracks).whereIn('id', trackIds); // TODO add albums & artists info
+    });
+};
+
 module.exports = {
   createNewArtistEntry,
   getAlbumsInfo,
@@ -87,4 +99,5 @@ module.exports = {
   follow,
   unfollow,
   findUserFavorites,
+  getTracks,
 };
