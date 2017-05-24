@@ -236,7 +236,6 @@ describe('Artist', () => {
         .set('Authorization', `Bearer ${testToken}`)
         .send(constants.updatedArtist)
         .end((err, res) => {
-          logger.warn(`RES ${JSON.stringify(res.body)}`);
           res.body.should.be.a('object');
           res.body.should.have.property('id').eql(constants.validArtistId);
           res.body.should.have.property('name').eql(constants.updatedArtist.name);
@@ -345,6 +344,72 @@ describe('Artist', () => {
   });
 
   describe('/GET /api/artists/{id}/tracks', () => {
+    it('should return status code 200', (done) => {
+      request(app)
+        .get(`/api/artists/${constants.validArtistId}/tracks`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.should.have.status(200);
+          done();
+        });
+    });
+
+    it('should return the expected body response when correct parameters are sent', (done) => {
+      request(app)
+        .get(`/api/artists/${constants.validArtistId}/tracks`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.body.should.be.a('object');
+          res.body.should.have.property('metadata');
+          res.body.metadata.should.have.property('version');
+          res.body.metadata.should.have.property('count');
+          res.body.should.have.property('tracks');
+          res.body.tracks.should.have.lengthOf(1);
+          res.body.tracks[0].should.have.property('id').eql(constants.initialTrack.id);
+          res.body.tracks[0].should.have.property('name').eql(constants.initialTrack.name);
+          res.body.tracks[0].should.have.property('duration');
+          res.body.tracks[0].should.have.property('href');
+          // res.body.tracks[0].should.have.property('album'); TODO
+          res.body.tracks[0].should.have.property('popularity');
+          done();
+        });
+    });
+
+    it('should return the expected body response with new track', (done) => {
+      request(app)
+        .post('/api/tracks')
+        .set('Authorization', `Bearer ${testToken}`)
+        .send(constants.testTrack)
+        .end((err, res) => {
+          res.should.have.status(201);
+          request(app)
+            .get(`/api/artists/${constants.validArtistId}/tracks`)
+            .set('Authorization', `Bearer ${testToken}`)
+            .end((err, res) => {
+              res.should.have.status(200);
+              res.body.tracks.should.have.lengthOf(2);
+              done();
+            });
+        });
+    });
+
+    it('should return the expected body response with no tracks', (done) => {
+      request(app)
+        .delete(`/api/tracks/${constants.validTrackId}`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.should.have.status(204);
+          request(app)
+            .get(`/api/artists/${constants.validArtistId}/tracks`)
+            .set('Authorization', `Bearer ${testToken}`)
+            .end((err, res) => {
+              res.should.have.status(200);
+              res.body.tracks.should.have.lengthOf(0);
+              done();
+            });
+        });
+    });
+
     it('should return status code 404 if id does not match an artist', (done) => {
       request(app)
         .get(`/api/artists/${constants.invalidArtistId}/tracks`)
