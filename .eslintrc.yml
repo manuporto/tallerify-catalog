@@ -2,8 +2,7 @@ extends: airbnb-base
 plugins:
   - import
 rules:
-  no-shadow: warn
-  spaced-comment: off
+  no-shadow: off
   no-underscore-dangle: off
   consistent-return: off
 env:
