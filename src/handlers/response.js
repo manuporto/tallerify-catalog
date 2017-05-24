@@ -13,12 +13,12 @@ const internalServerError = (reason, response) => {
 const unauthorizedError = (reason, response) => {
   const message = `Unauthorized: ${reason}`;
   logger.warn(message);
-  response.status(401).json({ code: 401, message: message });
+  response.status(401).json({ code: 401, message });
 };
 
 const nonExistentId = (message, response) => {
   logger.warn(message);
-  response.status(400).json({ code: 400, message: message });
+  response.status(400).json({ code: 400, message });
 };
 
 const validateRequestBody = (body, schema) => {
@@ -37,7 +37,7 @@ const validateRequestBody = (body, schema) => {
 const invalidRequestBodyError = (reasons, response) => {
   const message = `Request body is invalid: ${reasons[0].message}`;
   logger.warn(message);
-  return response.status(400).json({ code: 400, message: message });
+  return response.status(400).json({ code: 400, message });
 };
 
 const entryExists = (id, entry, response) => {
@@ -52,57 +52,49 @@ const entryExists = (id, entry, response) => {
 
 /* Users */
 
-const formatUserContacts = (contacts) => {
-  return (contacts[0] === null) ? [] : contacts.map(formatUserShortJson);
-};
+const formatUserContacts = contacts => (contacts[0] === null) ? [] : contacts.map(formatUserShortJson);
 
-const formatUserJson = (user) => {
-  return {
-    userName: user.userName,
-    password: user.password,
-    fb: {
-      userId: user.facebookUserId,
-      authToken: user.facebookAuthToken,
-    },
-    firstName: user.firstName,
-    lastName: user.lastName,
-    country: user.country,
-    email: user.email,
-    birthdate: user.birthdate,
-    images: user.images,
-    href: user.href,
-    contacts: formatUserContacts(user.contacts)
-  };
-};
+const formatUserJson = user => ({
+  userName: user.userName,
+  password: user.password,
+  fb: {
+    userId: user.facebookUserId,
+    authToken: user.facebookAuthToken,
+  },
+  firstName: user.firstName,
+  lastName: user.lastName,
+  country: user.country,
+  email: user.email,
+  birthdate: user.birthdate,
+  images: user.images,
+  href: user.href,
+  contacts: formatUserContacts(user.contacts),
+});
 
-const formatUserShortJson = (user) => {
-  return {
-    id: user.id,
-    userName: user.userName,
-    href: user.href,
-    images: user.images,
-  };
-};
+const formatUserShortJson = user => ({
+  id: user.id,
+  userName: user.userName,
+  href: user.href,
+  images: user.images,
+});
 
-const formatGetUserJson = (user) => {
-  return {
-    id: user.id,
-    userName: user.userName,
-    password: user.password,
-    fb: {
-      userId: user.facebookUserId,
-      authToken: user.facebookAuthToken,
-    },
-    firstName: user.firstName,
-    lastName: user.lastName,
-    country: user.country,
-    email: user.email,
-    birthdate: user.birthdate,
-    images: user.images,
-    href: user.href,
-    contacts: formatUserContacts(user.contacts),
-  };
-};
+const formatGetUserJson = user => ({
+  id: user.id,
+  userName: user.userName,
+  password: user.password,
+  fb: {
+    userId: user.facebookUserId,
+    authToken: user.facebookAuthToken,
+  },
+  firstName: user.firstName,
+  lastName: user.lastName,
+  country: user.country,
+  email: user.email,
+  birthdate: user.birthdate,
+  images: user.images,
+  href: user.href,
+  contacts: formatUserContacts(user.contacts),
+});
 
 const successfulUsersFetch = (users, response) => {
   logger.info('Successful users fetch');
@@ -190,13 +182,13 @@ const successfulAdminDeletion = (response) => {
 const nonexistentCredentials = (response) => {
   const message = 'No entry with such credentials';
   logger.warn(message);
-  response.status(400).json({ code: 400, message: message });
+  response.status(400).json({ code: 400, message });
 };
 
 const inconsistentCredentials = (response) => {
   const message = 'There is more than one entry with those credentials';
   logger.warn(message);
-  response.status(500).json({ code: 500, message: message });
+  response.status(500).json({ code: 500, message });
 };
 
 const successfulTokenGeneration = (result, response) => {
@@ -205,7 +197,7 @@ const successfulTokenGeneration = (result, response) => {
 };
 
 const successfulUserTokenGeneration = (user, token, response) => {
-  const result = { token: token };
+  const result = { token };
   successfulTokenGeneration(result, response);
 };
 
@@ -213,7 +205,7 @@ const successfulAdminTokenGeneration = (admin, token, response) => {
   const result = Object.assign(
     {},
     {
-      token: token,
+      token,
       admin: {
         id: admin.id,
         userName: admin.userName,
@@ -224,14 +216,12 @@ const successfulAdminTokenGeneration = (admin, token, response) => {
 
 /* Artists */
 
-const formatArtistShortJson = (artist) => {
-  return {
-    id: artist.id,
-    name: artist.name,
-    href: artist.href,
-    images: artist.images,
-  };
-};
+const formatArtistShortJson = artist => ({
+  id: artist.id,
+  name: artist.name,
+  href: artist.href,
+  images: artist.images,
+});
 
 const successfulArtistsFetch = (artists, res) => {
   logger.info('Successful artists fetch');
@@ -263,19 +253,17 @@ const formatAlbumShortJson = (album) => {
   };
 };
 
-const formatAlbumJson = (album) => {
-  return {
-    id: album.id,
-    name: album.name,
-    release_date: album.release_date,
-    href: album.href,
-    popularity: album.popularity,
-    artists: album.artists, // TODO album.artists.map(artist => formatArtistShortJson(artist)),
-    tracks: album.tracks, // TODO album.tracks.map(track => formatTrackShortJson(track)),
-    genres: album.genres,
-    images: album.images,
-  };
-};
+const formatAlbumJson = album => ({
+  id: album.id,
+  name: album.name,
+  release_date: album.release_date,
+  href: album.href,
+  popularity: album.popularity,
+  artists: album.artists, // TODO album.artists.map(artist => formatArtistShortJson(artist)),
+  tracks: album.tracks, // TODO album.tracks.map(track => formatTrackShortJson(track)),
+  genres: album.genres,
+  images: album.images,
+});
 
 const successfulAlbumsFetch = (albums, response) => {
   logger.info(`Successful albums fetch ${JSON.stringify(albums, null, 4)}`);
@@ -317,7 +305,7 @@ const successfulAlbumDeletion = (response) => {
 const invalidTrackDeletionFromAlbum = (trackId, albumId, response) => {
   const message = `Track (id: ${trackId}) does not belong to album (id: ${albumId})`;
   logger.info(message);
-  response.status(400).json({ code: 400, message: message });
+  response.status(400).json({ code: 400, message });
 };
 
 const successfulTrackDeletionFromAlbum = (trackId, albumId, response) => {
@@ -325,35 +313,31 @@ const successfulTrackDeletionFromAlbum = (trackId, albumId, response) => {
   response.sendStatus(204);
 };
 
-const successfulTrackAdditionToAlbum = (trackId, album, response) =>  {
+const successfulTrackAdditionToAlbum = (trackId, album, response) => {
   logger.info(`Track (id: ${trackId}) now belongs to album (id: ${album.id})`);
   response.status(200).json(formatAlbumJson(album));
 };
 
 /* Tracks */
 
-const formatTrackShortJson = (track) => {
-  return {
-    id: track.id,
-    name: track.name,
-    href: track.href,
-    images: track.images,
-  };
-};
+const formatTrackShortJson = track => ({
+  id: track.id,
+  name: track.name,
+  href: track.href,
+  images: track.images,
+});
 
-const formatTrackJson = (track) => {
-  return {
-    id: track.id,
-    name: track.name,
-    href: track.href,
-    duration: track.duration,
-    popularity: {
-      rate: track.rating,
-    },
-    album: formatAlbumShortJson(track.album),
-    artists: (track.hasOwnProperty('artists')) ? track.artists.map((artist) => formatArtistShortJson(artist)) : [],
-  };
-};
+const formatTrackJson = track => ({
+  id: track.id,
+  name: track.name,
+  href: track.href,
+  duration: track.duration,
+  popularity: {
+    rate: track.rating,
+  },
+  album: formatAlbumShortJson(track.album),
+  artists: (track.hasOwnProperty('artists')) ? track.artists.map(artist => formatArtistShortJson(artist)) : [],
+});
 
 const successfulTracksFetch = (tracks, response) => {
   logger.info(`Successful tracks fetch ${JSON.stringify(tracks, null, 4)}`);
@@ -418,7 +402,7 @@ const successfulTrackPopularityCalculation = (rating, response) => {
 const successfulTrackRate = (rate, response) => {
   logger.info(`Successful track rate: ${rate}`);
   response.status(201).json({
-    rate: rate,
+    rate,
   });
 };
 

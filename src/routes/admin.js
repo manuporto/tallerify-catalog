@@ -29,7 +29,7 @@ const adminExpectedBodySchema = {
 };
 
 function createNewAdmin(body) {
-  let admin = {
+  const admin = {
     userName: body.userName,
     password: body.password,
     firstName: body.firstName,

@@ -40,7 +40,7 @@ describe('Track', () => {
                   logger.warn(`Test tracks creation error: ${error}`);
                   done(error);
                 });
-          })
+            })
             .catch((error) => {
               logger.warn(`Test artists creation error: ${error}`);
               done(error);

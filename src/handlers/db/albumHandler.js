@@ -17,15 +17,13 @@ const findAlbumWithId = (id) => {
   return generalHandler.findEntryWithId(tables.albums, id); // TODO full query to get artists and tracks
 };
 
-const checkArtistsExistence = (body) => {
-  return db(tables.artists).whereIn('id', body.artists).then((artists) => {
-    if (artists.length < body.artists.length) {
-      logger.warn(`Req artists: ${JSON.stringify(body.artists)} vs DB artists: ${JSON.stringify(artists)}`);
-      return Promise.reject(new NonExistentIdError('Non existing artist.'));
-    }
-    return artists;
-  });
-};
+const checkArtistsExistence = body => db(tables.artists).whereIn('id', body.artists).then((artists) => {
+  if (artists.length < body.artists.length) {
+    logger.warn(`Req artists: ${JSON.stringify(body.artists)} vs DB artists: ${JSON.stringify(artists)}`);
+    return Promise.reject(new NonExistentIdError('Non existing artist.'));
+  }
+  return artists;
+});
 
 const createNewAlbumEntry = (body) => {
   logger.info(`Creating album with info: ${JSON.stringify(body, null, 4)}`);
@@ -37,14 +35,12 @@ const createNewAlbumEntry = (body) => {
     popularity: 0,
   };
   return checkArtistsExistence(body)
-    .then((results) => {
-      return generalHandler.createNewEntry(tables.albums, album)
+    .then(results => generalHandler.createNewEntry(tables.albums, album)
         .then((insertedAlbum) => {
           logger.info(`Inserted album: ${JSON.stringify(insertedAlbum, null, 4)}`);
           return albumArtistHandler.insertAssociations(insertedAlbum[0].id, body.artists)
             .then(() => insertedAlbum);
-        });
-    });
+        }));
 };
 
 const updateAlbumEntry = (body, id) => {
@@ -57,14 +53,12 @@ const updateAlbumEntry = (body, id) => {
   };
 
   return checkArtistsExistence(body)
-    .then((results) => {
-      return generalHandler.updateEntryWithId(tables.albums, id, album)
+    .then(results => generalHandler.updateEntryWithId(tables.albums, id, album)
         .then((updatedAlbum) => {
           logger.info(`Updated album: ${JSON.stringify(updatedAlbum, null, 4)}`);
           return albumArtistHandler.updateAssociations(updatedAlbum[0].id, body.artists)
             .then(() => updatedAlbum);
-        });
-    });
+        }));
 };
 
 const deleteAlbumWithId = (id) => {

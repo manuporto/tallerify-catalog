@@ -37,33 +37,33 @@ const facebookUser = {
   properties: {
     id: {
       required: true,
-      type: 'string'
+      type: 'string',
     },
     name: {
       required: true,
-      type: 'string'
+      type: 'string',
     },
     first_name: {
       required: true,
-      type: 'string'
+      type: 'string',
     },
     last_name: {
       required: true,
-      type: 'string'
+      type: 'string',
     },
     email: {
       required: true,
-      type: 'string'
+      type: 'string',
     },
     location: {
       required: false,
-      type: 'object'
+      type: 'object',
     },
     birthday: {
       required: true,
-      type: 'string'
-    }
-  }
+      type: 'string',
+    },
+  },
 };
 
 const getNativeUserToken = (req, res, next) => {
@@ -81,10 +81,10 @@ const getNativeUserToken = (req, res, next) => {
 
 const getFacebookUserToken = (req, res, next) => {
   facebook.checkCredentials(req.body)
-    .then(fUser => {
+    .then((fUser) => {
       respond.validateRequestBody(fUser, facebookUser)
         .then(() => facebook.handleLogin(req, res, next, fUser))
-        .catch(error => respond.invalidRequestBodyError(error, res));;
+        .catch(error => respond.invalidRequestBodyError(error, res));
     })
     .catch(error => respond.unauthorizedError(error, res));
 };

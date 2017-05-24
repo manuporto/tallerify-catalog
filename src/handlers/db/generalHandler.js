@@ -11,15 +11,13 @@ const findEntryWithId = (tableName, id) => {
   return db(tableName).where('id', id).first('*');
 };
 
-const findEntriesWithIds = (tableName, ids) => {
-  return db(tableName).whereIn('id', ids);
-};
+const findEntriesWithIds = (tableName, ids) => db(tableName).whereIn('id', ids);
 
 const findWithUsernameAndPassword = (tableName, username, password) => {
   logger.info(`Querying table ${tableName} for entry with username "${username}" and password "${password}"`);
   return db(tableName).where({
     userName: username,
-    password: password,
+    password,
   }).first('*');
 };
 

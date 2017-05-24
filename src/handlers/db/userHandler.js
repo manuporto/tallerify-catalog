@@ -26,18 +26,18 @@ select uf.id,
     array_agg(DISTINCT uf."facebookUserId") as "facebookUserId",
     string_agg(DISTINCT uf.href, ',') as "href",
     json_agg(uf.contact) as contacts from user_friend uf
-group by uf.id;`
+group by uf.id;`;
 
 const findWithFacebookUserId = (userId) => {
-    logger.info(`Querying database for entry with fb userId "${userId}"`);
-    return db(tables.users).where({
-        facebookUserId: userId,
-    }).first('*');
+  logger.info(`Querying database for entry with fb userId "${userId}"`);
+  return db(tables.users).where({
+    facebookUserId: userId,
+  }).first('*');
 };
 
 const findAllUsers = () => {
   logger.debug('Getting all users.');
-  return db.raw(innerJoin).then((res) => res.rows);
+  return db.raw(innerJoin).then(res => res.rows);
 };
 
 const findUser = (id) => {
@@ -67,7 +67,7 @@ select uf.id,
 where uf.id = ?
 group by uf.id;`, [id]).then((res) => {
   if (res.rows[0]) {
-    const user = Object.assign({}, res.rows[0], {images: res.rows[0].images[0]});
+    const user = Object.assign({}, res.rows[0], { images: res.rows[0].images[0] });
     return user;
   }
 });

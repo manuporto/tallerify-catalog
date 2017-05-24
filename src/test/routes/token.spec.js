@@ -21,7 +21,7 @@ describe('Token', () => {
           .then(() => {
             Promise.all([
               dbHandler.createNewEntry(tables.users, [constants.initialUser, constants.initialFacebookUser]),
-              dbHandler.createNewEntry(tables.admins, constants.initialAdmin)
+              dbHandler.createNewEntry(tables.admins, constants.initialAdmin),
             ]).then(() => done()).catch(error => done(error));
           })
           .catch(error => done(error));

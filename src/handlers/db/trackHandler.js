@@ -15,33 +15,29 @@ const createNewTrackEntry = (body) => {
     album_id: body.albumId,
   };
 
-  const findArtists = () => {
-    return db(tables.artists).whereIn('id', body.artists).then((artists) => {
-      if (artists.length < body.artists.length) {
-        logger.warn(`Req artists: ${JSON.stringify(body.artists)} vs DB artists: ${JSON.stringify(artists)}`);
-        return Promise.reject(new NonExistentIdError('Non existing artist.'));
-      }
-      return artists;
-    });
-  };
+  const findArtists = () => db(tables.artists).whereIn('id', body.artists).then((artists) => {
+    if (artists.length < body.artists.length) {
+      logger.warn(`Req artists: ${JSON.stringify(body.artists)} vs DB artists: ${JSON.stringify(artists)}`);
+      return Promise.reject(new NonExistentIdError('Non existing artist.'));
+    }
+    return artists;
+  });
 
   const findAlbum = () => -1; // TODO
 
   const finders = [findArtists(), findAlbum()];
   return Promise.all(finders)
-    .then((results) => {
-      return generalHandler.createNewEntry(tables.tracks, track)
+    .then(results => generalHandler.createNewEntry(tables.tracks, track)
         .then((insertedTrack) => {
           logger.info(`Inserted track: ${JSON.stringify(insertedTrack, null, 4)}`);
           return artistTrackHandler.insertAssociations(insertedTrack[0].id, body.artists)
             .then(() => insertedTrack);
-        });
-    });
+        }));
 };
 
 const updateTrackEntry = (body, id) => {
   logger.info(`Updating track ${id}`);
-  let track = {
+  const track = {
     name: body.name,
     album_id: body.albumId,
   };
@@ -53,17 +49,15 @@ const updateTrackEntry = (body, id) => {
     });
 };
 
-const getArtistsInfo = (track) => {
-  return artistTrackHandler.findArtistsIdsFromTrack(track.id)
+const getArtistsInfo = track => artistTrackHandler.findArtistsIdsFromTrack(track.id)
     .then((artistsIds) => {
-      const ids = artistsIds.map((artistId) => artistId.artist_id);
+      const ids = artistsIds.map(artistId => artistId.artist_id);
       return generalHandler.findEntriesWithIds(tables.artists, ids)
        .then((artists) => {
          logger.info(`Returning artists: ${JSON.stringify(artists, null, 4)}`);
          return artists;
        });
     });
-};
 
 const getAlbumInfo = (track) => {
   if (track.album_id !== -1) {
@@ -135,7 +129,7 @@ const rate = (trackId, userId, rating) => {
     .then(() => generalHandler.createNewEntry(tables.tracks_rating, {
       user_id: userId,
       track_id: trackId,
-      rating: rating,
+      rating,
     }));
 };
 

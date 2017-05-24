@@ -39,13 +39,13 @@ app.use(cookieParser());
 
 // *** jwt secret *** //
 const unprotectedRoutes = (req) => {
-  let baseRE = pathToRegexp('/');
-  let tokensRE = pathToRegexp('/api/tokens');
-  let adminTokensRE = pathToRegexp('/api/admins/tokens');
-  let usersRE = pathToRegexp('/api/users');
-  let userRE = pathToRegexp('/api/users/:id');
-  let usersMeRE = pathToRegexp('/api/users/me');
-  let usersMediaRE = pathToRegexp('/media/*');
+  const baseRE = pathToRegexp('/');
+  const tokensRE = pathToRegexp('/api/tokens');
+  const adminTokensRE = pathToRegexp('/api/admins/tokens');
+  const usersRE = pathToRegexp('/api/users');
+  const userRE = pathToRegexp('/api/users/:id');
+  const usersMeRE = pathToRegexp('/api/users/me');
+  const usersMediaRE = pathToRegexp('/media/*');
 
   if (usersMeRE.exec(req.path)) {
     return false;

@@ -12,8 +12,8 @@ const artistExpectedBodySchema = { // FIXME incomplete schema
     popularity: {
       required: true,
       type: 'integer',
-    }
-  }
+    },
+  },
 };
 
 function getArtists(req, res) {
@@ -28,7 +28,7 @@ function newArtist(req, res) {
       db.createNewEntry(tables.artists, req.body) // FIXME request body could have extra fields
         .then(artist => respond.successfulArtistCreation(artist, res))
         .catch(error => respond.internalServerError(error, res));
-    }).catch(error => {
+    }).catch((error) => {
       respond.invalidRequestBodyError(error, res);
     });
 }

@@ -112,7 +112,7 @@ const addTrackToAlbum = (req, res) => {
       db.track.updateAlbumId(req.params.trackId, req.params.albumId)
         .then(() => respond.successfulTrackAdditionToAlbum(req.params.trackId, results[1], res))
         .catch(error => respond.internalServerError(error, res));
-      })
+    })
     .catch(error => respond.internalServerError(error, res));
 };
 
