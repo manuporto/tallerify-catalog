@@ -85,9 +85,16 @@ exports.up = (knex, Promise) => {
 
     knex.schema.createTableIfNotExists(tables.users_tracks, (table) => {
       logger.debug('Creating users_tracks table.');
-      table.increments('user_tracks_id').primary();
+      table.increments('user_track_id').primary();
       table.integer('user_id');
       table.integer('track_id');
+    }),
+
+    knex.schema.createTableIfNotExists(tables.users_artists, (table) => {
+      logger.debug('Creating users_artists table.');
+      table.increments('user_artist_id').primary();
+      table.integer('user_id');
+      table.integer('artist_id');
     }),
 
   ]);

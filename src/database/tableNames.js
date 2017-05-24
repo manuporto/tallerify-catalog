@@ -8,4 +8,5 @@ module.exports = {
   users: 'users',
   admins: 'admins',
   users_tracks: 'users_tracks',
+  users_artists: 'users_artists',
 };

@@ -267,6 +267,16 @@ const successfulArtistDeletion = (response) => {
   response.sendStatus(204);
 };
 
+const successfulArtistFollow = (artist, response) => {
+  logger.info('Successful artist follow');
+  response.status(201).json(formatArtistJson(artist));
+};
+
+const successfulArtistUnfollow = (artist, response) => {
+  logger.info('Successful artist unfollow');
+  response.status(204).json(formatArtistJson(artist));
+};
+
 /* Albums */
 
 const formatAlbumShortJson = (album) => {
@@ -462,11 +472,13 @@ module.exports = {
   successfulAdminTokenGeneration,
   successfulArtistsFetch,
   successfulArtistCreation,
-  successfulAlbumsFetch,
-  successfulAlbumCreation,
   successfulArtistFetch,
   successfulArtistUpdate,
   successfulArtistDeletion,
+  successfulArtistFollow,
+  successfulArtistUnfollow,
+  successfulAlbumsFetch,
+  successfulAlbumCreation,
   successfulAlbumFetch,
   successfulAlbumUpdate,
   successfulAlbumDeletion,

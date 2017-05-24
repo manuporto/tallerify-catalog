@@ -85,5 +85,38 @@ const deleteArtist = (req, res) => {
     .catch(error => respond.internalServerError(error, res));
 };
 
+const getFavoriteArtists = (req, res) => {
 
-module.exports = { getArtists, newArtist, getArtist, updateArtist, deleteArtist };
+};
+
+const artistUnfollow = (req, res) => {
+
+};
+
+const artistFollow = (req, res) => {
+  db.general.findEntryWithId(tables.artists, req.params.id)
+    .then((artist) => {
+      if (!respond.entryExists(req.params.id, artist, res)) return;
+      db.artist.follow(req.user.id, req.params.id)
+        .then(() => respond.successfulArtistFollow(artist, res))
+        .catch(error => respond.internalServerError(error, res));
+    })
+    .catch(error => respond.internalServerError(error, res));
+};
+
+const getTracks = (req, res) => {
+
+};
+
+
+module.exports = {
+  getArtists,
+  newArtist,
+  getArtist,
+  updateArtist,
+  deleteArtist,
+  getFavoriteArtists,
+  artistUnfollow,
+  artistFollow,
+  getTracks,
+};

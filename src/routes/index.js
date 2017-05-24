@@ -59,6 +59,14 @@ router.put('/api/artists/:id', artist.updateArtist);
 
 router.delete('/api/artists/:id', artist.deleteArtist);
 
+router.get('/api/artists/me/favorites', artist.getFavoriteArtists);
+
+router.delete('/api/artists/me/:id/follow', artist.artistUnfollow);
+
+router.post('/api/artists/me/:id/follow', artist.artistFollow);
+
+router.get('/api/artists/:id/tracks', artist.getTracks);
+
 /* Tracks */
 
 router.get('/api/tracks', track.getTracks);

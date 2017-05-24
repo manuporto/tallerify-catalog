@@ -40,4 +40,29 @@ const deleteArtist = (id) => {
   return Promise.all(deleters);
 };
 
-module.exports = { createNewArtistEntry, getAlbumsInfo, updateArtistEntry, deleteArtist };
+const follow = (userId, artistId) => {
+  logger.info(`User ${userId} following artist ${artistId}`);
+  return db(tables.users_artists).where({
+    user_id: userId,
+    artist_id: artistId,
+  })
+    .then((result) => {
+      if (result.length) {
+        logger.warn(`User ${userId} already liked followed ${artistId}`);
+        return;
+      }
+      logger.info('Creating user-artist association');
+      return generalHandler.createNewEntry(tables.users_tracks, {
+        user_id: userId,
+        artist_id: artistId,
+      });
+    });
+};
+
+module.exports = {
+  createNewArtistEntry,
+  getAlbumsInfo,
+  updateArtistEntry,
+  deleteArtist,
+  follow,
+};
