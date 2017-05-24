@@ -151,7 +151,7 @@ describe('Artist', () => {
         });
     });
 
-    it('should return status code 200 with a track', (done) => {
+    it('should return status code 200 with an artist', (done) => {
       request(app)
         .post(`/api/artists/me/${constants.validArtistId}/follow`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -162,6 +162,7 @@ describe('Artist', () => {
             .set('Authorization', `Bearer ${testToken}`)
             .end((err, res) => {
               res.should.have.status(200);
+              res.body.artists.should.have.lengthOf(1);
               done();
             });
         });

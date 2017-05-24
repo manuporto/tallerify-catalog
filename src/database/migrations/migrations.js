@@ -111,5 +111,7 @@ exports.down = (knex, Promise) => {
     knex.schema.dropTable(tables.users),
     knex.schema.dropTable(tables.admins),
     knex.schema.dropTable(tables.users_tracks),
+    knex.schema.dropTable(tables.users_artists),
+    knex.schema.dropTable(tables.albums_artists),
   ]);
 };
