@@ -125,7 +125,7 @@ const deleteTrackFromAlbum = (req, res) => {
     .then((results) => {
       if (!respond.entryExists(req.params.trackId, results[0], res)) return;
       if (!respond.entryExists(req.params.albumId, results[1], res)) return;
-      if (results[0].album_id !== req.params.albumId) {
+      if (results[0].album_id != req.params.albumId) { // eslint-disable-line eqeqeq
         return respond.invalidTrackDeletionFromAlbum(req.params.trackId, req.params.albumId, res);
       }
       db.track.deleteAlbumId(req.params.trackId)
