@@ -10,6 +10,9 @@ const admin = require('./admin');
 
 const loginRouter = require('../middlewares/login-router');
 const usersMediaLocation = multer({dest: 'public/media/users/'});
+const artistsMediaLocation = multer({dest: 'public/media/artists/'});
+const albumsMediaLocation = multer({dest: 'public/media/albums/'});
+
 
 const router = express.Router();
 
@@ -57,7 +60,7 @@ router.post('/api/admins/tokens', token.generateAdminToken);
 
 router.get('/api/artists', artist.getArtists);
 
-router.post('/api/artists', artist.newArtist);
+router.post('/api/artists', artistsMediaLocation.single('picture'), artist.newArtist);
 
 /* Tracks */
 
@@ -87,7 +90,7 @@ router.get('/api/albums', album.getAlbums);
 
 router.get('/api/albums/:id', album.getAlbum);
 
-router.post('/api/albums', album.newAlbum);
+router.post('/api/albums', albumsMediaLocation.single('picture'), album.newAlbum);
 
 router.put('/api/albums/:id', album.updateAlbum);
 

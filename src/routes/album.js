@@ -55,9 +55,12 @@ const getAlbum = (req, res) => {
 };
 
 const newAlbum = (req, res) => {
+    if (!(req["file"])) {
+        req["file"] = {"path": ""};
+    }
   respond.validateRequestBody(req.body, albumExpectedBodySchema)
     .then(() => {
-      db.album.createNewAlbumEntry(req.body)
+        db.album.createNewAlbumEntry(req.body, req["file"]["path"] !== "" ? process.env.BASE_URL + req.file.path.replace("public/", "") : "")
         .then(album => respond.successfulAlbumCreation(album, res))
         .catch((error) => {
           if (error.name === 'NonExistentIdError') {

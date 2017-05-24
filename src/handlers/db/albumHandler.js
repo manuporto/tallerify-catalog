@@ -27,13 +27,14 @@ const checkArtistsExistence = (body) => {
   });
 };
 
-const createNewAlbumEntry = (body) => {
+const createNewAlbumEntry = (body, picturePath) => {
   logger.info(`Creating album with info: ${JSON.stringify(body, null, 4)}`);
+    let images = (picturePath !== "" && picturePath !== undefined) ? [picturePath] : [];
   const album = {
     name: body.name,
     release_date: body.release_date,
     genres: body.genres,
-    images: body.images,
+    images: images,
     popularity: 0,
   };
   return checkArtistsExistence(body)
