@@ -6,6 +6,7 @@ rules:
   no-underscore-dangle: off
   consistent-return: off
   no-prototype-builtins: off
+  no-use-before-define: off
   arrow-parens:
     - error
     - "as-needed"

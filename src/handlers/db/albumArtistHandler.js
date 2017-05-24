@@ -10,29 +10,23 @@ const insertAssociations = (albumId, artistsIds) => {
   return generalHandler.createNewEntry(tables.albums_artists, rowValues);
 };
 
-const deleteAssociationsOfAlbum = (albumId) => {
+const deleteAssociationsOfAlbum = albumId => {
   logger.info(`Deleting album ${albumId} associations`);
   return db(tables.albums_artists).where('album_id', albumId).del();
 };
 
-const updateAssociationsOfAlbum = (albumId, artistsIds) => {
-  return deleteAssociationsOfAlbum(albumId)
+const updateAssociationsOfAlbum = (albumId, artistsIds) => deleteAssociationsOfAlbum(albumId)
     .then(() => insertAssociations(albumId, artistsIds));
-};
 
-const deleteAssociationsOfArtist = (artistId) => {
+const deleteAssociationsOfArtist = artistId => {
   logger.info(`Deleting artist ${artistId} associations`);
   return db(tables.albums_artists).where('artist_id', artistId).del();
 };
 
 const findArtistsIdsFromAlbum = albumId => db(tables.albums_artists).where('album_id', albumId).select('artist_id');
 
-const findAlbumsOfArtist = (artistId) => {
-  return db(tables.albums_artists).where({ artist_id: artistId }).select('album_id')
-    .then((albums) => {
-      return db(tables.albums).whereIn('id', albums.map(album => album.album_id));
-    });
-};
+const findAlbumsOfArtist = artistId => db(tables.albums_artists).where({ artist_id: artistId }).select('album_id')
+    .then(albums => db(tables.albums).whereIn('id', albums.map(album => album.album_id)));
 
 module.exports = {
   insertAssociations,

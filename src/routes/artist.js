@@ -48,11 +48,11 @@ const newArtist = (req, res) => {
 
 const getArtist = (req, res) => {
   db.general.findEntryWithId(tables.artists, req.params.id)
-    .then((artist) => {
+    .then(artist => {
       if (!respond.entryExists(req.params.id, artist, res)) return;
       db.artist.getAlbumsInfo(req.params.id)
-        .then((albums) => {
-          const finalArtist = Object.assign({}, artist, { albums: albums });
+        .then(albums => {
+          const finalArtist = Object.assign({}, artist, { albums });
           respond.successfulArtistFetch(finalArtist, res);
         })
         .catch(error => respond.internalServerError(error, res));
@@ -63,7 +63,7 @@ const updateArtist = (req, res) => {
   respond.validateRequestBody(req.body, artistExpectedBodySchema)
     .then(() => {
       db.general.findEntryWithId(tables.artists, req.params.id)
-        .then((artist) => {
+        .then(artist => {
           if (!respond.entryExists(req.params.id, artist, res)) return;
           db.artist.updateArtistEntry(req.body, req.params.id)
             .then(updatedArtist => respond.successfulArtistUpdate(updatedArtist, res))
@@ -76,7 +76,7 @@ const updateArtist = (req, res) => {
 
 const deleteArtist = (req, res) => {
   db.general.findEntryWithId(tables.artists, req.params.id)
-    .then((artist) => {
+    .then(artist => {
       if (!respond.entryExists(req.params.id, artist, res)) return;
       db.artist.deleteArtist(req.params.id)
         .then(() => respond.successfulArtistDeletion(res))
@@ -93,7 +93,7 @@ const getFavoriteArtists = (req, res) => {
 
 const artistUnfollow = (req, res) => {
   db.general.findEntryWithId(tables.artists, req.params.id)
-    .then((artist) => {
+    .then(artist => {
       if (!respond.entryExists(req.params.id, artist, res)) return;
       db.artist.unfollow(req.user.id, req.params.id)
         .then(() => respond.successfulArtistUnfollow(artist, res))
@@ -104,7 +104,7 @@ const artistUnfollow = (req, res) => {
 
 const artistFollow = (req, res) => {
   db.general.findEntryWithId(tables.artists, req.params.id)
-    .then((artist) => {
+    .then(artist => {
       if (!respond.entryExists(req.params.id, artist, res)) return;
       db.artist.follow(req.user.id, req.params.id)
         .then(() => respond.successfulArtistFollow(artist, res))
@@ -115,7 +115,7 @@ const artistFollow = (req, res) => {
 
 const getTracks = (req, res) => {
   db.general.findEntryWithId(tables.artists, req.params.id)
-    .then((artist) => {
+    .then(artist => {
       if (!respond.entryExists(req.params.id, artist, res)) return;
       db.artist.getTracks(req.params.id)
         .then(tracks => respond.successfulArtistTracksFetch(tracks, res))

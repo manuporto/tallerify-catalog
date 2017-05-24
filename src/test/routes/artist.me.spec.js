@@ -2,7 +2,6 @@ process.env.NODE_ENV = 'test';
 
 const app = require('../../app');
 const db = require('../../database');
-const tables = require('../../database/tableNames');
 const dbHandler = require('../../handlers/db');
 const jwt = require('jsonwebtoken');
 const request = require('supertest');
@@ -19,18 +18,17 @@ const constants = require('./artist.me.constants.json');
 const testToken = jwt.sign(constants.jwtTestUser, config.secret);
 
 describe('Artist', () => {
-
-  beforeEach((done) => {
+  beforeEach(done => {
     db.migrate.rollback()
       .then(() => {
         db.migrate.latest()
           .then(() => {
             dbHandler.artist.createNewArtistEntry(constants.initialArtist)
-              .then((artist) => {
+              .then(artist => {
                 logger.info(`Tests artists created: ${JSON.stringify(artist, null, 4)}`);
                 done();
               })
-              .catch((error) => {
+              .catch(error => {
                 logger.warn(`Test artists creation error: ${error}`);
                 done(error);
               });
@@ -39,13 +37,13 @@ describe('Artist', () => {
       });
   });
 
-  afterEach((done) => {
+  afterEach(done => {
     db.migrate.rollback()
     .then(() => done());
   });
 
   describe('/POST artists/me/{id}/follow', () => {
-    it('should return status code 201 when artist follow is successful', (done) => {
+    it('should return status code 201 when artist follow is successful', done => {
       request(app)
         .post(`/api/artists/me/${constants.validArtistId}/follow`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -55,7 +53,7 @@ describe('Artist', () => {
         });
     });
 
-    it('should return status code 201 when artist follow is duplicated', (done) => {
+    it('should return status code 201 when artist follow is duplicated', done => {
       request(app)
         .post(`/api/artists/me/${constants.validArtistId}/follow`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -71,7 +69,7 @@ describe('Artist', () => {
         });
     });
 
-    it('should return status code 404 if id does not match an artist', (done) => {
+    it('should return status code 404 if id does not match an artist', done => {
       request(app)
         .post(`/api/artists/me/${constants.invalidArtistId}/follow`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -81,7 +79,7 @@ describe('Artist', () => {
         });
     });
 
-    it('should return status code 401 if unauthorized', (done) => {
+    it('should return status code 401 if unauthorized', done => {
       request(app)
         .post(`/api/artists/me/${constants.validArtistId}/follow`)
         .set('Authorization', 'Bearer UNAUTHORIZED')
@@ -93,7 +91,7 @@ describe('Artist', () => {
   });
 
   describe('/DELETE artists/me/{id}/follow', () => {
-    it('should return status code 204 when deletion is successful', (done) => {
+    it('should return status code 204 when deletion is successful', done => {
       request(app)
         .post(`/api/artists/me/${constants.validArtistId}/follow`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -109,7 +107,7 @@ describe('Artist', () => {
         });
     });
 
-    it('should return status code 204 if unfollowed artist was never followed', (done) => {
+    it('should return status code 204 if unfollowed artist was never followed', done => {
       request(app)
         .delete(`/api/artists/me/${constants.validArtistId}/follow`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -119,7 +117,7 @@ describe('Artist', () => {
         });
     });
 
-    it('should return status code 404 if id does not match an artist', (done) => {
+    it('should return status code 404 if id does not match an artist', done => {
       request(app)
         .delete(`/api/artists/me/${constants.invalidArtistId}/follow`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -129,7 +127,7 @@ describe('Artist', () => {
         });
     });
 
-    it('should return status code 401 if unauthorized', (done) => {
+    it('should return status code 401 if unauthorized', done => {
       request(app)
         .delete(`/api/artists/me/${constants.validArtistId}/follow`)
         .set('Authorization', 'Bearer UNAUTHORIZED')
@@ -141,7 +139,7 @@ describe('Artist', () => {
   });
 
   describe('/GET artists me', () => {
-    it('should return status code 200', (done) => {
+    it('should return status code 200', done => {
       request(app)
         .get('/api/artists/me/favorites')
         .set('Authorization', `Bearer ${testToken}`)
@@ -151,7 +149,7 @@ describe('Artist', () => {
         });
     });
 
-    it('should return status code 200 with an artist', (done) => {
+    it('should return status code 200 with an artist', done => {
       request(app)
         .post(`/api/artists/me/${constants.validArtistId}/follow`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -168,7 +166,7 @@ describe('Artist', () => {
         });
     });
 
-    it('should return the expected body response when correct parameters are sent', (done) => {
+    it('should return the expected body response when correct parameters are sent', done => {
       request(app)
         .get('/api/artists/me/favorites')
         .set('Authorization', `Bearer ${testToken}`)
@@ -180,12 +178,12 @@ describe('Artist', () => {
           res.body.metadata.should.have.property('count');
           res.body.should.have.property('artists');
           res.body.artists.should.be.a('array');
-          res.body.artists.should.be.empty;
+          res.body.artists.should.be.empty; // eslint-disable-line no-unused-expressions
           done();
         });
     });
 
-    it('should return an artist when correct parameters are sent', (done) => {
+    it('should return an artist when correct parameters are sent', done => {
       request(app)
         .post(`/api/artists/me/${constants.validArtistId}/follow`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -207,7 +205,7 @@ describe('Artist', () => {
         });
     });
 
-    it('should return an artist when correct parameters are sent', (done) => {
+    it('should return an artist when correct parameters are sent', done => {
       request(app)
         .post(`/api/artists/me/${constants.validArtistId}/follow`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -228,14 +226,14 @@ describe('Artist', () => {
                   res.body.metadata.should.have.property('count');
                   res.body.should.have.property('artists');
                   res.body.artists.should.be.a('array');
-                  res.body.artists.should.be.empty;
+                  res.body.artists.should.be.empty; // eslint-disable-line no-unused-expressions
                   done();
                 });
             });
         });
     });
 
-    it('should return status code 401 if unauthorized', (done) => {
+    it('should return status code 401 if unauthorized', done => {
       request(app)
         .get('/api/artists/me/favorites')
         .set('Authorization', 'Bearer UNAUTHORIZED')
@@ -245,5 +243,4 @@ describe('Artist', () => {
         });
     });
   });
-
 });

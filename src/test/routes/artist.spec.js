@@ -2,7 +2,6 @@ process.env.NODE_ENV = 'test';
 
 const app = require('../../app');
 const db = require('../../database');
-const tables = require('../../database/tableNames');
 const dbHandler = require('../../handlers/db');
 const jwt = require('jsonwebtoken');
 const request = require('supertest');
@@ -25,27 +24,27 @@ describe('Artist', () => {
         db.migrate.latest()
           .then(() => {
             dbHandler.artist.createNewArtistEntry(constants.initialArtist)
-              .then((artist) => {
+              .then(artist => {
                 logger.info(`Tests artists created: ${JSON.stringify(artist, null, 4)}`);
                 dbHandler.album.createNewAlbumEntry(constants.initialAlbum)
-                  .then((album) => {
+                  .then(album => {
                     logger.info(`Tests album created: ${JSON.stringify(album, null, 4)}`);
                     dbHandler.track.createNewTrackEntry(constants.initialTrack)
-                      .then((track) => {
+                      .then(track => {
                         logger.info(`Tests track created: ${JSON.stringify(track, null, 4)}`);
                         done();
                       })
-                      .catch((error) => {
+                      .catch(error => {
                         logger.warn(`Test track creation error: ${error}`);
                         done(error);
                       });
                   })
-                  .catch((error) => {
+                  .catch(error => {
                     logger.warn(`Test album creation error: ${error}`);
                     done(error);
                   });
               })
-              .catch((error) => {
+              .catch(error => {
                 logger.warn(`Test artists creation error: ${error}`);
                 done(error);
               });
@@ -85,7 +84,7 @@ describe('Artist', () => {
         });
     });
 
-    it('should return status code 401 if unauthorized', (done) => {
+    it('should return status code 401 if unauthorized', done => {
       request(app)
         .get('/api/artists')
         .set('Authorization', 'Bearer UNAUTHORIZED')
@@ -149,7 +148,7 @@ describe('Artist', () => {
         });
     });
 
-    it('should return status code 401 if unauthorized', (done) => {
+    it('should return status code 401 if unauthorized', done => {
       request(app)
         .post('/api/artists')
         .set('Authorization', 'Bearer UNAUTHORIZED')
@@ -162,7 +161,7 @@ describe('Artist', () => {
   });
 
   describe('/GET artists/{id}', () => {
-    it('should return status code 200', (done) => {
+    it('should return status code 200', done => {
       request(app)
         .get(`/api/artists/${constants.validArtistId}`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -172,7 +171,7 @@ describe('Artist', () => {
         });
     });
 
-    it('should return artist data', (done) => {
+    it('should return artist data', done => {
       request(app)
         .get(`/api/artists/${constants.validArtistId}`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -194,7 +193,7 @@ describe('Artist', () => {
         });
     });
 
-    it('should return status code 404 if id does not match an artist', (done) => {
+    it('should return status code 404 if id does not match an artist', done => {
       request(app)
         .get(`/api/artists/${constants.invalidArtistId}`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -204,7 +203,7 @@ describe('Artist', () => {
         });
     });
 
-    it('should return status code 401 if unauthorized', (done) => {
+    it('should return status code 401 if unauthorized', done => {
       request(app)
         .get(`/api/artists/${constants.invalidArtistId}`)
         .set('Authorization', 'Bearer UNAUTHORIZED')
@@ -216,7 +215,7 @@ describe('Artist', () => {
   });
 
   describe('/PUT artists/{id}', () => {
-    it('should return status code 201 when correct parameters are sent', (done) => {
+    it('should return status code 201 when correct parameters are sent', done => {
       request(app)
         .put(`/api/artists/${constants.validArtistId}`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -227,7 +226,7 @@ describe('Artist', () => {
         });
     });
 
-    it('should return the expected body response when correct parameters are sent', (done) => {
+    it('should return the expected body response when correct parameters are sent', done => {
       request(app)
         .put(`/api/artists/${constants.validArtistId}`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -246,7 +245,7 @@ describe('Artist', () => {
         });
     });
 
-    it('should return status code 400 when parameters are missing', (done) => {
+    it('should return status code 400 when parameters are missing', done => {
       request(app)
         .put(`/api/artists/${constants.validArtistId}`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -257,7 +256,7 @@ describe('Artist', () => {
         });
     });
 
-    it('should return status code 400 when parameters are invalid', (done) => {
+    it('should return status code 400 when parameters are invalid', done => {
       request(app)
         .put(`/api/artists/${constants.validArtistId}`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -268,7 +267,7 @@ describe('Artist', () => {
         });
     });
 
-    it('should return status code 404 if id does not match an artist', (done) => {
+    it('should return status code 404 if id does not match an artist', done => {
       request(app)
         .put(`/api/artists/${constants.invalidArtistId}`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -279,7 +278,7 @@ describe('Artist', () => {
         });
     });
 
-    it('should return status code 401 if unauthorized', (done) => {
+    it('should return status code 401 if unauthorized', done => {
       request(app)
         .put(`/api/artists/${constants.validArtistId}`)
         .set('Authorization', 'Bearer UNAUTHORIZED')
@@ -292,7 +291,7 @@ describe('Artist', () => {
   });
 
   describe('/DELETE artists/{id}', () => {
-    it('should return status code 204 when deletion is successful', (done) => {
+    it('should return status code 204 when deletion is successful', done => {
       request(app)
         .delete(`/api/artists/${constants.validArtistId}`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -302,7 +301,7 @@ describe('Artist', () => {
         });
     });
 
-    it('should remove artist from his album', (done) => {
+    it('should remove artist from his album', done => {
       request(app)
         .delete(`/api/artists/${constants.validArtistId}`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -319,7 +318,7 @@ describe('Artist', () => {
         });
     });
 
-    it('should return status code 404 if id does not match an artist', (done) => {
+    it('should return status code 404 if id does not match an artist', done => {
       request(app)
         .delete(`/api/artists/${constants.invalidArtistId}`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -329,7 +328,7 @@ describe('Artist', () => {
         });
     });
 
-    it('should return status code 401 if unauthorized', (done) => {
+    it('should return status code 401 if unauthorized', done => {
       request(app)
         .delete(`/api/artists/${constants.validArtistId}`)
         .set('Authorization', 'Bearer UNAUTHORIZED')
@@ -341,7 +340,7 @@ describe('Artist', () => {
   });
 
   describe('/GET /api/artists/{id}/tracks', () => {
-    it('should return status code 200', (done) => {
+    it('should return status code 200', done => {
       request(app)
         .get(`/api/artists/${constants.validArtistId}/tracks`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -351,7 +350,7 @@ describe('Artist', () => {
         });
     });
 
-    it('should return the expected body response when correct parameters are sent', (done) => {
+    it('should return the expected body response when correct parameters are sent', done => {
       request(app)
         .get(`/api/artists/${constants.validArtistId}/tracks`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -372,7 +371,7 @@ describe('Artist', () => {
         });
     });
 
-    it('should return the expected body response with new track', (done) => {
+    it('should return the expected body response with new track', done => {
       request(app)
         .post('/api/tracks')
         .set('Authorization', `Bearer ${testToken}`)
@@ -390,7 +389,7 @@ describe('Artist', () => {
         });
     });
 
-    it('should return the expected body response with no tracks', (done) => {
+    it('should return the expected body response with no tracks', done => {
       request(app)
         .delete(`/api/tracks/${constants.validTrackId}`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -407,7 +406,7 @@ describe('Artist', () => {
         });
     });
 
-    it('should return status code 404 if id does not match an artist', (done) => {
+    it('should return status code 404 if id does not match an artist', done => {
       request(app)
         .get(`/api/artists/${constants.invalidArtistId}/tracks`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -417,7 +416,7 @@ describe('Artist', () => {
         });
     });
 
-    it('should return status code 401 if unauthorized', (done) => {
+    it('should return status code 401 if unauthorized', done => {
       request(app)
         .get(`/api/artists/${constants.validArtistId}/tracks`)
         .set('Authorization', 'Bearer UNAUTHORIZED')
@@ -427,6 +426,4 @@ describe('Artist', () => {
         });
     });
   });
-
-
 });
