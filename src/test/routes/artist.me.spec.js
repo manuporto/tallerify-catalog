@@ -44,6 +44,102 @@ describe('Artist', () => {
     .then(() => done());
   });
 
+  describe('/POST artists/me/{id}/follow', () => {
+    it('should return status code 201 when artist follow is successful', (done) => {
+      request(app)
+        .post(`/api/artists/me/${constants.validArtistId}/follow`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.should.have.status(201);
+          done();
+        });
+    });
+
+    it('should return status code 201 when artist follow is duplicated', (done) => {
+      request(app)
+        .post(`/api/artists/me/${constants.validArtistId}/follow`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.should.have.status(201);
+          request(app)
+            .post(`/api/artists/me/${constants.validArtistId}/follow`)
+            .set('Authorization', `Bearer ${testToken}`)
+            .end((err, res) => {
+              res.should.have.status(201);
+              done();
+            });
+        });
+    });
+
+    it('should return status code 404 if id does not match an artist', (done) => {
+      request(app)
+        .post(`/api/artists/me/${constants.invalidArtistId}/follow`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.should.have.status(404);
+          done();
+        });
+    });
+
+    it('should return status code 401 if unauthorized', (done) => {
+      request(app)
+        .post(`/api/artists/me/${constants.validArtistId}/follow`)
+        .set('Authorization', 'Bearer UNAUTHORIZED')
+        .end((err, res) => {
+          res.should.have.status(401);
+          done();
+        });
+    });
+  });
+
+  describe('/DELETE artists/me/{id}/follow', () => {
+    it('should return status code 204 when deletion is successful', (done) => {
+      request(app)
+        .post(`/api/artists/me/${constants.validArtistId}/follow`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.should.have.status(201);
+          request(app)
+            .delete(`/api/artists/me/${constants.validArtistId}/follow`)
+            .set('Authorization', `Bearer ${testToken}`)
+            .end((err, res) => {
+              res.should.have.status(204);
+              done();
+            });
+        });
+    });
+
+    it('should return status code 204 if unfollowed artist was never followed', (done) => {
+      request(app)
+        .delete(`/api/artists/me/${constants.validArtistId}/follow`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.should.have.status(204);
+          done();
+        });
+    });
+
+    it('should return status code 404 if id does not match an artist', (done) => {
+      request(app)
+        .delete(`/api/artists/me/${constants.invalidArtistId}/follow`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.should.have.status(404);
+          done();
+        });
+    });
+
+    it('should return status code 401 if unauthorized', (done) => {
+      request(app)
+        .delete(`/api/artists/me/${constants.validArtistId}/follow`)
+        .set('Authorization', 'Bearer UNAUTHORIZED')
+        .end((err, res) => {
+          res.should.have.status(401);
+          done();
+        });
+    });
+  });
+
   describe('/GET artists me', () => {
     it('should return status code 200', (done) => {
       request(app)
