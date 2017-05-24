@@ -24,6 +24,12 @@
 		"genres": ["pero que no es justin"],
 		"images": ["ni daddy yankee"]
 	},
+	"updatedArtist": {
+		"name": "Ininity on high",
+		"description": "El que no canta despacito",
+		"genres": ["Punk"],
+		"images": ["una oveja"]
+	},
 	"newArtistWithMissingAttributes": {
 		"name": "Christian de Lugano"
 	},

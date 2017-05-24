@@ -32,8 +32,10 @@ const findArtistsIdsFromAlbum = (albumId) => {
 };
 
 const findAlbumsOfArtist = (artistId) => {
-  //todo
-  db(tables.albums_artists).where({ artist_id: artistId }).select('album_id')
+  return db(tables.albums_artists).where({ artist_id: artistId }).select('album_id')
+    .then((albums) => {
+      return db(tables.albums).whereIn('id', albums.map(album => album.album_id));
+    });
 };
 
 module.exports = {

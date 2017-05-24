@@ -20,7 +20,7 @@ const getAlbumsInfo = (artistId) => {
   return albumArtistHandler.findAlbumsOfArtist(artistId);
 };
 
-const updateArtistEntry = (id, body) => {
+const updateArtistEntry = (body, id) => {
   logger.info(`Updating artist ${id} with info: ${JSON.stringify(body, null, 4)}`);
   const artist = {
     name: body.name,
@@ -28,7 +28,7 @@ const updateArtistEntry = (id, body) => {
     genres: body.genres,
     images: body.images,
   };
-  return generalHandler.updateEntryWithId(id, artist);
+  return generalHandler.updateEntryWithId(tables.artists, id, artist);
 };
 
 const deleteArtist = (id) => {

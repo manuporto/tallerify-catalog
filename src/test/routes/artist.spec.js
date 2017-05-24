@@ -169,7 +169,7 @@ describe('Artist', () => {
 
     it('should return artist data', (done) => {
       request(app)
-        .get(`/api/artists/${constants.validTrackId}`)
+        .get(`/api/artists/${constants.validArtistId}`)
         .set('Authorization', `Bearer ${testToken}`)
         .end((err, res) => {
           res.body.should.be.a('object');
@@ -180,11 +180,11 @@ describe('Artist', () => {
           res.body.artist.should.have.property('id').eql(constants.validArtistId);
           res.body.artist.should.have.property('name').eql(constants.initialArtist.name);
           res.body.artist.should.have.property('description').eql(constants.initialArtist.description);
-          res.body.artists.should.have.property('href');
+          res.body.artist.should.have.property('href');
           // res.body.track.should.have.property('albums'); TODO
           res.body.artist.should.have.property('genres').eql(constants.initialArtist.genres);
           res.body.artist.should.have.property('images').eql(constants.initialArtist.images);
-          res.body.track.should.have.property('popularity').eql(0);
+          res.body.artist.should.have.property('popularity').eql(0);
           done();
         });
     });
@@ -210,12 +210,12 @@ describe('Artist', () => {
     });
   });
 
-  describe('/PUT tracks/{id}', () => {
+  describe('/PUT artists/{id}', () => {
     it('should return status code 201 when correct parameters are sent', (done) => {
       request(app)
-        .put(`/api/tracks/${constants.validTrackId}`)
+        .put(`/api/artists/${constants.validArtistId}`)
         .set('Authorization', `Bearer ${testToken}`)
-        .send(constants.updatedTrack)
+        .send(constants.updatedArtist)
         .end((err, res) => {
           res.should.have.status(200);
           done();
@@ -224,28 +224,29 @@ describe('Artist', () => {
 
     it('should return the expected body response when correct parameters are sent', (done) => {
       request(app)
-        .put(`/api/tracks/${constants.validTrackId}`)
+        .put(`/api/artists/${constants.validArtistId}`)
         .set('Authorization', `Bearer ${testToken}`)
-        .send(constants.updatedTrack)
+        .send(constants.updatedArtist)
         .end((err, res) => {
+          logger.warn(`RES ${JSON.stringify(res.body)}`);
           res.body.should.be.a('object');
-          res.body.should.have.property('id');
-          res.body.should.have.property('name').eql(constants.updatedTrack.name);
-          res.body.should.have.property('duration');
+          res.body.should.have.property('id').eql(constants.validArtistId);
+          res.body.should.have.property('name').eql(constants.updatedArtist.name);
+          res.body.should.have.property('description').eql(constants.updatedArtist.description);
           res.body.should.have.property('href');
-          // res.body.should.have.property('album'); TODO
-          // res.body.should.have.property('artists'); TODO
-          res.body.should.have.property('popularity');
-          // TODO add check for 'rate: int' inside popularity object
+          // res.body.track.should.have.property('albums'); TODO
+          res.body.should.have.property('genres').eql(constants.updatedArtist.genres);
+          res.body.should.have.property('images').eql(constants.updatedArtist.images);
+          res.body.should.have.property('popularity').eql(0);
           done();
         });
     });
 
     it('should return status code 400 when parameters are missing', (done) => {
       request(app)
-        .put(`/api/tracks/${constants.validTrackId}`)
+        .put(`/api/artists/${constants.validArtistId}`)
         .set('Authorization', `Bearer ${testToken}`)
-        .send(constants.updatedTrackWithMissingAttributes)
+        .send(constants.updatedArtistWithMissingAttributes)
         .end((err, res) => {
           res.should.have.status(400);
           done();
@@ -254,9 +255,9 @@ describe('Artist', () => {
 
     it('should return status code 400 when parameters are invalid', (done) => {
       request(app)
-        .put(`/api/tracks/${constants.validTrackId}`)
+        .put(`/api/artists/${constants.validArtistId}`)
         .set('Authorization', `Bearer ${testToken}`)
-        .send(constants.invalidTrack)
+        .send(constants.invalidArtist)
         .end((err, res) => {
           res.should.have.status(400);
           done();
@@ -265,9 +266,9 @@ describe('Artist', () => {
 
     it('should return status code 404 if id does not match a track', (done) => {
       request(app)
-        .put(`/api/tracks/${constants.invalidTrackId}`)
+        .put(`/api/artists/${constants.invalidArtistId}`)
         .set('Authorization', `Bearer ${testToken}`)
-        .send(constants.updatedTrack)
+        .send(constants.updatedArtist)
         .end((err, res) => {
           res.should.have.status(404);
           done();
@@ -276,9 +277,9 @@ describe('Artist', () => {
 
     it('should return status code 401 if unauthorized', (done) => {
       request(app)
-        .put(`/api/tracks/${constants.validTrackId}`)
+        .put(`/api/artists/${constants.validArtistId}`)
         .set('Authorization', 'Bearer UNAUTHORIZED')
-        .send(constants.updatedTrack)
+        .send(constants.updatedArtist)
         .end((err, res) => {
           res.should.have.status(401);
           done();
@@ -286,10 +287,10 @@ describe('Artist', () => {
     });
   });
 
-  describe('/DELETE tracks/{id}', () => {
+  describe('/DELETE artists/{id}', () => {
     it('should return status code 204 when deletion is successful', (done) => {
       request(app)
-        .delete(`/api/tracks/${constants.validTrackId}`)
+        .delete(`/api/artists/${constants.validArtistId}`)
         .set('Authorization', `Bearer ${testToken}`)
         .end((err, res) => {
           res.should.have.status(204);
@@ -299,7 +300,7 @@ describe('Artist', () => {
 
     it('should return status code 404 if id does not match a track', (done) => {
       request(app)
-        .delete(`/api/tracks/${constants.invalidTrackId}`)
+        .delete(`/api/artists/${constants.invalidArtistId}`)
         .set('Authorization', `Bearer ${testToken}`)
         .end((err, res) => {
           res.should.have.status(404);
@@ -309,7 +310,7 @@ describe('Artist', () => {
 
     it('should return status code 401 if unauthorized', (done) => {
       request(app)
-        .delete(`/api/tracks/${constants.validTrackId}`)
+        .delete(`/api/artists/${constants.validArtistId}`)
         .set('Authorization', 'Bearer UNAUTHORIZED')
         .end((err, res) => {
           res.should.have.status(401);

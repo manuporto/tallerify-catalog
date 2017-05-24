@@ -52,7 +52,7 @@ const getArtist = (req, res) => {
       if (!respond.entryExists(req.params.id, artist, res)) return;
       db.artist.getAlbumsInfo(req.params.id)
         .then((albums) => {
-          const finalArtist = Object.assign({}, track, { albums: albums });
+          const finalArtist = Object.assign({}, artist, { albums: albums });
           respond.successfulArtistFetch(finalArtist, res);
         })
         .catch(error => respond.internalServerError(error, res));
