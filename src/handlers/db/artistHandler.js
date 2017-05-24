@@ -52,7 +52,7 @@ const follow = (userId, artistId) => {
         return;
       }
       logger.info('Creating user-artist association');
-      return generalHandler.createNewEntry(tables.users_tracks, {
+      return generalHandler.createNewEntry(tables.users_artists, {
         user_id: userId,
         artist_id: artistId,
       });
@@ -68,7 +68,7 @@ const unfollow = (userId, artistId) => {
 };
 
 const findUserFavorites = (userId) => {
-  logger.info('Searching for artist favorites');
+  logger.info(`Searching for artist favorites of user ${userId}`);
   return db(tables.users_artists).select('artist_id').where({
     user_id: userId,
   })

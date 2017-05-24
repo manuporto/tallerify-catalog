@@ -79,7 +79,7 @@ router.put('/api/tracks/:id', track.updateTrack);
 
 router.delete('/api/tracks/:id', track.deleteTrack);
 
-router.post('/api/tracks/:id/like', track.trackLike);
+router.post('/api/tracks/:id/like', track.trackLike); // TODO add me to path and move tests
 
 router.delete('/api/tracks/:id/like', track.trackDislike);
 
