@@ -42,8 +42,8 @@ const createDbUserObject = (user) => {
 };
 
 const createFacebookUser = (req, user) => {
-  user.authToken = req.body.authToken;
-  return db.general.createNewEntry(tables.users, createDbUserObject(user));
+  const userWithToken = Object.assign({}, user, { authToken: req.body.authToken });
+  return db.general.createNewEntry(tables.users, createDbUserObject(userWithToken));
 };
 
 const checkCredentials = (credentials) => {
