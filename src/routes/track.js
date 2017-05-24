@@ -163,5 +163,5 @@ module.exports = {
   trackDislike,
   getFavoriteTracks,
   getTrackPopularity,
-  rateTrack
+  rateTrack,
 };

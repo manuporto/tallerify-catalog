@@ -24,5 +24,5 @@ module.exports = {
   insertAssociations,
   updateAssociations,
   deleteAssociations,
-  findArtistsIdsFromAlbum
+  findArtistsIdsFromAlbum,
 };

@@ -231,5 +231,5 @@ module.exports = {
   meUpdateUser,
   meGetContacts,
   meAddContact,
-  meDeleteContact
+  meDeleteContact,
 };
