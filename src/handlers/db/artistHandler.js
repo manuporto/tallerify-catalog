@@ -59,10 +59,19 @@ const follow = (userId, artistId) => {
     });
 };
 
+const unfollow = (userId, artistId) => {
+  logger.info(`User ${userId} disliking track ${artistId}`);
+  return db(tables.users_artists).where({
+    user_id: userId,
+    artist_id: artistId,
+  }).del();
+};
+
 module.exports = {
   createNewArtistEntry,
   getAlbumsInfo,
   updateArtistEntry,
   deleteArtist,
   follow,
+  unfollow,
 };

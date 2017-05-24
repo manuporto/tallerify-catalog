@@ -90,7 +90,14 @@ const getFavoriteArtists = (req, res) => {
 };
 
 const artistUnfollow = (req, res) => {
-
+  db.general.findEntryWithId(tables.artists, req.params.id)
+    .then((artist) => {
+      if (!respond.entryExists(req.params.id, artist, res)) return;
+      db.artist.unfollow(req.user.id, req.params.id)
+        .then(() => respond.successfulArtistUnfollow(artist, res))
+        .catch(error => respond.internalServerError(error, res));
+    })
+    .catch(error => respond.internalServerError(error, res));
 };
 
 const artistFollow = (req, res) => {
