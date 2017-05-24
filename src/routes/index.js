@@ -13,9 +13,7 @@ const usersMediaLocation = multer({dest: 'public/media/users/'});
 
 const router = express.Router();
 
-router.get('/', (req, res) => {
-  res.render('index');
-});
+router.get('/', (req, res) => res.render('index'));
 
 /* Users */
 
@@ -54,6 +52,12 @@ router.post('/api/admins/tokens', token.generateAdminToken);
 router.get('/api/artists', artist.getArtists);
 
 router.post('/api/artists', artist.newArtist);
+
+router.get('/api/artists/:id', artist.getArtist);
+
+router.put('/api/artists/:id', artist.updateArtist);
+
+router.delete('/api/artists/:id', artist.deleteArtist);
 
 /* Tracks */
 

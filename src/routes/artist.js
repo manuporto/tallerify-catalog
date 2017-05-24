@@ -30,13 +30,13 @@ const artistExpectedBodySchema = {
   },
 };
 
-function getArtists(req, res) {
+const getArtists = (req, res) => {
   db.general.findAllEntries(tables.artists)
     .then(artists => respond.successfulArtistsFetch(artists, res))
     .catch(error => respond.internalServerError(error, res));
 };
 
-function newArtist(req, res) {
+const newArtist = (req, res) => {
   respond.validateRequestBody(req.body, artistExpectedBodySchema)
     .then(() => {
       db.artist.createNewArtistEntry(req.body)
@@ -50,7 +50,7 @@ const getArtist = (req, res) => {
   db.general.findEntryWithId(tables.artists, req.params.id)
     .then((artist) => {
       if (!respond.entryExists(req.params.id, artist, res)) return;
-      db.artist.getAlbumsInfo(artist)
+      db.artist.getAlbumsInfo(req.params.id)
         .then((albums) => {
           const finalArtist = Object.assign({}, track, { albums: albums });
           respond.successfulArtistFetch(finalArtist, res);

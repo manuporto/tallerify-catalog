@@ -1,10 +1,21 @@
 {
+	"jwtTestUser": {
+		"admin": true
+	},
 	"initialArtist": {
 		"id": 1,
 		"name": "Papa Baute",
 		"description": "Tiene un implante coclear?",
 		"genres": ["Bachata"],
 		"images": ["una con guido", "otra con sergio"]
+	},
+	"initialAlbum": {
+		"id": 1,
+		"name": "Folie a deux",
+		"images": ["un oso", "otro oso"],
+		"genres": ["Rock"],
+		"artists": [1],
+		"release_date": "4011958"
 	},
 	"testArtist": {
 		"id": 2,
@@ -22,5 +33,7 @@
 		"genres": 3,
 		"images": "muchas",
 		"popularity": "#SiempreAlTop"
-	}
+	},
+	"validArtistId": 1,
+	"invalidArtistId": 9999
 }

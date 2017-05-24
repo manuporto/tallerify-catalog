@@ -16,9 +16,8 @@ const createNewArtistEntry = (body) => {
   return generalHandler.createNewEntry(tables.artists, artist);
 };
 
-const getAlbumsInfo = (artist) => {
-  // TODO
-  return [];
+const getAlbumsInfo = (artistId) => {
+  return albumArtistHandler.findAlbumsOfArtist(artistId);
 };
 
 const updateArtistEntry = (id, body) => {

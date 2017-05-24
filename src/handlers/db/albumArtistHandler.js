@@ -31,10 +31,16 @@ const findArtistsIdsFromAlbum = (albumId) => {
   return db(tables.albums_artists).where('album_id', albumId).select('artist_id');
 };
 
+const findAlbumsOfArtist = (artistId) => {
+  //todo
+  db(tables.albums_artists).where({ artist_id: artistId }).select('album_id')
+};
+
 module.exports = {
   insertAssociations,
   updateAssociationsOfAlbum,
   deleteAssociationsOfAlbum,
   findArtistsIdsFromAlbum,
   deleteAssociationsOfArtist,
+  findAlbumsOfArtist,
 };
