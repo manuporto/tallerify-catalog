@@ -17,6 +17,12 @@
 		"artists": [1],
 		"release_date": "4011958"
 	},
+	"initialTrack": {
+		"id": 1,
+		"name": "Despacito",
+		"albumId": 1,
+		"artists": [1]
+	},
 	"testArtist": {
 		"id": 2,
 		"name": "Luis Fonsi",

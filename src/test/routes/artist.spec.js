@@ -31,7 +31,15 @@ describe('Artist', () => {
                 dbHandler.album.createNewAlbumEntry(constants.initialAlbum)
                   .then((album) => {
                     logger.info(`Tests album created: ${JSON.stringify(album, null, 4)}`);
-                    done();
+                    dbHandler.track.createNewTrackEntry(constants.initialTrack)
+                      .then((track) => {
+                        logger.info(`Tests track created: ${JSON.stringify(track, null, 4)}`);
+                        done();
+                      })
+                      .catch((error) => {
+                        logger.warn(`Test track creation error: ${error}`);
+                        done(error);
+                      });
                   })
                   .catch((error) => {
                     logger.warn(`Test album creation error: ${error}`);
@@ -298,7 +306,7 @@ describe('Artist', () => {
         });
     });
 
-    it('should return status remove artist from his album', (done) => {
+    it('should remove artist from his album', (done) => {
       request(app)
         .delete(`/api/artists/${constants.validArtistId}`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -335,4 +343,28 @@ describe('Artist', () => {
         });
     });
   });
+
+  describe('/GET /api/artists/{id}/tracks', () => {
+    it('should return status code 404 if id does not match an artist', (done) => {
+      request(app)
+        .get(`/api/artists/${constants.invalidArtistId}/tracks`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.should.have.status(404);
+          done();
+        });
+    });
+
+    it('should return status code 401 if unauthorized', (done) => {
+      request(app)
+        .get(`/api/artists/${constants.validArtistId}/tracks`)
+        .set('Authorization', 'Bearer UNAUTHORIZED')
+        .end((err, res) => {
+          res.should.have.status(401);
+          done();
+        });
+    });
+  });
+
+
 });
