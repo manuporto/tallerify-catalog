@@ -319,12 +319,12 @@ const successfulTrackAdditionToAlbum = (trackId, album, response) => {
 
 /* Tracks */
 
-const formatTrackShortJson = track => ({
-  id: track.id,
-  name: track.name,
-  href: track.href,
-  images: track.images,
-});
+// const formatTrackShortJson = track => ({
+//   id: track.id,
+//   name: track.name,
+//   href: track.href,
+//   images: track.images,
+// });
 
 const formatTrackJson = track => ({
   id: track.id,
