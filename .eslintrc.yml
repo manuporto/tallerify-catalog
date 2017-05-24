@@ -5,6 +5,7 @@ rules:
   no-shadow: warn
   spaced-comment: off
   no-underscore-dangle: off
+  consistent-return: off
 env:
   es6: true
   node: true
