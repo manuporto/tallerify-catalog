@@ -16,7 +16,7 @@ const config = require('./../../config');
 const constants = require('./user.constants.json');
 
 const testToken = jwt.sign({ admin: true }, config.secret);
-const initialUser = Object.assign({}, constants.initialUser, {id: 1});
+const initialUser = Object.assign({}, constants.initialUser, { id: 1 });
 const initialUserToken = jwt.sign(initialUser, config.secret);
 
 describe('User', () => {
@@ -25,7 +25,8 @@ describe('User', () => {
       .then(() => {
         db.migrate.latest()
           .then(() => {
-            dbHandler.createNewEntry(tables.users, [constants.initialUser, constants.initialContact])
+            dbHandler.createNewEntry(tables.users,
+              [constants.initialUser, constants.initialContact])
               .then(() => done())
               .catch(error => done(error));
           })
@@ -174,7 +175,7 @@ describe('User', () => {
             .end((err, res) => {
               res.body.user.should.have.property('contacts').eql([constants.initialContactShort]);
               done();
-            })
+            });
         });
     });
 
@@ -189,7 +190,7 @@ describe('User', () => {
             .end((err, res) => {
               res.body.user.should.have.property('contacts').eql([]);
               done();
-            })
+            });
         });
     });
 
