@@ -67,6 +67,18 @@ const unfollow = (userId, artistId) => {
   }).del();
 };
 
+const findUserFavorites = (userId) => {
+  logger.info('Searching for artist favorites');
+  return db(tables.users_artists).select('artist_id').where({
+    user_id: userId,
+  })
+    .then((artists) => {
+      const artistIds = artists.map(artist => artist.artist_id);
+      logger.info(`Followed artist ids for user ${userId}: ${JSON.stringify(artistIds, null, 4)}`);
+      return db(tables.artists).whereIn('id', artistIds); // TODO add albums info
+    });
+};
+
 module.exports = {
   createNewArtistEntry,
   getAlbumsInfo,
@@ -74,4 +86,5 @@ module.exports = {
   deleteArtist,
   follow,
   unfollow,
+  findUserFavorites,
 };

@@ -86,7 +86,9 @@ const deleteArtist = (req, res) => {
 };
 
 const getFavoriteArtists = (req, res) => {
-
+  db.artist.findUserFavorites(req.user.id)
+    .then(artists => respond.successfulArtistsFetch(artists, res))
+    .catch(error => respond.internalServerError(error, res));
 };
 
 const artistUnfollow = (req, res) => {
