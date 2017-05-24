@@ -7,12 +7,12 @@ services:
   - postgresql
 before_script:
   - psql -c 'create database tallerify_travis;' -U postgres
+script:
+  - 'if [ "$TRAVIS_PULL_REQUEST" = "true" ]; then npm run lint; fi'
+  - npm test
+  - 'if [ "$TRAVIS_PULL_REQUEST" = "true" ]; then npm run coverage && npm run codecov; fi'
 env:
   - TEST_DATABASE_URL=postgres://postgres@localhost:5432/tallerify_travis
-after_success:
-  - npm run coverage
-  - npm run codecov
-  - npm run lint
 notifications:
   email: false
   slack: tallerify:3BddOwjmsqmpRjYFXvbRZu1r
