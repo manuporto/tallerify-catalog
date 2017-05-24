@@ -51,7 +51,7 @@ const newTrack = (req, res) => {
       .then(track => respond.successfulTrackCreation(track, res))
       .catch((error) => {
         if (error.name === 'NonExistentIdError') {
-          respond.nonExistentId(error.message, res);
+          return respond.nonExistentId(error.message, res);
         }
         respond.internalServerError(error, res);
       });
@@ -63,7 +63,7 @@ const getTrack = (req, res) => {
   db.general.findEntryWithId(tables.tracks, req.params.id)
     .then((track) => {
       if (!respond.entryExists(req.params.id, track, res)) return;
-      const getters = [ db.track.getArtistsInfo(track) , db.track.getAlbumInfo(track) ];
+      const getters = [db.track.getArtistsInfo(track), db.track.getAlbumInfo(track)];
       Promise.all(getters)
         .then((results) => {
           const finalTrack = Object.assign({}, track, { artists: results[0], album: results[1] });

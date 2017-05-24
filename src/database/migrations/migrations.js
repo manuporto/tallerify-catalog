@@ -9,7 +9,7 @@ exports.up = (knex, Promise) => {
 			table.increments('id').primary();
 			table.string('name');
 			table.integer('duration');
-      table.integer('albumId');
+      table.integer('album_id');
       table.string('href');
 		}),
 
@@ -27,6 +27,24 @@ exports.up = (knex, Promise) => {
 			table.string('name');
 			table.integer('popularity');
 		}),
+
+    knex.schema.createTableIfNotExists(tables.albums, (table) => {
+      logger.debug('Creating albums table.');
+      table.increments('id').primary();
+      table.string('href');
+      table.string('name');
+      table.string('release_date');
+      table.integer('popularity');
+      table.specificType('images', 'text ARRAY');
+      table.specificType('genres', 'text ARRAY');
+    }),
+
+    knex.schema.createTableIfNotExists(tables.albums_artists, (table) => {
+      logger.debug('Creating albums_artists table.');
+      table.increments('album_artist_id').primary();
+      table.integer('album_id');
+      table.integer('artist_id');
+    }),
 
 		knex.schema.createTableIfNotExists(tables.artists_tracks, (table) => {
 			logger.debug('Creating artists_tracks table.');
@@ -68,17 +86,26 @@ exports.up = (knex, Promise) => {
       table.integer('track_id');
     }),
 
+    knex.schema.createTableIfNotExists(tables.users_users, (table) => {
+      logger.debug('Creating users_users table.');
+      table.increments('user_friend_id').primary();
+      table.integer('user_id');
+      table.integer('friend_id');
+    }),
+
   ]);
 };
 
 exports.down = (knex, Promise) => {
 	return Promise.all([
     knex.schema.dropTable(tables.tracks),
+    knex.schema.dropTable(tables.albums),
     knex.schema.dropTable(tables.tracks_rating),
     knex.schema.dropTable(tables.artists),
     knex.schema.dropTable(tables.artists_tracks),
     knex.schema.dropTable(tables.users),
     knex.schema.dropTable(tables.admins),
     knex.schema.dropTable(tables.users_tracks),
+    knex.schema.dropTable(tables.users_users),
   ]);
 };
