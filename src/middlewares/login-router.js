@@ -1,4 +1,3 @@
-const logger = require('../utils/logger');
 const respond = require('../handlers/response');
 const facebook = require('./facebook');
 const db = require('../handlers/db');

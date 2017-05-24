@@ -77,7 +77,7 @@ app.use((req, res, next) => {
 // development and test error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
-  app.use((err, req, res, next) => {
+  app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
     res.status(err.status || 500).json({
       message: err.message,
       error: err,
@@ -87,7 +87,7 @@ if (app.get('env') === 'development') {
 
 // production error handler
 // no stacktraces leaked to user
-app.use((err, req, res, next) => {
+app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
   res.status(err.status || 500).json({
     code: err.status,
     message: err.message,

@@ -59,7 +59,7 @@ const formatUserShortJson = user => ({
   images: user.images,
 });
 
-const formatUserContacts = contacts => (contacts[0] === null) ? [] : contacts.map(formatUserShortJson);
+const formatUserContacts = contacts => (contacts[0] === null) ? [] : contacts.map(formatUserShortJson); // eslint-disable-line
 
 const formatUserJson = user => ({
   userName: user.userName,

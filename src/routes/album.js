@@ -125,14 +125,22 @@ const deleteTrackFromAlbum = (req, res) => {
     .then((results) => {
       if (!respond.entryExists(req.params.trackId, results[0], res)) return;
       if (!respond.entryExists(req.params.albumId, results[1], res)) return;
-      if (results[0].album_id != req.params.albumId) {
+      if (results[0].album_id !== req.params.albumId) {
         return respond.invalidTrackDeletionFromAlbum(req.params.trackId, req.params.albumId, res);
       }
       db.track.deleteAlbumId(req.params.trackId)
-        .then(() => respond.successfulTrackDeletionFromAlbum(req.params.trackId, req.params.albumId, res))
+        .then(() => respond.successfulTrackDeletionFromAlbum(req.params.trackId, req.params.albumId, res)) // eslint-disable-line max-len
         .catch(error => respond.internalServerError(error, res));
     })
     .catch(error => respond.internalServerError(error, res));
 };
 
-module.exports = { getAlbums, getAlbum, newAlbum, updateAlbum, deleteAlbum, addTrackToAlbum, deleteTrackFromAlbum };
+module.exports = {
+  getAlbums,
+  getAlbum,
+  newAlbum,
+  updateAlbum,
+  deleteAlbum,
+  addTrackToAlbum,
+  deleteTrackFromAlbum,
+};
