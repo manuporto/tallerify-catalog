@@ -10,7 +10,7 @@ const insertAssociations = (albumId, artistsIds) => {
   return generalHandler.createNewEntry(tables.albums_artists, rowValues);
 };
 
-const deleteAssociations = (albumId) => {
+const deleteAssociations = albumId => {
   logger.info(`Deleting album ${albumId} associations`);
   return db(tables.albums_artists).where('album_id', albumId).del();
 };

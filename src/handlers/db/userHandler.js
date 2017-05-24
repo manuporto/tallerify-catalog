@@ -28,7 +28,7 @@ select uf.id,
     json_agg(uf.contact) as contacts from user_friend uf
 group by uf.id;`;
 
-const findWithFacebookUserId = (userId) => {
+const findWithFacebookUserId = userId => {
   logger.info(`Querying database for entry with fb userId "${userId}"`);
   return db(tables.users).where({
     facebookUserId: userId,
@@ -40,7 +40,7 @@ const findAllUsers = () => {
   return db.raw(innerJoin).then(res => res.rows);
 };
 
-const findUser = (id) => {
+const findUser = id => {
   logger.info(`Finding user with id: ${id}`);
   return db.raw(`with user_friend as (
     with friends_ids as (
@@ -65,7 +65,7 @@ select uf.id,
     string_agg(DISTINCT uf.href, ',') as "href",
     json_agg(uf.contact) as contacts from user_friend uf
 where uf.id = ?
-group by uf.id;`, [id]).then((res) => {
+group by uf.id;`, [id]).then(res => {
   if (res.rows[0]) {
     const user = Object.assign({}, res.rows[0], { images: res.rows[0].images[0] });
     return user;
@@ -79,7 +79,7 @@ const friend = (userId, friendId) => {
     user_id: userId,
     friend_id: friendId,
   })
-    .then((result) => {
+    .then(result => {
       if (result.length) {
         logger.info(`User ${userId} already friended user ${friendId}`);
         return;

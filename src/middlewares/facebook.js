@@ -27,7 +27,7 @@ const validateWithProvider = socialToken => new Promise((resolve, reject) => {
       });
 });
 
-const createDbUserObject = (user) => {
+const createDbUserObject = user => {
   const defaultMissingValue = 'unknown';
   return {
     userName: user.name.split(' ').join('_').toLowerCase(),
@@ -46,24 +46,24 @@ const createFacebookUser = (req, user) => {
   return db.general.createNewEntry(tables.users, createDbUserObject(userWithToken));
 };
 
-const checkCredentials = (credentials) => {
+const checkCredentials = credentials => {
   logger.info(`Validating credentials: ${JSON.stringify(credentials)}`);
   return validateWithProvider(credentials.authToken);
 };
 
 const handleLogin = (req, res, next, fUser) => {
   db.user.findWithFacebookUserId(fUser.id)
-    .then((user) => {
+    .then(user => {
       if (user) {
         req.user = user;
         next();
       } else {
         createFacebookUser(req, fUser)
-          .then((newUser) => {
+          .then(newUser => {
             req.user = newUser[0];
             next();
           })
-          .catch((error) => {
+          .catch(error => {
             respond.internalServerError(error, res);
           });
       }

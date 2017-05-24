@@ -12,13 +12,13 @@ const findAllAlbums = () => {
   return generalHandler.findAllEntries(tables.albums); // TODO full query to get artists and tracks
 };
 
-const findAlbumWithId = (id) => {
+const findAlbumWithId = id => {
   logger.info(`Fetching album with id: ${id}`);
   // TODO full query to get artists and tracks
   return generalHandler.findEntryWithId(tables.albums, id);
 };
 
-const checkArtistsExistence = body => db(tables.artists).whereIn('id', body.artists).then((artists) => {
+const checkArtistsExistence = body => db(tables.artists).whereIn('id', body.artists).then(artists => {
   if (artists.length < body.artists.length) {
     logger.warn(`Req artists: ${JSON.stringify(body.artists)} vs DB artists: ${JSON.stringify(artists)}`);
     return Promise.reject(new NonExistentIdError('Non existing artist.'));
@@ -26,7 +26,7 @@ const checkArtistsExistence = body => db(tables.artists).whereIn('id', body.arti
   return artists;
 });
 
-const createNewAlbumEntry = (body) => {
+const createNewAlbumEntry = body => {
   logger.info(`Creating album with info: ${JSON.stringify(body, null, 4)}`);
   const album = {
     name: body.name,
@@ -37,7 +37,7 @@ const createNewAlbumEntry = (body) => {
   };
   return checkArtistsExistence(body)
     .then(() => generalHandler.createNewEntry(tables.albums, album)
-        .then((insertedAlbum) => {
+        .then(insertedAlbum => {
           logger.info(`Inserted album: ${JSON.stringify(insertedAlbum, null, 4)}`);
           return albumArtistHandler.insertAssociations(insertedAlbum[0].id, body.artists)
             .then(() => insertedAlbum);
@@ -55,14 +55,14 @@ const updateAlbumEntry = (body, id) => {
 
   return checkArtistsExistence(body)
     .then(() => generalHandler.updateEntryWithId(tables.albums, id, album)
-        .then((updatedAlbum) => {
+        .then(updatedAlbum => {
           logger.info(`Updated album: ${JSON.stringify(updatedAlbum, null, 4)}`);
           return albumArtistHandler.updateAssociations(updatedAlbum[0].id, body.artists)
             .then(() => updatedAlbum);
         }));
 };
 
-const deleteAlbumWithId = (id) => {
+const deleteAlbumWithId = id => {
   logger.info(`Deleting album ${id}`);
   const deleters = [
     generalHandler.deleteEntryWithId(tables.albums, id),

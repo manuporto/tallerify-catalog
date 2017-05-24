@@ -60,7 +60,7 @@ const newAdmin = (req, res) => {
 
 const deleteAdmin = (req, res) => {
   db.findEntryWithId('admins', req.params.id)
-    .then((admin) => {
+    .then(admin => {
       if (!respond.entryExists(req.params.id, admin, res)) return;
       db.deleteEntryWithId('admins', req.params.id)
         .then(() => respond.successfulAdminDeletion(res))

@@ -38,7 +38,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 // *** jwt secret *** //
-const unprotectedRoutes = (req) => {
+const unprotectedRoutes = req => {
   const baseRE = pathToRegexp('/');
   const tokensRE = pathToRegexp('/api/tokens');
   const adminTokensRE = pathToRegexp('/api/admins/tokens');

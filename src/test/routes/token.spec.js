@@ -14,7 +14,7 @@ chai.use(chaiHttp);
 const constants = require('./token.constants.json');
 
 describe('Token', () => {
-  beforeEach((done) => {
+  beforeEach(done => {
     db.migrate.rollback()
       .then(() => {
         db.migrate.latest()
@@ -29,13 +29,13 @@ describe('Token', () => {
       });
   });
 
-  afterEach((done) => {
+  afterEach(done => {
     db.migrate.rollback()
       .then(() => done());
   });
 
   describe('/POST tokens with native login', () => {
-    it('should return status code 400 when parameters are missing', (done) => {
+    it('should return status code 400 when parameters are missing', done => {
       request(app)
         .post('/api/tokens')
         .send(constants.tokenGenerationWithMissingAttributes)
@@ -45,7 +45,7 @@ describe('Token', () => {
         });
     });
 
-    it('should return status code 400 when credentials dont match', (done) => {
+    it('should return status code 400 when credentials dont match', done => {
       request(app)
         .post('/api/tokens')
         .send(constants.invalidCredentials)
@@ -55,7 +55,7 @@ describe('Token', () => {
         });
     });
 
-    it('should return status code 201', (done) => {
+    it('should return status code 201', done => {
       request(app)
         .post('/api/tokens')
         .send(constants.tokenGeneration)
@@ -65,7 +65,7 @@ describe('Token', () => {
         });
     });
 
-    it('should return the expected body response when correct credentials are sent', (done) => {
+    it('should return the expected body response when correct credentials are sent', done => {
       request(app)
         .post('/api/tokens')
         .send(constants.tokenGeneration)
@@ -83,7 +83,7 @@ describe('Token', () => {
   });
 
   describe('/POST tokens with facebook login', () => {
-    it('should return status code 400 when parameters are missing', (done) => {
+    it('should return status code 400 when parameters are missing', done => {
       request(app)
         .post('/api/tokens')
         .send(constants.facebookTokenGenerationWithMissingAttributes)
@@ -93,7 +93,7 @@ describe('Token', () => {
         });
     });
 
-    it('should return status code 401 when user token is invalid or expired', (done) => {
+    it('should return status code 401 when user token is invalid or expired', done => {
       request(app)
         .post('/api/tokens')
         .send(constants.facebookTokenGenerationWithInvalidCredentials)
@@ -103,7 +103,7 @@ describe('Token', () => {
         });
     });
 
-    it('should return status code 201', (done) => {
+    it('should return status code 201', done => {
       request(app)
         .post('/api/tokens')
         .send(constants.facebookTokenGeneration)
@@ -113,7 +113,7 @@ describe('Token', () => {
         });
     });
 
-    it('should return the expected body response when correct credentials are sent', (done) => {
+    it('should return the expected body response when correct credentials are sent', done => {
       request(app)
         .post('/api/tokens')
         .send(constants.facebookTokenGeneration)
@@ -129,7 +129,7 @@ describe('Token', () => {
         });
     });
 
-    it('should return existing information when logging with existing user', (done) => {
+    it('should return existing information when logging with existing user', done => {
       request(app)
         .post('/api/tokens')
         .send(constants.existingFacebookTokenGeneration)
@@ -148,7 +148,7 @@ describe('Token', () => {
   });
 
   describe('/POST admins/tokens', () => {
-    it('should return status code 400 when parameters are missing', (done) => {
+    it('should return status code 400 when parameters are missing', done => {
       request(app)
         .post('/api/admins/tokens')
         .send(constants.adminTokenGenerationWithMissingAttributes)
@@ -158,7 +158,7 @@ describe('Token', () => {
         });
     });
 
-    it('should return status code 400 when credentials dont match', (done) => {
+    it('should return status code 400 when credentials dont match', done => {
       request(app)
         .post('/api/admins/tokens')
         .send(constants.adminInvalidCredentials)
@@ -168,7 +168,7 @@ describe('Token', () => {
         });
     });
 
-    it('should return status code 201', (done) => {
+    it('should return status code 201', done => {
       request(app)
         .post('/api/admins/tokens')
         .send(constants.adminTokenGeneration)
@@ -178,7 +178,7 @@ describe('Token', () => {
         });
     });
 
-    it('should return the expected body response when correct credentials are sent', (done) => {
+    it('should return the expected body response when correct credentials are sent', done => {
       request(app)
         .post('/api/admins/tokens')
         .send(constants.adminTokenGeneration)

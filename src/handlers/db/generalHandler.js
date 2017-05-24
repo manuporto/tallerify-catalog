@@ -1,7 +1,7 @@
 const logger = require('../../utils/logger');
 const db = require('../../database/index');
 
-const findAllEntries = (tableName) => {
+const findAllEntries = tableName => {
   logger.debug('Getting all entries.');
   return db.select().from(tableName);
 };

@@ -20,7 +20,7 @@ const artistsConstants = require('./artist.constants.json');
 const testToken = jwt.sign(constants.jwtTestUser, config.secret);
 
 describe('Track me', () => {
-  beforeEach((done) => {
+  beforeEach(done => {
     db.migrate.rollback()
     .then(() => {
       db.migrate.rollback().then(() => {
@@ -29,18 +29,18 @@ describe('Track me', () => {
             [
               artistsConstants.initialArtist,
               artistsConstants.testArtist,
-            ]).then((artists) => {
+            ]).then(artists => {
               logger.info(`Tests artists created: ${JSON.stringify(artists, null, 4)}`);
               dbHandler.track.createNewTrackEntry(constants.initialTrack)
-                .then((tracks) => {
+                .then(tracks => {
                   logger.info(`Tests tracks created: ${JSON.stringify(tracks, null, 4)}`);
                   done();
                 })
-                .catch((error) => {
+                .catch(error => {
                   logger.warn(`Test tracks creation error: ${error}`);
                   done(error);
                 });
-            }).catch((error) => {
+            }).catch(error => {
               logger.warn(`Test artists creation error: ${error}`);
               done(error);
             });
@@ -50,13 +50,13 @@ describe('Track me', () => {
     });
   });
 
-  afterEach((done) => {
+  afterEach(done => {
     db.migrate.rollback()
     .then(() => done());
   });
 
   describe('/GET tracks me', () => {
-    it('should return status code 200', (done) => {
+    it('should return status code 200', done => {
       request(app)
         .get('/api/tracks/me/favorites')
         .set('Authorization', `Bearer ${testToken}`)
@@ -66,7 +66,7 @@ describe('Track me', () => {
         });
     });
 
-    it('should return status code 200 with a track', (done) => {
+    it('should return status code 200 with a track', done => {
       request(app)
         .post(`/api/tracks/${constants.validTrackId}/like`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -82,7 +82,7 @@ describe('Track me', () => {
         });
     });
 
-    it('should return the expected body response when correct parameters are sent', (done) => {
+    it('should return the expected body response when correct parameters are sent', done => {
       request(app)
         .get('/api/tracks/me/favorites')
         .set('Authorization', `Bearer ${testToken}`)
@@ -98,7 +98,7 @@ describe('Track me', () => {
         });
     });
 
-    it('should return a track when correct parameters are sent', (done) => {
+    it('should return a track when correct parameters are sent', done => {
       request(app)
         .post(`/api/tracks/${constants.validTrackId}/like`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -120,7 +120,7 @@ describe('Track me', () => {
         });
     });
 
-    it('should return a track when correct parameters are sent', (done) => {
+    it('should return a track when correct parameters are sent', done => {
       request(app)
         .post(`/api/tracks/${constants.validTrackId}/like`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -148,7 +148,7 @@ describe('Track me', () => {
         });
     });
 
-    it('should return status code 401 if unauthorized', (done) => {
+    it('should return status code 401 if unauthorized', done => {
       request(app)
         .get('/api/tracks/me/favorites')
         .set('Authorization', 'Bearer UNAUTHORIZED')

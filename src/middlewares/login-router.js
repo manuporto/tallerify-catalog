@@ -67,7 +67,7 @@ const facebookUser = {
 
 const getNativeUserToken = (req, res, next) => {
   db.general.findWithUsernameAndPassword(tables.users, req.body.userName, req.body.password)
-    .then((user) => {
+    .then(user => {
       if (user) {
         req.user = user;
         next();
@@ -80,7 +80,7 @@ const getNativeUserToken = (req, res, next) => {
 
 const getFacebookUserToken = (req, res, next) => {
   facebook.checkCredentials(req.body)
-    .then((fUser) => {
+    .then(fUser => {
       respond.validateRequestBody(fUser, facebookUser)
         .then(() => facebook.handleLogin(req, res, next, fUser))
         .catch(error => respond.invalidRequestBodyError(error, res));

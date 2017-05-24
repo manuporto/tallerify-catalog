@@ -40,7 +40,7 @@ const generateToken = (req, res) => {
 const generateAdminToken = (req, res) => respond.validateRequestBody(req.body, expectedBodySchema)
     .then(() => {
       db.findWithUsernameAndPassword(tables.admins, req.body.userName, req.body.password)
-        .then((admin) => {
+        .then(admin => {
           if (!resultIsValid(admin, res)) return;
           respond.successfulAdminTokenGeneration(admin, getToken(req.app.get('secret'), admin), res);
         }).catch(reason => respond.internalServerError(reason, res));

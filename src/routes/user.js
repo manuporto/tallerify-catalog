@@ -109,7 +109,7 @@ const updateUserInfo = (id, body) => {
 
 const _getUser = (id, res) => {
   db.user.findUser(id)
-    .then((user) => {
+    .then(user => {
       if (!respond.entryExists(id, user, res)) return;
       respond.successfulUserFetch(user, res);
     })
@@ -120,14 +120,14 @@ const _updateUser = (id, body, response) => {
   respond.validateRequestBody(body, updateUserExpectedBodySchema)
     .then(() => {
       db.general.findEntryWithId(tables.users, id)
-        .then((user) => {
+        .then(user => {
           if (!respond.entryExists(id, user, response)) return;
           updateUserInfo(id, body)
             .then(() => {
               // Ugly hack to get user's contacts
               // No need to recheck if user exists
               db.user.findUser(id)
-                .then((user) => {
+                .then(user => {
                   respond.successfulUserUpdate(user, response);
                 });
             })
@@ -157,7 +157,7 @@ const newUser = (req, res) => {
   respond.validateRequestBody(req.body, userExpectedBodySchema)
     .then(() => {
       createNewUser(req.body, process.env.BASE_URL + req.file.path.replace('public/', ''))
-        .then((user) => {
+        .then(user => {
           const userWithContactsField = Object.assign({}, user[0], { contacts: [null] });
           return respond.successfulUserCreation(userWithContactsField, res);
         })
@@ -172,7 +172,7 @@ const updateUser = (req, res) => {
 
 const deleteUser = (req, res) => {
   db.general.findEntryWithId(tables.users, req.params.id)
-    .then((user) => {
+    .then(user => {
       if (!respond.entryExists(req.params.id, user, res)) return;
       db.general.deleteEntryWithId(tables.users, req.params.id)
         .then(() => respond.successfulUserDeletion(res))
@@ -191,7 +191,7 @@ const meUpdateUser = (req, res) => {
 
 const meGetContacts = (req, res) => {
   db.user.findUser(req.user.id)
-    .then((user) => {
+    .then(user => {
       if (!respond.entryExists(req.user.id, user, res)) return;
       respond.successfulUserContactsFetch(user.contacts, res);
     })
@@ -200,7 +200,7 @@ const meGetContacts = (req, res) => {
 
 const meAddContact = (req, res) => {
   db.general.findEntryWithId(tables.users, req.params.id)
-    .then((user) => {
+    .then(user => {
       if (!respond.entryExists(req.params.id, user, res)) return;
       db.user.friend(req.user.id, req.params.id)
         .then(() => respond.successfulContactAddition(res))
@@ -211,7 +211,7 @@ const meAddContact = (req, res) => {
 
 const meDeleteContact = (req, res) => {
   db.general.findEntryWithId(tables.users, req.params.id)
-    .then((user) => {
+    .then(user => {
       if (!respond.entryExists(req.params.id, user, res)) return;
       db.user.unfriend(req.user.id, req.params.id)
         .then(() => respond.successfulContactDeletion(res))

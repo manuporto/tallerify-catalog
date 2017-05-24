@@ -24,7 +24,7 @@ const nonExistentId = (message, response) => {
 const validateRequestBody = (body, schema) => {
   logger.info(`Validating request "${JSON.stringify(body, null, 4)}"`);
   return new Promise((resolve, reject) => {
-    jsonSchemaValidator.validate(body, schema, (error) => {
+    jsonSchemaValidator.validate(body, schema, error => {
       if (error) {
         reject(error);
       } else {
@@ -128,7 +128,7 @@ const successfulUserUpdate = (user, response) => {
   response.status(200).json(formatUserJson(user));
 };
 
-const successfulUserDeletion = (response) => {
+const successfulUserDeletion = response => {
   logger.info('Successful user deletion');
   response.sendStatus(204);
 };
@@ -144,12 +144,12 @@ const successfulUserContactsFetch = (contacts, response) => {
   });
 };
 
-const successfulContactAddition = (response) => {
+const successfulContactAddition = response => {
   logger.info('Successful contact addition');
   response.sendStatus(201);
 };
 
-const successfulContactDeletion = (response) => {
+const successfulContactDeletion = response => {
   logger.info('Successful contact deletion');
   response.sendStatus(204);
 };
@@ -172,20 +172,20 @@ const successfulAdminCreation = (admin, response) => {
   response.status(201).json(admin[0]);
 };
 
-const successfulAdminDeletion = (response) => {
+const successfulAdminDeletion = response => {
   logger.info('Successful admin deletion');
   response.sendStatus(204);
 };
 
 /* Tokens */
 
-const nonexistentCredentials = (response) => {
+const nonexistentCredentials = response => {
   const message = 'No entry with such credentials';
   logger.warn(message);
   response.status(400).json({ code: 400, message });
 };
 
-const inconsistentCredentials = (response) => {
+const inconsistentCredentials = response => {
   const message = 'There is more than one entry with those credentials';
   logger.warn(message);
   response.status(500).json({ code: 500, message });
@@ -241,7 +241,7 @@ const successfulArtistCreation = (artist, res) => {
 
 /* Albums */
 
-const formatAlbumShortJson = (album) => {
+const formatAlbumShortJson = album => {
   if (album) {
     return {
       id: album.id,
@@ -296,7 +296,7 @@ const successfulAlbumUpdate = (album, response) => {
   response.status(200).json(formatAlbumJson(album[0]));
 };
 
-const successfulAlbumDeletion = (response) => {
+const successfulAlbumDeletion = response => {
   logger.info('Successful album deletion');
   response.sendStatus(204);
 };
@@ -371,7 +371,7 @@ const successfulTrackUpdate = (track, response) => {
   response.status(200).json(formatTrackJson(track[0]));
 };
 
-const successfulTrackDeletion = (response) => {
+const successfulTrackDeletion = response => {
   logger.info('Successful track deletion');
   response.sendStatus(204);
 };
