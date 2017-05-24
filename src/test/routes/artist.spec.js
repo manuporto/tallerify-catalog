@@ -16,7 +16,6 @@ const constants = require('./artist.constants.json');
 const testToken = jwt.sign({ admin: true }, config.secret);
 
 describe('Artist', () => {
-
   beforeEach((done) => {
     db.migrate.rollback()
     .then(() => {
@@ -32,7 +31,6 @@ describe('Artist', () => {
   });
 
   describe('/GET artists', () => {
-
     it('should return status code 200', (done) => {
       request(app)
         .get('/api/artists')
@@ -60,7 +58,6 @@ describe('Artist', () => {
   });
 
   describe('/POST artists', () => {
-
     it('should return status code 400 when parameters are missing', (done) => {
       request(app)
         .post('/api/artists')

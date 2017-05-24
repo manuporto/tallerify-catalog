@@ -15,30 +15,14 @@ const constants = require('./token.constants.json');
 
 describe('Token', () => {
   beforeEach((done) => {
-    const INITIAL_DATA_AMOUNT = 3;
-    let i = 0;
     db.migrate.rollback()
       .then(() => {
         db.migrate.latest()
           .then(() => {
-            dbHandler.createNewEntry(tables.users, constants.initialUser)
-              .then(() => {
-                i++;
-                if (i === INITIAL_DATA_AMOUNT) done(); // FIXME perdon
-              })
-              .catch(error => done(error));
-            dbHandler.createNewEntry(tables.users, constants.initialFacebookUser)
-              .then(() => {
-                i++;
-                if (i === INITIAL_DATA_AMOUNT) done(); // FIXME perdon
-              })
-              .catch(error => done(error));;
-            dbHandler.createNewEntry(tables.admins, constants.initialAdmin)
-              .then(() => {
-                i++;
-                if (i === INITIAL_DATA_AMOUNT) done(); // FIXME perdon
-              })
-              .catch(error => done(error));
+            Promise.all([
+              dbHandler.createNewEntry(tables.users, [constants.initialUser, constants.initialFacebookUser]),
+              dbHandler.createNewEntry(tables.admins, constants.initialAdmin)
+            ]).then(() => done()).catch(error => done(error));
           })
           .catch(error => done(error));
       });
