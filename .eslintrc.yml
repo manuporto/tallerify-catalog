@@ -5,6 +5,7 @@ rules:
   no-shadow: off
   no-underscore-dangle: off
   consistent-return: off
+  no-prototype-builtins: off
 env:
   es6: true
   node: true
