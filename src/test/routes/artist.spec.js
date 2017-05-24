@@ -181,7 +181,7 @@ describe('Artist', () => {
           res.body.artist.should.have.property('name').eql(constants.initialArtist.name);
           res.body.artist.should.have.property('description').eql(constants.initialArtist.description);
           res.body.artist.should.have.property('href');
-          // res.body.track.should.have.property('albums'); TODO
+          // res.body.artist.should.have.property('albums'); TODO
           res.body.artist.should.have.property('genres').eql(constants.initialArtist.genres);
           res.body.artist.should.have.property('images').eql(constants.initialArtist.images);
           res.body.artist.should.have.property('popularity').eql(0);
@@ -201,7 +201,7 @@ describe('Artist', () => {
 
     it('should return status code 401 if unauthorized', (done) => {
       request(app)
-        .get(`/api/artists/${constants.invalidTrackId}`)
+        .get(`/api/artists/${constants.invalidArtistId}`)
         .set('Authorization', 'Bearer UNAUTHORIZED')
         .end((err, res) => {
           res.should.have.status(401);
@@ -234,7 +234,7 @@ describe('Artist', () => {
           res.body.should.have.property('name').eql(constants.updatedArtist.name);
           res.body.should.have.property('description').eql(constants.updatedArtist.description);
           res.body.should.have.property('href');
-          // res.body.track.should.have.property('albums'); TODO
+          // res.body.artist.should.have.property('albums'); TODO
           res.body.should.have.property('genres').eql(constants.updatedArtist.genres);
           res.body.should.have.property('images').eql(constants.updatedArtist.images);
           res.body.should.have.property('popularity').eql(0);
@@ -264,7 +264,7 @@ describe('Artist', () => {
         });
     });
 
-    it('should return status code 404 if id does not match a track', (done) => {
+    it('should return status code 404 if id does not match an artist', (done) => {
       request(app)
         .put(`/api/artists/${constants.invalidArtistId}`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -298,7 +298,24 @@ describe('Artist', () => {
         });
     });
 
-    it('should return status code 404 if id does not match a track', (done) => {
+    it('should return status remove artist from his album', (done) => {
+      request(app)
+        .delete(`/api/artists/${constants.validArtistId}`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.should.have.status(204);
+          request(app)
+            .get(`/api/albums/${constants.validAlbumId}`)
+            .set('Authorization', `Bearer ${testToken}`)
+            .end((err, res) => {
+              res.should.have.status(200);
+              res.body.album.should.not.have.property('artists');
+              done();
+            });
+        });
+    });
+
+    it('should return status code 404 if id does not match an artist', (done) => {
       request(app)
         .delete(`/api/artists/${constants.invalidArtistId}`)
         .set('Authorization', `Bearer ${testToken}`)

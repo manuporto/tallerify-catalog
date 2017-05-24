@@ -41,5 +41,6 @@
 		"popularity": "#SiempreAlTop"
 	},
 	"validArtistId": 1,
-	"invalidArtistId": 9999
+	"invalidArtistId": 9999,
+	"validAlbumId": 1
 }
