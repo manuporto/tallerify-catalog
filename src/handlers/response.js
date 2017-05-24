@@ -52,6 +52,13 @@ const entryExists = (id, entry, response) => {
 
 /* Users */
 
+const formatUserShortJson = user => ({
+  id: user.id,
+  userName: user.userName,
+  href: user.href,
+  images: user.images,
+});
+
 const formatUserContacts = contacts => (contacts[0] === null) ? [] : contacts.map(formatUserShortJson);
 
 const formatUserJson = user => ({
@@ -69,13 +76,6 @@ const formatUserJson = user => ({
   images: user.images,
   href: user.href,
   contacts: formatUserContacts(user.contacts),
-});
-
-const formatUserShortJson = user => ({
-  id: user.id,
-  userName: user.userName,
-  href: user.href,
-  images: user.images,
 });
 
 const formatGetUserJson = user => ({
@@ -242,15 +242,14 @@ const successfulArtistCreation = (artist, res) => {
 /* Albums */
 
 const formatAlbumShortJson = (album) => {
-  if (!album) {
-    return;
+  if (album) {
+    return {
+      id: album.id,
+      name: album.name,
+      href: album.href,
+      images: album.images,
+    };
   }
-  return {
-    id: album.id,
-    name: album.name,
-    href: album.href,
-    images: album.images,
-  };
 };
 
 const formatAlbumJson = album => ({
@@ -336,7 +335,8 @@ const formatTrackJson = track => ({
     rate: track.rating,
   },
   album: formatAlbumShortJson(track.album),
-  artists: (track.hasOwnProperty('artists')) ? track.artists.map(artist => formatArtistShortJson(artist)) : [],
+  artists: (track.hasOwnProperty('artists')) ?
+    track.artists.map(artist => formatArtistShortJson(artist)) : [],
 });
 
 const successfulTracksFetch = (tracks, response) => {

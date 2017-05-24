@@ -20,7 +20,8 @@ describe('Token', () => {
         db.migrate.latest()
           .then(() => {
             Promise.all([
-              dbHandler.createNewEntry(tables.users, [constants.initialUser, constants.initialFacebookUser]),
+              dbHandler.createNewEntry(tables.users,
+                [constants.initialUser, constants.initialFacebookUser]),
               dbHandler.createNewEntry(tables.admins, constants.initialAdmin),
             ]).then(() => done()).catch(error => done(error));
           })

@@ -14,7 +14,8 @@ const findAllAlbums = () => {
 
 const findAlbumWithId = (id) => {
   logger.info(`Fetching album with id: ${id}`);
-  return generalHandler.findEntryWithId(tables.albums, id); // TODO full query to get artists and tracks
+  // TODO full query to get artists and tracks
+  return generalHandler.findEntryWithId(tables.albums, id);
 };
 
 const checkArtistsExistence = body => db(tables.artists).whereIn('id', body.artists).then((artists) => {
@@ -35,7 +36,7 @@ const createNewAlbumEntry = (body) => {
     popularity: 0,
   };
   return checkArtistsExistence(body)
-    .then(results => generalHandler.createNewEntry(tables.albums, album)
+    .then(() => generalHandler.createNewEntry(tables.albums, album)
         .then((insertedAlbum) => {
           logger.info(`Inserted album: ${JSON.stringify(insertedAlbum, null, 4)}`);
           return albumArtistHandler.insertAssociations(insertedAlbum[0].id, body.artists)
@@ -53,7 +54,7 @@ const updateAlbumEntry = (body, id) => {
   };
 
   return checkArtistsExistence(body)
-    .then(results => generalHandler.updateEntryWithId(tables.albums, id, album)
+    .then(() => generalHandler.updateEntryWithId(tables.albums, id, album)
         .then((updatedAlbum) => {
           logger.info(`Updated album: ${JSON.stringify(updatedAlbum, null, 4)}`);
           return albumArtistHandler.updateAssociations(updatedAlbum[0].id, body.artists)

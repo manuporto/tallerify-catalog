@@ -1,4 +1,3 @@
-const logger = require('../utils/logger');
 const db = require('./../handlers/db/index');
 const tables = require('../database/tableNames');
 const respond = require('./../handlers/response');
@@ -53,7 +52,7 @@ const newTrack = (req, res) => {
         if (error.name === 'NonExistentIdError') {
           return respond.nonExistentId(error.message, res);
         }
-        respond.internalServerError(error, res);
+        return respond.internalServerError(error, res);
       });
   })
   .catch(error => respond.invalidRequestBodyError(error, res));
@@ -154,4 +153,15 @@ const rateTrack = (req, res) => {
 };
 
 
-module.exports = { getTracks, newTrack, getTrack, updateTrack, deleteTrack, trackLike, trackDislike, getFavoriteTracks, getTrackPopularity, rateTrack };
+module.exports = {
+  getTracks,
+  newTrack,
+  getTrack,
+  updateTrack,
+  deleteTrack,
+  trackLike,
+  trackDislike,
+  getFavoriteTracks,
+  getTrackPopularity,
+  rateTrack
+};

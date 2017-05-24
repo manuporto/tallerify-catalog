@@ -221,4 +221,15 @@ const meDeleteContact = (req, res) => {
 };
 
 
-module.exports = { getUsers, getUser, newUser, updateUser, deleteUser, meGetUser, meUpdateUser, meGetContacts, meAddContact, meDeleteContact };
+module.exports = {
+  getUsers,
+  getUser,
+  newUser,
+  updateUser,
+  deleteUser,
+  meGetUser,
+  meUpdateUser,
+  meGetContacts,
+  meAddContact,
+  meDeleteContact
+};

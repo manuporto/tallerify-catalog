@@ -20,4 +20,9 @@ const updateAssociations = (albumId, artistsIds) => deleteAssociations(albumId)
 
 const findArtistsIdsFromAlbum = albumId => db(tables.albums_artists).where('album_id', albumId).select('artist_id');
 
-module.exports = { insertAssociations, updateAssociations, deleteAssociations, findArtistsIdsFromAlbum };
+module.exports = {
+  insertAssociations,
+  updateAssociations,
+  deleteAssociations,
+  findArtistsIdsFromAlbum
+};
