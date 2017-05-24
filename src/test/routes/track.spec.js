@@ -19,7 +19,6 @@ const constants = require('./track.constants.json');
 const testToken = jwt.sign(constants.jwtTestUser, config.secret);
 
 describe('Track', () => {
-
   beforeEach((done) => {
     db.migrate.rollback()
     .then(() => {
@@ -31,16 +30,16 @@ describe('Track', () => {
               constants.initialArtist2,
             ])
             .then((artists) => {
-            logger.info(`Tests artists created: ${JSON.stringify(artists, null, 4)}`);
-            dbHandler.track.createNewTrackEntry(constants.initialTrack)
-              .then((tracks) => {
-              logger.info(`Tests tracks created: ${JSON.stringify(tracks, null, 4)}`);
-              done();
-            })
-              .catch((error) => {
-                logger.warn(`Test tracks creation error: ${error}`);
-                done(error);
-              });
+              logger.info(`Tests artists created: ${JSON.stringify(artists, null, 4)}`);
+              dbHandler.track.createNewTrackEntry(constants.initialTrack)
+                .then((tracks) => {
+                  logger.info(`Tests tracks created: ${JSON.stringify(tracks, null, 4)}`);
+                  done();
+                })
+                .catch((error) => {
+                  logger.warn(`Test tracks creation error: ${error}`);
+                  done(error);
+                });
           })
             .catch((error) => {
               logger.warn(`Test artists creation error: ${error}`);
@@ -55,7 +54,7 @@ describe('Track', () => {
     db.migrate.rollback()
     .then(() => done());
   });
-  
+
   describe('/GET tracks', () => {
     it('should return status code 200', (done) => {
       request(app)
@@ -96,7 +95,6 @@ describe('Track', () => {
   });
 
   describe('/POST tracks', () => {
-
     it('should return status code 400 when parameters are missing', (done) => {
       request(app)
         .post('/api/tracks')

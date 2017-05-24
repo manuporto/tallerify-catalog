@@ -20,7 +20,6 @@ const artistsConstants = require('./artist.constants.json');
 const testToken = jwt.sign(constants.jwtTestUser, config.secret);
 
 describe('Track me', () => {
-
   beforeEach((done) => {
     db.migrate.rollback()
     .then(() => {
@@ -29,7 +28,7 @@ describe('Track me', () => {
           dbHandler.general.createNewEntry(tables.artists,
             [
               artistsConstants.initialArtist,
-              artistsConstants.testArtist
+              artistsConstants.testArtist,
             ]).then((artists) => {
               logger.info(`Tests artists created: ${JSON.stringify(artists, null, 4)}`);
               dbHandler.track.createNewTrackEntry(constants.initialTrack)
@@ -55,7 +54,7 @@ describe('Track me', () => {
     db.migrate.rollback()
     .then(() => done());
   });
-  
+
   describe('/GET tracks me', () => {
     it('should return status code 200', (done) => {
       request(app)
@@ -94,7 +93,7 @@ describe('Track me', () => {
           res.body.metadata.should.have.property('count');
           res.body.should.have.property('tracks');
           res.body.tracks.should.be.a('array');
-          res.body.tracks.should.be.empty;
+          res.body.tracks.should.be.empty; // eslint-disable-line no-unused-expressions
           done();
         });
     });
@@ -142,7 +141,7 @@ describe('Track me', () => {
                   res.body.metadata.should.have.property('count');
                   res.body.should.have.property('tracks');
                   res.body.tracks.should.be.a('array');
-                  res.body.tracks.should.be.empty;
+                  res.body.tracks.should.be.empty; // eslint-disable-line no-unused-expressions
                   done();
                 });
             });

@@ -19,13 +19,13 @@ const initialUserToken = jwt.sign(constants.initialUser, config.secret);
 const invalidUserToken = jwt.sign(constants.invalidUser, config.secret);
 
 describe('User me', () => {
-
   beforeEach((done) => {
     db.migrate.rollback()
       .then(() => {
         db.migrate.latest()
           .then(() => {
-            dbHandler.createNewEntry(tables.users, [ constants.initialUser, constants.initialContact ])
+            dbHandler.createNewEntry(tables.users,
+              [constants.initialUser, constants.initialContact])
               .then(() => done())
               .catch(error => done(error));
           })
@@ -124,7 +124,7 @@ describe('User me', () => {
           res.body.should.have.property('email').eql(constants.updatedUser.email);
           res.body.should.have.property('birthdate').eql(constants.updatedUser.birthdate);
           res.body.should.have.property('images');
-          res.body.images.should.have.lengthOf(2);//.eql(constants.updatedUser.images);
+          res.body.images.should.have.lengthOf(2); // .eql(constants.updatedUser.images);
           res.body.should.have.property('contacts').eql([]);
           done();
         });
@@ -210,8 +210,8 @@ describe('User me', () => {
               done();
             });
         });
-    })
-    //TODO add tests
+    });
+    // TODO add tests
 
     it('should return status code 401 if unauthorized', (done) => {
       request(app)
