@@ -6,6 +6,9 @@ rules:
   no-underscore-dangle: off
   consistent-return: off
   no-prototype-builtins: off
+  arrow-parens:
+    - error
+    - "as-needed"
 env:
   es6: true
   node: true
