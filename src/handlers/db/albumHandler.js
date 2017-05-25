@@ -39,7 +39,7 @@ const checkArtistsExistence = body => db(tables.artists).whereIn('id', body.arti
 });
 
 const createNewAlbumEntry = body => {
-  logger.info(`Creating album with info: ${JSON.stringify(body, null, 4)}`);
+  logger.debug(`Creating album with info: ${JSON.stringify(body, null, 4)}`);
   const album = {
     name: body.name,
     release_date: body.release_date,
@@ -50,14 +50,14 @@ const createNewAlbumEntry = body => {
   return checkArtistsExistence(body)
     .then(() => generalHandler.createNewEntry(tables.albums, album)
         .then(insertedAlbum => {
-          logger.info(`Inserted album: ${JSON.stringify(insertedAlbum, null, 4)}`);
+          logger.debug(`Inserted album: ${JSON.stringify(insertedAlbum, null, 4)}`);
           return albumArtistHandler.insertAssociations(insertedAlbum[0].id, body.artists)
             .then(() => insertedAlbum);
         }));
 };
 
 const updateAlbumEntry = (body, id) => {
-  logger.info(`Updating album ${id}`);
+  logger.debug(`Updating album ${id}`);
   const album = {
     name: body.name,
     release_date: body.release_date,
@@ -68,14 +68,14 @@ const updateAlbumEntry = (body, id) => {
   return checkArtistsExistence(body)
     .then(() => generalHandler.updateEntryWithId(tables.albums, id, album)
         .then(updatedAlbum => {
-          logger.info(`Updated album: ${JSON.stringify(updatedAlbum, null, 4)}`);
+          logger.debug(`Updated album: ${JSON.stringify(updatedAlbum, null, 4)}`);
           return albumArtistHandler.updateAssociationsOfAlbum(updatedAlbum[0].id, body.artists)
             .then(() => updatedAlbum);
         }));
 };
 
 const deleteAlbumWithId = id => {
-  logger.info(`Deleting album ${id}`);
+  logger.debug(`Deleting album ${id}`);
   const deleters = [
     generalHandler.deleteEntryWithId(tables.albums, id),
     albumArtistHandler.deleteAssociationsOfAlbum(id),
