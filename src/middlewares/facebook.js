@@ -6,16 +6,15 @@ const respond = require('./../handlers/response');
 
 const provider = 'https://graph.facebook.com/v2.9/me';
 
-const validateWithProvider = (socialToken) => {
-  return new Promise((resolve, reject) => {
+const validateWithProvider = socialToken => new Promise((resolve, reject) => {
     // Send a GET request to Facebook with the token as query string
-    request.get({
-      url: provider,
-      qs: {
-        access_token: socialToken,
-        fields: 'id, name, first_name, last_name, birthday, email, location'
-      }
+  request.get({
+    url: provider,
+    qs: {
+      access_token: socialToken,
+      fields: 'id, name, first_name, last_name, birthday, email, location',
     },
+  },
       (error, response, body) => {
         if (!error && response.statusCode === 200) {
           const resBody = JSON.parse(response.body);
@@ -26,46 +25,46 @@ const validateWithProvider = (socialToken) => {
           reject(errMsg);
         }
       });
-  });
-};
+});
 
-const createDbUserObject = (user) => {
+const createDbUserObject = user => {
   const defaultMissingValue = 'unknown';
   return {
-        userName: user.name.split(' ').join('_').toLowerCase(),
-        facebookUserId: user.id,
-        facebookAuthToken: user.authToken,
-        birthdate: user.birthday,
-        firstName: user.first_name,
-        lastName: user.last_name,
-        email: user.email,
-        country: (user.hasOwnProperty('location')) ? user.location.name : defaultMissingValue,
-      };
+    userName: user.name.split(' ').join('_').toLowerCase(),
+    facebookUserId: user.id,
+    facebookAuthToken: user.authToken,
+    birthdate: user.birthday,
+    firstName: user.first_name,
+    lastName: user.last_name,
+    email: user.email,
+    country: (user.hasOwnProperty('location')) ? user.location.name : defaultMissingValue,
+  };
 };
 
 const createFacebookUser = (req, user) => {
-  user.authToken = req.body.authToken;
-  return db.general.createNewEntry(tables.users, createDbUserObject(user));
+  const userWithToken = Object.assign({}, user, { authToken: req.body.authToken });
+  return db.general.createNewEntry(tables.users, createDbUserObject(userWithToken));
 };
 
-const checkCredentials = (credentials) => {
-  logger.info(`Validating credentials: ${JSON.stringify(credentials)}`);
+const checkCredentials = credentials => {
+  logger.info('Validating credentials');
+  logger.debug(`Credentials: ${JSON.stringify(credentials)}`);
   return validateWithProvider(credentials.authToken);
 };
 
 const handleLogin = (req, res, next, fUser) => {
   db.user.findWithFacebookUserId(fUser.id)
-    .then((user) => {
+    .then(user => {
       if (user) {
         req.user = user;
         next();
       } else {
         createFacebookUser(req, fUser)
-          .then((newUser) => {
+          .then(newUser => {
             req.user = newUser[0];
             next();
           })
-          .catch((error) => {
+          .catch(error => {
             respond.internalServerError(error, res);
           });
       }

@@ -19,7 +19,7 @@ const constants = require('./album.constants.json');
 const testToken = jwt.sign(constants.jwtTestUser, config.secret);
 
 describe('Album', () => {
-  beforeEach((done) => {
+  beforeEach(done => {
     db.migrate.rollback()
       .then(() => {
         db.migrate.latest()
@@ -30,27 +30,27 @@ describe('Album', () => {
                 constants.initialArtist2,
                 constants.initialArtist3,
               ])
-              .then((artists) => {
-                logger.info(`Tests artists created: ${JSON.stringify(artists, null, 4)}`);
+              .then(artists => {
+                logger.debug(`Tests artists created: ${JSON.stringify(artists, null, 4)}`);
                 dbHandler.album.createNewAlbumEntry(constants.initialAlbum)
-                  .then((album) => {
-                    logger.info(`Tests album created: ${JSON.stringify(album, null, 4)}`);
+                  .then(album => {
+                    logger.debug(`Tests album created: ${JSON.stringify(album, null, 4)}`);
                     dbHandler.track.createNewTrackEntry(constants.initialTrack)
-                      .then((track) => {
-                        logger.info(`Tests track created: ${JSON.stringify(track, null, 4)}`);
+                      .then(track => {
+                        logger.debug(`Tests track created: ${JSON.stringify(track, null, 4)}`);
                         done();
                       })
-                      .catch((error) => {
+                      .catch(error => {
                         logger.warn(`Test track creation error: ${error}`);
                         done(error);
                       });
                   })
-                  .catch((error) => {
+                  .catch(error => {
                     logger.warn(`Test album creation error: ${error}`);
                     done(error);
                   });
               })
-              .catch((error) => {
+              .catch(error => {
                 logger.warn(`Test artists creation error: ${error}`);
                 done(error);
               });
@@ -59,13 +59,13 @@ describe('Album', () => {
       });
   });
 
-  afterEach((done) => {
+  afterEach(done => {
     db.migrate.rollback()
       .then(() => done());
   });
 
   describe('/GET albums', () => {
-    it('should return status code 200', (done) => {
+    it('should return status code 200', done => {
       request(app)
         .get('/api/albums')
         .set('Authorization', `Bearer ${testToken}`)
@@ -75,7 +75,7 @@ describe('Album', () => {
         });
     });
 
-    it('should return the expected body response when correct parameters are sent', (done) => {
+    it('should return the expected body response when correct parameters are sent', done => {
       request(app)
         .get('/api/albums')
         .set('Authorization', `Bearer ${testToken}`)
@@ -90,7 +90,7 @@ describe('Album', () => {
         });
     });
 
-    it('should return status code 401 if unauthorized', (done) => {
+    it('should return status code 401 if unauthorized', done => {
       request(app)
         .get('/api/albums')
         .set('Authorization', 'Bearer UNAUTHORIZED')
@@ -102,7 +102,7 @@ describe('Album', () => {
   });
 
   describe('/POST albums', () => {
-    it('should return status code 400 when parameters are missing', (done) => {
+    it('should return status code 400 when parameters are missing', done => {
       request(app)
         .post('/api/albums')
         .set('Authorization', `Bearer ${testToken}`)
@@ -113,7 +113,7 @@ describe('Album', () => {
         });
     });
 
-    it('should return status code 400 when parameters are invalid', (done) => {
+    it('should return status code 400 when parameters are invalid', done => {
       request(app)
         .post('/api/albums')
         .set('Authorization', `Bearer ${testToken}`)
@@ -124,7 +124,7 @@ describe('Album', () => {
         });
     });
 
-    it('should return status code 400 with non existent artist id', (done) => {
+    it('should return status code 400 with non existent artist id', done => {
       request(app)
         .post('/api/albums')
         .set('Authorization', `Bearer ${testToken}`)
@@ -135,7 +135,7 @@ describe('Album', () => {
         });
     });
 
-    it('should return status code 201 when correct parameters are sent', (done) => {
+    it('should return status code 201 when correct parameters are sent', done => {
       request(app)
         .post('/api/albums')
         .set('Authorization', `Bearer ${testToken}`)
@@ -146,7 +146,7 @@ describe('Album', () => {
         });
     });
 
-    it('should return the expected body response when correct parameters are sent', (done) => {
+    it('should return the expected body response when correct parameters are sent', done => {
       request(app)
         .post('/api/albums')
         .set('Authorization', `Bearer ${testToken}`)
@@ -166,7 +166,7 @@ describe('Album', () => {
         });
     });
 
-    it('should return status code 401 if unauthorized', (done) => {
+    it('should return status code 401 if unauthorized', done => {
       request(app)
         .post('/api/albums')
         .set('Authorization', 'Bearer UNAUTHORIZED')
@@ -179,7 +179,7 @@ describe('Album', () => {
   });
 
   describe('/GET albums/{id}', () => {
-    it('should return status code 200', (done) => {
+    it('should return status code 200', done => {
       request(app)
         .get(`/api/albums/${constants.validAlbumId}`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -189,7 +189,7 @@ describe('Album', () => {
         });
     });
 
-    it('should return albums data', (done) => {
+    it('should return albums data', done => {
       request(app)
         .get(`/api/albums/${constants.validAlbumId}`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -213,7 +213,7 @@ describe('Album', () => {
         });
     });
 
-    it('should return status code 404 if id does not match an album', (done) => {
+    it('should return status code 404 if id does not match an album', done => {
       request(app)
         .get(`/api/albums/${constants.invalidAlbumId}`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -223,7 +223,7 @@ describe('Album', () => {
         });
     });
 
-    it('should return status code 401 if unauthorized', (done) => {
+    it('should return status code 401 if unauthorized', done => {
       request(app)
         .get(`/api/albums/${constants.validAlbumId}`)
         .set('Authorization', 'Bearer UNAUTHORIZED')
@@ -235,7 +235,7 @@ describe('Album', () => {
   });
 
   describe('/PUT albums/{id}', () => {
-    it('should return status code 201 when correct parameters are sent', (done) => {
+    it('should return status code 201 when correct parameters are sent', done => {
       request(app)
         .put(`/api/albums/${constants.validAlbumId}`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -246,7 +246,7 @@ describe('Album', () => {
         });
     });
 
-    it('should return the expected body response when correct parameters are sent', (done) => {
+    it('should return the expected body response when correct parameters are sent', done => {
       request(app)
         .put(`/api/albums/${constants.validAlbumId}`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -266,7 +266,7 @@ describe('Album', () => {
         });
     });
 
-    it('should return status code 400 when parameters are missing', (done) => {
+    it('should return status code 400 when parameters are missing', done => {
       request(app)
         .put(`/api/albums/${constants.validAlbumId}`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -277,7 +277,7 @@ describe('Album', () => {
         });
     });
 
-    it('should return status code 400 when parameters are invalid', (done) => {
+    it('should return status code 400 when parameters are invalid', done => {
       request(app)
         .put(`/api/albums/${constants.validAlbumId}`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -288,7 +288,7 @@ describe('Album', () => {
         });
     });
 
-    it('should return status code 400 with non existent artist id', (done) => {
+    it('should return status code 400 with non existent artist id', done => {
       request(app)
         .put(`/api/albums/${constants.validAlbumId}`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -299,7 +299,7 @@ describe('Album', () => {
         });
     });
 
-    it('should return status code 404 if id does not match an album', (done) => {
+    it('should return status code 404 if id does not match an album', done => {
       request(app)
         .put(`/api/albums/${constants.invalidAlbumId}`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -310,7 +310,7 @@ describe('Album', () => {
         });
     });
 
-    it('should return status code 401 if unauthorized', (done) => {
+    it('should return status code 401 if unauthorized', done => {
       request(app)
         .put(`/api/albums/${constants.validAlbumId}`)
         .set('Authorization', 'Bearer UNAUTHORIZED')
@@ -323,7 +323,7 @@ describe('Album', () => {
   });
 
   describe('/DELETE albums/{id}', () => {
-    it('should return status code 204 when deletion is successful', (done) => {
+    it('should return status code 204 when deletion is successful', done => {
       request(app)
         .delete(`/api/albums/${constants.validAlbumId}`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -333,7 +333,7 @@ describe('Album', () => {
         });
     });
 
-    it('should return status code 404 if id does not match an album', (done) => {
+    it('should return status code 404 if id does not match an album', done => {
       request(app)
         .delete(`/api/albums/${constants.invalidAlbumId}`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -343,7 +343,7 @@ describe('Album', () => {
         });
     });
 
-    it('should return status code 401 if unauthorized', (done) => {
+    it('should return status code 401 if unauthorized', done => {
       request(app)
         .delete(`/api/albums/${constants.validAlbumId}`)
         .set('Authorization', 'Bearer UNAUTHORIZED')
@@ -353,7 +353,7 @@ describe('Album', () => {
         });
     });
 
-    it('should leave its tracks orphan', (done) => {
+    it('should leave its tracks orphan', done => {
       request(app)
         .delete(`/api/albums/${constants.validAlbumId}`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -368,7 +368,6 @@ describe('Album', () => {
               done();
             });
         });
-
     });
   });
 });

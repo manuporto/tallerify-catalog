@@ -6,20 +6,28 @@
 	"initialArtist": {
 		"id": 1,
 		"name": "Papa Baute",
-		"popularity": 2
-	},
-	"initialShortArtist": {
-		"id": 1,
-		"name": "Papa Baute"
+		"description": "Tiene un implante coclear?",
+		"genres": ["Bachata"],
+		"images": ["una con guido", "otra con sergio"]
 	},
 	"initialArtist2": {
 		"id": 2,
 		"name": "Luis Fonsi",
-		"popularity": 1
+		"description": "El que canta despacito",
+		"genres": ["pero que no es justin"],
+		"images": ["ni daddy yankee"]
+	},
+	"initialShortArtist": {
+		"id": 1,
+		"name": "Papa Baute",
+		"href": null,
+		"images": ["una con guido", "otra con sergio"]
 	},
 	"initialShortArtist2": {
 		"id": 2,
-		"name": "Luis Fonsi"
+		"name": "Luis Fonsi",
+		"href": null,
+		"images": ["ni daddy yankee"]
 	},
 	"initialTrack": {
 		"id": 1,

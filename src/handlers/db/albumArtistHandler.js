@@ -5,25 +5,34 @@ const tables = require('../../database/tableNames');
 
 
 const insertAssociations = (albumId, artistsIds) => {
-  logger.info(`Creating associations for album ${albumId} and artists ${artistsIds}`);
-  const rowValues = artistsIds.map(id => {
-    return { album_id: albumId, artist_id: id }
-  });
+  logger.debug(`Creating associations for album ${albumId} and artists ${artistsIds}`);
+  const rowValues = artistsIds.map(id => ({ album_id: albumId, artist_id: id }));
   return generalHandler.createNewEntry(tables.albums_artists, rowValues);
 };
 
-const deleteAssociations = (albumId) => {
-  logger.info(`Deleting album ${albumId} associations`);
+const deleteAssociationsOfAlbum = albumId => {
+  logger.debug(`Deleting album ${albumId} associations`);
   return db(tables.albums_artists).where('album_id', albumId).del();
 };
 
-const updateAssociations = (albumId, artistsIds) => {
-  return deleteAssociations(albumId)
+const updateAssociationsOfAlbum = (albumId, artistsIds) => deleteAssociationsOfAlbum(albumId)
     .then(() => insertAssociations(albumId, artistsIds));
+
+const deleteAssociationsOfArtist = artistId => {
+  logger.debug(`Deleting artist ${artistId} associations`);
+  return db(tables.albums_artists).where('artist_id', artistId).del();
 };
 
-const findArtistsIdsFromAlbum = (albumId) => {
-  return db(tables.albums_artists).where('album_id', albumId).select('artist_id');
-};
+const findArtistsIdsFromAlbum = albumId => db(tables.albums_artists).where('album_id', albumId).select('artist_id');
 
-module.exports = { insertAssociations, updateAssociations, deleteAssociations, findArtistsIdsFromAlbum };
+const findAlbumsOfArtist = artistId => db(tables.albums_artists).where({ artist_id: artistId }).select('album_id')
+    .then(albums => db(tables.albums).whereIn('id', albums.map(album => album.album_id)));
+
+module.exports = {
+  insertAssociations,
+  updateAssociationsOfAlbum,
+  deleteAssociationsOfAlbum,
+  findArtistsIdsFromAlbum,
+  deleteAssociationsOfArtist,
+  findAlbumsOfArtist,
+};

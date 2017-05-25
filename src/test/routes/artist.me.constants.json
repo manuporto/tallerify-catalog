@@ -1,0 +1,22 @@
+{
+	"jwtTestUser": {
+		"admin": false,
+		"id": 42
+	},
+	"initialArtist": {
+		"id": 1,
+		"name": "Papa Baute",
+		"description": "Tiene un implante coclear?",
+		"genres": ["Bachata"],
+		"images": ["una con guido", "otra con sergio"]
+	},
+	"testArtist": {
+		"id": 2,
+		"name": "Luis Fonsi",
+		"description": "El que canta despacito",
+		"genres": ["pero que no es justin"],
+		"images": ["ni daddy yankee"]
+	},
+	"validArtistId": 1,
+	"invalidArtistId": 9999
+}
