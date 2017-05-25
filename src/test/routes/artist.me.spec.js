@@ -165,7 +165,7 @@ describe('Artist', () => {
               res.body.artists[0].description.should.eql(constants.initialArtist.description);
               res.body.artists[0].genres.should.eql(constants.initialArtist.genres);
               res.body.artists[0].images.should.eql(constants.initialArtist.images);
-              res.body.artists[0].albums.should.be.empty; // eslint-disable-line no-unused-expressions
+              res.body.artists[0].should.have.property('albums').eql([]);
               done();
             });
         });
@@ -181,9 +181,7 @@ describe('Artist', () => {
           res.body.should.have.property('metadata');
           res.body.metadata.should.have.property('version');
           res.body.metadata.should.have.property('count');
-          res.body.should.have.property('artists');
-          res.body.artists.should.be.a('array');
-          res.body.artists.should.be.empty; // eslint-disable-line no-unused-expressions
+          res.body.should.have.property('artists').eql([]);
           done();
         });
     });
@@ -208,7 +206,7 @@ describe('Artist', () => {
               res.body.artists[0].description.should.eql(constants.initialArtist.description);
               res.body.artists[0].genres.should.eql(constants.initialArtist.genres);
               res.body.artists[0].images.should.eql(constants.initialArtist.images);
-              res.body.artists[0].albums.should.be.empty; // eslint-disable-line no-unused-expressions
+              res.body.artists[0].should.have.property('albums').eql([]);
               done();
             });
         });
@@ -233,9 +231,7 @@ describe('Artist', () => {
                   res.body.should.have.property('metadata');
                   res.body.metadata.should.have.property('version');
                   res.body.metadata.should.have.property('count');
-                  res.body.should.have.property('artists');
-                  res.body.artists.should.be.a('array');
-                  res.body.artists.should.be.empty; // eslint-disable-line no-unused-expressions
+                  res.body.should.have.property('artists').eql([]);
                   done();
                 });
             });
