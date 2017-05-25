@@ -331,7 +331,7 @@ const successfulAlbumsFetch = (albums, response) => {
 };
 
 const successfulAlbumCreation = (album, response) => {
-  logger.info(`Successful album creation`);
+  logger.info('Successful album creation');
   response.status(201).json(formatAlbumJson(album[0]));
 };
 
