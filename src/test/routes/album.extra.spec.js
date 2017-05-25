@@ -18,8 +18,7 @@ const constants = require('./album.extra.constants.json');
 
 const testToken = jwt.sign(constants.jwtTestUser, config.secret);
 
-var validTrackId;
-
+let validTrackId;
 describe('Album', () => {
   beforeEach(done => {
     db.migrate.rollback()
