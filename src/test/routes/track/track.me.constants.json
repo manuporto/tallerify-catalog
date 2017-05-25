@@ -1,0 +1,25 @@
+{
+	"jwtTestUser": {
+		"id": 24
+	},
+	"initialTrack": {
+		"name": "Despacito",
+		"albumId": 240,
+		"artists": [2, 1]
+	},
+	"validTrackId": 1,
+	"initialArtist1": {
+		"id": 1,
+		"name": "Papa Baute",
+		"description": "Tiene un implante coclear?",
+		"genres": ["Bachata"],
+		"images": ["una con guido", "otra con sergio"]
+	},
+	"initialArtist2": {
+		"id": 2,
+		"name": "Luis Fonsi",
+		"description": "El que canta despacito",
+		"genres": ["pero que no es justin"],
+		"images": ["ni daddy yankee"]
+	}
+}

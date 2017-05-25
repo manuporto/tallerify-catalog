@@ -1,10 +1,10 @@
 process.env.NODE_ENV = 'test';
 
-const logger = require('../../utils/logger');
-const app = require('../../app');
-const db = require('../../database');
-const tables = require('../../database/tableNames');
-const dbHandler = require('../../handlers/db');
+const logger = require('../../../utils/logger');
+const app = require('../../../app');
+const db = require('../../../database/index');
+const tables = require('../../../database/tableNames');
+const dbHandler = require('../../../handlers/db/index');
 const jwt = require('jsonwebtoken');
 const request = require('supertest');
 const chai = require('chai');
@@ -13,9 +13,8 @@ const chaiHttp = require('chai-http');
 chai.should();
 chai.use(chaiHttp);
 
-const config = require('./../../config');
+const config = require('./../../../config');
 const constants = require('./track.me.constants.json');
-const artistsConstants = require('./artist.constants.json');
 
 const testToken = jwt.sign(constants.jwtTestUser, config.secret);
 
@@ -27,8 +26,8 @@ describe('Track me', () => {
         db.migrate.latest().then(() => {
           dbHandler.general.createNewEntry(tables.artists,
             [
-              artistsConstants.initialArtist,
-              artistsConstants.testArtist,
+              constants.initialArtist1,
+              constants.initialArtist2,
             ]).then(artists => {
               logger.info(`Tests artists created: ${JSON.stringify(artists, null, 4)}`);
               dbHandler.track.createNewTrackEntry(constants.initialTrack)
