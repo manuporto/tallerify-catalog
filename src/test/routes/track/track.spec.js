@@ -18,36 +18,48 @@ const constants = require('./track.constants.json');
 
 const testToken = jwt.sign(constants.jwtTestUser, config.secret);
 
+let initialArtist1Id;
+let initialArtist2Id;
 describe('Track', () => {
   beforeEach(done => {
     db.migrate.rollback()
-    .then(() => {
-      db.migrate.latest()
-        .then(() => {
-          dbHandler.general.createNewEntry(tables.artists,
-            [
-              constants.initialArtist,
-              constants.initialArtist2,
-            ])
-            .then(artists => {
+      .then(() => {
+        db.migrate.rollback().then(() => {
+          db.migrate.latest().then(() => {
+            dbHandler.general.createNewEntry(tables.artists,
+              [
+                constants.initialArtist1,
+                constants.initialArtist2,
+              ]).then(artists => {
               logger.info(`Tests artists created: ${JSON.stringify(artists, null, 4)}`);
-              dbHandler.track.createNewTrackEntry(constants.initialTrack)
-                .then(tracks => {
-                  logger.info(`Tests tracks created: ${JSON.stringify(tracks, null, 4)}`);
-                  done();
+              initialArtist1Id = artists[0].id;
+              initialArtist2Id = artists[1].id;
+              logger.warn(initialArtist1Id);
+              dbHandler.album.createNewAlbumEntry(constants.initialAlbum)
+                .then(album => {
+                  logger.info(`Tests album created: ${JSON.stringify(album, null, 4)}`);
+                  dbHandler.track.createNewTrackEntry(constants.initialTrack)
+                    .then(tracks => {
+                      logger.info(`Tests tracks created: ${JSON.stringify(tracks, null, 4)}`);
+                      done();
+                    })
+                    .catch(error => {
+                      logger.warn(`Test tracks creation error: ${error}`);
+                      done(error);
+                    });
                 })
                 .catch(error => {
-                  logger.warn(`Test tracks creation error: ${error}`);
+                  logger.warn(`Test album creation error: ${error}`);
                   done(error);
-                });
-            })
-            .catch(error => {
+                })
+            }).catch(error => {
               logger.warn(`Test artists creation error: ${error}`);
               done(error);
             });
-        })
-        .catch(error => done(error));
-    });
+          })
+            .catch(error => done(error));
+        });
+      });
   });
 
   afterEach(done => {
@@ -124,18 +136,6 @@ describe('Track', () => {
         .send(constants.testTrack)
         .end((err, res) => {
           res.should.have.status(201);
-          done();
-        });
-    });
-
-    it('should return status code 400 with non existent artist id', done => {
-      request(app)
-        .post('/api/tracks')
-        .set('Authorization', `Bearer ${testToken}`)
-        .send(constants.newTrackWithNonExistentArtist)
-        .end((err, res) => {
-          res.should.have.status(400);
-          res.body.should.have.property('message').eql('Non existing artist.');
           done();
         });
     });
@@ -278,6 +278,31 @@ describe('Track', () => {
         .send(constants.invalidTrack)
         .end((err, res) => {
           res.should.have.status(400);
+          done();
+        });
+    });
+
+    it('should return status code 400 with non existent artist id', done => {
+      request(app)
+        .put(`/api/tracks/${constants.validTrackId}`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .send(constants.updatedTrackWithNonExistentArtist)
+        .end((err, res) => {
+          logger.warn(JSON.stringify(res.body));
+          res.should.have.status(400);
+          res.body.should.have.property('message').eql('Non existing artist.');
+          done();
+        });
+    });
+
+    it('should return status code 400 with non existent album id', done => {
+      request(app)
+        .put(`/api/tracks/${constants.validTrackId}`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .send(constants.updatedTrackWithNonExistentAlbum)
+        .end((err, res) => {
+          res.should.have.status(400);
+          res.body.should.have.property('message').eql('Non existing album.');
           done();
         });
     });

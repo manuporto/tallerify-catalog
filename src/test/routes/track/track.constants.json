@@ -3,7 +3,7 @@
 		"admin": true,
 		"id": 24
 	},
-	"initialArtist": {
+	"initialArtist1": {
 		"id": 1,
 		"name": "Papa Baute",
 		"description": "Tiene un implante coclear?",
@@ -29,34 +29,57 @@
 		"href": null,
 		"images": ["ni daddy yankee"]
 	},
+	"initialAlbum": {
+		"id": 1,
+		"name": "2nd law",
+		"images": ["Matt B", "Chris W"],
+		"genres": ["Rock"],
+		"artists": [1, 2],
+		"release_date": "20091959"
+	},
 	"initialTrack": {
 		"id": 1,
 		"name": "Despacito",
-		"albumId": 240,
+		"albumId": 1,
 		"artists": [1, 2]
 	},
 	"testTrack": {
 		"id": 2,
 		"name": "Come a Little Closer",
-		"albumId": 229,
+		"albumId": 1,
 		"artists": [2]
 	},
 	"newTrackWithMissingAttributes": {
-		"albumId": 123,
+		"albumId": 1,
 		"artists": [24, 9]
 	},
 	"newTrackWithNonExistentArtist": {
 		"name": "Evermore",
-		"albumId": 229,
+		"albumId": 1,
 		"artists": [28]
+	},
+	"newTrackWithNonExistentAlbum": {
+		"name": "Evermore",
+		"albumId": 1113,
+		"artists": [1]
 	},
 	"updatedTrack": {
 		"name": "Andromeda",
-		"albumId": 321,
-		"artists": [12, 8, 94]
+		"albumId": 1,
+		"artists": [1, 2]
 	},
 	"updatedTrackWithMissingAttributes": {
 		"name": "Animus Vox"
+	},
+	"updatedTrackWithNonExistentArtist": {
+		"name": "Evermore",
+		"albumId": 1,
+		"artists": [2851, 1]
+	},
+	"updatedTrackWithNonExistentAlbum": {
+		"name": "Evermore",
+		"albumId": 1113,
+		"artists": [1]
 	},
 	"invalidTrack": {
 		"name": "Machu Picchu",

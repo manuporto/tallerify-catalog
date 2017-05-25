@@ -80,7 +80,12 @@ const updateTrack = (req, res) => {
           if (!respond.entryExists(req.params.id, track, res)) return;
           db.track.updateTrackEntry(req.body, req.params.id)
             .then(updatedTrack => respond.successfulTrackUpdate(updatedTrack, res))
-            .catch(error => respond.internalServerError(error, res));
+            .catch(error => {
+              if (error.name === 'NonExistentIdError') {
+                return respond.nonExistentId(error.message, res);
+              }
+              respond.internalServerError(error, res);
+            });
         })
         .catch(error => respond.internalServerError(error, res));
     })

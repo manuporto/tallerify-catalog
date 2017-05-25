@@ -8,24 +8,29 @@ const NonExistentIdError = require('../../errors/NonExistentIdError');
 
 const math = require('mathjs');
 
+const findArtists = (body) => db(tables.artists).whereIn('id', body.artists).then(artists => {
+  if (artists.length < body.artists.length) {
+    logger.warn(`Req artists: ${JSON.stringify(body.artists)} vs DB artists: ${JSON.stringify(artists)}`);
+    return Promise.reject(new NonExistentIdError('Non existing artist.'));
+  }
+  return artists;
+});
+
+const findAlbum = (body) => db(tables.albums).where('id', body.albumId).first().then(album => {
+  if (!album) {
+    logger.warn(`Req album: ${JSON.stringify(body.albumId)} vs DB album: ${JSON.stringify(album)}`);
+    return Promise.reject(new NonExistentIdError('Non existing album.'));
+  }
+  return album;
+});
+
 const createNewTrackEntry = body => {
   logger.info(`Creating track with info: ${JSON.stringify(body, null, 4)}`);
   const track = {
     name: body.name,
     album_id: body.albumId,
   };
-
-  const findArtists = () => db(tables.artists).whereIn('id', body.artists).then(artists => {
-    if (artists.length < body.artists.length) {
-      logger.warn(`Req artists: ${JSON.stringify(body.artists)} vs DB artists: ${JSON.stringify(artists)}`);
-      return Promise.reject(new NonExistentIdError('Non existing artist.'));
-    }
-    return artists;
-  });
-
-  const findAlbum = () => -1; // TODO
-
-  const finders = [findArtists(), findAlbum()];
+  const finders = [findArtists(body), findAlbum(body)];
   return Promise.all(finders)
     .then(() => generalHandler.createNewEntry(tables.tracks, track)
         .then(insertedTrack => {
@@ -41,12 +46,14 @@ const updateTrackEntry = (body, id) => {
     name: body.name,
     album_id: body.albumId,
   };
-  return generalHandler.updateEntryWithId(tables.tracks, id, track)
-    .then(updatedTrack => {
-      logger.info(`Updated track: ${JSON.stringify(updatedTrack, null, 4)}`);
-      return artistTrackHandler.updateAssociations(updatedTrack[0].id, body.artists)
-        .then(() => updatedTrack);
-    });
+  const finders = [findArtists(body), findAlbum(body)];
+  return Promise.all(finders)
+    .then(() => generalHandler.updateEntryWithId(tables.tracks, id, track)
+      .then(updatedTrack => {
+        logger.info(`Updated track: ${JSON.stringify(updatedTrack, null, 4)}`);
+        return artistTrackHandler.updateAssociations(updatedTrack[0].id, body.artists)
+          .then(() => updatedTrack);
+      }));
 };
 
 const getArtistsInfo = track => artistTrackHandler.findArtistsIdsFromTrack(track.id)

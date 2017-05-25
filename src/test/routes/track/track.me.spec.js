@@ -30,15 +30,23 @@ describe('Track me', () => {
               constants.initialArtist2,
             ]).then(artists => {
               logger.info(`Tests artists created: ${JSON.stringify(artists, null, 4)}`);
-              dbHandler.track.createNewTrackEntry(constants.initialTrack)
-                .then(tracks => {
-                  logger.info(`Tests tracks created: ${JSON.stringify(tracks, null, 4)}`);
-                  done();
-                })
-                .catch(error => {
-                  logger.warn(`Test tracks creation error: ${error}`);
-                  done(error);
-                });
+              dbHandler.album.createNewAlbumEntry(constants.initialAlbum)
+              .then(album => {
+                logger.info(`Tests album created: ${JSON.stringify(album, null, 4)}`);
+                dbHandler.track.createNewTrackEntry(constants.initialTrack)
+                  .then(tracks => {
+                    logger.info(`Tests tracks created: ${JSON.stringify(tracks, null, 4)}`);
+                    done();
+                  })
+                  .catch(error => {
+                    logger.warn(`Test tracks creation error: ${error}`);
+                    done(error);
+                  });
+              })
+              .catch(error => {
+                logger.warn(`Test album creation error: ${error}`);
+                done(error);
+              })
             }).catch(error => {
               logger.warn(`Test artists creation error: ${error}`);
               done(error);
