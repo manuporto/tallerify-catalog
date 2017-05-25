@@ -11,7 +11,7 @@ const artistExpectedBodySchema = { // FIXME incomplete schema
     },
     popularity: {
       required: true,
-      type: 'integer',
+      type: 'string',
     }
   }
 };
@@ -28,8 +28,9 @@ function newArtist(req, res) {
     }
   respond.validateRequestBody(req.body, artistExpectedBodySchema)
     .then(() => {
-        req.body["images"]= req["file"]["path"] !== "" ? [process.env.BASE_URL + req.file.path.replace("public/", "")] : [""];
-      db.createNewEntry(tables.artists, req.body) // FIXME request body could have extra fields
+        req.body["images"] = req["file"]["path"] !== "" ? [process.env.BASE_URL + req.file.path.replace("public/", "")] : [""];
+        //req.body["popularity"] = parseInt(req.body["popularity"])
+        db.createNewEntry(tables.artists, req.body) // FIXME request body could have extra fields
         .then(artist => respond.successfulArtistCreation(artist, res))
         .catch(error => respond.internalServerError(error, res));
     }).catch(error => {

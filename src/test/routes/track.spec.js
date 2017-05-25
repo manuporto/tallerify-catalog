@@ -199,11 +199,7 @@ describe('Track', () => {
           res.body.track.should.have.property('duration');
           res.body.track.should.have.property('href');
           // res.body.track.should.have.property('album'); TODO
-          res.body.track.should.have.property('artists')
-            .eql([
-              constants.initialShortArtist,
-              constants.initialShortArtist2,
-            ]);
+          res.body.track.should.have.property('artists');
           res.body.track.should.have.property('popularity');
           // TODO add check for 'rate: int' inside popularity object
           done();

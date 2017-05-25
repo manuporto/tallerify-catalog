@@ -43,5 +43,5 @@ Thumbs.db
 *.log
 
 /public/media/*
-/src/media/users/*
+/src/public/media/*
 

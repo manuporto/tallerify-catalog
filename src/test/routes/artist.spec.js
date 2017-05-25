@@ -103,7 +103,7 @@ describe('Artist', () => {
           res.body.should.be.a('object');
           res.body.should.have.property('id');
           res.body.should.have.property('name').eql(constants.testArtist.name);
-          res.body.should.have.property('popularity').eql(constants.testArtist.popularity);
+          res.body.should.have.property('popularity').eql(parseInt(constants.testArtist.popularity));
           done();
         });
     });

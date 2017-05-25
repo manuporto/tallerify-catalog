@@ -26,6 +26,7 @@ exports.up = (knex, Promise) => {
 			table.increments('id').primary();
 			table.string('name');
 			table.integer('popularity');
+            table.specificType('images', 'text ARRAY');
 		}),
 
     knex.schema.createTableIfNotExists(tables.albums, (table) => {
