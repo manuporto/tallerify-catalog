@@ -29,7 +29,7 @@ select uf.id,
 group by uf.id;`;
 
 const findWithFacebookUserId = userId => {
-  logger.info(`Querying database for entry with fb userId "${userId}"`);
+  logger.debug(`Querying database for entry with fb userId "${userId}"`);
   return db(tables.users).where({
     facebookUserId: userId,
   }).first('*');
@@ -41,7 +41,7 @@ const findAllUsers = () => {
 };
 
 const findUser = id => {
-  logger.info(`Finding user with id: ${id}`);
+  logger.debug(`Finding user with id: ${id}`);
   return db.raw(`with user_friend as (
     with friends_ids as (
     select *
@@ -74,17 +74,17 @@ group by uf.id;`, [id]).then(res => {
 };
 
 const friend = (userId, friendId) => {
-  logger.info(`User ${userId} friending user ${friendId}`);
+  logger.debug(`User ${userId} friending user ${friendId}`);
   return db(tables.users_users).where({
     user_id: userId,
     friend_id: friendId,
   })
     .then(result => {
       if (result.length) {
-        logger.info(`User ${userId} already friended user ${friendId}`);
+        logger.debug(`User ${userId} already friended user ${friendId}`);
         return;
       }
-      logger.info('Creating user-user association');
+      logger.debug('Creating user-user association');
       return generalHandler.createNewEntry(tables.users_users, {
         user_id: userId,
         friend_id: friendId,
@@ -93,7 +93,7 @@ const friend = (userId, friendId) => {
 };
 
 const unfriend = (userId, friendId) => {
-  logger.info(`User ${userId} unfriending user ${friendId}`);
+  logger.debug(`User ${userId} unfriending user ${friendId}`);
   return db(tables.users_users).where({
     user_id: userId,
     friend_id: friendId,

@@ -22,7 +22,8 @@ const nonExistentId = (message, response) => {
 };
 
 const validateRequestBody = (body, schema) => {
-  logger.info(`Validating request "${JSON.stringify(body, null, 4)}"`);
+  logger.info('Validating request');
+  logger.debug(`Request "${JSON.stringify(body, null, 4)}"`);
   return new Promise((resolve, reject) => {
     jsonSchemaValidator.validate(body, schema, error => {
       if (error) {
@@ -41,7 +42,8 @@ const invalidRequestBodyError = (reasons, response) => {
 };
 
 const entryExists = (id, entry, response) => {
-  logger.info(`Queried entry: ${JSON.stringify(entry, null, 4)}`);
+  logger.info('Querying entry');
+  logger.debug(`Entry: ${JSON.stringify(entry, null, 4)}`);
   if (!entry) {
     logger.warn(`No entry with id ${id}`);
     response.status(404).json({ code: 404, message: `No entry with id ${id}` });
@@ -329,7 +331,7 @@ const successfulAlbumsFetch = (albums, response) => {
 };
 
 const successfulAlbumCreation = (album, response) => {
-  logger.info(`Successful album creation ${JSON.stringify(album, null, 4)}`);
+  logger.info(`Successful album creation`);
   response.status(201).json(formatAlbumJson(album[0]));
 };
 
@@ -393,7 +395,8 @@ const formatTrackJson = track => ({
 });
 
 const successfulTracksFetch = (tracks, response) => {
-  logger.info(`Successful tracks fetch ${JSON.stringify(tracks, null, 4)}`);
+  logger.info('Successful tracks fetch');
+  logger.debug(`Tracks: ${JSON.stringify(tracks, null, 4)}`);
   return response.status(200).json({
     metadata: {
       count: tracks.length,
@@ -404,7 +407,8 @@ const successfulTracksFetch = (tracks, response) => {
 };
 
 const successfulTrackCreation = (track, response) => {
-  logger.info(`Successful track creation ${JSON.stringify(track, null, 4)}`);
+  logger.info('Successful track creation');
+  logger.debug(`Track: ${JSON.stringify(track, null, 4)}`);
   response.status(201).json(formatTrackJson(track[0]));
 };
 

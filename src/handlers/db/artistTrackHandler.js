@@ -5,13 +5,13 @@ const tables = require('../../database/tableNames');
 
 
 const insertAssociations = (trackId, artistsIds) => {
-  logger.info(`Creating associations for track ${trackId} and artists ${artistsIds}`);
+  logger.debug(`Creating associations for track ${trackId} and artists ${artistsIds}`);
   const rowValues = artistsIds.map(id => ({ track_id: trackId, artist_id: id }));
   return generalHandler.createNewEntry(tables.artists_tracks, rowValues);
 };
 
 const deleteAssociations = trackId => {
-  logger.info(`Deleting track ${trackId} associations`);
+  logger.debug(`Deleting track ${trackId} associations`);
   return db(tables.artists_tracks).where('track_id', trackId).del();
 };
 
