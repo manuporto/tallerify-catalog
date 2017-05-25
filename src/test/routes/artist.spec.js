@@ -25,13 +25,13 @@ describe('Artist', () => {
           .then(() => {
             dbHandler.artist.createNewArtistEntry(constants.initialArtist)
               .then(artist => {
-                logger.info(`Tests artists created: ${JSON.stringify(artist, null, 4)}`);
+                logger.debug(`Tests artists created: ${JSON.stringify(artist, null, 4)}`);
                 dbHandler.album.createNewAlbumEntry(constants.initialAlbum)
                   .then(album => {
-                    logger.info(`Tests album created: ${JSON.stringify(album, null, 4)}`);
+                    logger.debug(`Tests album created: ${JSON.stringify(album, null, 4)}`);
                     dbHandler.track.createNewTrackEntry(constants.initialTrack)
                       .then(track => {
-                        logger.info(`Tests track created: ${JSON.stringify(track, null, 4)}`);
+                        logger.debug(`Tests track created: ${JSON.stringify(track, null, 4)}`);
                         done();
                       })
                       .catch(error => {

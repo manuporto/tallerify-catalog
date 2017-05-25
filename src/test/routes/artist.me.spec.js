@@ -25,7 +25,7 @@ describe('Artist', () => {
           .then(() => {
             dbHandler.artist.createNewArtistEntry(constants.initialArtist)
               .then(artist => {
-                logger.info(`Tests artists created: ${JSON.stringify(artist, null, 4)}`);
+                logger.debug(`Tests artists created: ${JSON.stringify(artist, null, 4)}`);
                 done();
               })
               .catch(error => {
