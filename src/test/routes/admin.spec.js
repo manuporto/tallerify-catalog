@@ -18,7 +18,7 @@ const constants = require('./admin.constants.json');
 const testToken = jwt.sign({ admin: true }, config.secret);
 
 describe('Admin', () => {
-  beforeEach((done) => {
+  beforeEach(done => {
     db.migrate.rollback()
       .then(() => {
         db.migrate.latest()
@@ -31,13 +31,13 @@ describe('Admin', () => {
       });
   });
 
-  afterEach((done) => {
+  afterEach(done => {
     db.migrate.rollback()
       .then(() => done());
   });
 
   describe('/GET admins', () => {
-    it('should return status code 200', (done) => {
+    it('should return status code 200', done => {
       request(app)
       .get('/api/admins')
       .set('Authorization', `Bearer ${testToken}`)
@@ -47,7 +47,7 @@ describe('Admin', () => {
       });
     });
 
-    it('should return the expected body response when correct parameters are sent', (done) => {
+    it('should return the expected body response when correct parameters are sent', done => {
       request(app)
         .get('/api/admins')
         .set('Authorization', `Bearer ${testToken}`)
@@ -64,7 +64,7 @@ describe('Admin', () => {
   });
 
   describe('/POST admins', () => {
-    it('should return status code 400 when parameters are missing', (done) => {
+    it('should return status code 400 when parameters are missing', done => {
       request(app)
         .post('/api/admins')
         .set('Authorization', `Bearer ${testToken}`)
@@ -75,7 +75,7 @@ describe('Admin', () => {
         });
     });
 
-    it('should return status code 400 when parameters are invalid', (done) => {
+    it('should return status code 400 when parameters are invalid', done => {
       request(app)
         .post('/api/admins')
         .set('Authorization', `Bearer ${testToken}`)
@@ -86,7 +86,7 @@ describe('Admin', () => {
         });
     });
 
-    it('should return status code 201 when correct parameters are sent', (done) => {
+    it('should return status code 201 when correct parameters are sent', done => {
       request(app)
         .post('/api/admins')
         .set('Authorization', `Bearer ${testToken}`)
@@ -97,7 +97,7 @@ describe('Admin', () => {
         });
     });
 
-    it('should return the expected body response when correct parameters are sent', (done) => {
+    it('should return the expected body response when correct parameters are sent', done => {
       request(app)
         .post('/api/admins')
         .set('Authorization', `Bearer ${testToken}`)
@@ -116,7 +116,7 @@ describe('Admin', () => {
   });
 
   describe('/DELETE admins/{id}', () => {
-    it('should return status code 204 when deletion is successful', (done) => {
+    it('should return status code 204 when deletion is successful', done => {
       request(app)
         .delete(`/api/admins/${constants.validAdminId}`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -126,7 +126,7 @@ describe('Admin', () => {
         });
     });
 
-    it('should return status code 404 if id does not match an admin', (done) => {
+    it('should return status code 404 if id does not match an admin', done => {
       request(app)
         .delete(`/api/admins/${constants.invalidAdminId}`)
         .set('Authorization', `Bearer ${testToken}`)

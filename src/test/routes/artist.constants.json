@@ -1,23 +1,58 @@
 {
+	"jwtTestUser": {
+		"admin": true
+	},
 	"initialArtist": {
 		"id": 1,
 		"name": "Papa Baute",
-		"popularity": "2"
+		"description": "Tiene un implante coclear?",
+		"genres": ["Bachata"],
+		"images": ["una con guido", "otra con sergio"]
+	},
+	"initialAlbum": {
+		"id": 1,
+		"name": "Folie a deux",
+		"images": ["un oso", "otro oso"],
+		"genres": ["Rock"],
+		"artists": [1],
+		"release_date": "4011958"
+	},
+	"initialTrack": {
+		"id": 1,
+		"name": "Despacito",
+		"albumId": 1,
+		"artists": [1]
 	},
 	"testArtist": {
 		"id": 2,
 		"name": "Luis Fonsi",
-		"popularity": "1"
+		"description": "El que canta despacito",
+		"genres": ["pero que no es justin"],
+		"images": ["ni daddy yankee"]
 	},
-	"trackTestArtist": {
-		"name": "Cage The Elephant",
-		"popularity": "3"
+	"testTrack": {
+		"name": "Come a Little Closer",
+		"albumId": 1,
+		"artists": [1]
+	},
+	"updatedArtist": {
+		"name": "Ininity on high",
+		"description": "El que no canta despacito",
+		"genres": ["Punk"],
+		"images": ["una oveja"]
 	},
 	"newArtistWithMissingAttributes": {
 		"name": "Christian de Lugano"
 	},
 	"invalidArtist": {
 		"name": "Alexander Cannigia",
+		"description": 4,
+		"genres": 3,
+		"images": "muchas",
 		"popularity": 513
-	}
+	},
+	"validArtistId": 1,
+	"invalidArtistId": 9999,
+	"validAlbumId": 1,
+	"validTrackId": 1
 }

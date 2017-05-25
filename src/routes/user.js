@@ -1,9 +1,6 @@
 const db = require('./../handlers/db/index');
-const dbRaw = require('./../database/index');
 const tables = require('../database/tableNames');
 const respond = require('./../handlers/response');
-const constants = require('./constants.json');
-const logger = require('../utils/logger');
 
 const userExpectedBodySchema = {
   type: 'object',
@@ -83,7 +80,7 @@ const updateUserExpectedBodySchema = {
 };
 
 const createNewUser = (body, avatarPath) => {
-  let user = {
+  const user = {
     userName: body.userName,
     password: body.password,
     firstName: body.firstName,
@@ -97,7 +94,7 @@ const createNewUser = (body, avatarPath) => {
 };
 
 const updateUserInfo = (id, body) => {
-  let updatedUser = {
+  const updatedUser = {
     userName: body.userName,
     password: body.password,
     firstName: body.firstName,
@@ -112,9 +109,9 @@ const updateUserInfo = (id, body) => {
 
 const _getUser = (id, res) => {
   db.user.findUser(id)
-    .then((user) => {
-        if (!respond.entryExists(id, user, res)) return;
-        respond.successfulUserFetch(user, res);
+    .then(user => {
+      if (!respond.entryExists(id, user, res)) return;
+      respond.successfulUserFetch(user, res);
     })
     .catch(error => respond.internalServerError(error, res));
 };
@@ -123,16 +120,16 @@ const _updateUser = (id, body, response) => {
   respond.validateRequestBody(body, updateUserExpectedBodySchema)
     .then(() => {
       db.general.findEntryWithId(tables.users, id)
-        .then((user) => {
+        .then(user => {
           if (!respond.entryExists(id, user, response)) return;
           updateUserInfo(id, body)
-            .then(updatedUser => {
+            .then(() => {
               // Ugly hack to get user's contacts
               // No need to recheck if user exists
               db.user.findUser(id)
-                .then((user) => {
-                  respond.successfulUserUpdate(user, response)
-                }); 
+                .then(user => {
+                  respond.successfulUserUpdate(user, response);
+                });
             })
             .catch(error => respond.internalServerError(error, response));
         })
@@ -154,14 +151,14 @@ const getUser = (req, res) => {
 };
 
 const newUser = (req, res) => {
-  if (!(req["file"])) {
-      req["file"] = {"path": ""};
+  if (!(req.file)) {
+    req.file = { path: '' };
   }
   respond.validateRequestBody(req.body, userExpectedBodySchema)
     .then(() => {
       createNewUser(req.body, req["file"] !== "" ? process.env.BASE_URL + req.file.path.replace("public/", "") : "")
         .then(user => {
-          const userWithContactsField = Object.assign({}, user[0], {contacts: [null]});
+          const userWithContactsField = Object.assign({}, user[0], { contacts: [null] });
           return respond.successfulUserCreation(userWithContactsField, res);
         })
         .catch(error => respond.internalServerError(error, res));
@@ -175,7 +172,7 @@ const updateUser = (req, res) => {
 
 const deleteUser = (req, res) => {
   db.general.findEntryWithId(tables.users, req.params.id)
-    .then((user) => {
+    .then(user => {
       if (!respond.entryExists(req.params.id, user, res)) return;
       db.general.deleteEntryWithId(tables.users, req.params.id)
         .then(() => respond.successfulUserDeletion(res))
@@ -194,7 +191,7 @@ const meUpdateUser = (req, res) => {
 
 const meGetContacts = (req, res) => {
   db.user.findUser(req.user.id)
-    .then((user) => {
+    .then(user => {
       if (!respond.entryExists(req.user.id, user, res)) return;
       respond.successfulUserContactsFetch(user.contacts, res);
     })
@@ -203,7 +200,7 @@ const meGetContacts = (req, res) => {
 
 const meAddContact = (req, res) => {
   db.general.findEntryWithId(tables.users, req.params.id)
-    .then((user) => {
+    .then(user => {
       if (!respond.entryExists(req.params.id, user, res)) return;
       db.user.friend(req.user.id, req.params.id)
         .then(() => respond.successfulContactAddition(res))
@@ -214,7 +211,7 @@ const meAddContact = (req, res) => {
 
 const meDeleteContact = (req, res) => {
   db.general.findEntryWithId(tables.users, req.params.id)
-    .then((user) => {
+    .then(user => {
       if (!respond.entryExists(req.params.id, user, res)) return;
       db.user.unfriend(req.user.id, req.params.id)
         .then(() => respond.successfulContactDeletion(res))
@@ -224,4 +221,15 @@ const meDeleteContact = (req, res) => {
 };
 
 
-module.exports = { getUsers, getUser, newUser, updateUser, deleteUser, meGetUser, meUpdateUser, meGetContacts, meAddContact, meDeleteContact };
+module.exports = {
+  getUsers,
+  getUser,
+  newUser,
+  updateUser,
+  deleteUser,
+  meGetUser,
+  meUpdateUser,
+  meGetContacts,
+  meAddContact,
+  meDeleteContact,
+};

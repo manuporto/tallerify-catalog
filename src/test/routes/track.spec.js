@@ -19,8 +19,7 @@ const constants = require('./track.constants.json');
 const testToken = jwt.sign(constants.jwtTestUser, config.secret);
 
 describe('Track', () => {
-
-  beforeEach((done) => {
+  beforeEach(done => {
     db.migrate.rollback()
     .then(() => {
       db.migrate.latest()
@@ -30,19 +29,19 @@ describe('Track', () => {
               constants.initialArtist,
               constants.initialArtist2,
             ])
-            .then((artists) => {
-            logger.info(`Tests artists created: ${JSON.stringify(artists, null, 4)}`);
-            dbHandler.track.createNewTrackEntry(constants.initialTrack)
-              .then((tracks) => {
-              logger.info(`Tests tracks created: ${JSON.stringify(tracks, null, 4)}`);
-              done();
+            .then(artists => {
+              logger.debug(`Tests artists created: ${JSON.stringify(artists, null, 4)}`);
+              dbHandler.track.createNewTrackEntry(constants.initialTrack)
+                .then(tracks => {
+                  logger.debug(`Tests tracks created: ${JSON.stringify(tracks, null, 4)}`);
+                  done();
+                })
+                .catch(error => {
+                  logger.warn(`Test tracks creation error: ${error}`);
+                  done(error);
+                });
             })
-              .catch((error) => {
-                logger.warn(`Test tracks creation error: ${error}`);
-                done(error);
-              });
-          })
-            .catch((error) => {
+            .catch(error => {
               logger.warn(`Test artists creation error: ${error}`);
               done(error);
             });
@@ -51,13 +50,13 @@ describe('Track', () => {
     });
   });
 
-  afterEach((done) => {
+  afterEach(done => {
     db.migrate.rollback()
     .then(() => done());
   });
-  
+
   describe('/GET tracks', () => {
-    it('should return status code 200', (done) => {
+    it('should return status code 200', done => {
       request(app)
         .get('/api/tracks')
         .set('Authorization', `Bearer ${testToken}`)
@@ -67,7 +66,7 @@ describe('Track', () => {
         });
     });
 
-    it('should return the expected body response when correct parameters are sent', (done) => {
+    it('should return the expected body response when correct parameters are sent', done => {
       request(app)
         .get('/api/tracks')
         .set('Authorization', `Bearer ${testToken}`)
@@ -84,7 +83,7 @@ describe('Track', () => {
         });
     });
 
-    it('should return status code 401 if unauthorized', (done) => {
+    it('should return status code 401 if unauthorized', done => {
       request(app)
         .get('/api/tracks')
         .set('Authorization', 'Bearer UNAUTHORIZED')
@@ -96,8 +95,7 @@ describe('Track', () => {
   });
 
   describe('/POST tracks', () => {
-
-    it('should return status code 400 when parameters are missing', (done) => {
+    it('should return status code 400 when parameters are missing', done => {
       request(app)
         .post('/api/tracks')
         .set('Authorization', `Bearer ${testToken}`)
@@ -108,7 +106,7 @@ describe('Track', () => {
         });
     });
 
-    it('should return status code 400 when parameters are invalid', (done) => {
+    it('should return status code 400 when parameters are invalid', done => {
       request(app)
         .post('/api/tracks')
         .set('Authorization', `Bearer ${testToken}`)
@@ -119,7 +117,7 @@ describe('Track', () => {
         });
     });
 
-    it('should return status code 201 when correct parameters are sent', (done) => {
+    it('should return status code 201 when correct parameters are sent', done => {
       request(app)
         .post('/api/tracks')
         .set('Authorization', `Bearer ${testToken}`)
@@ -130,7 +128,7 @@ describe('Track', () => {
         });
     });
 
-    it('should return status code 400 with non existent artist id', (done) => {
+    it('should return status code 400 with non existent artist id', done => {
       request(app)
         .post('/api/tracks')
         .set('Authorization', `Bearer ${testToken}`)
@@ -142,7 +140,7 @@ describe('Track', () => {
         });
     });
 
-    it('should return the expected body response when correct parameters are sent', (done) => {
+    it('should return the expected body response when correct parameters are sent', done => {
       request(app)
         .post('/api/tracks')
         .set('Authorization', `Bearer ${testToken}`)
@@ -161,7 +159,7 @@ describe('Track', () => {
         });
     });
 
-    it('should return status code 401 if unauthorized', (done) => {
+    it('should return status code 401 if unauthorized', done => {
       request(app)
         .post('/api/tracks')
         .set('Authorization', 'Bearer UNAUTHORIZED')
@@ -174,7 +172,7 @@ describe('Track', () => {
   });
 
   describe('/GET tracks/{id}', () => {
-    it('should return status code 200', (done) => {
+    it('should return status code 200', done => {
       request(app)
         .get(`/api/tracks/${constants.validTrackId}`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -184,7 +182,7 @@ describe('Track', () => {
         });
     });
 
-    it('should return track data', (done) => {
+    it('should return track data', done => {
       request(app)
         .get(`/api/tracks/${constants.validTrackId}`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -206,7 +204,7 @@ describe('Track', () => {
         });
     });
 
-    it('should return status code 404 if id does not match a track', (done) => {
+    it('should return status code 404 if id does not match a track', done => {
       request(app)
         .get(`/api/tracks/${constants.invalidTrackId}`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -216,7 +214,7 @@ describe('Track', () => {
         });
     });
 
-    it('should return status code 401 if unauthorized', (done) => {
+    it('should return status code 401 if unauthorized', done => {
       request(app)
         .get(`/api/tracks/${constants.invalidTrackId}`)
         .set('Authorization', 'Bearer UNAUTHORIZED')
@@ -228,7 +226,7 @@ describe('Track', () => {
   });
 
   describe('/PUT tracks/{id}', () => {
-    it('should return status code 201 when correct parameters are sent', (done) => {
+    it('should return status code 201 when correct parameters are sent', done => {
       request(app)
         .put(`/api/tracks/${constants.validTrackId}`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -239,7 +237,7 @@ describe('Track', () => {
         });
     });
 
-    it('should return the expected body response when correct parameters are sent', (done) => {
+    it('should return the expected body response when correct parameters are sent', done => {
       request(app)
         .put(`/api/tracks/${constants.validTrackId}`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -258,7 +256,7 @@ describe('Track', () => {
         });
     });
 
-    it('should return status code 400 when parameters are missing', (done) => {
+    it('should return status code 400 when parameters are missing', done => {
       request(app)
         .put(`/api/tracks/${constants.validTrackId}`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -269,7 +267,7 @@ describe('Track', () => {
         });
     });
 
-    it('should return status code 400 when parameters are invalid', (done) => {
+    it('should return status code 400 when parameters are invalid', done => {
       request(app)
         .put(`/api/tracks/${constants.validTrackId}`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -280,7 +278,7 @@ describe('Track', () => {
         });
     });
 
-    it('should return status code 404 if id does not match a track', (done) => {
+    it('should return status code 404 if id does not match a track', done => {
       request(app)
         .put(`/api/tracks/${constants.invalidTrackId}`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -291,7 +289,7 @@ describe('Track', () => {
         });
     });
 
-    it('should return status code 401 if unauthorized', (done) => {
+    it('should return status code 401 if unauthorized', done => {
       request(app)
         .put(`/api/tracks/${constants.validTrackId}`)
         .set('Authorization', 'Bearer UNAUTHORIZED')
@@ -304,7 +302,7 @@ describe('Track', () => {
   });
 
   describe('/DELETE tracks/{id}', () => {
-    it('should return status code 204 when deletion is successful', (done) => {
+    it('should return status code 204 when deletion is successful', done => {
       request(app)
         .delete(`/api/tracks/${constants.validTrackId}`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -314,7 +312,7 @@ describe('Track', () => {
         });
     });
 
-    it('should return status code 404 if id does not match a track', (done) => {
+    it('should return status code 404 if id does not match a track', done => {
       request(app)
         .delete(`/api/tracks/${constants.invalidTrackId}`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -324,7 +322,7 @@ describe('Track', () => {
         });
     });
 
-    it('should return status code 401 if unauthorized', (done) => {
+    it('should return status code 401 if unauthorized', done => {
       request(app)
         .delete(`/api/tracks/${constants.validTrackId}`)
         .set('Authorization', 'Bearer UNAUTHORIZED')
@@ -336,7 +334,7 @@ describe('Track', () => {
   });
 
   describe('/POST tracks/{id}/like', () => {
-    it('should return status code 201 when track like is successful', (done) => {
+    it('should return status code 201 when track like is successful', done => {
       request(app)
         .post(`/api/tracks/${constants.validTrackId}/like`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -346,7 +344,7 @@ describe('Track', () => {
         });
     });
 
-    it('should return status code 201 when track like is duplicated', (done) => {
+    it('should return status code 201 when track like is duplicated', done => {
       request(app)
         .post(`/api/tracks/${constants.validTrackId}/like`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -362,7 +360,7 @@ describe('Track', () => {
         });
     });
 
-    it('should return status code 404 if id does not match a track', (done) => {
+    it('should return status code 404 if id does not match a track', done => {
       request(app)
         .post(`/api/tracks/${constants.invalidTrackId}/like`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -372,7 +370,7 @@ describe('Track', () => {
         });
     });
 
-    it('should return status code 401 if unauthorized', (done) => {
+    it('should return status code 401 if unauthorized', done => {
       request(app)
         .post(`/api/tracks/${constants.validTrackId}/like`)
         .set('Authorization', 'Bearer UNAUTHORIZED')
@@ -384,7 +382,7 @@ describe('Track', () => {
   });
 
   describe('/DELETE tracks/{id}/like', () => {
-    it('should return status code 204 when deletion is successful', (done) => {
+    it('should return status code 204 when deletion is successful', done => {
       request(app)
         .post(`/api/tracks/${constants.validTrackId}/like`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -400,7 +398,7 @@ describe('Track', () => {
         });
     });
 
-    it('should return status code 204 if disliked track was never liked', (done) => {
+    it('should return status code 204 if disliked track was never liked', done => {
       request(app)
         .delete(`/api/tracks/${constants.validTrackId}/like`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -410,7 +408,7 @@ describe('Track', () => {
         });
     });
 
-    it('should return status code 404 if id does not match a track', (done) => {
+    it('should return status code 404 if id does not match a track', done => {
       request(app)
         .delete(`/api/tracks/${constants.invalidTrackId}/like`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -420,7 +418,7 @@ describe('Track', () => {
         });
     });
 
-    it('should return status code 401 if unauthorized', (done) => {
+    it('should return status code 401 if unauthorized', done => {
       request(app)
         .delete(`/api/tracks/${constants.validTrackId}/like`)
         .set('Authorization', 'Bearer UNAUTHORIZED')
@@ -432,7 +430,7 @@ describe('Track', () => {
   });
 
   describe('/GET tracks/{id}/popularity', () => {
-    it('should return status code 200', (done) => {
+    it('should return status code 200', done => {
       request(app)
         .get(`/api/tracks/${constants.validTrackId}/popularity`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -442,7 +440,7 @@ describe('Track', () => {
         });
     });
 
-    it('should return track popularity 0', (done) => {
+    it('should return track popularity 0', done => {
       request(app)
         .get(`/api/tracks/${constants.validTrackId}/popularity`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -457,7 +455,7 @@ describe('Track', () => {
         });
     });
 
-    it('should return track popularity non 0', (done) => {
+    it('should return track popularity non 0', done => {
       request(app)
         .post(`/api/tracks/${constants.validTrackId}/popularity`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -479,7 +477,7 @@ describe('Track', () => {
         });
     });
 
-    it('should return status code 404 if id does not match a track', (done) => {
+    it('should return status code 404 if id does not match a track', done => {
       request(app)
         .get(`/api/tracks/${constants.invalidTrackId}/popularity`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -489,7 +487,7 @@ describe('Track', () => {
         });
     });
 
-    it('should return status code 401 if unauthorized', (done) => {
+    it('should return status code 401 if unauthorized', done => {
       request(app)
         .get(`/api/tracks/${constants.validTrackId}/popularity`)
         .set('Authorization', 'Bearer UNAUTHORIZED')
@@ -501,7 +499,7 @@ describe('Track', () => {
   });
 
   describe('/POST tracks/{id}/popularity', () => {
-    it('should return status code 201', (done) => {
+    it('should return status code 201', done => {
       request(app)
         .post(`/api/tracks/${constants.validTrackId}/popularity`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -512,7 +510,7 @@ describe('Track', () => {
         });
     });
 
-    it('should return user\'s track rate', (done) => {
+    it('should return user\'s track rate', done => {
       request(app)
         .post(`/api/tracks/${constants.validTrackId}/popularity`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -523,7 +521,7 @@ describe('Track', () => {
         });
     });
 
-    it('should return status code 400 when parameters are invalid', (done) => {
+    it('should return status code 400 when parameters are invalid', done => {
       request(app)
         .post(`/api/tracks/${constants.validTrackId}/popularity`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -534,7 +532,7 @@ describe('Track', () => {
         });
     });
 
-    it('should return status code 400 when rate is out of range', (done) => {
+    it('should return status code 400 when rate is out of range', done => {
       request(app)
         .post(`/api/tracks/${constants.validTrackId}/popularity`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -545,7 +543,7 @@ describe('Track', () => {
         });
     });
 
-    it('should return status code 404 if id does not match a track', (done) => {
+    it('should return status code 404 if id does not match a track', done => {
       request(app)
         .post(`/api/tracks/${constants.invalidTrackId}/popularity`)
         .set('Authorization', `Bearer ${testToken}`)
@@ -556,7 +554,7 @@ describe('Track', () => {
         });
     });
 
-    it('should return status code 401 if unauthorized', (done) => {
+    it('should return status code 401 if unauthorized', done => {
       request(app)
         .post(`/api/tracks/${constants.validTrackIdTrackId}/popularity`)
         .set('Authorization', 'Bearer UNAUTHORIZED')

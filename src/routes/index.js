@@ -9,16 +9,12 @@ const track = require('./track');
 const admin = require('./admin');
 
 const loginRouter = require('../middlewares/login-router');
-const usersMediaLocation = multer({dest: 'public/media/users/'});
 const artistsMediaLocation = multer({dest: 'public/media/artists/'});
 const albumsMediaLocation = multer({dest: 'public/media/albums/'});
-
-
+const usersMediaLocation = multer({ dest: 'public/media/users/' });
 const router = express.Router();
 
-router.get('/', (req, res) => {
-  res.render('index');
-});
+router.get('/', (req, res) => res.render('index'));
 
 /* Users */
 
@@ -62,6 +58,20 @@ router.get('/api/artists', artist.getArtists);
 
 router.post('/api/artists', artistsMediaLocation.single('picture'), artist.newArtist);
 
+router.get('/api/artists/:id', artist.getArtist);
+
+router.put('/api/artists/:id', artist.updateArtist);
+
+router.delete('/api/artists/:id', artist.deleteArtist);
+
+router.get('/api/artists/me/favorites', artist.getFavoriteArtists);
+
+router.delete('/api/artists/me/:id/follow', artist.artistUnfollow);
+
+router.post('/api/artists/me/:id/follow', artist.artistFollow);
+
+router.get('/api/artists/:id/tracks', artist.getTracks);
+
 /* Tracks */
 
 router.get('/api/tracks', track.getTracks);
@@ -74,7 +84,7 @@ router.put('/api/tracks/:id', track.updateTrack);
 
 router.delete('/api/tracks/:id', track.deleteTrack);
 
-router.post('/api/tracks/:id/like', track.trackLike);
+router.post('/api/tracks/:id/like', track.trackLike); // TODO add me to path and move tests
 
 router.delete('/api/tracks/:id/like', track.trackDislike);
 
