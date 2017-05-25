@@ -47,7 +47,8 @@ const createFacebookUser = (req, user) => {
 };
 
 const checkCredentials = credentials => {
-  logger.info(`Validating credentials: ${JSON.stringify(credentials)}`);
+  logger.info('Validating credentials');
+  logger.debug(`Credentials: ${JSON.stringify(credentials)}`);
   return validateWithProvider(credentials.authToken);
 };
 
