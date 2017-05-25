@@ -37,12 +37,12 @@ const getArtists = (req, res) => {
 };
 
 const newArtist = (req, res) => {
-    if (!(req["file"])) {
-        req["file"] = {"path": ""};
-    }
+  if (!(req.file)) {
+    req.file = { path: '' };
+  }
   respond.validateRequestBody(req.body, artistExpectedBodySchema)
     .then(() => {
-        req.body["images"] = req["file"]["path"] !== "" ? [process.env.BASE_URL + req.file.path.replace("public/", "")] : [""];
+      req.body.images = req.file.path !== '' ? [process.env.BASE_URL + req.file.path.replace('public/', '')] : [''];
       db.artist.createNewArtistEntry(req.body)
         .then(artist => respond.successfulArtistCreation(artist, res))
         .catch(error => respond.internalServerError(error, res));

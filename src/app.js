@@ -47,7 +47,7 @@ const unprotectedRoutes = req => {
   const usersMeRE = pathToRegexp('/api/users/me');
   const usersMediaRE = pathToRegexp('/media/*');
 
-    if (usersMeRE.exec(req.path)) {
+  if (usersMeRE.exec(req.path)) {
     return false;
   }
   if (baseRE.exec(req.path) ||
