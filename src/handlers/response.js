@@ -313,8 +313,20 @@ const formatAlbumJson = album => ({
   release_date: album.release_date,
   href: album.href,
   popularity: album.popularity,
-  artists: album.artists, // TODO album.artists.map(artist => formatArtistShortJson(artist)),
-  tracks: album.tracks, // TODO album.tracks.map(track => formatTrackShortJson(track)),
+  artists: album.artists[0] === null 
+    ? [] : album.artists.map(artist => formatArtistShortJson(artist)),
+  tracks: album.tracks[0] === null
+    ? [] : album.tracks.map(track => formatTrackShortJson(track)),
+  genres: album.genres,
+  images: album.images,
+});
+
+const formatTempAlbumJson = album => ({
+  id: album.id,
+  name: album.name,
+  release_date: album.release_date,
+  href: album.href,
+  popularity: album.popularity,
   genres: album.genres,
   images: album.images,
 });
@@ -332,7 +344,7 @@ const successfulAlbumsFetch = (albums, response) => {
 
 const successfulAlbumCreation = (album, response) => {
   logger.info('Successful album creation');
-  response.status(201).json(formatAlbumJson(album[0]));
+  response.status(201).json(formatAlbumJson(album));
 };
 
 const successfulAlbumFetch = (album, response) => {
@@ -348,7 +360,7 @@ const successfulAlbumFetch = (album, response) => {
 
 const successfulAlbumUpdate = (album, response) => {
   logger.info('Successful album update');
-  response.status(200).json(formatAlbumJson(album[0]));
+  response.status(200).json(formatAlbumJson(album));
 };
 
 const successfulAlbumDeletion = response => {
@@ -369,17 +381,17 @@ const successfulTrackDeletionFromAlbum = (trackId, albumId, response) => {
 
 const successfulTrackAdditionToAlbum = (trackId, album, response) => {
   logger.info(`Track (id: ${trackId}) now belongs to album (id: ${album.id})`);
-  response.status(200).json(formatAlbumJson(album));
+  response.status(200).json(formatTempAlbumJson(album));
 };
 
 /* Tracks */
 
-// const formatTrackShortJson = track => ({
-//   id: track.id,
-//   name: track.name,
-//   href: track.href,
-//   images: track.images,
-// });
+const formatTrackShortJson = track => ({
+  id: track.id,
+  name: track.name,
+  href: track.href,
+  images: track.images,
+});
 
 const formatTrackJson = track => ({
   id: track.id,

@@ -14,7 +14,7 @@ const _findAllAlbums = () => {
     .from('albums as al')
     .innerJoin('albums_artists as aa', 'al.id', 'aa.album_id')
     .innerJoin('artists as ar', 'ar.id', 'aa.artist_id')
-    .innerJoin('tracks as tr', 'tr.album_id', 'al.id')
+    .leftJoin('tracks as tr', 'tr.album_id', 'al.id')
     .groupBy('al.id');
 };
 
@@ -52,7 +52,7 @@ const createNewAlbumEntry = body => {
         .then(insertedAlbum => {
           logger.debug(`Inserted album: ${JSON.stringify(insertedAlbum, null, 4)}`);
           return albumArtistHandler.insertAssociations(insertedAlbum[0].id, body.artists)
-            .then(() => insertedAlbum);
+            .then(() => findAlbumWithId(insertedAlbum[0].id));
         }));
 };
 
@@ -70,7 +70,7 @@ const updateAlbumEntry = (body, id) => {
         .then(updatedAlbum => {
           logger.debug(`Updated album: ${JSON.stringify(updatedAlbum, null, 4)}`);
           return albumArtistHandler.updateAssociationsOfAlbum(updatedAlbum[0].id, body.artists)
-            .then(() => updatedAlbum);
+            .then(() => findAlbumWithId(updatedAlbum[0].id));
         }));
 };
 
