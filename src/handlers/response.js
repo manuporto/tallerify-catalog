@@ -223,20 +223,73 @@ const formatArtistShortJson = artist => ({
   images: artist.images,
 });
 
-const successfulArtistsFetch = (artists, res) => {
+const formatArtistJson = artist => ({
+  id: artist.id,
+  name: artist.name,
+  description: artist.description,
+  href: artist.href,
+  images: artist.images,
+  genres: artist.genres,
+  albums: artist.hasOwnProperty('albums') ? artist.albums.map(formatAlbumShortJson) : [],
+  popularity: artist.popularity,
+});
+
+const successfulArtistsFetch = (artists, response) => {
   logger.info('Successful artists fetch');
-  return res.status(200).json({
+  return response.status(200).json({
     metadata: {
       count: artists.length,
       version: constants.API_VERSION,
     },
-    artists,
+    artists: artists.map(formatArtistJson),
   });
 };
 
-const successfulArtistCreation = (artist, res) => {
+const successfulArtistCreation = (artist, response) => {
   logger.info('Successful artist creation');
-  res.status(201).json(artist[0]);
+  response.status(201).json(formatArtistJson(artist[0]));
+};
+
+const successfulArtistFetch = (artist, response) => {
+  logger.info('Successful artist fetch');
+  return response.status(200).json({
+    metadata: {
+      count: 1,
+      version: constants.API_VERSION,
+    },
+    artist: (formatArtistJson(artist)),
+  });
+};
+
+const successfulArtistUpdate = (artist, response) => {
+  logger.info('Successful artist update');
+  response.status(200).json(formatArtistJson(artist[0]));
+};
+
+const successfulArtistDeletion = response => {
+  logger.info('Successful artist deletion');
+  response.sendStatus(204);
+};
+
+const successfulArtistFollow = (artist, response) => {
+  logger.info('Successful artist follow');
+  response.status(201).json(formatArtistJson(artist));
+};
+
+const successfulArtistUnfollow = (artist, response) => {
+  logger.info('Successful artist unfollow');
+  response.status(204).json(formatArtistJson(artist));
+};
+
+const successfulArtistTracksFetch = (tracks, response) => {
+  logger.info('Successful tracks fetch');
+  response.status(200).json({
+    metadata: {
+      count: tracks.length,
+      version: constants.API_VERSION,
+    },
+    tracks: tracks.map(formatTrackJson),
+  });
 };
 
 /* Albums */
@@ -265,7 +318,7 @@ const formatAlbumJson = album => ({
 });
 
 const successfulAlbumsFetch = (albums, response) => {
-  logger.info(`Successful albums fetch ${JSON.stringify(albums, null, 4)}`);
+  logger.info('Successful albums fetch');
   return response.status(200).json({
     metadata: {
       count: albums.length,
@@ -430,6 +483,12 @@ module.exports = {
   successfulAdminTokenGeneration,
   successfulArtistsFetch,
   successfulArtistCreation,
+  successfulArtistFetch,
+  successfulArtistUpdate,
+  successfulArtistDeletion,
+  successfulArtistFollow,
+  successfulArtistUnfollow,
+  successfulArtistTracksFetch,
   successfulAlbumsFetch,
   successfulAlbumCreation,
   successfulAlbumFetch,

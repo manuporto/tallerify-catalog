@@ -10,6 +10,7 @@ exports.up = (knex, Promise) => Promise.all([
     table.integer('duration');
     table.integer('album_id');
     table.string('href');
+    table.integer('popularity');
   }),
 
   knex.schema.createTableIfNotExists(tables.tracks_rating, table => {
@@ -24,7 +25,11 @@ exports.up = (knex, Promise) => Promise.all([
     logger.debug('Creating artists table.');
     table.increments('id').primary();
     table.string('name');
+    table.string('description');
+    table.string('href');
     table.integer('popularity');
+    table.specificType('images', 'text ARRAY');
+    table.specificType('genres', 'text ARRAY');
   }),
 
   knex.schema.createTableIfNotExists(tables.albums, table => {
@@ -80,9 +85,16 @@ exports.up = (knex, Promise) => Promise.all([
 
   knex.schema.createTableIfNotExists(tables.users_tracks, table => {
     logger.debug('Creating users_tracks table.');
-    table.increments('user_tracks_id').primary();
+    table.increments('user_track_id').primary();
     table.integer('user_id');
     table.integer('track_id');
+  }),
+
+  knex.schema.createTableIfNotExists(tables.users_artists, table => {
+    logger.debug('Creating users_artists table.');
+    table.increments('user_artist_id').primary();
+    table.integer('user_id');
+    table.integer('artist_id');
   }),
 
   knex.schema.createTableIfNotExists(tables.users_users, table => {
@@ -91,7 +103,6 @@ exports.up = (knex, Promise) => Promise.all([
     table.integer('user_id');
     table.integer('friend_id');
   }),
-
 ]);
 
 exports.down = (knex, Promise) => Promise.all([
@@ -103,5 +114,7 @@ exports.down = (knex, Promise) => Promise.all([
   knex.schema.dropTable(tables.users),
   knex.schema.dropTable(tables.admins),
   knex.schema.dropTable(tables.users_tracks),
+  knex.schema.dropTable(tables.users_artists),
+  knex.schema.dropTable(tables.albums_artists),
   knex.schema.dropTable(tables.users_users),
 ]);

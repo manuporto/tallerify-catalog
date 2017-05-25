@@ -11,13 +11,11 @@
 		"release_date": "20091959"
 	},
 	"initialTrackInAlbum": {
-		"id": 1,
 		"name": "Absolution",
 		"albumId": 1,
 		"artists": [1, 2]
 	},
 	"initialTrack": {
-		"id": 2,
 		"name": "Panic Station",
 		"albumId": 56,
 		"artists": [1]

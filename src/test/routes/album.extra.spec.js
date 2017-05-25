@@ -18,8 +18,8 @@ const constants = require('./album.extra.constants.json');
 
 const testToken = jwt.sign(constants.jwtTestUser, config.secret);
 
-var validTrackId;
-
+let trackInAlbumId;
+let validTrackId;
 describe('Album', () => {
   beforeEach(done => {
     db.migrate.rollback()
@@ -44,6 +44,7 @@ describe('Album', () => {
                       .then(result => {
                         logger.debug(`Tests track in album created: ${JSON.stringify(result[0], null, 4)}`);
                         logger.debug(`Tests track created: ${JSON.stringify(result[1], null, 4)}`);
+                        trackInAlbumId = result[0][0].id;
                         validTrackId = result[1][0].id;
                         done();
                       })
@@ -165,7 +166,7 @@ describe('Album', () => {
   describe('/DELETE api/albums/{albumId}/track/{trackId}', () => {
     it('should return status code 204 when deletion is successful', done => {
       request(app)
-        .delete(`/api/albums/${constants.validAlbumId}/track/${constants.initialTrackInAlbum.id}`)
+        .delete(`/api/albums/${constants.validAlbumId}/track/${trackInAlbumId}`)
         .set('Authorization', `Bearer ${testToken}`)
         .end((err, res) => {
           res.should.have.status(204);
@@ -175,12 +176,12 @@ describe('Album', () => {
 
     it('should leave track as orphan', done => {
       request(app)
-        .delete(`/api/albums/${constants.validAlbumId}/track/${constants.initialTrackInAlbum.id}`)
+        .delete(`/api/albums/${constants.validAlbumId}/track/${trackInAlbumId}`)
         .set('Authorization', `Bearer ${testToken}`)
         .end((err, res) => {
           res.should.have.status(204);
           request(app)
-            .get(`/api/tracks/${constants.initialTrackInAlbum.id}`)
+            .get(`/api/tracks/${trackInAlbumId}`)
             .set('Authorization', `Bearer ${testToken}`)
             .end((err, res) => {
               res.should.have.status(200);
@@ -202,7 +203,7 @@ describe('Album', () => {
 
     it('should return status code 404 if albumId does not match an album', done => {
       request(app)
-        .delete(`/api/albums/${constants.invalidAlbumId}/track/${constants.initialTrackInAlbum.id}`)
+        .delete(`/api/albums/${constants.invalidAlbumId}/track/${trackInAlbumId}`)
         .set('Authorization', `Bearer ${testToken}`)
         .end((err, res) => {
           res.should.have.status(404);
