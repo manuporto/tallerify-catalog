@@ -7,15 +7,27 @@ const albumArtistHandler = require('./albumArtistHandler');
 
 const NonExistentIdError = require('../../errors/NonExistentIdError');
 
+const _findAllAlbums = () => {
+  return db
+    .select('al.*',
+      db.raw('to_json(array_agg(distinct ar.*)) as artists, to_json(array_agg(distinct tr.*)) as tracks'))
+    .from('albums as al')
+    .innerJoin('albums_artists as aa', 'al.id', 'aa.album_id')
+    .innerJoin('artists as ar', 'ar.id', 'aa.artist_id')
+    .innerJoin('tracks as tr', 'tr.album_id', 'al.id')
+    .groupBy('al.id');
+};
+
 const findAllAlbums = () => {
   logger.info('Fetching albums');
-  return generalHandler.findAllEntries(tables.albums); // TODO full query to get artists and tracks
+  return _findAllAlbums();
 };
 
 const findAlbumWithId = id => {
   logger.info(`Fetching album with id: ${id}`);
-  // TODO full query to get artists and tracks
-  return generalHandler.findEntryWithId(tables.albums, id);
+  return _findAllAlbums()
+    .where('al.id', id)
+    .first();
 };
 
 const checkArtistsExistence = body => db(tables.artists).whereIn('id', body.artists).then(artists => {
