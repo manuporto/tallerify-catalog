@@ -18,6 +18,8 @@ const constants = require('./album.extra.constants.json');
 
 const testToken = jwt.sign(constants.jwtTestUser, config.secret);
 
+var validTrackId;
+
 describe('Album', () => {
   beforeEach(done => {
     db.migrate.rollback()
@@ -42,6 +44,7 @@ describe('Album', () => {
                       .then(result => {
                         logger.debug(`Tests track in album created: ${JSON.stringify(result[0], null, 4)}`);
                         logger.debug(`Tests track created: ${JSON.stringify(result[1], null, 4)}`);
+                        validTrackId = result[1][0].id;
                         done();
                       })
                       .catch(error => {
@@ -71,7 +74,7 @@ describe('Album', () => {
   describe('/PUT api/albums/{albumId}/track/{trackId}', () => {
     it('should return status code 200 when correct parameters are sent', done => {
       request(app)
-        .put(`/api/albums/${constants.validAlbumId}/track/${constants.validTrackId}`)
+        .put(`/api/albums/${constants.validAlbumId}/track/${validTrackId}`)
         .set('Authorization', `Bearer ${testToken}`)
         .end((err, res) => {
           res.should.have.status(200);
@@ -81,12 +84,12 @@ describe('Album', () => {
 
     it('should change tracks albumId', done => {
       request(app)
-        .put(`/api/albums/${constants.validAlbumId}/track/${constants.validTrackId}`)
+        .put(`/api/albums/${constants.validAlbumId}/track/${validTrackId}`)
         .set('Authorization', `Bearer ${testToken}`)
         .end((err, res) => {
           res.should.have.status(200);
           request(app)
-            .get(`/api/tracks/${constants.validTrackId}`)
+            .get(`/api/tracks/${validTrackId}`)
             .set('Authorization', `Bearer ${testToken}`)
             .end((err, res) => {
               res.should.have.status(200);
@@ -100,12 +103,12 @@ describe('Album', () => {
 
     it('should return status code 200 if track already belongs to album', done => {
       request(app)
-        .put(`/api/albums/${constants.validAlbumId}/track/${constants.validTrackId}`)
+        .put(`/api/albums/${constants.validAlbumId}/track/${validTrackId}`)
         .set('Authorization', `Bearer ${testToken}`)
         .end((err, res) => {
           res.should.have.status(200);
           request(app)
-            .put(`/api/albums/${constants.validAlbumId}/track/${constants.validTrackId}`)
+            .put(`/api/albums/${constants.validAlbumId}/track/${validTrackId}`)
             .set('Authorization', `Bearer ${testToken}`)
             .end((err, res) => {
               res.should.have.status(200);
@@ -127,7 +130,7 @@ describe('Album', () => {
 
     it('should return status code 404 if id does not match an album', done => {
       request(app)
-        .put(`/api/albums/${constants.invalidAlbumId}/track/${constants.validTrackId}`)
+        .put(`/api/albums/${constants.invalidAlbumId}/track/${validTrackId}`)
         .set('Authorization', `Bearer ${testToken}`)
         .send(constants.updatedAlbum)
         .end((err, res) => {
@@ -189,7 +192,7 @@ describe('Album', () => {
 
     it('should return status code 400 if trackId does not belong to album', done => {
       request(app)
-        .delete(`/api/albums/${constants.validAlbumId}/track/${constants.validTrackId}`)
+        .delete(`/api/albums/${constants.validAlbumId}/track/${validTrackId}`)
         .set('Authorization', `Bearer ${testToken}`)
         .end((err, res) => {
           res.should.have.status(400);
