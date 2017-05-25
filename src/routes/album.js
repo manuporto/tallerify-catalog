@@ -17,17 +17,10 @@ const albumExpectedBodySchema = {
       required: true,
       type: 'array',
       items: {
-        type: 'integer',
-      },
-    },
-    genres: {
-      required: true,
-      type: 'array',
-      items: {
         type: 'string',
       },
     },
-    images: {
+    genres: {
       required: true,
       type: 'array',
       items: {
