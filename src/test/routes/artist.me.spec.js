@@ -161,6 +161,11 @@ describe('Artist', () => {
             .end((err, res) => {
               res.should.have.status(200);
               res.body.artists.should.have.lengthOf(1);
+              res.body.artists[0].name.should.eql(constants.initialArtist.name);
+              res.body.artists[0].description.should.eql(constants.initialArtist.description);
+              res.body.artists[0].genres.should.eql(constants.initialArtist.genres);
+              res.body.artists[0].images.should.eql(constants.initialArtist.images);
+              res.body.artists[0].albums.should.be.empty; // eslint-disable-line no-unused-expressions
               done();
             });
         });
@@ -200,6 +205,10 @@ describe('Artist', () => {
               res.body.should.have.property('artists');
               res.body.artists.should.be.a('array');
               res.body.artists[0].name.should.eql(constants.initialArtist.name);
+              res.body.artists[0].description.should.eql(constants.initialArtist.description);
+              res.body.artists[0].genres.should.eql(constants.initialArtist.genres);
+              res.body.artists[0].images.should.eql(constants.initialArtist.images);
+              res.body.artists[0].albums.should.be.empty; // eslint-disable-line no-unused-expressions
               done();
             });
         });
