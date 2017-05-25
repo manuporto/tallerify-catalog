@@ -8,6 +8,7 @@
 		"artists": [2, 1]
 	},
 	"validTrackId": 1,
+	"invalidTrackId": 99999,
 	"initialArtist1": {
 		"id": 1,
 		"name": "Papa Baute",

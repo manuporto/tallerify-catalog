@@ -83,7 +83,6 @@ describe('Track', () => {
         .get('/api/tracks')
         .set('Authorization', `Bearer ${testToken}`)
         .end((err, res) => {
-          logger.info(`Tracks: ${JSON.stringify(res.body.tracks, null, 4)}`);
           res.body.should.be.a('object');
           res.body.should.have.property('metadata');
           res.body.metadata.should.have.property('version');
@@ -288,7 +287,6 @@ describe('Track', () => {
         .set('Authorization', `Bearer ${testToken}`)
         .send(constants.updatedTrackWithNonExistentArtist)
         .end((err, res) => {
-          logger.warn(JSON.stringify(res.body));
           res.should.have.status(400);
           res.body.should.have.property('message').eql('Non existing artist.');
           done();
@@ -354,102 +352,6 @@ describe('Track', () => {
     it('should return status code 401 if unauthorized', done => {
       request(app)
         .delete(`/api/tracks/${constants.validTrackId}`)
-        .set('Authorization', 'Bearer UNAUTHORIZED')
-        .end((err, res) => {
-          res.should.have.status(401);
-          done();
-        });
-    });
-  });
-
-  describe('/POST tracks/{id}/like', () => {
-    it('should return status code 201 when track like is successful', done => {
-      request(app)
-        .post(`/api/tracks/${constants.validTrackId}/like`)
-        .set('Authorization', `Bearer ${testToken}`)
-        .end((err, res) => {
-          res.should.have.status(201);
-          done();
-        });
-    });
-
-    it('should return status code 201 when track like is duplicated', done => {
-      request(app)
-        .post(`/api/tracks/${constants.validTrackId}/like`)
-        .set('Authorization', `Bearer ${testToken}`)
-        .end((err, res) => {
-          res.should.have.status(201);
-          request(app)
-            .post(`/api/tracks/${constants.validTrackId}/like`)
-            .set('Authorization', `Bearer ${testToken}`)
-            .end((err, res) => {
-              res.should.have.status(201);
-              done();
-            });
-        });
-    });
-
-    it('should return status code 404 if id does not match a track', done => {
-      request(app)
-        .post(`/api/tracks/${constants.invalidTrackId}/like`)
-        .set('Authorization', `Bearer ${testToken}`)
-        .end((err, res) => {
-          res.should.have.status(404);
-          done();
-        });
-    });
-
-    it('should return status code 401 if unauthorized', done => {
-      request(app)
-        .post(`/api/tracks/${constants.validTrackId}/like`)
-        .set('Authorization', 'Bearer UNAUTHORIZED')
-        .end((err, res) => {
-          res.should.have.status(401);
-          done();
-        });
-    });
-  });
-
-  describe('/DELETE tracks/{id}/like', () => {
-    it('should return status code 204 when deletion is successful', done => {
-      request(app)
-        .post(`/api/tracks/${constants.validTrackId}/like`)
-        .set('Authorization', `Bearer ${testToken}`)
-        .end((err, res) => {
-          res.should.have.status(201);
-          request(app)
-            .delete(`/api/tracks/${constants.validTrackId}/like`)
-            .set('Authorization', `Bearer ${testToken}`)
-            .end((err, res) => {
-              res.should.have.status(204);
-              done();
-            });
-        });
-    });
-
-    it('should return status code 204 if disliked track was never liked', done => {
-      request(app)
-        .delete(`/api/tracks/${constants.validTrackId}/like`)
-        .set('Authorization', `Bearer ${testToken}`)
-        .end((err, res) => {
-          res.should.have.status(204);
-          done();
-        });
-    });
-
-    it('should return status code 404 if id does not match a track', done => {
-      request(app)
-        .delete(`/api/tracks/${constants.invalidTrackId}/like`)
-        .set('Authorization', `Bearer ${testToken}`)
-        .end((err, res) => {
-          res.should.have.status(404);
-          done();
-        });
-    });
-
-    it('should return status code 401 if unauthorized', done => {
-      request(app)
-        .delete(`/api/tracks/${constants.validTrackId}/like`)
         .set('Authorization', 'Bearer UNAUTHORIZED')
         .end((err, res) => {
           res.should.have.status(401);
