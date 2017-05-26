@@ -13,22 +13,14 @@
 		"name": "Absolution",
 		"artists": [1, 2]
 	},
-	"initialTrackShort": {
-		"name": "Absolution",
-		"href": null,
-		"images": null
-	},
 	"initialArtist1": {
-		"name": "Matthew Bellamy",
-		"popularity": 5
+		"name": "Matthew Bellamy"
 	},
 	"initialArtist2": {
-		"name": "Christopher Wolstenholme",
-		"popularity": 4
+		"name": "Christopher Wolstenholme"
 	},
 	"initialArtist3": {
-		"name": "Dominic Howard",
-		"popularity": 2
+		"name": "Dominic Howard"
 	},
 	"testAlbum": {
 		"name": "Folie a deux",
