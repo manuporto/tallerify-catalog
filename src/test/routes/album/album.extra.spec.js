@@ -63,17 +63,17 @@ describe('Album', () => {
                         done();
                       })
                       .catch(error => {
-                        logger.debug(`Test tracks creation error: ${error}`);
+                        logger.warn(`Test tracks creation error: ${error}`);
                         done(error);
                       });
                   })
                   .catch(error => {
-                    logger.debug(`Test album creation error: ${error}`);
+                    logger.warn(`Test album creation error: ${error}`);
                     done(error);
                   });
               })
               .catch(error => {
-                logger.debug(`Test artists creation error: ${error}`);
+                logger.warn(`Test artists creation error: ${error}`);
                 done(error);
               });
           })

@@ -31,16 +31,15 @@ describe('Track', () => {
                 constants.initialArtist1,
                 constants.initialArtist2,
               ]).then(artists => {
-              logger.info(`Tests artists created: ${JSON.stringify(artists, null, 4)}`);
+              logger.debug(`Tests artists created: ${JSON.stringify(artists, null, 4)}`);
               initialArtist1Id = artists[0].id;
               initialArtist2Id = artists[1].id;
-              logger.warn(initialArtist1Id);
               dbHandler.album.createNewAlbumEntry(constants.initialAlbum)
                 .then(album => {
-                  logger.info(`Tests album created: ${JSON.stringify(album, null, 4)}`);
+                  logger.debug(`Tests album created: ${JSON.stringify(album, null, 4)}`);
                   dbHandler.track.createNewTrackEntry(constants.initialTrack)
                     .then(tracks => {
-                      logger.info(`Tests tracks created: ${JSON.stringify(tracks, null, 4)}`);
+                      logger.debug(`Tests tracks created: ${JSON.stringify(tracks, null, 4)}`);
                       done();
                     })
                     .catch(error => {
