@@ -17,12 +17,12 @@ const _findAllTracks = () => db
   .innerJoin(`${tables.artists} as ar`, 'ar.id', 'art.artist_id')
   .groupBy('tr.id');
 
-const findAllTracks = (queries) => {
+const findAllTracks = queries => {
   logger.info('Finding tracks');
   // Ugly hack to return empty array if empty name query it'supplied
   // The normal behavior (knex) it's to return everything
   if (queries.name === '') return Promise.resolve([]);
-  return (queries.name) ? _findAllTracks().where('tr.name', queries.name) : _findAllTracks();;
+  return (queries.name) ? _findAllTracks().where('tr.name', queries.name) : _findAllTracks();
 };
 
 const findTrackWithId = id => {

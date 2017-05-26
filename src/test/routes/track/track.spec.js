@@ -58,7 +58,7 @@ describe('Track', () => {
                 dbHandler.album.createNewAlbumEntry(constants.initialAlbum)
                 .then(album => {
                   logger.debug(`Tests album created: ${JSON.stringify(album, null, 4)}`);
-                  
+
                   initialAlbumId = album.id;
                   initialAlbumShort = {
                     id: initialAlbumId,
@@ -74,9 +74,9 @@ describe('Track', () => {
                     albumId: initialAlbumId,
                     artists: [initialArtistId1],
                   });
-                  
+
                   dbHandler.track.createNewTrackEntry(
-                    Object.assign({}, constants.initialTrack, {albumId: initialAlbumId}))
+                    Object.assign({}, constants.initialTrack, { albumId: initialAlbumId }))
                     .then(tracks => {
                       logger.debug(`Tests tracks created: ${JSON.stringify(tracks, null, 4)}`);
                       initialTrackId = tracks[0].id;
