@@ -396,7 +396,7 @@ const formatTrackJson = track => ({
   popularity: {
     rate: track.rating,
   },
-  album: track.album !== undefined ? formatAlbumShortJson(track.album) : {},
+  album: track.album ? formatAlbumShortJson(track.album) : {},
   artists: (track.hasOwnProperty('artists')) ?
     track.artists.map(artist => formatArtistShortJson(artist)) : [],
 });
