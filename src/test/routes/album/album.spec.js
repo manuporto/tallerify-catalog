@@ -101,6 +101,61 @@ describe('Album', () => {
     });
   });
 
+  describe('/GET albums?name=', () => {
+    it('should return status code 200 with existent album name', done => {
+      request(app)
+        .get(`/api/albums?name=${constants.initialAlbum.name}`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.should.have.status(200);
+          done();
+        });
+    });
+
+    it('should return status code 200 with non existent album name', done => {
+      request(app)
+        .get('/api/albums?name=INEXISTENT')
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.should.have.status(200);
+          done();
+        });
+    });
+
+    it('should return albums matching with the name in the query', done => {
+      request(app)
+        .get(`/api/albums?name=${constants.initialAlbum.name}`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.body.should.have.property('albums');
+          res.body.albums.should.be.a('array');
+          res.body.albums.should.have.lengthOf(1);
+          // res.body.albums[0].name.eql(constants.initialAlbum.name);
+          done();
+        });
+    });
+
+    it('should return no albums if the name query doesn\'t match any album ', done => {
+      request(app)
+        .get('/api/albums?name=INEXISTENT')
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.body.should.have.property('albums').eql([]);
+          done();
+        });
+    });
+
+    it('should return no albums if the name query it\'s empty', done => {
+      request(app)
+        .get('/api/albums?name=')
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.body.should.have.property('albums').eql([]);
+          done();
+        });
+    });
+  });
+
   describe('/POST albums', () => {
     it('should return status code 400 when parameters are missing', done => {
       request(app)
@@ -156,9 +211,9 @@ describe('Album', () => {
           res.body.should.have.property('id').eql(constants.testAlbum.id);
           res.body.should.have.property('href');
           res.body.should.have.property('name').eql(constants.testAlbum.name);
-          // TODO res.body.should.have.property('artists').eql(constants.testAlbum.artists);
+          res.body.should.have.property('artists').eql([constants.initialArtist3Short]);
           res.body.should.have.property('genres').eql(constants.testAlbum.genres);
-          // TODO res.body.should.have.property('tracks');
+          res.body.should.have.property('tracks').eql([]);
           res.body.should.have.property('popularity').eql(0);
           res.body.should.have.property('release_date').eql(constants.testAlbum.release_date);
           res.body.should.have.property('images').eql(constants.testAlbum.images);
@@ -204,8 +259,11 @@ describe('Album', () => {
           res.body.album.should.have.property('name').eql(constants.initialAlbum.name);
           res.body.album.should.have.property('images').eql(constants.initialAlbum.images);
           res.body.album.should.have.property('href');
-          // TODO res.body.should.have.property('artists').eql(constants.testAlbum.artists);
-          // TODO res.body.should.have.property('tracks');
+          res.body.album.should.have.property('artists').eql([
+            constants.initialArtist1Short,
+            constants.initialArtist2Short,
+            constants.initialArtist3Short]);
+          res.body.album.should.have.property('tracks').eql([constants.initialTrackShort]);
           res.body.album.should.have.property('genres').eql(constants.initialAlbum.genres);
           res.body.album.should.have.property('popularity');
           res.body.album.should.have.property('release_date').eql(constants.initialAlbum.release_date);
@@ -256,9 +314,9 @@ describe('Album', () => {
           res.body.should.have.property('id').eql(constants.validAlbumId);
           res.body.should.have.property('href');
           res.body.should.have.property('name').eql(constants.updatedAlbum.name);
-          // TODO res.body.should.have.property('artists').eql(constants.updatedAlbum.artists);
+          res.body.should.have.property('artists').eql([constants.initialArtist2Short]);
           res.body.should.have.property('genres').eql(constants.updatedAlbum.genres);
-          // TODO res.body.should.have.property('tracks');
+          res.body.should.have.property('tracks').eql([constants.initialTrackShort]);
           res.body.should.have.property('popularity');
           res.body.should.have.property('release_date').eql(constants.updatedAlbum.release_date);
           res.body.should.have.property('images').eql(constants.updatedAlbum.images);
@@ -364,7 +422,7 @@ describe('Album', () => {
             .set('Authorization', `Bearer ${testToken}`)
             .end((err, res) => {
               res.should.have.status(200);
-              res.body.track.should.not.have.property('album');
+              res.body.track.should.have.property('album').eql({});
               done();
             });
         });
