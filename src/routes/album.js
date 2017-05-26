@@ -40,7 +40,7 @@ const albumExpectedBodySchema = {
 /* Routes */
 
 const getAlbums = (req, res) => {
-  db.album.findAllAlbums(req.query)
+  db.album.findAllAlbums()
     .then(albums => respond.successfulAlbumsFetch(albums, res))
     .catch(error => respond.internalServerError(error, res));
 };
