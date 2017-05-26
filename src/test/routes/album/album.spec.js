@@ -101,6 +101,61 @@ describe('Album', () => {
     });
   });
 
+  describe('/GET albums?name=', () => {
+    it('should return status code 200 with existent album name', done => {
+      request(app)
+        .get(`/api/albums?name=${constants.initialAlbum.name}`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.should.have.status(200);
+          done();
+        });
+    });
+
+    it('should return status code 200 with non existent album name', done => {
+      request(app)
+        .get('/api/albums?name=INEXISTENT')
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.should.have.status(200);
+          done();
+        });
+    });
+
+    it('should return albums matching with the name in the query', done => {
+      request(app)
+        .get(`/api/albums?name=${constants.initialAlbum.name}`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.body.should.have.property('albums');
+          res.body.albums.should.be.a('array');
+          res.body.albums.should.have.lengthOf(1);
+          // res.body.albums[0].name.eql(constants.initialAlbum.name);
+          done();
+        });
+    });
+
+    it('should return no albums if the name query doesn\'t match any album ', done => {
+      request(app)
+        .get(`/api/albums?name=INEXISTENT`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.body.should.have.property('albums').eql([]);
+          done();
+        });
+    });
+
+    it('should return no albums if the name query it\'s empty', done => {
+      request(app)
+        .get(`/api/albums?name=`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.body.should.have.property('albums').eql([]);
+          done();
+        });
+    })
+  });
+
   describe('/POST albums', () => {
     it('should return status code 400 when parameters are missing', done => {
       request(app)

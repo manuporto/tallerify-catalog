@@ -16,9 +16,13 @@ const _findAllAlbums = () => db
     .leftJoin('tracks as tr', 'tr.album_id', 'al.id')
     .groupBy('al.id');
 
-const findAllAlbums = () => {
+const findAllAlbums = (queries) => {
   logger.info('Fetching albums');
-  return _findAllAlbums();
+  logger.info(`queries ${JSON.stringify(queries, null, 4)}`);
+  // Ugly hack to return empty array if empty name query it'supplied
+  // The normal behavior (knex) it's to return everything
+  if (queries.name === '') return Promise.resolve([]);
+  return (queries.name) ? _findAllAlbums().where('al.name', queries.name) : _findAllAlbums();
 };
 
 const findAlbumWithId = id => {
