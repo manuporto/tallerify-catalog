@@ -1,9 +1,9 @@
 process.env.NODE_ENV = 'test';
 
-const app = require('../../app');
-const db = require('../../database');
-const tables = require('../../database/tableNames');
-const dbHandler = require('../../handlers/db/generalHandler');
+const app = require('../../../app');
+const db = require('../../../database/index');
+const tables = require('../../../database/tableNames');
+const dbHandler = require('../../../handlers/db/generalHandler');
 const request = require('supertest');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
