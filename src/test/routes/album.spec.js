@@ -158,7 +158,7 @@ describe('Album', () => {
           res.body.should.have.property('name').eql(constants.testAlbum.name);
           res.body.should.have.property('artists').eql([constants.initialArtist3Short]);
           res.body.should.have.property('genres').eql(constants.testAlbum.genres);
-          res.body.should.have.property('tracks');
+          res.body.should.have.property('tracks').eql([]);
           res.body.should.have.property('popularity').eql(0);
           res.body.should.have.property('release_date').eql(constants.testAlbum.release_date);
           res.body.should.have.property('images').eql(constants.testAlbum.images);
@@ -208,7 +208,7 @@ describe('Album', () => {
             constants.initialArtist1Short,
             constants.initialArtist2Short,
             constants.initialArtist3Short]);
-          res.body.album.should.have.property('tracks');
+          res.body.album.should.have.property('tracks').eql([constants.initialTrackShort]);
           res.body.album.should.have.property('genres').eql(constants.initialAlbum.genres);
           res.body.album.should.have.property('popularity');
           res.body.album.should.have.property('release_date').eql(constants.initialAlbum.release_date);
@@ -261,7 +261,7 @@ describe('Album', () => {
           res.body.should.have.property('name').eql(constants.updatedAlbum.name);
           res.body.should.have.property('artists').eql([constants.initialArtist2Short]);
           res.body.should.have.property('genres').eql(constants.updatedAlbum.genres);
-          res.body.should.have.property('tracks');
+          res.body.should.have.property('tracks').eql([constants.initialTrackShort]);
           res.body.should.have.property('popularity');
           res.body.should.have.property('release_date').eql(constants.updatedAlbum.release_date);
           res.body.should.have.property('images').eql(constants.updatedAlbum.images);

@@ -16,6 +16,12 @@
 		"albumId": 1,
 		"artists": [1, 2]
 	},
+	"initialTrackShort": {
+		"id": 1,
+		"name": "Absolution",
+		"href": null,
+		"images": null
+	},
 	"initialArtist1": {
 		"id": 1,
 		"name": "Matthew Bellamy",
