@@ -45,10 +45,10 @@ describe('Album', () => {
                     initialAlbumId = albums[0][0].id;
                     additionalAlbumId = albums[1][0].id;
 
-                    let initialTrackInAlbum = constants.initialTrackInAlbum;
+                    const initialTrackInAlbum = constants.initialTrackInAlbum;
                     initialTrackInAlbum.albumId = initialAlbumId; // albumId is set on runtime
 
-                    let initialTrack = constants.initialTrack;
+                    const initialTrack = constants.initialTrack;
                     initialTrack.albumId = additionalAlbumId; // albumId is set on runtime
 
                     Promise.all([

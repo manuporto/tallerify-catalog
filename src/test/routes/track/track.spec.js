@@ -18,8 +18,8 @@ const constants = require('./track.constants.json');
 
 const testToken = jwt.sign(constants.jwtTestUser, config.secret);
 
-let initialArtist1Id;
-let initialArtist2Id;
+// let initialArtist1Id;
+// let initialArtist2Id;
 describe('Track', () => {
   beforeEach(done => {
     db.migrate.rollback()
@@ -31,10 +31,10 @@ describe('Track', () => {
                 constants.initialArtist1,
                 constants.initialArtist2,
               ]).then(artists => {
-              logger.debug(`Tests artists created: ${JSON.stringify(artists, null, 4)}`);
-              initialArtist1Id = artists[0].id;
-              initialArtist2Id = artists[1].id;
-              dbHandler.album.createNewAlbumEntry(constants.initialAlbum)
+                logger.debug(`Tests artists created: ${JSON.stringify(artists, null, 4)}`);
+                // initialArtist1Id = artists[0].id;
+                // initialArtist2Id = artists[1].id;
+                dbHandler.album.createNewAlbumEntry(constants.initialAlbum)
                 .then(album => {
                   logger.debug(`Tests album created: ${JSON.stringify(album, null, 4)}`);
                   dbHandler.track.createNewTrackEntry(constants.initialTrack)
@@ -50,11 +50,11 @@ describe('Track', () => {
                 .catch(error => {
                   logger.warn(`Test album creation error: ${error}`);
                   done(error);
-                })
-            }).catch(error => {
-              logger.warn(`Test artists creation error: ${error}`);
-              done(error);
-            });
+                });
+              }).catch(error => {
+                logger.warn(`Test artists creation error: ${error}`);
+                done(error);
+              });
           })
             .catch(error => done(error));
         });

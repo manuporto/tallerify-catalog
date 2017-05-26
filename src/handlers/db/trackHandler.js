@@ -8,7 +8,7 @@ const NonExistentIdError = require('../../errors/NonExistentIdError');
 
 const math = require('mathjs');
 
-const findArtists = (body) => db(tables.artists).whereIn('id', body.artists).then(artists => {
+const findArtists = body => db(tables.artists).whereIn('id', body.artists).then(artists => {
   if (artists.length < body.artists.length) {
     logger.warn(`Req artists: ${JSON.stringify(body.artists)} vs DB artists: ${JSON.stringify(artists)}`);
     return Promise.reject(new NonExistentIdError('Non existing artist.'));
@@ -16,7 +16,7 @@ const findArtists = (body) => db(tables.artists).whereIn('id', body.artists).the
   return artists;
 });
 
-const findAlbum = (body) => db(tables.albums).where('id', body.albumId).first().then(album => {
+const findAlbum = body => db(tables.albums).where('id', body.albumId).first().then(album => {
   if (!album) {
     logger.warn(`Req album: ${JSON.stringify(body.albumId)} vs DB album: ${JSON.stringify(album)}`);
     return Promise.reject(new NonExistentIdError('Non existing album.'));
