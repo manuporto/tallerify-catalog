@@ -1,0 +1,78 @@
+{
+	"jwtTestUser": {
+		"admin": true
+	},
+	"initialAlbum": {
+		"id": 1,
+		"name": "2nd law",
+		"images": ["Matt B", "Chris W"],
+		"genres": ["Rock"],
+		"artists": [1, 2, 3],
+		"release_date": "20091959"
+	},
+	"initialTrack": {
+		"id": 1,
+		"name": "Absolution",
+		"albumId": 1,
+		"artists": [1, 2]
+	},
+	"initialArtist1": {
+		"id": 1,
+		"name": "Matthew Bellamy",
+		"popularity": 5
+	},
+	"initialArtist2": {
+		"id": 2,
+		"name": "Christopher Wolstenholme",
+		"popularity": 4
+	},
+	"initialArtist3": {
+		"id": 3,
+		"name": "Dominic Howard",
+		"popularity": 2
+	},
+	"testAlbum": {
+		"id": 2,
+		"name": "Folie a deux",
+		"images": ["un oso", "otro oso"],
+		"genres": ["Rock"],
+		"artists": [3],
+		"release_date": "4011958"
+	},
+	"newAlbumWithMissingAttributes": {
+		"artists": [1, 3],
+		"images": ["un oso", "otro oso"],
+		"release_date": "16081930"
+	},
+	"newAlbumWithNonExistentArtist": {
+		"name": "Folie a deux",
+		"images": ["un oso", "otro oso"],
+		"genres": ["Rock"],
+		"artists": [33, 1, 2],
+		"release_date": "4011958"
+	},
+	"updatedAlbum": {
+		"name": "October",
+		"artists": [2],
+		"release_date": "3121930",
+		"genres": ["Punk"],
+		"images": ["una oveja"]
+	},
+	"updatedAlbumWithMissingAttributes": {
+		"name": "Showbiz"
+	},
+	"updatedAlbumWithNonExistentArtist": {
+		"name": "Folie a deux",
+		"images": ["un oso", "otro oso"],
+		"genres": ["Rock"],
+		"artists": [33, 1, 2],
+		"release_date": "4011958"
+	},
+	"invalidAlbum": {
+		"name": "Violent Things",
+		"albumId": 187,
+		"artists": 12
+	},
+	"validAlbumId": 1,
+	"invalidAlbumId": 99999
+}

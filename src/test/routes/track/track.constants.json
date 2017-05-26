@@ -1,0 +1,100 @@
+{
+	"jwtTestUser": {
+		"admin": true,
+		"id": 24
+	},
+	"initialArtist1": {
+		"id": 1,
+		"name": "Papa Baute",
+		"description": "Tiene un implante coclear?",
+		"genres": ["Bachata"],
+		"images": ["una con guido", "otra con sergio"]
+	},
+	"initialArtist2": {
+		"id": 2,
+		"name": "Luis Fonsi",
+		"description": "El que canta despacito",
+		"genres": ["pero que no es justin"],
+		"images": ["ni daddy yankee"]
+	},
+	"initialShortArtist": {
+		"id": 1,
+		"name": "Papa Baute",
+		"href": null,
+		"images": ["una con guido", "otra con sergio"]
+	},
+	"initialShortArtist2": {
+		"id": 2,
+		"name": "Luis Fonsi",
+		"href": null,
+		"images": ["ni daddy yankee"]
+	},
+	"initialAlbum": {
+		"id": 1,
+		"name": "2nd law",
+		"images": ["Matt B", "Chris W"],
+		"genres": ["Rock"],
+		"artists": [1, 2],
+		"release_date": "20091959"
+	},
+	"initialTrack": {
+		"id": 1,
+		"name": "Despacito",
+		"albumId": 1,
+		"artists": [1, 2]
+	},
+	"testTrack": {
+		"id": 2,
+		"name": "Come a Little Closer",
+		"albumId": 1,
+		"artists": [2]
+	},
+	"newTrackWithMissingAttributes": {
+		"albumId": 1,
+		"artists": [24, 9]
+	},
+	"newTrackWithNonExistentArtist": {
+		"name": "Evermore",
+		"albumId": 1,
+		"artists": [28]
+	},
+	"newTrackWithNonExistentAlbum": {
+		"name": "Evermore",
+		"albumId": 1113,
+		"artists": [1]
+	},
+	"updatedTrack": {
+		"name": "Andromeda",
+		"albumId": 1,
+		"artists": [1, 2]
+	},
+	"updatedTrackWithMissingAttributes": {
+		"name": "Animus Vox"
+	},
+	"updatedTrackWithNonExistentArtist": {
+		"name": "Evermore",
+		"albumId": 1,
+		"artists": [2851, 1]
+	},
+	"updatedTrackWithNonExistentAlbum": {
+		"name": "Evermore",
+		"albumId": 1113,
+		"artists": [1]
+	},
+	"invalidTrack": {
+		"name": "Machu Picchu",
+		"albumId": 187,
+		"artists": 12
+	},
+	"validTrackId": 1,
+	"invalidTrackId": 99999,
+    "validTrackRate": {
+      "rate": 3
+    },
+    "outOfRangeTrackRate": {
+      "rate": 12
+    },
+    "invalidTrackRate": {
+      "rating": 2
+    }
+}

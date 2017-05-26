@@ -1,0 +1,44 @@
+{
+	"jwtTestUser": {
+		"admin": true
+	},
+	"initialAlbum1": {
+		"name": "2nd law",
+		"images": ["Matt B", "Chris W"],
+		"genres": ["Rock"],
+		"artists": [1, 2, 3],
+		"release_date": "20091959"
+	},
+	"initialAlbum2": {
+		"name": "The Resistance",
+		"images": ["Dom H"],
+		"genres": ["Pop"],
+		"artists": [3],
+		"release_date": "24041995"
+	},
+	"initialTrackInAlbum": {
+		"name": "Absolution",
+		"artists": [1, 2]
+	},
+	"initialTrack": {
+		"name": "Panic Station",
+		"artists": [1]
+	},
+	"initialArtist1": {
+		"id": 1,
+		"name": "Matthew Bellamy",
+		"popularity": 5
+	},
+	"initialArtist2": {
+		"id": 2,
+		"name": "Christopher Wolstenholme",
+		"popularity": 4
+	},
+	"initialArtist3": {
+		"id": 3,
+		"name": "Dominic Howard",
+		"popularity": 2
+	},
+	"invalidAlbumId": 99999,
+	"invalidTrackId": 99999
+}
