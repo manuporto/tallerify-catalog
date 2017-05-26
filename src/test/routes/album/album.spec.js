@@ -279,7 +279,7 @@ describe('Album', () => {
   describe('/GET albums/{id}', () => {
     it('should return status code 200', done => {
       request(app)
-        .get(`/api/albums/${constants.validAlbumId}`)
+        .get(`/api/albums/${initialAlbumId}`)
         .set('Authorization', `Bearer ${testToken}`)
         .end((err, res) => {
           res.should.have.status(200);
@@ -298,7 +298,7 @@ describe('Album', () => {
           res.body.metadata.should.have.property('count');
           res.body.should.have.property('album');
           res.body.album.should.be.a('object');
-          res.body.album.should.have.property('id').eql(constants.validAlbumId);
+          res.body.album.should.have.property('id').eql(initialAlbumId);
           res.body.album.should.have.property('name').eql(constants.initialAlbum.name);
           res.body.album.should.have.property('images').eql(constants.initialAlbum.images);
           res.body.album.should.have.property('href');
@@ -391,7 +391,7 @@ describe('Album', () => {
 
     it('should return status code 400 with non existent artist id', done => {
       request(app)
-        .put(`/api/albums/${constants.validAlbumId}`)
+        .put(`/api/albums/${initialAlbumId}`)
         .set('Authorization', `Bearer ${testToken}`)
         .send(constants.updatedAlbumWithNonExistentArtist)
         .end((err, res) => {
