@@ -1,18 +1,18 @@
 process.env.NODE_ENV = 'test';
 
-const app = require('../../app');
-const db = require('../../database');
-const dbHandler = require('../../handlers/db');
+const app = require('../../../app');
+const db = require('../../../database/index');
+const dbHandler = require('../../../handlers/db/index');
 const jwt = require('jsonwebtoken');
 const request = require('supertest');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
-const logger = require('../../utils/logger');
+const logger = require('../../../utils/logger');
 
 chai.should();
 chai.use(chaiHttp);
 
-const config = require('./../../config');
+const config = require('./../../../config');
 const constants = require('./artist.constants.json');
 
 const testToken = jwt.sign(constants.jwtTestUser, config.secret);

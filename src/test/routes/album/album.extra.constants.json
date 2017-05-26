@@ -2,22 +2,26 @@
 	"jwtTestUser": {
 		"admin": true
 	},
-	"initialAlbum": {
-		"id": 1,
+	"initialAlbum1": {
 		"name": "2nd law",
 		"images": ["Matt B", "Chris W"],
 		"genres": ["Rock"],
 		"artists": [1, 2, 3],
 		"release_date": "20091959"
 	},
+	"initialAlbum2": {
+		"name": "The Resistance",
+		"images": ["Dom H"],
+		"genres": ["Pop"],
+		"artists": [3],
+		"release_date": "24041995"
+	},
 	"initialTrackInAlbum": {
 		"name": "Absolution",
-		"albumId": 1,
 		"artists": [1, 2]
 	},
 	"initialTrack": {
 		"name": "Panic Station",
-		"albumId": 56,
 		"artists": [1]
 	},
 	"initialArtist1": {
@@ -35,8 +39,6 @@
 		"name": "Dominic Howard",
 		"popularity": 2
 	},
-	"validAlbumId": 1,
 	"invalidAlbumId": 99999,
-	"validTrackId": 2,
 	"invalidTrackId": 99999
 }

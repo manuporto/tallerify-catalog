@@ -1,53 +1,64 @@
 process.env.NODE_ENV = 'test';
 
-const app = require('../../app');
-const db = require('../../database');
-const tables = require('../../database/tableNames');
-const dbHandler = require('../../handlers/db');
+const app = require('../../../app');
+const db = require('../../../database/index');
+const tables = require('../../../database/tableNames');
+const dbHandler = require('../../../handlers/db/index');
 const jwt = require('jsonwebtoken');
 const request = require('supertest');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
-const logger = require('../../utils/logger');
+const logger = require('../../../utils/logger');
 
 chai.should();
 chai.use(chaiHttp);
 
-const config = require('./../../config');
+const config = require('./../../../config');
 const constants = require('./track.constants.json');
 
 const testToken = jwt.sign(constants.jwtTestUser, config.secret);
 
+// let initialArtist1Id;
+// let initialArtist2Id;
 describe('Track', () => {
   beforeEach(done => {
     db.migrate.rollback()
-    .then(() => {
-      db.migrate.latest()
-        .then(() => {
-          dbHandler.general.createNewEntry(tables.artists,
-            [
-              constants.initialArtist,
-              constants.initialArtist2,
-            ])
-            .then(artists => {
-              logger.debug(`Tests artists created: ${JSON.stringify(artists, null, 4)}`);
-              dbHandler.track.createNewTrackEntry(constants.initialTrack)
-                .then(tracks => {
-                  logger.debug(`Tests tracks created: ${JSON.stringify(tracks, null, 4)}`);
-                  done();
+      .then(() => {
+        db.migrate.rollback().then(() => {
+          db.migrate.latest().then(() => {
+            dbHandler.general.createNewEntry(tables.artists,
+              [
+                constants.initialArtist1,
+                constants.initialArtist2,
+              ]).then(artists => {
+                logger.debug(`Tests artists created: ${JSON.stringify(artists, null, 4)}`);
+                // initialArtist1Id = artists[0].id;
+                // initialArtist2Id = artists[1].id;
+                dbHandler.album.createNewAlbumEntry(constants.initialAlbum)
+                .then(album => {
+                  logger.debug(`Tests album created: ${JSON.stringify(album, null, 4)}`);
+                  dbHandler.track.createNewTrackEntry(constants.initialTrack)
+                    .then(tracks => {
+                      logger.debug(`Tests tracks created: ${JSON.stringify(tracks, null, 4)}`);
+                      done();
+                    })
+                    .catch(error => {
+                      logger.warn(`Test tracks creation error: ${error}`);
+                      done(error);
+                    });
                 })
                 .catch(error => {
-                  logger.warn(`Test tracks creation error: ${error}`);
+                  logger.warn(`Test album creation error: ${error}`);
                   done(error);
                 });
-            })
-            .catch(error => {
-              logger.warn(`Test artists creation error: ${error}`);
-              done(error);
-            });
-        })
-        .catch(error => done(error));
-    });
+              }).catch(error => {
+                logger.warn(`Test artists creation error: ${error}`);
+                done(error);
+              });
+          })
+            .catch(error => done(error));
+        });
+      });
   });
 
   afterEach(done => {
@@ -71,7 +82,6 @@ describe('Track', () => {
         .get('/api/tracks')
         .set('Authorization', `Bearer ${testToken}`)
         .end((err, res) => {
-          logger.info(`Tracks: ${JSON.stringify(res.body.tracks, null, 4)}`);
           res.body.should.be.a('object');
           res.body.should.have.property('metadata');
           res.body.metadata.should.have.property('version');
@@ -124,18 +134,6 @@ describe('Track', () => {
         .send(constants.testTrack)
         .end((err, res) => {
           res.should.have.status(201);
-          done();
-        });
-    });
-
-    it('should return status code 400 with non existent artist id', done => {
-      request(app)
-        .post('/api/tracks')
-        .set('Authorization', `Bearer ${testToken}`)
-        .send(constants.newTrackWithNonExistentArtist)
-        .end((err, res) => {
-          res.should.have.status(400);
-          res.body.should.have.property('message').eql('Non existing artist.');
           done();
         });
     });
@@ -282,6 +280,30 @@ describe('Track', () => {
         });
     });
 
+    it('should return status code 400 with non existent artist id', done => {
+      request(app)
+        .put(`/api/tracks/${constants.validTrackId}`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .send(constants.updatedTrackWithNonExistentArtist)
+        .end((err, res) => {
+          res.should.have.status(400);
+          res.body.should.have.property('message').eql('Non existing artist.');
+          done();
+        });
+    });
+
+    it('should return status code 400 with non existent album id', done => {
+      request(app)
+        .put(`/api/tracks/${constants.validTrackId}`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .send(constants.updatedTrackWithNonExistentAlbum)
+        .end((err, res) => {
+          res.should.have.status(400);
+          res.body.should.have.property('message').eql('Non existing album.');
+          done();
+        });
+    });
+
     it('should return status code 404 if id does not match a track', done => {
       request(app)
         .put(`/api/tracks/${constants.invalidTrackId}`)
@@ -329,102 +351,6 @@ describe('Track', () => {
     it('should return status code 401 if unauthorized', done => {
       request(app)
         .delete(`/api/tracks/${constants.validTrackId}`)
-        .set('Authorization', 'Bearer UNAUTHORIZED')
-        .end((err, res) => {
-          res.should.have.status(401);
-          done();
-        });
-    });
-  });
-
-  describe('/POST tracks/{id}/like', () => {
-    it('should return status code 201 when track like is successful', done => {
-      request(app)
-        .post(`/api/tracks/${constants.validTrackId}/like`)
-        .set('Authorization', `Bearer ${testToken}`)
-        .end((err, res) => {
-          res.should.have.status(201);
-          done();
-        });
-    });
-
-    it('should return status code 201 when track like is duplicated', done => {
-      request(app)
-        .post(`/api/tracks/${constants.validTrackId}/like`)
-        .set('Authorization', `Bearer ${testToken}`)
-        .end((err, res) => {
-          res.should.have.status(201);
-          request(app)
-            .post(`/api/tracks/${constants.validTrackId}/like`)
-            .set('Authorization', `Bearer ${testToken}`)
-            .end((err, res) => {
-              res.should.have.status(201);
-              done();
-            });
-        });
-    });
-
-    it('should return status code 404 if id does not match a track', done => {
-      request(app)
-        .post(`/api/tracks/${constants.invalidTrackId}/like`)
-        .set('Authorization', `Bearer ${testToken}`)
-        .end((err, res) => {
-          res.should.have.status(404);
-          done();
-        });
-    });
-
-    it('should return status code 401 if unauthorized', done => {
-      request(app)
-        .post(`/api/tracks/${constants.validTrackId}/like`)
-        .set('Authorization', 'Bearer UNAUTHORIZED')
-        .end((err, res) => {
-          res.should.have.status(401);
-          done();
-        });
-    });
-  });
-
-  describe('/DELETE tracks/{id}/like', () => {
-    it('should return status code 204 when deletion is successful', done => {
-      request(app)
-        .post(`/api/tracks/${constants.validTrackId}/like`)
-        .set('Authorization', `Bearer ${testToken}`)
-        .end((err, res) => {
-          res.should.have.status(201);
-          request(app)
-            .delete(`/api/tracks/${constants.validTrackId}/like`)
-            .set('Authorization', `Bearer ${testToken}`)
-            .end((err, res) => {
-              res.should.have.status(204);
-              done();
-            });
-        });
-    });
-
-    it('should return status code 204 if disliked track was never liked', done => {
-      request(app)
-        .delete(`/api/tracks/${constants.validTrackId}/like`)
-        .set('Authorization', `Bearer ${testToken}`)
-        .end((err, res) => {
-          res.should.have.status(204);
-          done();
-        });
-    });
-
-    it('should return status code 404 if id does not match a track', done => {
-      request(app)
-        .delete(`/api/tracks/${constants.invalidTrackId}/like`)
-        .set('Authorization', `Bearer ${testToken}`)
-        .end((err, res) => {
-          res.should.have.status(404);
-          done();
-        });
-    });
-
-    it('should return status code 401 if unauthorized', done => {
-      request(app)
-        .delete(`/api/tracks/${constants.validTrackId}/like`)
         .set('Authorization', 'Bearer UNAUTHORIZED')
         .end((err, res) => {
           res.should.have.status(401);
