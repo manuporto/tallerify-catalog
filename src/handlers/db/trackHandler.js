@@ -12,7 +12,7 @@ const _findAllTracks = () => db
   .select('tr.*',
     db.raw('to_json(array_agg(distinct ar.*)) as artists, to_json(array_agg(distinct al.*))::json->0 as album'))
   .from(`${tables.tracks} as tr`)
-  .innerJoin(`${tables.albums} as al`, 'al.id', 'tr.album_id')
+  .leftJoin(`${tables.albums} as al`, 'al.id', 'tr.album_id')
   .innerJoin(`${tables.artists_tracks} as art`, 'art.track_id', 'tr.id')
   .innerJoin(`${tables.artists} as ar`, 'ar.id', 'art.artist_id')
   .groupBy('tr.id');
