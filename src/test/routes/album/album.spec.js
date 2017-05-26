@@ -18,6 +18,16 @@ const constants = require('./album.constants.json');
 
 const testToken = jwt.sign(constants.jwtTestUser, config.secret);
 
+let initialArtistId1;
+let initialArtistId2;
+let initialArtistId3;
+let initialAlbumId;
+let initialTrackId;
+let initialArtistShort1;
+let initialArtistShort2;
+let initialArtistShort3;
+let initialTrackShort;
+
 describe('Album', () => {
   beforeEach(done => {
     db.migrate.rollback()
@@ -32,12 +42,44 @@ describe('Album', () => {
               ])
               .then(artists => {
                 logger.debug(`Tests artists created: ${JSON.stringify(artists, null, 4)}`);
+                initialArtistId1 = artists[0].id;
+                initialArtistId2 = artists[1].id;
+                initialArtistId3 = artists[2].id;
+
+                initialArtistShort1 = {
+                  id: initialArtistId1,
+                  name: constants.initialArtist1.name,
+                  href: null,
+                  images: null,
+                };
+                initialArtistShort2 = {
+                  id: initialArtistId2,
+                  name: constants.initialArtist2.name,
+                  href: null,
+                  images: null,
+                };
+                initialArtistShort3 = {
+                  id: initialArtistId3,
+                  name: constants.initialArtist3.name,
+                  href: null,
+                  images: null,
+                };
                 dbHandler.album.createNewAlbumEntry(constants.initialAlbum)
                   .then(album => {
                     logger.debug(`Tests album created: ${JSON.stringify(album, null, 4)}`);
-                    dbHandler.track.createNewTrackEntry(constants.initialTrack)
+                    initialAlbumId = album.id;
+                    const initialTrack = Object.assign({},
+                      constants.initialTrack, { albumId: initialAlbumId });
+                    dbHandler.track.createNewTrackEntry(initialTrack)
                       .then(track => {
                         logger.debug(`Tests track created: ${JSON.stringify(track, null, 4)}`);
+                        initialTrackId = track[0].id;
+
+                        initialTrackShort = {
+                          id: initialTrackId,
+                          name: constants.initialTrack.name,
+                          href: null,
+                        };
                         done();
                       })
                       .catch(error => {
@@ -130,7 +172,7 @@ describe('Album', () => {
           res.body.should.have.property('albums');
           res.body.albums.should.be.a('array');
           res.body.albums.should.have.lengthOf(1);
-          // res.body.albums[0].name.eql(constants.initialAlbum.name);
+          res.body.albums.map(album => album.name.should.eql(constants.initialAlbum.name));
           done();
         });
     });
@@ -208,10 +250,9 @@ describe('Album', () => {
         .send(constants.testAlbum)
         .end((err, res) => {
           res.body.should.be.a('object');
-          res.body.should.have.property('id').eql(constants.testAlbum.id);
           res.body.should.have.property('href');
           res.body.should.have.property('name').eql(constants.testAlbum.name);
-          res.body.should.have.property('artists').eql([constants.initialArtist3Short]);
+          res.body.should.have.property('artists').eql([initialArtistShort3]);
           res.body.should.have.property('genres').eql(constants.testAlbum.genres);
           res.body.should.have.property('tracks').eql([]);
           res.body.should.have.property('popularity').eql(0);
@@ -236,7 +277,7 @@ describe('Album', () => {
   describe('/GET albums/{id}', () => {
     it('should return status code 200', done => {
       request(app)
-        .get(`/api/albums/${constants.validAlbumId}`)
+        .get(`/api/albums/${initialAlbumId}`)
         .set('Authorization', `Bearer ${testToken}`)
         .end((err, res) => {
           res.should.have.status(200);
@@ -246,7 +287,7 @@ describe('Album', () => {
 
     it('should return albums data', done => {
       request(app)
-        .get(`/api/albums/${constants.validAlbumId}`)
+        .get(`/api/albums/${initialAlbumId}`)
         .set('Authorization', `Bearer ${testToken}`)
         .end((err, res) => {
           res.body.should.be.a('object');
@@ -255,15 +296,15 @@ describe('Album', () => {
           res.body.metadata.should.have.property('count');
           res.body.should.have.property('album');
           res.body.album.should.be.a('object');
-          res.body.album.should.have.property('id').eql(constants.validAlbumId);
+          res.body.album.should.have.property('id').eql(initialAlbumId);
           res.body.album.should.have.property('name').eql(constants.initialAlbum.name);
           res.body.album.should.have.property('images').eql(constants.initialAlbum.images);
           res.body.album.should.have.property('href');
           res.body.album.should.have.property('artists').eql([
-            constants.initialArtist1Short,
-            constants.initialArtist2Short,
-            constants.initialArtist3Short]);
-          res.body.album.should.have.property('tracks').eql([constants.initialTrackShort]);
+            initialArtistShort1,
+            initialArtistShort2,
+            initialArtistShort3]);
+          res.body.album.should.have.property('tracks').eql([initialTrackShort]);
           res.body.album.should.have.property('genres').eql(constants.initialAlbum.genres);
           res.body.album.should.have.property('popularity');
           res.body.album.should.have.property('release_date').eql(constants.initialAlbum.release_date);
@@ -283,7 +324,7 @@ describe('Album', () => {
 
     it('should return status code 401 if unauthorized', done => {
       request(app)
-        .get(`/api/albums/${constants.validAlbumId}`)
+        .get(`/api/albums/${initialAlbumId}`)
         .set('Authorization', 'Bearer UNAUTHORIZED')
         .end((err, res) => {
           res.should.have.status(401);
@@ -295,7 +336,7 @@ describe('Album', () => {
   describe('/PUT albums/{id}', () => {
     it('should return status code 201 when correct parameters are sent', done => {
       request(app)
-        .put(`/api/albums/${constants.validAlbumId}`)
+        .put(`/api/albums/${initialAlbumId}`)
         .set('Authorization', `Bearer ${testToken}`)
         .send(constants.updatedAlbum)
         .end((err, res) => {
@@ -306,17 +347,17 @@ describe('Album', () => {
 
     it('should return the expected body response when correct parameters are sent', done => {
       request(app)
-        .put(`/api/albums/${constants.validAlbumId}`)
+        .put(`/api/albums/${initialAlbumId}`)
         .set('Authorization', `Bearer ${testToken}`)
         .send(constants.updatedAlbum)
         .end((err, res) => {
           res.body.should.be.a('object');
-          res.body.should.have.property('id').eql(constants.validAlbumId);
+          res.body.should.have.property('id').eql(initialAlbumId);
           res.body.should.have.property('href');
           res.body.should.have.property('name').eql(constants.updatedAlbum.name);
-          res.body.should.have.property('artists').eql([constants.initialArtist2Short]);
+          res.body.should.have.property('artists').eql([initialArtistShort2]);
           res.body.should.have.property('genres').eql(constants.updatedAlbum.genres);
-          res.body.should.have.property('tracks').eql([constants.initialTrackShort]);
+          res.body.should.have.property('tracks').eql([initialTrackShort]);
           res.body.should.have.property('popularity');
           res.body.should.have.property('release_date').eql(constants.updatedAlbum.release_date);
           res.body.should.have.property('images').eql(constants.updatedAlbum.images);
@@ -326,7 +367,7 @@ describe('Album', () => {
 
     it('should return status code 400 when parameters are missing', done => {
       request(app)
-        .put(`/api/albums/${constants.validAlbumId}`)
+        .put(`/api/albums/${initialAlbumId}`)
         .set('Authorization', `Bearer ${testToken}`)
         .send(constants.updatedAlbumWithMissingAttributes)
         .end((err, res) => {
@@ -337,7 +378,7 @@ describe('Album', () => {
 
     it('should return status code 400 when parameters are invalid', done => {
       request(app)
-        .put(`/api/albums/${constants.validAlbumId}`)
+        .put(`/api/albums/${initialAlbumId}`)
         .set('Authorization', `Bearer ${testToken}`)
         .send(constants.invalidAlbum)
         .end((err, res) => {
@@ -348,7 +389,7 @@ describe('Album', () => {
 
     it('should return status code 400 with non existent artist id', done => {
       request(app)
-        .put(`/api/albums/${constants.validAlbumId}`)
+        .put(`/api/albums/${initialAlbumId}`)
         .set('Authorization', `Bearer ${testToken}`)
         .send(constants.updatedAlbumWithNonExistentArtist)
         .end((err, res) => {
@@ -370,7 +411,7 @@ describe('Album', () => {
 
     it('should return status code 401 if unauthorized', done => {
       request(app)
-        .put(`/api/albums/${constants.validAlbumId}`)
+        .put(`/api/albums/${initialAlbumId}`)
         .set('Authorization', 'Bearer UNAUTHORIZED')
         .send(constants.updatedAlbum)
         .end((err, res) => {
@@ -383,7 +424,7 @@ describe('Album', () => {
   describe('/DELETE albums/{id}', () => {
     it('should return status code 204 when deletion is successful', done => {
       request(app)
-        .delete(`/api/albums/${constants.validAlbumId}`)
+        .delete(`/api/albums/${initialAlbumId}`)
         .set('Authorization', `Bearer ${testToken}`)
         .end((err, res) => {
           res.should.have.status(204);
@@ -403,7 +444,7 @@ describe('Album', () => {
 
     it('should return status code 401 if unauthorized', done => {
       request(app)
-        .delete(`/api/albums/${constants.validAlbumId}`)
+        .delete(`/api/albums/${initialAlbumId}`)
         .set('Authorization', 'Bearer UNAUTHORIZED')
         .end((err, res) => {
           res.should.have.status(401);
@@ -413,12 +454,12 @@ describe('Album', () => {
 
     it('should leave its tracks orphan', done => {
       request(app)
-        .delete(`/api/albums/${constants.validAlbumId}`)
+        .delete(`/api/albums/${initialAlbumId}`)
         .set('Authorization', `Bearer ${testToken}`)
         .end((err, res) => {
           res.should.have.status(204);
           request(app)
-            .get(`/api/tracks/${constants.initialTrack.id}`)
+            .get(`/api/tracks/${initialTrackId}`)
             .set('Authorization', `Bearer ${testToken}`)
             .end((err, res) => {
               res.should.have.status(200);
