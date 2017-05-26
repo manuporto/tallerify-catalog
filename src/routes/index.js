@@ -98,11 +98,13 @@ router.post('/api/tracks/:id/popularity', track.rateTrack);
 
 router.get('/api/playlists', playlist.getPlaylists);
 
-router.post('/api/playlists', playlist.getPlaylist);
+router.post('/api/playlists', playlist.newPlaylist);
 
 router.get('/api/playlists/:id', playlist.getPlaylist);
 
 router.put('/api/playlists/:id', playlist.updatePlaylist);
+
+router.delete('/api/tracks/:id', track.deletePlaylist);
 
 /* Albums */
 

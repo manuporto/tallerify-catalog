@@ -109,8 +109,14 @@ exports.up = (knex, Promise) => Promise.all([
     table.increments('id').primary();
     table.string('name');
     table.string('description');
-    table.integer('ownerId');
-  // TODO: Missing songs array
+    table.integer('owner_id');
+  }),
+
+  knex.schema.createTableIfNotExists(tables.playlists_tracks, table => {
+    logger.debug('Creating playlists_tracks table.');
+    table.increments('playlist_track_id').primary();
+    table.integer('playlist_id');
+    table.integer('track_id');
   }),
 ]);
 
@@ -127,4 +133,5 @@ exports.down = (knex, Promise) => Promise.all([
   knex.schema.dropTable(tables.albums_artists),
   knex.schema.dropTable(tables.users_users),
   knex.schema.dropTable(tables.playlists),
+  knex.schema.dropTable(tables.playlists_tracks),
 ]);

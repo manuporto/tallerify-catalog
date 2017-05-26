@@ -385,12 +385,12 @@ const successfulTrackAdditionToAlbum = (trackId, album, response) => {
 
 /* Tracks */
 
-// const formatTrackShortJson = track => ({
-//   id: track.id,
-//   name: track.name,
-//   href: track.href,
-//   images: track.images,
-// });
+const formatTrackShortJson = track => ({
+  id: track.id,
+  name: track.name,
+  href: track.href,
+  images: track.images,
+});
 
 const formatTrackJson = track => ({
   id: track.id,
@@ -474,6 +474,58 @@ const successfulTrackRate = (rate, response) => {
   });
 };
 
+/* Playlist */
+
+const formatPlaylistJson = playlist => ({
+  id: playlist.id,
+  name: playlist.name,
+  href: playlist.href,
+  description: playlist.description,
+  owner: formatUserShortJson(playlist.owner),
+  tracks: (playlist.hasOwnProperty('songs')) ?
+    playlist.tracks.map(track => formatTrackShortJson(track)) : [],
+});
+
+const successfulPlaylistsFetch = (playlists, response) => {
+  logger.info('Successful playlists fetch');
+  logger.debug(`Playlists: ${JSON.stringify(playlists, null, 4)}`);
+  return response.status(200).json({
+    metadata: {
+      count: playlists.length,
+      version: constants.API_VERSION,
+    },
+    playlists: playlists.map(formatPlaylistJson),
+  });
+};
+
+const successfulPlaylistCreation = (playlist, response) => {
+  logger.info('Successful playlist creation');
+  logger.debug(`Playlist: ${JSON.stringify(playlist, null, 4)}`);
+  response.status(201).json(formatPlaylistJson(playlist[0]));
+};
+
+const successfulPlaylistFetch = (playlist, response) => {
+  logger.info('Successful playlist fetch');
+  response.status(200).json({
+    metadata: {
+      count: 1,
+      version: constants.API_VERSION,
+    },
+    playlist: formatPlaylistJson(playlist),
+  });
+};
+
+const successfulPlaylistUpdate = (playlist, response) => {
+  logger.info('Successful playlist update');
+  response.status(200).json(formatPlaylistJson(playlist[0]));
+};
+
+const successfulPlaylistDeletion = response => {
+  logger.info('Successful playlist deletion');
+  response.sendStatus(204);
+};
+
+
 module.exports = {
   internalServerError,
   unauthorizedError,
@@ -521,4 +573,9 @@ module.exports = {
   successfulTrackDislike,
   successfulTrackPopularityCalculation,
   successfulTrackRate,
+  successfulPlaylistsFetch,
+  successfulPlaylistCreation,
+  successfulPlaylistFetch,
+  successfulPlaylistUpdate,
+  successfulPlaylistDeletion,
 };
