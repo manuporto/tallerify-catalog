@@ -45,8 +45,7 @@
 		"artists": [1]
 	},
 	"updatedTrack": {
-		"name": "Andromeda",
-		"artists": [1, 2]
+		"name": "Andromeda"
 	},
 	"updatedTrackWithMissingAttributes": {
 		"name": "Animus Vox"

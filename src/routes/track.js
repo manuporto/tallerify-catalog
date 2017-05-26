@@ -73,7 +73,8 @@ const updateTrack = (req, res) => {
         .then(track => {
           if (!respond.entryExists(req.params.id, track, res)) return;
           db.track.updateTrackEntry(req.body, req.params.id)
-            .then(updatedTrack => respond.successfulTrackUpdate(updatedTrack, res))
+            .then(() => db.track.findTrackWithId(req.params.id)
+              .then(track => respond.successfulTrackUpdate(track, res)))
             .catch(error => {
               if (error.name === 'NonExistentIdError') {
                 return respond.nonExistentId(error.message, res);

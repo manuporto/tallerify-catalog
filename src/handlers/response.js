@@ -423,7 +423,7 @@ const successfulTrackFetch = (track, response) => {
 
 const successfulTrackUpdate = (track, response) => {
   logger.info('Successful track update');
-  response.status(200).json(formatTrackJson(track[0]));
+  response.status(200).json(formatTrackJson(track));
 };
 
 const successfulTrackDeletion = response => {
