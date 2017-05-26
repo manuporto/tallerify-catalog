@@ -31,6 +31,24 @@
 		"name": "Dominic Howard",
 		"popularity": 2
 	},
+	"initialArtist1Short": {
+		"id": 1,
+		"name": "Matthew Bellamy",
+		"href": null,
+		"images": null
+	},
+	"initialArtist2Short": {
+		"id": 2,
+		"name": "Christopher Wolstenholme",
+		"href": null,
+		"images": null
+	},
+	"initialArtist3Short": {
+		"id": 3,
+		"name": "Dominic Howard",
+		"href": null,
+		"images": null
+	},
 	"testAlbum": {
 		"id": 2,
 		"name": "Folie a deux",
