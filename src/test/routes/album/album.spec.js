@@ -172,7 +172,7 @@ describe('Album', () => {
           res.body.should.have.property('albums');
           res.body.albums.should.be.a('array');
           res.body.albums.should.have.lengthOf(1);
-          // res.body.albums[0].name.eql(constants.initialAlbum.name);
+          res.body.albums.map(album => album.name.should.eql(constants.initialAlbum.name));
           done();
         });
     });
