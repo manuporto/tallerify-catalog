@@ -35,13 +35,13 @@ describe('Album', () => {
                 constants.initialArtist3,
               ])
               .then(artists => {
-                logger.info(`Tests artists created: ${JSON.stringify(artists, null, 4)}`);
+                logger.debug(`Tests artists created: ${JSON.stringify(artists, null, 4)}`);
                 Promise.all([
                   dbHandler.album.createNewAlbumEntry(constants.initialAlbum1),
                   dbHandler.album.createNewAlbumEntry(constants.initialAlbum2),
                 ])
                   .then(albums => {
-                    logger.info(`!!!Tests albums created: ${JSON.stringify(albums, null, 4)}`);
+                    logger.debug(`Tests albums created: ${JSON.stringify(albums, null, 4)}`);
                     initialAlbumId = albums[0].id;
                     additionalAlbumId = albums[1].id;
 
@@ -56,8 +56,8 @@ describe('Album', () => {
                       dbHandler.track.createNewTrackEntry(initialTrack),
                     ])
                       .then(tracks => {
-                        logger.info(`Tests track in album created: ${JSON.stringify(tracks[0], null, 4)}`);
-                        logger.info(`Tests track created: ${JSON.stringify(tracks[1], null, 4)}`);
+                        logger.debug(`Tests track in album created: ${JSON.stringify(tracks[0], null, 4)}`);
+                        logger.debug(`Tests track created: ${JSON.stringify(tracks[1], null, 4)}`);
                         trackInAlbumId = tracks[0][0].id;
                         validTrackId = tracks[1][0].id;
                         done();
