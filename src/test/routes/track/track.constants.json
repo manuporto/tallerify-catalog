@@ -27,8 +27,7 @@
 		"artists": [1, 2]
 	},
 	"testTrack": {
-		"name": "Come a Little Closer",
-		"artists": [2]
+		"name": "Come a Little Closer"
 	},
 	"newTrackWithMissingAttributes": {
 		"albumId": 1,

@@ -66,7 +66,10 @@ describe('Track', () => {
                     name: album.name,
                     images: album.images,
                   };
-                  testTrack = Object.assign({}, constants.testTrack, {albumId: initialAlbumId});
+                  testTrack = Object.assign({}, constants.testTrack, {
+                    albumId: initialAlbumId,
+                    artists: [initialArtistId2],
+                  });
                   updatedTrack = Object.assign({}, constants.updatedTrack, {
                     albumId: initialAlbumId,
                     artists: [initialArtistId1],
@@ -185,8 +188,8 @@ describe('Track', () => {
           res.body.should.have.property('name').eql(testTrack.name);
           res.body.should.have.property('duration');
           res.body.should.have.property('href');
-          res.body.should.have.property('album');
-          res.body.should.have.property('artists');
+          res.body.should.have.property('album').eql(initialAlbumShort);
+          res.body.should.have.property('artists').eql([initialArtistShort2]);
           res.body.should.have.property('popularity');
           // TODO add check for 'rate: int' inside popularity object
           done();
