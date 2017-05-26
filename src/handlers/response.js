@@ -317,16 +317,6 @@ const formatAlbumJson = album => ({
   images: album.images,
 });
 
-const formatTempAlbumJson = album => ({
-  id: album.id,
-  name: album.name,
-  release_date: album.release_date,
-  href: album.href,
-  popularity: album.popularity,
-  genres: album.genres,
-  images: album.images,
-});
-
 const successfulAlbumsFetch = (albums, response) => {
   logger.info('Successful albums fetch');
   return response.status(200).json({
@@ -377,7 +367,7 @@ const successfulTrackDeletionFromAlbum = (trackId, albumId, response) => {
 
 const successfulTrackAdditionToAlbum = (trackId, album, response) => {
   logger.info(`Track (id: ${trackId}) now belongs to album (id: ${album.id})`);
-  response.status(200).json(formatTempAlbumJson(album));
+  response.status(200).json(formatAlbumJson(album));
 };
 
 /* Tracks */
