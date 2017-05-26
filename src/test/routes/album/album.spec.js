@@ -137,7 +137,7 @@ describe('Album', () => {
 
     it('should return no albums if the name query doesn\'t match any album ', done => {
       request(app)
-        .get(`/api/albums?name=INEXISTENT`)
+        .get('/api/albums?name=INEXISTENT')
         .set('Authorization', `Bearer ${testToken}`)
         .end((err, res) => {
           res.body.should.have.property('albums').eql([]);
@@ -147,13 +147,13 @@ describe('Album', () => {
 
     it('should return no albums if the name query it\'s empty', done => {
       request(app)
-        .get(`/api/albums?name=`)
+        .get('/api/albums?name=')
         .set('Authorization', `Bearer ${testToken}`)
         .end((err, res) => {
           res.body.should.have.property('albums').eql([]);
           done();
         });
-    })
+    });
   });
 
   describe('/POST albums', () => {

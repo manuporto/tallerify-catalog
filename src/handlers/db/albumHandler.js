@@ -16,7 +16,7 @@ const _findAllAlbums = () => db
     .leftJoin('tracks as tr', 'tr.album_id', 'al.id')
     .groupBy('al.id');
 
-const findAllAlbums = (queries) => {
+const findAllAlbums = queries => {
   logger.info('Fetching albums');
   logger.info(`queries ${JSON.stringify(queries, null, 4)}`);
   // Ugly hack to return empty array if empty name query it'supplied
