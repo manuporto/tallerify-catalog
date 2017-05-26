@@ -386,7 +386,6 @@ const formatTrackShortJson = track => ({
   id: track.id,
   name: track.name,
   href: track.href,
-  images: track.hasOwnProperty('images') ? track.images : null,
 });
 
 const formatTrackJson = track => ({

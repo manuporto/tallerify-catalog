@@ -3,7 +3,6 @@
 		"admin": true
 	},
 	"initialAlbum": {
-		"id": 1,
 		"name": "2nd law",
 		"images": ["Matt B", "Chris W"],
 		"genres": ["Rock"],
@@ -11,52 +10,27 @@
 		"release_date": "20091959"
 	},
 	"initialTrack": {
-		"id": 1,
 		"name": "Absolution",
-		"albumId": 1,
 		"artists": [1, 2]
 	},
 	"initialTrackShort": {
-		"id": 1,
 		"name": "Absolution",
 		"href": null,
 		"images": null
 	},
 	"initialArtist1": {
-		"id": 1,
 		"name": "Matthew Bellamy",
 		"popularity": 5
 	},
 	"initialArtist2": {
-		"id": 2,
 		"name": "Christopher Wolstenholme",
 		"popularity": 4
 	},
 	"initialArtist3": {
-		"id": 3,
 		"name": "Dominic Howard",
 		"popularity": 2
 	},
-	"initialArtist1Short": {
-		"id": 1,
-		"name": "Matthew Bellamy",
-		"href": null,
-		"images": null
-	},
-	"initialArtist2Short": {
-		"id": 2,
-		"name": "Christopher Wolstenholme",
-		"href": null,
-		"images": null
-	},
-	"initialArtist3Short": {
-		"id": 3,
-		"name": "Dominic Howard",
-		"href": null,
-		"images": null
-	},
 	"testAlbum": {
-		"id": 2,
 		"name": "Folie a deux",
 		"images": ["un oso", "otro oso"],
 		"genres": ["Rock"],
