@@ -250,8 +250,6 @@ describe('Album', () => {
         .send(constants.testAlbum)
         .end((err, res) => {
           res.body.should.be.a('object');
-          // Cant test this with ids in runtime, maybe it's not relevant anymore
-          // res.body.should.have.property('id').eql(constants.testAlbum.id);
           res.body.should.have.property('href');
           res.body.should.have.property('name').eql(constants.testAlbum.name);
           res.body.should.have.property('artists').eql([initialArtistShort3]);
@@ -369,7 +367,7 @@ describe('Album', () => {
 
     it('should return status code 400 when parameters are missing', done => {
       request(app)
-        .put(`/api/albums/${constants.validAlbumId}`)
+        .put(`/api/albums/${initialAlbumId}`)
         .set('Authorization', `Bearer ${testToken}`)
         .send(constants.updatedAlbumWithMissingAttributes)
         .end((err, res) => {
@@ -380,7 +378,7 @@ describe('Album', () => {
 
     it('should return status code 400 when parameters are invalid', done => {
       request(app)
-        .put(`/api/albums/${constants.validAlbumId}`)
+        .put(`/api/albums/${initialAlbumId}`)
         .set('Authorization', `Bearer ${testToken}`)
         .send(constants.invalidAlbum)
         .end((err, res) => {
@@ -413,7 +411,7 @@ describe('Album', () => {
 
     it('should return status code 401 if unauthorized', done => {
       request(app)
-        .put(`/api/albums/${constants.validAlbumId}`)
+        .put(`/api/albums/${initialAlbumId}`)
         .set('Authorization', 'Bearer UNAUTHORIZED')
         .send(constants.updatedAlbum)
         .end((err, res) => {
@@ -446,7 +444,7 @@ describe('Album', () => {
 
     it('should return status code 401 if unauthorized', done => {
       request(app)
-        .delete(`/api/albums/${constants.validAlbumId}`)
+        .delete(`/api/albums/${initialAlbumId}`)
         .set('Authorization', 'Bearer UNAUTHORIZED')
         .end((err, res) => {
           res.should.have.status(401);
