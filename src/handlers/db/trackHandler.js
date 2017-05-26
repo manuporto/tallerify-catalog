@@ -178,6 +178,8 @@ const deleteAlbumId = trackId => {
 };
 
 module.exports = {
+  findAllTracks,
+  findTrackWithId,
   createNewTrackEntry,
   updateTrackEntry,
   getArtistsInfo,
