@@ -8,6 +8,28 @@ const NonExistentIdError = require('../../errors/NonExistentIdError');
 
 const math = require('mathjs');
 
+const _findAllTracks = () => db
+  .select('tr.*',
+    db.raw('to_json(array_agg(distinct ar.*)) as artists, to_json(array_agg(distinct al.*))::json->0 as album'))
+  .from(`${tables.tracks} as tr`)
+  .innerJoin(`${tables.albums} as al`, 'al.id', 'tr.album_id')
+  .innerJoin(`${tables.artists_tracks} as art`, 'art.track_id', 'tr.id')
+  .innerJoin(`${tables.artists} as ar`, 'ar.id', 'art.artist_id')
+  .groupBy('tr.id');
+
+const findAllTracks = (queries) => {
+  logger.info('Finding tracks');
+  // Ugly hack to return empty array if empty name query it'supplied
+  // The normal behavior (knex) it's to return everything
+  if (queries.name === '') return Promise.resolve([]);
+  return (queries.name) ? _findAllTracks().where('tr.name', queries.name) : _findAllTracks();;
+};
+
+const findTrackWithId = id => {
+  logger.info('Finding track by id');
+  return _findAllTracks().where('tr.id', id).first();
+};
+
 const findArtists = body => db(tables.artists).whereIn('id', body.artists).then(artists => {
   if (artists.length < body.artists.length) {
     logger.warn(`Req artists: ${JSON.stringify(body.artists)} vs DB artists: ${JSON.stringify(artists)}`);
