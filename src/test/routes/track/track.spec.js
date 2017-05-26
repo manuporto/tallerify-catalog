@@ -23,6 +23,7 @@ let initialArtistId2;
 let initialArtistShort1;
 let initialArtistShort2;
 let initialAlbumId;
+let initialAlbumShort;
 let initialTrackId;
 let testTrack;
 let updatedTrack;
@@ -59,6 +60,12 @@ describe('Track', () => {
                   logger.debug(`Tests album created: ${JSON.stringify(album, null, 4)}`);
                   
                   initialAlbumId = album.id;
+                  initialAlbumShort = {
+                    id: initialAlbumId,
+                    href: null,
+                    name: album.name,
+                    images: album.images,
+                  };
                   testTrack = Object.assign({}, constants.testTrack, {albumId: initialAlbumId});
                   updatedTrack = Object.assign({}, constants.updatedTrack, {albumId: initialAlbumId});
                   
@@ -220,7 +227,7 @@ describe('Track', () => {
           res.body.track.should.have.property('name').eql(constants.initialTrack.name);
           res.body.track.should.have.property('duration');
           res.body.track.should.have.property('href');
-          res.body.track.should.have.property('album');
+          res.body.track.should.have.property('album').eql(initialAlbumShort);
           res.body.track.should.have.property('artists')
             .eql([
               initialArtistShort1,
