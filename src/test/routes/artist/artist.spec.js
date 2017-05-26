@@ -312,7 +312,7 @@ describe('Artist', () => {
             .set('Authorization', `Bearer ${testToken}`)
             .end((err, res) => {
               res.should.have.status(200);
-              res.body.album.should.not.have.property('artists');
+              res.body.album.should.have.property('artists').eql([]);
               done();
             });
         });

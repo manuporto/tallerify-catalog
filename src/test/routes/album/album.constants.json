@@ -16,6 +16,12 @@
 		"albumId": 1,
 		"artists": [1, 2]
 	},
+	"initialTrackShort": {
+		"id": 1,
+		"name": "Absolution",
+		"href": null,
+		"images": null
+	},
 	"initialArtist1": {
 		"id": 1,
 		"name": "Matthew Bellamy",
@@ -30,6 +36,24 @@
 		"id": 3,
 		"name": "Dominic Howard",
 		"popularity": 2
+	},
+	"initialArtist1Short": {
+		"id": 1,
+		"name": "Matthew Bellamy",
+		"href": null,
+		"images": null
+	},
+	"initialArtist2Short": {
+		"id": 2,
+		"name": "Christopher Wolstenholme",
+		"href": null,
+		"images": null
+	},
+	"initialArtist3Short": {
+		"id": 3,
+		"name": "Dominic Howard",
+		"href": null,
+		"images": null
 	},
 	"testAlbum": {
 		"id": 2,
