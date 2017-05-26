@@ -426,7 +426,7 @@ describe('Album', () => {
   describe('/DELETE albums/{id}', () => {
     it('should return status code 204 when deletion is successful', done => {
       request(app)
-        .delete(`/api/albums/${constants.validAlbumId}`)
+        .delete(`/api/albums/${initialAlbumId}`)
         .set('Authorization', `Bearer ${testToken}`)
         .end((err, res) => {
           res.should.have.status(204);
