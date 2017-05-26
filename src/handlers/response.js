@@ -296,16 +296,12 @@ const successfulArtistTracksFetch = (tracks, response) => {
 
 /* Albums */
 
-const formatAlbumShortJson = album => {
-  if (album) {
-    return {
-      id: album.id,
-      name: album.name,
-      href: album.href,
-      images: album.images,
-    };
-  }
-};
+const formatAlbumShortJson = album => ({
+  id: album.id,
+  name: album.name,
+  href: album.href,
+  images: album.images,
+});
 
 const formatAlbumJson = album => ({
   id: album.id,
@@ -313,7 +309,7 @@ const formatAlbumJson = album => ({
   release_date: album.release_date,
   href: album.href,
   popularity: album.popularity,
-  artists: album.artists[0] === null 
+  artists: album.artists[0] === null
     ? [] : album.artists.map(artist => formatArtistShortJson(artist)),
   tracks: album.tracks[0] === null
     ? [] : album.tracks.map(track => formatTrackShortJson(track)),
@@ -401,7 +397,7 @@ const formatTrackJson = track => ({
   popularity: {
     rate: track.rating,
   },
-  album: formatAlbumShortJson(track.album),
+  album: track.album !== undefined ? formatAlbumShortJson(track.album) : {},
   artists: (track.hasOwnProperty('artists')) ?
     track.artists.map(artist => formatArtistShortJson(artist)) : [],
 });
@@ -426,6 +422,7 @@ const successfulTrackCreation = (track, response) => {
 
 const successfulTrackFetch = (track, response) => {
   logger.info('Successful track fetch');
+  logger.debug(`Track: ${JSON.stringify(track, null, 4)}`);
   response.status(200).json({
     metadata: {
       count: 1,

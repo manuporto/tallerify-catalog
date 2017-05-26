@@ -185,7 +185,7 @@ describe('Album', () => {
             .set('Authorization', `Bearer ${testToken}`)
             .end((err, res) => {
               res.should.have.status(200);
-              res.body.track.should.not.have.property('album');
+              res.body.track.should.have.property('album').eql({});
               done();
             });
         });
