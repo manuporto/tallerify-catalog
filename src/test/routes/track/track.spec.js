@@ -144,6 +144,61 @@ describe('Track', () => {
     });
   });
 
+  describe('/GET tracks?name=', () => {
+    it('should return status code 200 with existent track name', done => {
+      request(app)
+        .get(`/api/tracks?name=${constants.initialTrack.name}`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.should.have.status(200);
+          done();
+        });
+    });
+
+    it('should return status code 200 with non existent track name', done => {
+      request(app)
+        .get('/api/tracks?name=INEXISTENT')
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.should.have.status(200);
+          done();
+        });
+    });
+
+    it('should return albums matching with the name in the query', done => {
+      request(app)
+        .get(`/api/tracks?name=${constants.initialTrackname}`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.body.should.have.property('tracks');
+          res.body.tracks.should.be.a('array');
+          res.body.tracks.should.have.lengthOf(1);
+          res.body.tracks.map(track => track.name.should.eql(constants.initialTrack.name));
+          done();
+        });
+    });
+
+    it('should return no albums if the name query doesn\'t match any album ', done => {
+      request(app)
+        .get('/api/tracks?name=INEXISTENT')
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.body.should.have.property('tracks').eql([]);
+          done();
+        });
+    });
+
+    it('should return no albums if the name query it\'s empty', done => {
+      request(app)
+        .get('/api/tracks?name=')
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.body.should.have.property('tracks').eql([]);
+          done();
+        });
+    });
+  });
+
   describe('/POST tracks', () => {
     it('should return status code 400 when parameters are missing', done => {
       request(app)
