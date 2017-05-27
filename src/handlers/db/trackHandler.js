@@ -19,7 +19,7 @@ const _findAllTracks = () => db
 
 const findAllTracks = queries => {
   logger.info('Finding tracks');
-  // Ugly hack to return empty array if empty name query it'supplied
+  // Ugly hack to return empty array if empty name query it's supplied
   // The normal behavior (knex) it's to return everything
   if (queries.name === '') return Promise.resolve([]);
   return (queries.name) ? _findAllTracks().where('tr.name', queries.name) : _findAllTracks();
