@@ -74,7 +74,7 @@ const updateTrackEntry = (body, id) => {
       .then(updatedTrack => {
         logger.debug(`Updated track: ${JSON.stringify(updatedTrack, null, 4)}`);
         return artistTrackHandler.updateAssociations(updatedTrack[0].id, body.artists)
-          .then(() => updatedTrack);
+          .then(() => findTrackWithId(updatedTrack[0].id));
       }));
 };
 
