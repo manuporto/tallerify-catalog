@@ -47,8 +47,7 @@ const newTrack = (req, res) => {
   respond.validateRequestBody(req.body, trackExpectedBodySchema)
   .then(() => {
     db.track.createNewTrackEntry(req.body)
-      .then(track => db.track.findTrackWithId(track[0].id)
-        .then(fullTrack => respond.successfulTrackCreation(fullTrack, res)))
+      .then(track => respond.successfulTrackCreation(track, res))
       .catch(error => {
         if (error.name === 'NonExistentIdError') {
           return respond.nonExistentId(error.message, res);
