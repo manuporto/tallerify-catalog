@@ -78,26 +78,6 @@ const updateTrackEntry = (body, id) => {
       }));
 };
 
-const getArtistsInfo = track => artistTrackHandler.findArtistsIdsFromTrack(track.id)
-    .then(artistsIds => {
-      const ids = artistsIds.map(artistId => artistId.artist_id);
-      return generalHandler.findEntriesWithIds(tables.artists, ids)
-       .then(artists => {
-         logger.debug(`Returning artists: ${JSON.stringify(artists, null, 4)}`);
-         return artists;
-       });
-    });
-
-const getAlbumInfo = track => {
-  if (track.album_id !== -1) {
-    return generalHandler.findEntryWithId(tables.albums, track.album_id)
-      .then(album => {
-        logger.debug(`Returning album: ${JSON.stringify(album, null, 4)}`);
-        return album;
-      });
-  }
-};
-
 const like = (userId, trackId) => {
   logger.debug(`User ${userId} liking track ${trackId}`);
   return db(tables.users_tracks).where({
@@ -182,8 +162,6 @@ module.exports = {
   findTrackWithId,
   createNewTrackEntry,
   updateTrackEntry,
-  getArtistsInfo,
-  getAlbumInfo,
   like,
   dislike,
   findUserFavorites,
