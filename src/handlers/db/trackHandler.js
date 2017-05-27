@@ -56,7 +56,7 @@ const createNewTrackEntry = body => {
   return Promise.all(finders)
     .then(() => generalHandler.createNewEntry(tables.tracks, track)
         .then(insertedTrack => {
-          logger.info(`Inserted track: ${JSON.stringify(insertedTrack, null, 4)}`);
+          logger.debug(`Inserted track: ${JSON.stringify(insertedTrack, null, 4)}`);
           return artistTrackHandler.insertAssociations(insertedTrack[0].id, body.artists)
             .then(() => findTrackWithId(insertedTrack[0].id));
         }));
