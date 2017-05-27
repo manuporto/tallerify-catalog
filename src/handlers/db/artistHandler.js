@@ -4,6 +4,27 @@ const tables = require('../../database/tableNames');
 const generalHandler = require('./generalHandler');
 const albumArtistHandler = require('./albumArtistHandler');
 
+const _findAllArtists = () => db
+  .select('ar.*',
+    db.raw('to_json(array_agg(distinct al.*)) as albums'))
+  .from(`${tables.artists} as ar`)
+  .leftJoin(`${tables.albums_artists} as aa`, 'ar.id', 'aa.artist_id')
+  .innerJoin(`${tables.albums} as al`, 'al.id', 'aa.album_id')
+  .groupBy('ar.id');
+
+const findAllArtists = queries => {
+  logger.info('Finding artists');
+  // Ugly hack to return empty array if empty name query it's supplied
+  // The normal behavior (knex) it's to return everything
+  if (queries.name === '') return Promise.resolve([]);
+  return (queries.name) ? _findAllArtists().where('ar.name', queries.name) : _findAllArtists();
+};
+
+const findArtistWithId = id => {
+  logger.info('Finding artist by id');
+  return _findAllArtists().where('ar.id', id).first();
+};
+
 const createNewArtistEntry = body => {
   logger.debug(`Creating artist with info: ${JSON.stringify(body, null, 4)}`);
   const artist = {
@@ -90,6 +111,8 @@ const getTracks = artistId => {
 };
 
 module.exports = {
+  findAllArtists,
+  findArtistWithId,
   createNewArtistEntry,
   getAlbumsInfo,
   updateArtistEntry,
