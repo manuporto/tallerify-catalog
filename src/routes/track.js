@@ -38,7 +38,7 @@ const trackRatingExpectedBodySchema = {
 /* Routes */
 
 const getTracks = (req, res) => {
-  db.general.findAllEntries(tables.tracks)
+  db.track.findAllTracks(req.query)
     .then(tracks => respond.successfulTracksFetch(tracks, res))
     .catch(error => respond.internalServerError(error, res));
 };
@@ -59,16 +59,10 @@ const newTrack = (req, res) => {
 };
 
 const getTrack = (req, res) => {
-  db.general.findEntryWithId(tables.tracks, req.params.id)
+  db.track.findTrackWithId(req.params.id)
     .then(track => {
       if (!respond.entryExists(req.params.id, track, res)) return;
-      const getters = [db.track.getArtistsInfo(track), db.track.getAlbumInfo(track)];
-      Promise.all(getters)
-        .then(results => {
-          const finalTrack = Object.assign({}, track, { artists: results[0], album: results[1] });
-          respond.successfulTrackFetch(finalTrack, res);
-        })
-        .catch(error => respond.internalServerError(error, res));
+      return respond.successfulTrackFetch(track, res);
     });
 };
 
@@ -79,7 +73,7 @@ const updateTrack = (req, res) => {
         .then(track => {
           if (!respond.entryExists(req.params.id, track, res)) return;
           db.track.updateTrackEntry(req.body, req.params.id)
-            .then(updatedTrack => respond.successfulTrackUpdate(updatedTrack, res))
+            .then(track => respond.successfulTrackUpdate(track, res))
             .catch(error => {
               if (error.name === 'NonExistentIdError') {
                 return respond.nonExistentId(error.message, res);

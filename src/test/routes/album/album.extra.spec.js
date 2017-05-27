@@ -58,8 +58,8 @@ describe('Album', () => {
                       .then(tracks => {
                         logger.debug(`Tests track in album created: ${JSON.stringify(tracks[0], null, 4)}`);
                         logger.debug(`Tests track created: ${JSON.stringify(tracks[1], null, 4)}`);
-                        trackInAlbumId = tracks[0][0].id;
-                        validTrackId = tracks[1][0].id;
+                        trackInAlbumId = tracks[0].id;
+                        validTrackId = tracks[1].id;
                         done();
                       })
                       .catch(error => {

@@ -73,7 +73,7 @@ describe('Album', () => {
                     dbHandler.track.createNewTrackEntry(initialTrack)
                       .then(track => {
                         logger.debug(`Tests track created: ${JSON.stringify(track, null, 4)}`);
-                        initialTrackId = track[0].id;
+                        initialTrackId = track.id;
 
                         initialTrackShort = {
                           id: initialTrackId,
