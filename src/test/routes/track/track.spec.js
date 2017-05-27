@@ -167,7 +167,7 @@ describe('Track', () => {
 
     it('should return albums matching with the name in the query', done => {
       request(app)
-        .get(`/api/tracks?name=${constants.initialTrackname}`)
+        .get(`/api/tracks?name=${constants.initialTrack.name}`)
         .set('Authorization', `Bearer ${testToken}`)
         .end((err, res) => {
           res.body.should.have.property('tracks');
