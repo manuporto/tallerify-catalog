@@ -113,7 +113,7 @@ const findUserFavorites = userId => {
     .then(tracks => {
       const trackIds = tracks.map(track => track.track_id);
       logger.debug(`Liked track ids for user ${userId}: ${JSON.stringify(trackIds, null, 4)}`);
-      return db(tables.tracks).whereIn('id', trackIds);
+      return _findAllTracks().whereIn('tr.id', trackIds);
     });
 };
 
