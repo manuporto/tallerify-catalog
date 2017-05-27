@@ -143,7 +143,7 @@ describe('Artist', () => {
           res.body.should.have.property('genres').eql(constants.testArtist.genres);
           res.body.should.have.property('images').eql(constants.testArtist.images);
           res.body.should.have.property('popularity').eql(0);
-          // res.body.should.have.property('albums'); TODO
+          res.body.should.have.property('albums');
           done();
         });
     });
@@ -185,7 +185,7 @@ describe('Artist', () => {
           res.body.artist.should.have.property('name').eql(constants.initialArtist.name);
           res.body.artist.should.have.property('description').eql(constants.initialArtist.description);
           res.body.artist.should.have.property('href');
-          // res.body.artist.should.have.property('albums'); TODO
+          res.body.artist.should.have.property('albums');
           res.body.artist.should.have.property('genres').eql(constants.initialArtist.genres);
           res.body.artist.should.have.property('images').eql(constants.initialArtist.images);
           res.body.artist.should.have.property('popularity').eql(0);
@@ -237,7 +237,7 @@ describe('Artist', () => {
           res.body.should.have.property('name').eql(constants.updatedArtist.name);
           res.body.should.have.property('description').eql(constants.updatedArtist.description);
           res.body.should.have.property('href');
-          // res.body.artist.should.have.property('albums'); TODO
+          res.body.should.have.property('albums');
           res.body.should.have.property('genres').eql(constants.updatedArtist.genres);
           res.body.should.have.property('images').eql(constants.updatedArtist.images);
           res.body.should.have.property('popularity').eql(0);
@@ -365,7 +365,7 @@ describe('Artist', () => {
           res.body.tracks[0].should.have.property('name').eql(constants.initialTrack.name);
           res.body.tracks[0].should.have.property('duration');
           res.body.tracks[0].should.have.property('href');
-          // res.body.tracks[0].should.have.property('album'); TODO
+          res.body.tracks[0].should.have.property('album');
           res.body.tracks[0].should.have.property('popularity');
           done();
         });

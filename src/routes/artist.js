@@ -31,7 +31,7 @@ const artistExpectedBodySchema = {
 };
 
 const getArtists = (req, res) => {
-  db.general.findAllEntries(tables.artists)
+  db.artist.findAllArtists(req.query)
     .then(artists => respond.successfulArtistsFetch(artists, res))
     .catch(error => respond.internalServerError(error, res));
 };
@@ -47,16 +47,12 @@ const newArtist = (req, res) => {
 };
 
 const getArtist = (req, res) => {
-  db.general.findEntryWithId(tables.artists, req.params.id)
+  db.artist.findArtistWithId(req.params.id)
     .then(artist => {
       if (!respond.entryExists(req.params.id, artist, res)) return;
-      db.artist.getAlbumsInfo(req.params.id)
-        .then(albums => {
-          const finalArtist = Object.assign({}, artist, { albums });
-          respond.successfulArtistFetch(finalArtist, res);
-        })
-        .catch(error => respond.internalServerError(error, res));
-    });
+      respond.successfulArtistFetch(artist, res);
+    })
+    .catch(error => respond.internalServerError(error, res));
 };
 
 const updateArtist = (req, res) => {

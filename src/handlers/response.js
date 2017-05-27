@@ -232,7 +232,7 @@ const formatArtistJson = artist => ({
   href: artist.href,
   images: artist.images,
   genres: artist.genres,
-  albums: artist.hasOwnProperty('albums') ? artist.albums.map(formatAlbumShortJson) : [],
+  albums: artist.albums ? artist.albums.map(formatAlbumShortJson) : [],
   popularity: artist.popularity,
 });
 
