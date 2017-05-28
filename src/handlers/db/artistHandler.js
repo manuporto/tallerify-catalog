@@ -38,8 +38,6 @@ const createNewArtistEntry = body => {
   return generalHandler.createNewEntry(tables.artists, artist);
 };
 
-const getAlbumsInfo = artistId => albumArtistHandler.findAlbumsOfArtist(artistId);
-
 const updateArtistEntry = (body, id) => {
   logger.debug(`Updating artist ${id} with info: ${JSON.stringify(body, null, 4)}`);
   const artist = {
@@ -116,7 +114,6 @@ module.exports = {
   findAllArtists,
   findArtistWithId,
   createNewArtistEntry,
-  getAlbumsInfo,
   updateArtistEntry,
   deleteArtist,
   follow,
