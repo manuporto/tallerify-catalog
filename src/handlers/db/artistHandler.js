@@ -10,7 +10,7 @@ const _findAllArtists = () => db
     db.raw('to_json(array_agg(distinct al.*)) as albums'))
   .from(`${tables.artists} as ar`)
   .leftJoin(`${tables.albums_artists} as aa`, 'ar.id', 'aa.artist_id')
-  .innerJoin(`${tables.albums} as al`, 'al.id', 'aa.album_id')
+  .leftJoin(`${tables.albums} as al`, 'al.id', 'aa.album_id')
   .groupBy('ar.id');
 
 const findAllArtists = queries => {
@@ -35,7 +35,8 @@ const createNewArtistEntry = body => {
     images: body.images,
     popularity: 0,
   };
-  return generalHandler.createNewEntry(tables.artists, artist);
+  return generalHandler.createNewEntry(tables.artists, artist)
+    .then(artist => findArtistWithId(artist[0].id));
 };
 
 const updateArtistEntry = (body, id) => {
@@ -94,7 +95,7 @@ const findUserFavorites = userId => {
     .then(artists => {
       const artistIds = artists.map(artist => artist.artist_id);
       logger.debug(`Followed artist ids for user ${userId}: ${JSON.stringify(artistIds, null, 4)}`);
-      return db(tables.artists).whereIn('id', artistIds); // TODO add albums info
+      return _findAllArtists().whereIn('ar.id', artistIds); // TODO add albums info
     });
 };
 

@@ -88,7 +88,7 @@ const getFavoriteArtists = (req, res) => {
 };
 
 const artistUnfollow = (req, res) => {
-  db.general.findEntryWithId(tables.artists, req.params.id)
+  db.artist.findArtistWithId(req.params.id)
     .then(artist => {
       if (!respond.entryExists(req.params.id, artist, res)) return;
       db.artist.unfollow(req.user.id, req.params.id)
@@ -99,7 +99,7 @@ const artistUnfollow = (req, res) => {
 };
 
 const artistFollow = (req, res) => {
-  db.general.findEntryWithId(tables.artists, req.params.id)
+  db.artist.findArtistWithId(req.params.id)
     .then(artist => {
       if (!respond.entryExists(req.params.id, artist, res)) return;
       db.artist.follow(req.user.id, req.params.id)
