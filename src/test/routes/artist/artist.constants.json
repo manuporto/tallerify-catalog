@@ -12,7 +12,6 @@
 		"name": "Folie a deux",
 		"images": ["un oso", "otro oso"],
 		"genres": ["Rock"],
-		"artists": [1],
 		"release_date": "4011958"
 	},
 	"initialTrack": {

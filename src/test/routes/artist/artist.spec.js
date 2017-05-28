@@ -32,7 +32,7 @@ describe('Artist', () => {
               .then(artist => {
                 logger.debug(`Tests artists created: ${JSON.stringify(artist, null, 4)}`);
                 initialArtistId = artist[0].id;
-                dbHandler.album.createNewAlbumEntry(constants.initialAlbum)
+                dbHandler.album.createNewAlbumEntry(Object.assign({}, constants.initialAlbum, {artists: [initialArtistId]}))
                   .then(album => {
                     logger.debug(`Tests album created: ${JSON.stringify(album, null, 4)}`);
                     initialAlbumId = album.id;
