@@ -232,7 +232,7 @@ const formatArtistJson = artist => ({
   href: artist.href,
   images: artist.images,
   genres: artist.genres,
-  albums: artist.hasOwnProperty('albums') ? artist.albums.map(formatAlbumShortJson) : [],
+  albums: artist.albums[0] ? artist.albums.map(formatAlbumShortJson) : [],
   popularity: artist.popularity,
 });
 
@@ -249,7 +249,7 @@ const successfulArtistsFetch = (artists, response) => {
 
 const successfulArtistCreation = (artist, response) => {
   logger.info('Successful artist creation');
-  response.status(201).json(formatArtistJson(artist[0]));
+  response.status(201).json(formatArtistJson(artist));
 };
 
 const successfulArtistFetch = (artist, response) => {
@@ -265,7 +265,7 @@ const successfulArtistFetch = (artist, response) => {
 
 const successfulArtistUpdate = (artist, response) => {
   logger.info('Successful artist update');
-  response.status(200).json(formatArtistJson(artist[0]));
+  response.status(200).json(formatArtistJson(artist));
 };
 
 const successfulArtistDeletion = response => {
