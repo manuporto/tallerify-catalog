@@ -265,7 +265,7 @@ describe('Artist', () => {
           res.body.artist.should.have.property('name').eql(constants.initialArtist.name);
           res.body.artist.should.have.property('description').eql(constants.initialArtist.description);
           res.body.artist.should.have.property('href');
-          res.body.artist.should.have.property('albums');
+          res.body.artist.should.have.property('albums').eql([initialAlbumShort]);
           res.body.artist.should.have.property('genres').eql(constants.initialArtist.genres);
           res.body.artist.should.have.property('images').eql(constants.initialArtist.images);
           res.body.artist.should.have.property('popularity').eql(0);
@@ -317,7 +317,7 @@ describe('Artist', () => {
           res.body.should.have.property('name').eql(constants.updatedArtist.name);
           res.body.should.have.property('description').eql(constants.updatedArtist.description);
           res.body.should.have.property('href');
-          res.body.should.have.property('albums');
+          res.body.should.have.property('albums').eql([initialAlbumShort]);
           res.body.should.have.property('genres').eql(constants.updatedArtist.genres);
           res.body.should.have.property('images').eql(constants.updatedArtist.images);
           res.body.should.have.property('popularity').eql(0);

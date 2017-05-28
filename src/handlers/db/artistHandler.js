@@ -47,7 +47,8 @@ const updateArtistEntry = (body, id) => {
     genres: body.genres,
     images: body.images,
   };
-  return generalHandler.updateEntryWithId(tables.artists, id, artist);
+  return generalHandler.updateEntryWithId(tables.artists, id, artist)
+    .then(updatedArtist => findArtistWithId(updatedArtist[0].id));
 };
 
 const deleteArtist = id => {

@@ -265,7 +265,7 @@ const successfulArtistFetch = (artist, response) => {
 
 const successfulArtistUpdate = (artist, response) => {
   logger.info('Successful artist update');
-  response.status(200).json(formatArtistJson(artist[0]));
+  response.status(200).json(formatArtistJson(artist));
 };
 
 const successfulArtistDeletion = response => {
