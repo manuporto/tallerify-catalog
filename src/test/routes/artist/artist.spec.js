@@ -119,6 +119,61 @@ describe('Artist', () => {
     });
   });
 
+  describe('/GET artists?name=', () => {
+    it('should return status code 200 with existent artist name', done => {
+      request(app)
+        .get(`/api/artists?name=${constants.initialArtist.name}`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.should.have.status(200);
+          done();
+        });
+    });
+
+    it('should return status code 200 with non existent artist name', done => {
+      request(app)
+        .get('/api/artists?name=INEXISTENT')
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.should.have.status(200);
+          done();
+        });
+    });
+
+    it('should return artists matching with the name in the query', done => {
+      request(app)
+        .get(`/api/artists?name=${constants.initialArtist.name}`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.body.should.have.property('artists');
+          res.body.artists.should.be.a('array');
+          res.body.artists.should.have.lengthOf(1);
+          res.body.artists.map(artist => artist.name.should.eql(constants.initialArtist.name));
+          done();
+        });
+    });
+
+    it('should return no artists if the name query doesn\'t match any album ', done => {
+      request(app)
+        .get('/api/artists?name=INEXISTENT')
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.body.should.have.property('artists').eql([]);
+          done();
+        });
+    });
+
+    it('should return no artists if the name query it\'s empty', done => {
+      request(app)
+        .get('/api/artists?name=')
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.body.should.have.property('artists').eql([]);
+          done();
+        });
+    });
+  });
+
   describe('/POST artists', () => {
     it('should return status code 400 when parameters are missing', done => {
       request(app)
