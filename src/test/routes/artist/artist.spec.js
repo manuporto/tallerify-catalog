@@ -21,6 +21,7 @@ let initialArtistId;
 let initialAlbumId;
 let initialAlbumShort;
 let initialTrackId;
+let testTrack;
 
 describe('Artist', () => {
   beforeEach(done => {
@@ -51,6 +52,10 @@ describe('Artist', () => {
                       .then(track => {
                         logger.debug(`Tests track created: ${JSON.stringify(track, null, 4)}`);
                         initialTrackId = track.id;
+                        testTrack = Object.assign({}, constants.testTrack, {
+                          albumId: initialAlbumId,
+                          artists: [initialArtistId],
+                        });
                         done();
                       })
                       .catch(error => {
@@ -395,7 +400,7 @@ describe('Artist', () => {
       request(app)
         .post('/api/tracks')
         .set('Authorization', `Bearer ${testToken}`)
-        .send(constants.testTrack)
+        .send(testTrack)
         .end((err, res) => {
           res.should.have.status(201);
           request(app)
