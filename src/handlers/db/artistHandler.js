@@ -3,6 +3,7 @@ const db = require('../../database/');
 const tables = require('../../database/tableNames');
 const generalHandler = require('./generalHandler');
 const albumArtistHandler = require('./albumArtistHandler');
+const trackHandler = require('./trackHandler');
 
 const _findAllArtists = () => db
   .select('ar.*',
@@ -107,7 +108,7 @@ const getTracks = artistId => {
     .then(tracks => {
       const trackIds = tracks.map(track => track.track_id);
       logger.debug(`Track ids for artist ${artistId}: ${JSON.stringify(trackIds, null, 4)}`);
-      return db(tables.tracks).whereIn('id', trackIds); // TODO add albums & artists info
+      return trackHandler.findAllTracks({}).whereIn('tr.id', trackIds);
     });
 };
 
