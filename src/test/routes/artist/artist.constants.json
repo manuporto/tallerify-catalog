@@ -3,14 +3,12 @@
 		"admin": true
 	},
 	"initialArtist": {
-		"id": 1,
 		"name": "Papa Baute",
 		"description": "Tiene un implante coclear?",
 		"genres": ["Bachata"],
 		"images": ["una con guido", "otra con sergio"]
 	},
 	"initialAlbum": {
-		"id": 1,
 		"name": "Folie a deux",
 		"images": ["un oso", "otro oso"],
 		"genres": ["Rock"],
@@ -18,13 +16,11 @@
 		"release_date": "4011958"
 	},
 	"initialTrack": {
-		"id": 1,
 		"name": "Despacito",
 		"albumId": 1,
 		"artists": [1]
 	},
 	"testArtist": {
-		"id": 2,
 		"name": "Luis Fonsi",
 		"description": "El que canta despacito",
 		"genres": ["pero que no es justin"],
@@ -51,8 +47,5 @@
 		"images": "muchas",
 		"popularity": "#SiempreAlTop"
 	},
-	"validArtistId": 1,
-	"invalidArtistId": 9999,
-	"validAlbumId": 1,
-	"validTrackId": 1
+	"invalidArtistId": 9999
 }
