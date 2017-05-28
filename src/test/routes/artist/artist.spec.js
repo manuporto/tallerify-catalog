@@ -241,7 +241,6 @@ describe('Artist', () => {
 
   describe('/GET artists/{id}', () => {
     it('should return status code 200', done => {
-      console.log(`i artist id: ${initialArtistId}`);
       request(app)
         .get(`/api/artists/${initialArtistId}`)
         .set('Authorization', `Bearer ${testToken}`)
