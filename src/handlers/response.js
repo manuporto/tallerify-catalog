@@ -523,6 +523,16 @@ const successfulTrackAdditionToPlaylist = (trackId, playlist, response) => {
   response.status(200).json(formatPlaylistJson(playlist));
 };
 
+const successfulAlbumDeletionFromPlaylist = (albumId, playlist, response) => {
+  logger.info(`Successful album (id: ${albumId}) deletion from playlist (id: ${playlist.id})`);
+  response.sendStatus(204);
+};
+
+const successfulAlbumAdditionToPlaylist = (albumId, playlist, response) => {
+  logger.info(`Album (id: ${albumId}) now belongs to playlist (id: ${playlist.id})`);
+  response.status(200).json(formatPlaylistJson(playlist));
+};
+
 module.exports = {
   internalServerError,
   unauthorizedError,
@@ -577,4 +587,6 @@ module.exports = {
   successfulPlaylistDeletion,
   successfulTrackDeletionFromPlaylist,
   successfulTrackAdditionToPlaylist,
+  successfulAlbumDeletionFromPlaylist,
+  successfulAlbumAdditionToPlaylist,
 };

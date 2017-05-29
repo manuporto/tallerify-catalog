@@ -119,6 +119,13 @@ exports.up = (knex, Promise) => Promise.all([
     table.integer('playlist_id');
     table.integer('track_id');
   }),
+
+  knex.schema.createTableIfNotExists(tables.playlists_albums, table => {
+    logger.debug('Creating playlists_albums table.');
+    table.increments('playlist_album_id').primary();
+    table.integer('playlist_id');
+    table.integer('album_id');
+  }),
 ]);
 
 exports.down = (knex, Promise) => Promise.all([
@@ -135,4 +142,5 @@ exports.down = (knex, Promise) => Promise.all([
   knex.schema.dropTable(tables.users_users),
   knex.schema.dropTable(tables.playlists),
   knex.schema.dropTable(tables.playlists_tracks),
+  knex.schema.dropTable(tables.playlists_albums),
 ]);

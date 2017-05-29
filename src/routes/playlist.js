@@ -138,6 +138,38 @@ const deleteTrackFromPlaylist = (req, res) => {
     .catch(error => respond.internalServerError(error, res));
 };
 
+const addAlbumToPlaylist = (req, res) => {
+  const finders = [
+    db.general.findEntryWithId(tables.albums, req.params.albumId),
+    db.general.findEntryWithId(tables.playlists, req.params.id),
+  ];
+  Promise.all(finders)
+    .then(results => {
+      if (!respond.entryExists(req.params.albumId, results[0], res)) return;
+      if (!respond.entryExists(req.params.id, results[1], res)) return;
+      db.playlist.addAlbum(req.params.id, req.params.albumId)
+        .then(() => respond.successfulAlbumAdditionToPlaylist(req.params.albumId, results[1], res))
+        .catch(error => respond.internalServerError(error, res));
+    })
+    .catch(error => respond.internalServerError(error, res));
+};
+
+const deleteAlbumFromPlaylist = (req, res) => {
+  const finders = [
+    db.general.findEntryWithId(tables.albums, req.params.albumId),
+    db.general.findEntryWithId(tables.playlists, req.params.id),
+  ];
+  Promise.all(finders)
+    .then(results => {
+      if (!respond.entryExists(req.params.albumId, results[0], res)) return;
+      if (!respond.entryExists(req.params.id, results[1], res)) return;
+      db.playlist.deleteAlbum(req.params.id, req.params.albumId)
+        .then(() => respond.successfulAlbumDeletionFromPlaylist(req.params.albumId, results[1], res)) // eslint-disable-line max-len
+        .catch(error => respond.internalServerError(error, res));
+    })
+    .catch(error => respond.internalServerError(error, res));
+};
+
 module.exports = {
   getPlaylists,
   getPlaylist,
@@ -147,4 +179,6 @@ module.exports = {
   getTracks,
   addTrackToPlaylist,
   deleteTrackFromPlaylist,
+  addAlbumToPlaylist,
+  deleteAlbumFromPlaylist,
 };

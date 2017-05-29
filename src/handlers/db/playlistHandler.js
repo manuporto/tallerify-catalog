@@ -3,6 +3,7 @@ const tables = require('../../database/tableNames');
 const db = require('../../database/index');
 const generalHandler = require('./generalHandler');
 const playlistTrackHandler = require('./playlistTrackHandler');
+const playlistAlbumHandler = require('./playlistAlbumHandler');
 
 const NonExistentIdError = require('../../errors/NonExistentIdError');
 
@@ -99,6 +100,11 @@ const addTrack = (playlistId, trackId) => playlistTrackHandler.addTrack(playlist
 
 const deleteTrack = (playlistId, trackId) => playlistTrackHandler.deleteTrack(playlistId, trackId);
 
+const addAlbum = (playlistId, albumId) => playlistAlbumHandler.addAlbum(playlistId, albumId);
+
+const deleteAlbum = (playlistId, albumId) => playlistAlbumHandler.deleteAlbum(playlistId, albumId);
+
+
 module.exports = {
   createNewPlaylistEntry,
   getTracksInfo,
@@ -108,4 +114,6 @@ module.exports = {
   getTracks,
   addTrack,
   deleteTrack,
+  addAlbum,
+  deleteAlbum,
 };

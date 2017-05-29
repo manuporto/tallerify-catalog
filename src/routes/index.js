@@ -114,9 +114,9 @@ router.put('/api/playlists/:id/tracks/:trackId', playlist.addTrackToPlaylist);
 
 router.get('/api/playlists/:id/albums', playlist.getAlbums);
 
-router.delete('/api/playlists/:id/albums/:albumId', playlist.deleteAlbum);
+router.delete('/api/playlists/:id/albums/:albumId', playlist.deleteAlbumFromPlaylist);
 
-router.put('/api/playlists/:id/albums/:albumId', playlist.addAlbum);
+router.put('/api/playlists/:id/albums/:albumId', playlist.addAlbumToPlaylist);
 
 /* Albums */
 

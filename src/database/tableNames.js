@@ -12,4 +12,5 @@ module.exports = {
   users_users: 'users_users',
   users_artists: 'users_artists',
   playlists_tracks: 'playlists_tracks',
+  playlists_albums: 'playlists_albums',
 };
