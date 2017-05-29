@@ -1,8 +1,6 @@
 const db = require('./../handlers/db/index');
 const tables = require('../database/tableNames');
 const respond = require('./../handlers/response');
-const constants = require('./constants.json');
-const logger = require('../utils/logger');
 
 const playlistExpectedBodySchema = {
   type: 'object',
@@ -138,6 +136,17 @@ const deleteTrackFromPlaylist = (req, res) => {
     .catch(error => respond.internalServerError(error, res));
 };
 
+const getAlbums = (req, res) => {
+  db.general.findEntryWithId(tables.playlists, req.params.id)
+    .then(playlist => {
+      if (!respond.entryExists(req.params.id, playlist, res)) return;
+      db.playlist.getAlbums(req.params.id)
+        .then(albums => respond.successfulAlbumsFetch(albums, res))
+        .catch(error => respond.internalServerError(error, res));
+    })
+    .catch(error => respond.internalServerError(error, res));
+};
+
 const addAlbumToPlaylist = (req, res) => {
   const finders = [
     db.general.findEntryWithId(tables.albums, req.params.albumId),
@@ -179,6 +188,7 @@ module.exports = {
   getTracks,
   addTrackToPlaylist,
   deleteTrackFromPlaylist,
+  getAlbums,
   addAlbumToPlaylist,
   deleteAlbumFromPlaylist,
 };

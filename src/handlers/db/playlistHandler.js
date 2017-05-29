@@ -5,6 +5,8 @@ const generalHandler = require('./generalHandler');
 const playlistTrackHandler = require('./playlistTrackHandler');
 const playlistAlbumHandler = require('./playlistAlbumHandler');
 
+const union = require('lodash.union');
+
 const NonExistentIdError = require('../../errors/NonExistentIdError');
 
 const findTracks = body => db(tables.tracks).whereIn('id', body.songs).then(tracks => {
@@ -67,13 +69,11 @@ const getTracksInfo = playlist => playlistTrackHandler.findTracksIdsFromPlaylist
        });
     });
 
-const getOwnerInfo = track => {
-  return generalHandler.findEntryWithId(tables.users, track.owner_id)
+const getOwnerInfo = track => generalHandler.findEntryWithId(tables.users, track.owner_id)
     .then(user => {
       logger.debug(`Returning user: ${JSON.stringify(user, null, 4)}`);
       return user;
     });
-};
 
 const deletePlaylistWithId = id => {
   logger.debug(`Deleting playlist ${id}`);
@@ -86,19 +86,38 @@ const deletePlaylistWithId = id => {
 
 const getTracks = playlistId => {
   logger.debug(`Searching for playlist ${playlistId} tracks`);
-  return db(tables.playlists_tracks).select('track_id').where({
-    playlist_id: playlistId,
-  })
-    .then(tracks => {
-      const trackIds = tracks.map(track => track.track_id);
+  return Promise.all([
+    db(tables.playlists_tracks).select('track_id').where({ playlist_id: playlistId }),
+    db(tables.playlists_albums).select('album_id').where({ playlist_id: playlistId }),
+  ])
+    .then(results => {
+      const trackIds = results[0].map(track => track.track_id);
       logger.debug(`Track ids for playlist ${playlistId}: ${JSON.stringify(trackIds, null, 4)}`);
-      return db(tables.tracks).whereIn('id', trackIds); // TODO add albums & artists info
+      const albumIds = results[1].map(album => album.album_id);
+      logger.debug(`Album ids for playlist ${playlistId}: ${JSON.stringify(albumIds, null, 4)}`);
+      return Promise.all([
+        db(tables.tracks).whereIn('id', trackIds), // TODO add albums & artists info
+        db(tables.tracks).whereIn('albumId', albumIds),
+      ])
+        .then(results => union(results));
     });
 };
 
 const addTrack = (playlistId, trackId) => playlistTrackHandler.addTrack(playlistId, trackId);
 
 const deleteTrack = (playlistId, trackId) => playlistTrackHandler.deleteTrack(playlistId, trackId);
+
+const getAlbums = playlistId => {
+  logger.debug(`Searching for playlist ${playlistId} albums`);
+  return db(tables.playlists_albums).select('album_id').where({
+    playlist_id: playlistId,
+  })
+    .then(albums => {
+      const albumIds = albums.map(album => album.album_id);
+      logger.debug(`Album ids for playlist ${playlistId}: ${JSON.stringify(albumIds, null, 4)}`);
+      return db(tables.albums).whereIn('id', albumIds); // TODO add artists and tracks info
+    });
+};
 
 const addAlbum = (playlistId, albumId) => playlistAlbumHandler.addAlbum(playlistId, albumId);
 
@@ -114,6 +133,7 @@ module.exports = {
   getTracks,
   addTrack,
   deleteTrack,
+  getAlbums,
   addAlbum,
   deleteAlbum,
 };
