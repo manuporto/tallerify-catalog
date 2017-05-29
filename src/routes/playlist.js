@@ -95,4 +95,56 @@ const deletePlaylist = (req, res) => {
     .catch(error => respond.internalServerError(error, res));
 };
 
-module.exports = { getPlaylists, getPlaylist, newPlaylist, updatePlaylist, deletePlaylist };
+const getTracks = (req, res) => {
+  db.general.findEntryWithId(tables.playlists, req.params.id)
+    .then(playlist => {
+      if (!respond.entryExists(req.params.id, playlist, res)) return;
+      db.playlist.getTracks(req.params.id)
+        .then(tracks => respond.successfulTracksFetch(tracks, res))
+        .catch(error => respond.internalServerError(error, res));
+    })
+    .catch(error => respond.internalServerError(error, res));
+};
+
+const addTrackToPlaylist = (req, res) => {
+  const finders = [
+    db.general.findEntryWithId(tables.tracks, req.params.trackId),
+    db.general.findEntryWithId(tables.playlists, req.params.id),
+  ];
+  Promise.all(finders)
+    .then(results => {
+      if (!respond.entryExists(req.params.trackId, results[0], res)) return;
+      if (!respond.entryExists(req.params.id, results[1], res)) return;
+      db.playlist.addTrack(req.params.id, req.params.trackId)
+        .then(() => respond.successfulTrackAdditionToPlaylist(req.params.trackId, results[1], res))
+        .catch(error => respond.internalServerError(error, res));
+    })
+    .catch(error => respond.internalServerError(error, res));
+};
+
+const deleteTrackFromPlaylist = (req, res) => {
+  const finders = [
+    db.general.findEntryWithId(tables.tracks, req.params.trackId),
+    db.general.findEntryWithId(tables.playlists, req.params.id),
+  ];
+  Promise.all(finders)
+    .then(results => {
+      if (!respond.entryExists(req.params.trackId, results[0], res)) return;
+      if (!respond.entryExists(req.params.id, results[1], res)) return;
+      db.playlist.deleteTrack(req.params.id, req.params.trackId)
+        .then(() => respond.successfulTrackDeletionFromPlaylist(req.params.trackId, results[1], res)) // eslint-disable-line max-len
+        .catch(error => respond.internalServerError(error, res));
+    })
+    .catch(error => respond.internalServerError(error, res));
+};
+
+module.exports = {
+  getPlaylists,
+  getPlaylist,
+  newPlaylist,
+  updatePlaylist,
+  deletePlaylist,
+  getTracks,
+  addTrackToPlaylist,
+  deleteTrackFromPlaylist,
+};

@@ -11,7 +11,7 @@ const insertAssociations = (playlistId, tracksIds) => {
 };
 
 const deleteAssociations = playlistId => {
-  logger.debug(`Deleting track ${playlistId} associations`);
+  logger.debug(`Deleting playlist ${playlistId} associations`);
   return db(tables.playlists_tracks).where('playlist_id', playlistId).del();
 };
 
@@ -20,4 +20,21 @@ const updateAssociations = (playlistId, tracksIds) => deleteAssociations(playlis
 
 const findTracksIdsFromPlaylist = playlistId => db(tables.playlists_tracks).where('playlist_id', playlistId).select('track_id');
 
-module.exports = { insertAssociations, updateAssociations, deleteAssociations, findTracksIdsFromPlaylist };
+const addTrack = (playlistId, trackId) => {
+  logger.debug(`Creating association for playlist ${playlistId} and track ${trackId}`);
+  return generalHandler.createNewEntry(tables.playlists_tracks, { track_id: trackId, playlist_id: playlistId });
+};
+
+const deleteTrack = (playlistId, trackId) => {
+  logger.debug(`Deleting track ${trackId} from playlist ${playlistId}`);
+  return db(tables.playlists_tracks).where({ playlist_id: playlistId, track_id: trackId }).del();
+};
+
+module.exports = {
+  insertAssociations,
+  updateAssociations,
+  deleteAssociations,
+  findTracksIdsFromPlaylist,
+  addTrack,
+  deleteTrack,
+};

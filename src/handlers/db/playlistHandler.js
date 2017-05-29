@@ -83,10 +83,29 @@ const deletePlaylistWithId = id => {
   return Promise.all(deleters);
 };
 
+const getTracks = playlistId => {
+  logger.debug(`Searching for playlist ${playlistId} tracks`);
+  return db(tables.playlists_tracks).select('track_id').where({
+    playlist_id: playlistId,
+  })
+    .then(tracks => {
+      const trackIds = tracks.map(track => track.track_id);
+      logger.debug(`Track ids for playlist ${playlistId}: ${JSON.stringify(trackIds, null, 4)}`);
+      return db(tables.tracks).whereIn('id', trackIds); // TODO add albums & artists info
+    });
+};
+
+const addTrack = (playlistId, trackId) => playlistTrackHandler.addTrack(playlistId, trackId);
+
+const deleteTrack = (playlistId, trackId) => playlistTrackHandler.deleteTrack(playlistId, trackId);
+
 module.exports = {
   createNewPlaylistEntry,
   getTracksInfo,
   getOwnerInfo,
   updatePlaylistEntry,
   deletePlaylistWithId,
+  getTracks,
+  addTrack,
+  deleteTrack,
 };

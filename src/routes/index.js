@@ -106,6 +106,18 @@ router.put('/api/playlists/:id', playlist.updatePlaylist);
 
 router.delete('/api/playlists/:id', playlist.deletePlaylist);
 
+router.get('/api/playlists/:id/tracks', playlist.getTracks);
+
+router.delete('/api/playlists/:id/tracks/:trackId', playlist.deleteTrackFromPlaylist);
+
+router.put('/api/playlists/:id/tracks/:trackId', playlist.addTrackToPlaylist);
+
+router.get('/api/playlists/:id/albums', playlist.getAlbums);
+
+router.delete('/api/playlists/:id/albums/:albumId', playlist.deleteAlbum);
+
+router.put('/api/playlists/:id/albums/:albumId', playlist.addAlbum);
+
 /* Albums */
 
 router.get('/api/albums', album.getAlbums);

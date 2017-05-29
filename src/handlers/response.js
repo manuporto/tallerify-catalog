@@ -513,6 +513,15 @@ const successfulPlaylistDeletion = response => {
   response.sendStatus(204);
 };
 
+const successfulTrackDeletionFromPlaylist = (trackId, playlist, response) => {
+  logger.info(`Successful track (id: ${trackId}) deletion from playlist (id: ${playlist.id})`);
+  response.sendStatus(204);
+};
+
+const successfulTrackAdditionToPlaylist = (trackId, playlist, response) => {
+  logger.info(`Track (id: ${trackId}) now belongs to playlist (id: ${playlist.id})`);
+  response.status(200).json(formatPlaylistJson(playlist));
+};
 
 module.exports = {
   internalServerError,
@@ -566,4 +575,6 @@ module.exports = {
   successfulPlaylistFetch,
   successfulPlaylistUpdate,
   successfulPlaylistDeletion,
+  successfulTrackDeletionFromPlaylist,
+  successfulTrackAdditionToPlaylist,
 };
