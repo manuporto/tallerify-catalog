@@ -136,7 +136,6 @@ describe('Album', () => {
       request(app)
         .put(`/api/albums/${initialAlbumId}/track/${constants.invalidTrackId}`)
         .set('Authorization', `Bearer ${testToken}`)
-        .send(constants.updatedAlbum)
         .end((err, res) => {
           res.should.have.status(404);
           done();
@@ -147,7 +146,6 @@ describe('Album', () => {
       request(app)
         .put(`/api/albums/${constants.invalidAlbumId}/track/${validTrackId}`)
         .set('Authorization', `Bearer ${testToken}`)
-        .send(constants.updatedAlbum)
         .end((err, res) => {
           res.should.have.status(404);
           done();
@@ -158,7 +156,6 @@ describe('Album', () => {
       request(app)
         .put(`/api/albums/${constants.invalidAlbumId}/track/${constants.invalidTrackId}`)
         .set('Authorization', `Bearer ${testToken}`)
-        .send(constants.updatedAlbum)
         .end((err, res) => {
           res.should.have.status(404);
           done();
@@ -167,9 +164,8 @@ describe('Album', () => {
 
     it('should return status code 401 if unauthorized', done => {
       request(app)
-        .put(`/api/albums/${initialAlbumId}`)
+        .put(`/api/albums/${initialAlbumId}/track/${validTrackId}`)
         .set('Authorization', 'Bearer UNAUTHORIZED')
-        .send(constants.updatedAlbum)
         .end((err, res) => {
           res.should.have.status(401);
           done();
@@ -239,7 +235,6 @@ describe('Album', () => {
       request(app)
         .delete(`/api/albums/${constants.invalidAlbumId}/track/${constants.invalidTrackId}`)
         .set('Authorization', `Bearer ${testToken}`)
-        .send(constants.updatedAlbum)
         .end((err, res) => {
           res.should.have.status(404);
           done();
@@ -248,7 +243,7 @@ describe('Album', () => {
 
     it('should return status code 401 if unauthorized', done => {
       request(app)
-        .delete(`/api/albums/${initialAlbumId}`)
+        .delete(`/api/albums/${initialAlbumId}/track/${trackInAlbumId}`)
         .set('Authorization', 'Bearer UNAUTHORIZED')
         .end((err, res) => {
           res.should.have.status(401);
