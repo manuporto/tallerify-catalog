@@ -109,6 +109,7 @@ exports.up = (knex, Promise) => Promise.all([
     table.increments('id').primary();
     table.string('name');
     table.string('description');
+    table.string('href');
     table.integer('owner_id');
   }),
 

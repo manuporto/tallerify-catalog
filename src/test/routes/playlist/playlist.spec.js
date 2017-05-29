@@ -20,63 +20,81 @@ const testToken = jwt.sign(constants.jwtTestUser, config.secret);
 
 let initialArtistId;
 let initialAlbumId;
+let initialUserId;
 let validTrackId;
+let validPlaylistId;
 describe('Playlist', () => {
   beforeEach(done => {
     db.migrate.rollback()
       .then(() => {
         db.migrate.latest()
           .then(() => {
-            dbHandler.artist.createNewArtistEntry(constants.initialArtist)
-              .then(artist => {
-                logger.debug(`Tests artist created: ${JSON.stringify(artist, null, 4)}`);
-                initialArtistId = artist[0].id;
-                dbHandler.album.createNewAlbumEntry(constants.initialAlbum)
-                  .then(album => {
-                    logger.debug(`Tests album created: ${JSON.stringify(album, null, 4)}`);
-                    initialAlbumId = album[0].id;
+            dbHandler.general.createNewEntry(tables.users, constants.initialUser)
+              .then(owner => {
+                logger.info(`Tests user created: ${JSON.stringify(owner, null, 4)}`);
+                initialUserId = owner[0].id;
+                dbHandler.artist.createNewArtistEntry(constants.initialArtist)
+                  .then(artist => {
+                    logger.info(`Tests artist created: ${JSON.stringify(artist, null, 4)}`);
+                    initialArtistId = artist[0].id;
 
-                    const initialTrackInPlaylist = constants.initialTrackInPlaylist;
-                    initialTrackInPlaylist.albumId = initialAlbumId;
+                    const initialAlbum = constants.initialAlbum;
+                    initialAlbum.artists = [initialArtistId];
 
-                    const initialTrack = constants.initialTrack;
-                    initialTrack.albumId = initialAlbumId;
+                    dbHandler.album.createNewAlbumEntry(initialAlbum)
+                      .then(album => {
+                        logger.info(`Tests album created: ${JSON.stringify(album, null, 4)}`);
+                        initialAlbumId = album[0].id;
 
-                    Promise.all([
-                      dbHandler.track.createNewTrackEntry(initialTrackInPlaylist),
-                      dbHandler.track.createNewTrackEntry(initialTrack),
-                      ])
-                      .then(track => {
-                        logger.debug(`Tests track in album created: ${JSON.stringify(track, null, 4)}`);
-                        initialTrackInPlaylistId = track[0][0].id;
-                        validTrackId = track[1][0].id;
+                        const initialTrackInPlaylist = constants.initialTrackInPlaylist;
+                        initialTrackInPlaylist.albumId = initialAlbumId;
+                        initialTrackInPlaylist.artists = [initialArtistId];
 
-                        const initialPlaylist = constants.initialPlaylist;
-                        initialPlaylist.ownerId = initialUserId;
-                        initialPlaylist.songs = [initialTrackInPlaylistId];
+                        const initialTrack = constants.initialTrack;
+                        initialTrack.albumId = initialAlbumId;
+                        initialTrack.artists = [initialArtistId];
 
-                        dbHandler.playlist.createNewPlaylistEntry(initialPlaylist)
-                          .then(playlist => {
-                            logger.debug(`Tests playlist created: ${JSON.stringify(playlist, null, 4)}`);
-                            done();
+                        Promise.all([
+                          dbHandler.track.createNewTrackEntry(initialTrackInPlaylist),
+                          dbHandler.track.createNewTrackEntry(initialTrack),
+                        ])
+                          .then(tracks => {
+                            logger.info(`Tests tracks created: ${JSON.stringify(tracks, null, 4)}`);
+                            const initialTrackInPlaylistId = tracks[0][0].id;
+                            validTrackId = tracks[1][0].id;
+
+                            const initialPlaylist = constants.initialPlaylist;
+                            initialPlaylist.ownerId = initialUserId;
+                            initialPlaylist.songs = [initialTrackInPlaylistId];
+
+                            dbHandler.playlist.createNewPlaylistEntry(initialPlaylist)
+                              .then(playlist => {
+                                logger.info(`Tests playlist created: ${JSON.stringify(playlist, null, 4)}`);
+                                validPlaylistId = playlist[0].id;
+                                done();
+                              })
+                              .catch(error => {
+                                logger.warn(`Test playlist creation error: ${error}`);
+                                done(error);
+                              });
                           })
                           .catch(error => {
-                            logger.warn(`Test playlist creation error: ${error}`);
+                            logger.warn(`Test track creation error: ${error}`);
                             done(error);
                           });
                       })
                       .catch(error => {
-                        logger.warn(`Test track creation error: ${error}`);
+                        logger.warn(`Test album creation error: ${error}`);
                         done(error);
                       });
                   })
                   .catch(error => {
-                    logger.warn(`Test album creation error: ${error}`);
+                    logger.warn(`Test artist creation error: ${error}`);
                     done(error);
                   });
               })
               .catch(error => {
-                logger.warn(`Test artist creation error: ${error}`);
+                logger.warn(`Test user creation error: ${error}`);
                 done(error);
               });
           })
@@ -110,8 +128,8 @@ describe('Playlist', () => {
           res.body.metadata.should.have.property('version');
           res.body.metadata.should.have.property('count');
           res.body.should.have.property('playlists');
-          res.body.tracks.should.be.a('array');
-          res.body.tracks.should.have.lengthOf(1);
+          res.body.playlists.should.be.a('array');
+          res.body.playlists.should.have.lengthOf(1);
           done();
         });
     });
@@ -211,12 +229,12 @@ describe('Playlist', () => {
           res.body.metadata.should.have.property('version');
           res.body.metadata.should.have.property('count');
           res.body.should.have.property('playlist');
-          res.body.track.should.have.property('id').eql(validPlaylistId);
-          res.body.track.should.have.property('name').eql(constants.initialPlaylist.name);
-          res.body.track.should.have.property('description').eql(constants.initialPlaylist.description);
-          res.body.track.should.have.property('href');
-          // res.body.track.should.have.property('owner'); TODO
-          // res.body.track.should.have.property('tracks'); TODO
+          res.body.playlist.should.have.property('id').eql(validPlaylistId);
+          res.body.playlist.should.have.property('name').eql(constants.initialPlaylist.name);
+          res.body.playlist.should.have.property('description').eql(constants.initialPlaylist.description);
+          res.body.playlist.should.have.property('href');
+          // res.body.playlist.should.have.property('owner'); TODO
+          // res.body.playlist.should.have.property('tracks'); TODO
           done();
         });
     });
@@ -309,7 +327,7 @@ describe('Playlist', () => {
       request(app)
         .put(`/api/playlists/${validPlaylistId}`)
         .set('Authorization', `Bearer ${testToken}`)
-        .send(constants.updatedTrackWithNonExistentOwner)
+        .send(constants.updatedPlaylistWithNonExistentOwner)
         .end((err, res) => {
           res.should.have.status(400);
           res.body.should.have.property('message').eql('Non existing user.');
@@ -371,5 +389,4 @@ describe('Playlist', () => {
         });
     });
   });
-
 });

@@ -78,7 +78,7 @@ const deletePlaylistWithId = id => {
   logger.debug(`Deleting playlist ${id}`);
   const deleters = [
     generalHandler.deleteEntryWithId(tables.playlists, id),
-    playlistTrackHandler.deleteAssociationsOfAlbum(id),
+    playlistTrackHandler.deleteAssociations(id),
   ];
   return Promise.all(deleters);
 };

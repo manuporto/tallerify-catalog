@@ -98,17 +98,6 @@ const formatGetUserJson = user => ({
   contacts: formatUserContacts(user.contacts),
 });
 
-const successfulPlaylistsFetch = (playlists, response) => {
-  logger.info('Successful playlists fetch');
-  return response.status(200).json({
-    metadata: {
-      count: playlists.length,
-      version: constants.API_VERSION,
-    },
-    playlists: playlists.map(formatGetPlaylistJson),
-  });
-};
-
 const successfulUsersFetch = (users, response) => {
   logger.info('Successful users fetch');
   return response.status(200).json({
@@ -481,14 +470,13 @@ const formatPlaylistJson = playlist => ({
   name: playlist.name,
   href: playlist.href,
   description: playlist.description,
-  owner: formatUserShortJson(playlist.owner),
-  tracks: (playlist.hasOwnProperty('songs')) ?
-    playlist.tracks.map(track => formatTrackShortJson(track)) : [],
+  //owner: formatUserShortJson(playlist.owner),
+  //tracks: (playlist.hasOwnProperty('songs')) ? playlist.tracks.map(track => formatTrackShortJson(track)) : [],
 });
 
 const successfulPlaylistsFetch = (playlists, response) => {
   logger.info('Successful playlists fetch');
-  logger.debug(`Playlists: ${JSON.stringify(playlists, null, 4)}`);
+  logger.info(`Playlists: ${JSON.stringify(playlists, null, 4)}`);
   return response.status(200).json({
     metadata: {
       count: playlists.length,
