@@ -55,7 +55,7 @@ const getPlaylist = (req, res) => {
       const getters = [db.playlist.getTracksInfo(playlist), db.playlist.getOwnerInfo(playlist)];
       Promise.all(getters)
         .then(results => {
-          const finalPlaylist = Object.assign({}, playlist, { tracks: results[0], owner: results[1] });
+          const finalPlaylist = Object.assign({}, playlist, { tracks: results[0], owner: results[1] }); // eslint-disable-line max-len
           respond.successfulPlaylistFetch(finalPlaylist, res);
         })
         .catch(error => respond.internalServerError(error, res));
