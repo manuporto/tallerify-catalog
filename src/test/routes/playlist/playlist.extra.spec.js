@@ -19,7 +19,7 @@ const constants = require('./playlist.extra.constants.json');
 const testToken = jwt.sign(constants.jwtTestUser, config.secret);
 
 let initialArtistId;
-let initialAlbumId;
+let validAlbumId;
 let initialUserId;
 let validTrackId;
 let validPlaylistId;
@@ -45,14 +45,14 @@ describe('Playlist', () => {
                     dbHandler.album.createNewAlbumEntry(initialAlbum)
                       .then(album => {
                         logger.info(`Tests album created: ${JSON.stringify(album, null, 4)}`);
-                        initialAlbumId = album[0].id;
+                        validAlbumId = album[0].id;
 
                         const initialTrackInPlaylist = constants.initialTrackInPlaylist;
-                        initialTrackInPlaylist.albumId = initialAlbumId;
+                        initialTrackInPlaylist.albumId = validAlbumId;
                         initialTrackInPlaylist.artists = [initialArtistId];
 
                         const initialTrack = constants.initialTrack;
-                        initialTrack.albumId = initialAlbumId;
+                        initialTrack.albumId = validAlbumId; // fixme change album
                         initialTrack.artists = [initialArtistId];
 
                         Promise.all([
@@ -177,7 +177,6 @@ describe('Playlist', () => {
       request(app)
         .put(`/api/playlists/${constants.invalidPlaylistId}/tracks/${constants.invalidTrackId}`)
         .set('Authorization', `Bearer ${testToken}`)
-        .send(constants.updatedAlbum)
         .end((err, res) => {
           res.should.have.status(404);
           done();
@@ -188,7 +187,6 @@ describe('Playlist', () => {
       request(app)
         .put(`/api/playlists/${validPlaylistId}/tracks/${validTrackId}`)
         .set('Authorization', 'Bearer UNAUTHORIZED')
-        .send(constants.updatedAlbum)
         .end((err, res) => {
           res.should.have.status(401);
           done();
@@ -240,6 +238,91 @@ describe('Playlist', () => {
     it('should return status code 401 if unauthorized', done => {
       request(app)
         .delete(`/api/playlists/${validPlaylistId}/tracks/${trackInPlaylistId}`)
+        .set('Authorization', 'Bearer UNAUTHORIZED')
+        .end((err, res) => {
+          res.should.have.status(401);
+          done();
+        });
+    });
+  });
+
+  describe('/PUT api/playlists/{playlistId}/albums/{albumId}', () => {
+    it('should return status code 200 when correct parameters are sent', done => {
+      request(app)
+        .put(`/api/playlists/${validPlaylistId}/albums/${validAlbumId}`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.should.have.status(200);
+          done();
+        });
+    });
+
+    it('should return status code 200 when correct parameters are sent', done => {
+      request(app)
+        .put(`/api/playlists/${validPlaylistId}/albums/${validAlbumId}`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.should.have.status(200);
+          request(app)
+            .get(`/api/playlists/${validPlaylistId}/albums`)
+            .set('Authorization', `Bearer ${testToken}`)
+            .end((err, res) => {
+              res.should.have.status(200);
+              res.body.albums[0].should.have.property('name').eql(constants.initialAlbum.name);
+              done();
+            });
+        });
+    });
+
+    it('should return status code 200 if album already belongs to playlist', done => {
+      request(app)
+        .put(`/api/playlists/${validPlaylistId}/albums/${validAlbumId}`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.should.have.status(200);
+          request(app)
+            .put(`/api/playlists/${validPlaylistId}/albums/${validAlbumId}`)
+            .set('Authorization', `Bearer ${testToken}`)
+            .end((err, res) => {
+              res.should.have.status(200);
+              done();
+            });
+        });
+    });
+
+    it('should return status code 404 if trackId does not match an album', done => {
+      request(app)
+        .put(`/api/playlists/${validPlaylistId}/albums/${constants.invalidAlbumId}`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.should.have.status(404);
+          done();
+        });
+    });
+
+    it('should return status code 404 if id does not match a playlist', done => {
+      request(app)
+        .put(`/api/playlists/${constants.invalidPlaylistId}/albums/${validTrackId}`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.should.have.status(404);
+          done();
+        });
+    });
+
+    it('should return status code 404 if playlistId and albumId are invalid', done => {
+      request(app)
+        .put(`/api/playlists/${constants.invalidPlaylistId}/albums/${constants.invalidAlbumId}`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.should.have.status(404);
+          done();
+        });
+    });
+
+    it('should return status code 401 if unauthorized', done => {
+      request(app)
+        .put(`/api/playlists/${validPlaylistId}/albums/${validAlbumId}`)
         .set('Authorization', 'Bearer UNAUTHORIZED')
         .end((err, res) => {
           res.should.have.status(401);

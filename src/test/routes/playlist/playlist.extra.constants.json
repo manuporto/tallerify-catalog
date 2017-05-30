@@ -87,5 +87,6 @@
 		"songs": 12
 	},
 	"invalidPlaylistId": 99999,
-	"invalidTrackId": 99998
+	"invalidTrackId": 99998,
+	"invalidAlbumId": 99997
 }
