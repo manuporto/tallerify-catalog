@@ -141,7 +141,7 @@ describe('Playlist', () => {
             .end((err, res) => {
               res.should.have.status(200);
               // FIXME logger.warn(JSON.stringify(res.body));
-              //res.body.tracks[0].should.have.property('name').eql(constants.initialTrack.name);
+              // res.body.tracks[0].should.have.property('name').eql(constants.initialTrack.name);
               done();
             });
         });

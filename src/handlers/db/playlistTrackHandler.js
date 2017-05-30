@@ -18,11 +18,15 @@ const deleteAssociations = playlistId => {
 const updateAssociations = (playlistId, tracksIds) => deleteAssociations(playlistId)
     .then(() => insertAssociations(playlistId, tracksIds));
 
-const findTracksIdsFromPlaylist = playlistId => db(tables.playlists_tracks).where('playlist_id', playlistId).select('track_id');
+const findTracksIdsFromPlaylist = playlistId =>
+  db(tables.playlists_tracks).where('playlist_id', playlistId).select('track_id');
 
 const addTrack = (playlistId, trackId) => {
   logger.debug(`Creating association for playlist ${playlistId} and track ${trackId}`);
-  return generalHandler.createNewEntry(tables.playlists_tracks, { track_id: trackId, playlist_id: playlistId });
+  return generalHandler.createNewEntry(tables.playlists_tracks, {
+    track_id: trackId,
+    playlist_id: playlistId,
+  });
 };
 
 const deleteTrack = (playlistId, trackId) => {

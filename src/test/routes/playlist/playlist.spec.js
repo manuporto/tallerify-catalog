@@ -21,7 +21,6 @@ const testToken = jwt.sign(constants.jwtTestUser, config.secret);
 let initialArtistId;
 let initialAlbumId;
 let initialUserId;
-let validTrackId;
 let validPlaylistId;
 describe('Playlist', () => {
   beforeEach(done => {
@@ -61,7 +60,6 @@ describe('Playlist', () => {
                           .then(tracks => {
                             logger.info(`Tests tracks created: ${JSON.stringify(tracks, null, 4)}`);
                             const initialTrackInPlaylistId = tracks[0][0].id;
-                            validTrackId = tracks[1][0].id;
 
                             const initialPlaylist = constants.initialPlaylist;
                             initialPlaylist.ownerId = initialUserId;

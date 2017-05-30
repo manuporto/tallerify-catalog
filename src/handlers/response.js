@@ -470,8 +470,9 @@ const formatPlaylistJson = playlist => ({
   name: playlist.name,
   href: playlist.href,
   description: playlist.description,
-  //owner: formatUserShortJson(playlist.owner),
-  //tracks: (playlist.hasOwnProperty('songs')) ? playlist.tracks.map(track => formatTrackShortJson(track)) : [],
+  // owner: formatUserShortJson(playlist.owner),
+  // tracks: (playlist.hasOwnProperty('songs')) ?
+  // playlist.tracks.map(track => formatTrackShortJson(track)) : [],
 });
 
 const successfulPlaylistsFetch = (playlists, response) => {
