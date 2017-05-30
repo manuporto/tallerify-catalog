@@ -31,6 +31,11 @@ const findAlbumWithId = id => {
     .first();
 };
 
+const findAlbumsWithIds = ids => {
+  logger.info('Fetching albums with selected ids.');
+  return _findAllAlbums().whereIn('al.id', ids);
+};
+
 const checkArtistsExistence = body => db(tables.artists).whereIn('id', body.artists).then(artists => {
   if (artists.length < body.artists.length) {
     logger.warn(`Req artists: ${JSON.stringify(body.artists)} vs DB artists: ${JSON.stringify(artists)}`);
@@ -88,6 +93,7 @@ const deleteAlbumWithId = id => {
 module.exports = {
   findAllAlbums,
   findAlbumWithId,
+  findAlbumsWithIds,
   createNewAlbumEntry,
   updateAlbumEntry,
   deleteAlbumWithId,

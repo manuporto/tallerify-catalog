@@ -5,6 +5,7 @@ const generalHandler = require('./generalHandler');
 const playlistTrackHandler = require('./playlistTrackHandler');
 const playlistAlbumHandler = require('./playlistAlbumHandler');
 const albumHandler = require('./albumHandler');
+const trackHandler = require('./trackHandler');
 
 const union = require('lodash.union');
 
@@ -97,7 +98,7 @@ const getTracks = playlistId => {
       const albumIds = results[1].map(album => album.album_id);
       logger.debug(`Album ids for playlist ${playlistId}: ${JSON.stringify(albumIds, null, 4)}`);
       return Promise.all([
-        db(tables.tracks).whereIn('id', trackIds), // TODO add albums & artists info
+        trackHandler.findTracksWithIds(trackIds), // TODO add albums & artists info
         db(tables.tracks).whereIn('album_id', albumIds),
       ])
         .then(results => {
@@ -119,7 +120,7 @@ const getAlbums = playlistId => {
     .then(albums => {
       const albumIds = albums.map(album => album.album_id);
       logger.debug(`Album ids for playlist ${playlistId}: ${JSON.stringify(albumIds, null, 4)}`);
-      return albumHandler.findAllAlbums({}).whereIn('al.id', albumIds); // TODO add artists and tracks info
+      return albumHandler.findAlbumsWithIds(albumIds); // TODO add artists and tracks info
     });
 };
 
