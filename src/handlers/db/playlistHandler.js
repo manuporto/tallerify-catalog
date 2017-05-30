@@ -97,9 +97,12 @@ const getTracks = playlistId => {
       logger.debug(`Album ids for playlist ${playlistId}: ${JSON.stringify(albumIds, null, 4)}`);
       return Promise.all([
         db(tables.tracks).whereIn('id', trackIds), // TODO add albums & artists info
-        db(tables.tracks).whereIn('albumId', albumIds),
+        db(tables.tracks).whereIn('album_id', albumIds),
       ])
-        .then(results => union(results));
+        .then(results => {
+          logger.debug(`Complete tracks from playlist ${playlistId}: ${JSON.stringify(union(results[0], results[1]), null, 4)}`);
+          return union(results[0], results[1]);
+        });
     });
 };
 

@@ -506,4 +506,96 @@ describe('Playlist', () => {
         });
     });
   });
+
+  describe('/GET /api/playlists/{playlistId}/tracks', () => {
+    it('should return status code 200', done => {
+      request(app)
+        .get(`/api/playlists/${validPlaylistId}/tracks`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.should.have.status(200);
+          done();
+        });
+    });
+
+    it('should return the expected body response when correct parameters are sent', done => {
+      request(app)
+        .get(`/api/playlists/${validPlaylistId}/tracks`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.body.should.be.a('object');
+          res.body.should.have.property('metadata');
+          res.body.metadata.should.have.property('version');
+          res.body.metadata.should.have.property('count');
+          logger.warn(JSON.stringify(res.body));
+          res.body.tracks.should.have.lengthOf(1);
+          res.body.tracks[0].should.have.property('name').eql(constants.initialTrackInPlaylist.name);
+          // TODO check artists & album
+          done();
+        });
+    });
+
+    it('should return tracks and album tracks', done => {
+      request(app)
+        .put(`/api/playlists/${validPlaylistId}/albums/${albumInPlaylistId}`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.should.have.status(200);
+          request(app)
+            .get(`/api/playlists/${validPlaylistId}/tracks`)
+            .set('Authorization', `Bearer ${testToken}`)
+            .end((err, res) => {
+              res.body.should.be.a('object');
+              res.body.should.have.property('metadata');
+              res.body.metadata.should.have.property('version');
+              res.body.metadata.should.have.property('count');
+              res.body.tracks.should.have.lengthOf(2);
+              res.body.tracks[0].should.have.property('name').eql(constants.initialTrackInPlaylist.name);
+              res.body.tracks[1].should.have.property('name').eql(constants.initialTrack.name);
+              done();
+            });
+        });
+    });
+
+    it('should return status code 200 and empty array for playlist with no tracks', done => {
+      request(app)
+        .delete(`/api/playlists/${validPlaylistId}/tracks/${trackInPlaylistId}`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.should.have.status(204);
+          request(app)
+            .get(`/api/playlists/${validPlaylistId}/tracks`)
+            .set('Authorization', `Bearer ${testToken}`)
+            .end((err, res) => {
+              res.should.have.status(200);
+              res.body.should.be.a('object');
+              res.body.should.have.property('metadata');
+              res.body.metadata.should.have.property('version');
+              res.body.metadata.should.have.property('count');
+              res.body.tracks.should.have.lengthOf(0);
+              done();
+            });
+        });
+    });
+
+    it('should return status code 404 if playlistId is invalid', done => {
+      request(app)
+        .get(`/api/playlists/${constants.invalidPlaylistId}/tracks`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.should.have.status(404);
+          done();
+        });
+    });
+
+    it('should return status code 401 if unauthorized', done => {
+      request(app)
+        .get(`/api/playlists/${validPlaylistId}/tracks`)
+        .set('Authorization', 'Bearer UNAUTHORIZED')
+        .end((err, res) => {
+          res.should.have.status(401);
+          done();
+        });
+    });
+  });
 });
