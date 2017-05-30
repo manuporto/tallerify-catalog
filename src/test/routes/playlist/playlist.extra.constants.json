@@ -28,6 +28,12 @@
 		"genres": ["Rock"],
 		"release_date": "20091959"
 	},
+	"initialAlbumInPlaylist": {
+		"name": "Brand new eyes",
+		"images": ["Patrick"],
+		"genres": ["Pop"],
+		"release_date": "20091959"
+	},
 	"initialTrackInPlaylist": {
 		"name": "Despacito"
 	},

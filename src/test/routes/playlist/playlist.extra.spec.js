@@ -19,10 +19,12 @@ const constants = require('./playlist.extra.constants.json');
 const testToken = jwt.sign(constants.jwtTestUser, config.secret);
 
 let initialArtistId;
-let validAlbumId;
 let initialUserId;
+
+let validAlbumId;
 let validTrackId;
 let validPlaylistId;
+let albumInPlaylistId;
 let trackInPlaylistId;
 describe('Playlist', () => {
   beforeEach(done => {
@@ -39,20 +41,27 @@ describe('Playlist', () => {
                     logger.info(`Tests artist created: ${JSON.stringify(artist, null, 4)}`);
                     initialArtistId = artist[0].id;
 
+                    const initialAlbumInPlaylist = constants.initialAlbumInPlaylist;
+                    initialAlbumInPlaylist.artists = [initialArtistId];
+
                     const initialAlbum = constants.initialAlbum;
                     initialAlbum.artists = [initialArtistId];
 
-                    dbHandler.album.createNewAlbumEntry(initialAlbum)
-                      .then(album => {
-                        logger.info(`Tests album created: ${JSON.stringify(album, null, 4)}`);
-                        validAlbumId = album[0].id;
+                    Promise.all([
+                      dbHandler.album.createNewAlbumEntry(initialAlbumInPlaylist),
+                      dbHandler.album.createNewAlbumEntry(initialAlbum),
+                    ])
+                      .then(albums => {
+                        logger.info(`Tests albums created: ${JSON.stringify(albums, null, 4)}`);
+                        albumInPlaylistId = albums[0][0].id;
+                        validAlbumId = albums[1][0].id;
 
                         const initialTrackInPlaylist = constants.initialTrackInPlaylist;
                         initialTrackInPlaylist.albumId = validAlbumId;
                         initialTrackInPlaylist.artists = [initialArtistId];
 
                         const initialTrack = constants.initialTrack;
-                        initialTrack.albumId = validAlbumId; // fixme change album
+                        initialTrack.albumId = albumInPlaylistId;
                         initialTrack.artists = [initialArtistId];
 
                         Promise.all([
@@ -194,7 +203,7 @@ describe('Playlist', () => {
     });
   });
 
-  describe('/DELETE api/albums/{albumId}/track/{trackId}', () => {
+  describe('/DELETE api/playlists/{playlistId}/tracks/{trackId}', () => {
     it('should return status code 204 when deletion is successful', done => {
       request(app)
         .delete(`/api/playlists/${validPlaylistId}/tracks/${trackInPlaylistId}`)
@@ -323,6 +332,58 @@ describe('Playlist', () => {
     it('should return status code 401 if unauthorized', done => {
       request(app)
         .put(`/api/playlists/${validPlaylistId}/albums/${validAlbumId}`)
+        .set('Authorization', 'Bearer UNAUTHORIZED')
+        .end((err, res) => {
+          res.should.have.status(401);
+          done();
+        });
+    });
+  });
+
+  describe('/DELETE api/playlists/{playlistId}/albums/{trackId}', () => {
+    it('should return status code 204 when deletion is successful', done => {
+      request(app)
+        .delete(`/api/playlists/${validPlaylistId}/albums/${albumInPlaylistId}`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.should.have.status(204);
+          done();
+        });
+    });
+
+    it('should return status code 404 if playlistId does not match a playlist', done => {
+      request(app)
+        .delete(`/api/playlists/${constants.invalidPlaylistId}/albums/${albumInPlaylistId}`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.should.have.status(404);
+          done();
+        });
+    });
+
+    it('should return status code 404 if albumId does not match a track', done => {
+      request(app)
+        .delete(`/api/playlists/${validPlaylistId}/albums/${constants.invalidAlbumId}`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.should.have.status(404);
+          done();
+        });
+    });
+
+    it('should return status code 404 if playlistId and albumId are invalid', done => {
+      request(app)
+        .delete(`/api/playlists/${constants.invalidPlaylistId}/albums/${constants.invalidAlbumId}`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.should.have.status(404);
+          done();
+        });
+    });
+
+    it('should return status code 401 if unauthorized', done => {
+      request(app)
+        .delete(`/api/playlists/${validPlaylistId}/albums/${albumInPlaylistId}`)
         .set('Authorization', 'Bearer UNAUTHORIZED')
         .end((err, res) => {
           res.should.have.status(401);
