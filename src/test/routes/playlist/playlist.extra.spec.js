@@ -344,51 +344,81 @@ describe('Playlist', () => {
   describe('/DELETE api/playlists/{playlistId}/albums/{trackId}', () => {
     it('should return status code 204 when deletion is successful', done => {
       request(app)
-        .delete(`/api/playlists/${validPlaylistId}/albums/${albumInPlaylistId}`)
+        .put(`/api/playlists/${validPlaylistId}/albums/${albumInPlaylistId}`)
         .set('Authorization', `Bearer ${testToken}`)
         .end((err, res) => {
-          res.should.have.status(204);
-          done();
+          res.should.have.status(200);
+          request(app)
+            .delete(`/api/playlists/${validPlaylistId}/albums/${albumInPlaylistId}`)
+            .set('Authorization', `Bearer ${testToken}`)
+            .end((err, res) => {
+              res.should.have.status(204);
+              done();
+            });
         });
     });
 
     it('should return status code 404 if playlistId does not match a playlist', done => {
       request(app)
-        .delete(`/api/playlists/${constants.invalidPlaylistId}/albums/${albumInPlaylistId}`)
+        .put(`/api/playlists/${validPlaylistId}/albums/${albumInPlaylistId}`)
         .set('Authorization', `Bearer ${testToken}`)
         .end((err, res) => {
-          res.should.have.status(404);
-          done();
+          res.should.have.status(200);
+          request(app)
+            .delete(`/api/playlists/${constants.invalidPlaylistId}/albums/${albumInPlaylistId}`)
+            .set('Authorization', `Bearer ${testToken}`)
+            .end((err, res) => {
+              res.should.have.status(404);
+              done();
+            });
         });
     });
 
-    it('should return status code 404 if albumId does not match a track', done => {
+    it('should return status code 404 if playlistId does not match an album', done => {
       request(app)
-        .delete(`/api/playlists/${validPlaylistId}/albums/${constants.invalidAlbumId}`)
+        .put(`/api/playlists/${validPlaylistId}/albums/${albumInPlaylistId}`)
         .set('Authorization', `Bearer ${testToken}`)
         .end((err, res) => {
-          res.should.have.status(404);
-          done();
+          res.should.have.status(200);
+          request(app)
+            .delete(`/api/playlists/${validPlaylistId}/albums/${constants.invalidAlbumId}`)
+            .set('Authorization', `Bearer ${testToken}`)
+            .end((err, res) => {
+              res.should.have.status(404);
+              done();
+            });
         });
     });
 
     it('should return status code 404 if playlistId and albumId are invalid', done => {
       request(app)
-        .delete(`/api/playlists/${constants.invalidPlaylistId}/albums/${constants.invalidAlbumId}`)
+        .put(`/api/playlists/${validPlaylistId}/albums/${albumInPlaylistId}`)
         .set('Authorization', `Bearer ${testToken}`)
         .end((err, res) => {
-          res.should.have.status(404);
-          done();
+          res.should.have.status(200);
+          request(app)
+            .delete(`/api/playlists/${constants.invalidPlaylistId}/albums/${constants.invalidAlbumId}`)
+            .set('Authorization', `Bearer ${testToken}`)
+            .end((err, res) => {
+              res.should.have.status(404);
+              done();
+            });
         });
     });
 
     it('should return status code 401 if unauthorized', done => {
       request(app)
-        .delete(`/api/playlists/${validPlaylistId}/albums/${albumInPlaylistId}`)
-        .set('Authorization', 'Bearer UNAUTHORIZED')
+        .put(`/api/playlists/${validPlaylistId}/albums/${albumInPlaylistId}`)
+        .set('Authorization', `Bearer ${testToken}`)
         .end((err, res) => {
-          res.should.have.status(401);
-          done();
+          res.should.have.status(200);
+          request(app)
+            .delete(`/api/playlists/${validPlaylistId}/albums/${albumInPlaylistId}`)
+            .set('Authorization', 'Bearer UNAUTHORIZED')
+            .end((err, res) => {
+              res.should.have.status(401);
+              done();
+            });
         });
     });
   });
@@ -435,19 +465,28 @@ describe('Playlist', () => {
         });
     });
 
-    it('should return status code 404 if playlistId is invalid', done => {
+    it('should return status code 200 and empty array for playlist with no albums', done => {
       request(app)
-        .put(`/api/playlists/${validPlaylistId}/albums/${albumInPlaylistId}`)
+        .get(`/api/playlists/${validPlaylistId}/albums`)
         .set('Authorization', `Bearer ${testToken}`)
         .end((err, res) => {
           res.should.have.status(200);
-          request(app)
-            .get(`/api/playlists/${constants.invalidPlaylistId}/albums`)
-            .set('Authorization', `Bearer ${testToken}`)
-            .end((err, res) => {
-              res.should.have.status(404);
-              done();
-            });
+          res.body.should.be.a('object');
+          res.body.should.have.property('metadata');
+          res.body.metadata.should.have.property('version');
+          res.body.metadata.should.have.property('count');
+          res.body.albums.should.have.lengthOf(0);
+          done();
+        });
+    });
+
+    it('should return status code 404 if playlistId is invalid', done => {
+      request(app)
+        .get(`/api/playlists/${constants.invalidPlaylistId}/albums`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.should.have.status(404);
+          done();
         });
     });
 
