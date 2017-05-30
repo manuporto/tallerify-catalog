@@ -42,7 +42,7 @@ const invalidRequestBodyError = (reasons, response) => {
 };
 
 const entryExists = (id, entry, response) => {
-  logger.info('Querying entry');
+  logger.info('Checking if entry exist');
   logger.debug(`Entry: ${JSON.stringify(entry, null, 4)}`);
   if (!entry) {
     logger.warn(`No entry with id ${id}`);

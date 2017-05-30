@@ -21,6 +21,7 @@ const testToken = jwt.sign(constants.jwtTestUser, config.secret);
 let initialArtistId;
 let initialUserId;
 
+let albumInPlaylist;
 let validAlbumId;
 let validTrackId;
 let validPlaylistId;
@@ -41,14 +42,14 @@ describe('Playlist', () => {
                     logger.info(`Tests artist created: ${JSON.stringify(artist, null, 4)}`);
                     initialArtistId = artist[0].id;
 
-                    const initialAlbumInPlaylist = constants.initialAlbumInPlaylist;
-                    initialAlbumInPlaylist.artists = [initialArtistId];
+                    albumInPlaylist = constants.initialAlbumInPlaylist;
+                    albumInPlaylist.artists = [initialArtistId];
 
                     const initialAlbum = constants.initialAlbum;
                     initialAlbum.artists = [initialArtistId];
 
                     Promise.all([
-                      dbHandler.album.createNewAlbumEntry(initialAlbumInPlaylist),
+                      dbHandler.album.createNewAlbumEntry(albumInPlaylist),
                       dbHandler.album.createNewAlbumEntry(initialAlbum),
                     ])
                       .then(albums => {
@@ -388,6 +389,81 @@ describe('Playlist', () => {
         .end((err, res) => {
           res.should.have.status(401);
           done();
+        });
+    });
+  });
+
+  describe('/GET /api/playlists/{playlistId}/albums', () => {
+    it('should return status code 200', done => {
+      request(app)
+        .put(`/api/playlists/${validPlaylistId}/albums/${albumInPlaylistId}`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.should.have.status(200);
+          request(app)
+            .get(`/api/playlists/${validPlaylistId}/albums`)
+            .set('Authorization', `Bearer ${testToken}`)
+            .end((err, res) => {
+              res.should.have.status(200);
+              done();
+            });
+        });
+    });
+
+    it('should return the expected body response when correct parameters are sent', done => {
+      request(app)
+        .put(`/api/playlists/${validPlaylistId}/albums/${albumInPlaylistId}`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.should.have.status(200);
+          request(app)
+            .get(`/api/playlists/${validPlaylistId}/albums`)
+            .set('Authorization', `Bearer ${testToken}`)
+            .end((err, res) => {
+              res.body.should.be.a('object');
+              res.body.should.have.property('metadata');
+              res.body.metadata.should.have.property('version');
+              res.body.metadata.should.have.property('count');
+              res.body.albums.should.have.lengthOf(1);
+              res.body.albums[0].should.have.property('name').eql(constants.initialAlbumInPlaylist.name);
+              res.body.albums[0].should.have.property('images').eql(constants.initialAlbumInPlaylist.images);
+              res.body.albums[0].should.have.property('genres').eql(constants.initialAlbumInPlaylist.genres);
+              res.body.albums[0].should.have.property('release_date').eql(constants.initialAlbumInPlaylist.release_date);
+              // TODO check artists & tracks
+              done();
+            });
+        });
+    });
+
+    it('should return status code 404 if playlistId is invalid', done => {
+      request(app)
+        .put(`/api/playlists/${validPlaylistId}/albums/${albumInPlaylistId}`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.should.have.status(200);
+          request(app)
+            .get(`/api/playlists/${constants.invalidPlaylistId}/albums`)
+            .set('Authorization', `Bearer ${testToken}`)
+            .end((err, res) => {
+              res.should.have.status(404);
+              done();
+            });
+        });
+    });
+
+    it('should return status code 401 if unauthorized', done => {
+      request(app)
+        .put(`/api/playlists/${validPlaylistId}/albums/${albumInPlaylistId}`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.should.have.status(200);
+          request(app)
+            .get(`/api/playlists/${validPlaylistId}/albums`)
+            .set('Authorization', 'Bearer UNAUTHORIZED')
+            .end((err, res) => {
+              res.should.have.status(401);
+              done();
+            });
         });
     });
   });
