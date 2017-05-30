@@ -18,10 +18,6 @@ const constants = require('./playlist.extra.constants.json');
 
 const testToken = jwt.sign(constants.jwtTestUser, config.secret);
 
-let initialArtistId;
-let initialUserId;
-
-let albumInPlaylist;
 let validAlbumId;
 let validTrackId;
 let validPlaylistId;
@@ -36,13 +32,13 @@ describe('Playlist', () => {
             dbHandler.general.createNewEntry(tables.users, constants.initialUser)
               .then(owner => {
                 logger.info(`Tests user created: ${JSON.stringify(owner, null, 4)}`);
-                initialUserId = owner[0].id;
+                const initialUserId = owner[0].id;
                 dbHandler.artist.createNewArtistEntry(constants.initialArtist)
                   .then(artist => {
                     logger.info(`Tests artist created: ${JSON.stringify(artist, null, 4)}`);
-                    initialArtistId = artist[0].id;
+                    const initialArtistId = artist[0].id;
 
-                    albumInPlaylist = constants.initialAlbumInPlaylist;
+                    const albumInPlaylist = constants.initialAlbumInPlaylist;
                     albumInPlaylist.artists = [initialArtistId];
 
                     const initialAlbum = constants.initialAlbum;
