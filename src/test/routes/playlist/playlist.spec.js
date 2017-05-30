@@ -32,7 +32,7 @@ describe('Playlist', () => {
                 dbHandler.artist.createNewArtistEntry(constants.initialArtist)
                   .then(artist => {
                     logger.info(`Tests artist created: ${JSON.stringify(artist, null, 4)}`);
-                    const initialArtistId = artist[0].id;
+                    const initialArtistId = artist.id;
 
                     const initialAlbum = constants.initialAlbum;
                     initialAlbum.artists = [initialArtistId];
@@ -40,7 +40,7 @@ describe('Playlist', () => {
                     dbHandler.album.createNewAlbumEntry(initialAlbum)
                       .then(album => {
                         logger.info(`Tests album created: ${JSON.stringify(album, null, 4)}`);
-                        const initialAlbumId = album[0].id;
+                        const initialAlbumId = album.id;
 
                         const initialTrackInPlaylist = constants.initialTrackInPlaylist;
                         initialTrackInPlaylist.albumId = initialAlbumId;
@@ -56,7 +56,7 @@ describe('Playlist', () => {
                         ])
                           .then(tracks => {
                             logger.info(`Tests tracks created: ${JSON.stringify(tracks, null, 4)}`);
-                            const initialTrackInPlaylistId = tracks[0][0].id;
+                            const initialTrackInPlaylistId = tracks[0].id;
 
                             const initialPlaylist = constants.initialPlaylist;
                             initialPlaylist.ownerId = initialUserId;

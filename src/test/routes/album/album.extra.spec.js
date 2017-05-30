@@ -42,8 +42,8 @@ describe('Album', () => {
                 ])
                   .then(albums => {
                     logger.debug(`Tests albums created: ${JSON.stringify(albums, null, 4)}`);
-                    initialAlbumId = albums[0][0].id;
-                    additionalAlbumId = albums[1][0].id;
+                    initialAlbumId = albums[0].id;
+                    additionalAlbumId = albums[1].id;
 
                     const initialTrackInAlbum = constants.initialTrackInAlbum;
                     initialTrackInAlbum.albumId = initialAlbumId; // albumId is set on runtime
@@ -58,8 +58,8 @@ describe('Album', () => {
                       .then(tracks => {
                         logger.debug(`Tests track in album created: ${JSON.stringify(tracks[0], null, 4)}`);
                         logger.debug(`Tests track created: ${JSON.stringify(tracks[1], null, 4)}`);
-                        trackInAlbumId = tracks[0][0].id;
-                        validTrackId = tracks[1][0].id;
+                        trackInAlbumId = tracks[0].id;
+                        validTrackId = tracks[1].id;
                         done();
                       })
                       .catch(error => {
@@ -195,7 +195,7 @@ describe('Album', () => {
             .set('Authorization', `Bearer ${testToken}`)
             .end((err, res) => {
               res.should.have.status(200);
-              res.body.track.should.not.have.property('album');
+              res.body.track.should.have.property('album').eql({});
               done();
             });
         });

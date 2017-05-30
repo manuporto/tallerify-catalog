@@ -3,6 +3,28 @@ const db = require('../../database/');
 const tables = require('../../database/tableNames');
 const generalHandler = require('./generalHandler');
 const albumArtistHandler = require('./albumArtistHandler');
+const trackHandler = require('./trackHandler');
+
+const _findAllArtists = () => db
+  .select('ar.*',
+    db.raw('to_json(array_agg(distinct al.*)) as albums'))
+  .from(`${tables.artists} as ar`)
+  .leftJoin(`${tables.albums_artists} as aa`, 'ar.id', 'aa.artist_id')
+  .leftJoin(`${tables.albums} as al`, 'al.id', 'aa.album_id')
+  .groupBy('ar.id');
+
+const findAllArtists = queries => {
+  logger.info('Finding artists');
+  // Ugly hack to return empty array if empty name query it's supplied
+  // The normal behavior (knex) it's to return everything
+  if (queries.name === '') return Promise.resolve([]);
+  return (queries.name) ? _findAllArtists().where('ar.name', queries.name) : _findAllArtists();
+};
+
+const findArtistWithId = id => {
+  logger.info('Finding artist by id');
+  return _findAllArtists().where('ar.id', id).first();
+};
 
 const createNewArtistEntry = body => {
   logger.debug(`Creating artist with info: ${JSON.stringify(body, null, 4)}`);
@@ -13,10 +35,9 @@ const createNewArtistEntry = body => {
     images: body.images,
     popularity: 0,
   };
-  return generalHandler.createNewEntry(tables.artists, artist);
+  return generalHandler.createNewEntry(tables.artists, artist)
+    .then(artist => findArtistWithId(artist[0].id));
 };
-
-const getAlbumsInfo = artistId => albumArtistHandler.findAlbumsOfArtist(artistId);
 
 const updateArtistEntry = (body, id) => {
   logger.debug(`Updating artist ${id} with info: ${JSON.stringify(body, null, 4)}`);
@@ -26,7 +47,8 @@ const updateArtistEntry = (body, id) => {
     genres: body.genres,
     images: body.images,
   };
-  return generalHandler.updateEntryWithId(tables.artists, id, artist);
+  return generalHandler.updateEntryWithId(tables.artists, id, artist)
+    .then(updatedArtist => findArtistWithId(updatedArtist[0].id));
 };
 
 const deleteArtist = id => {
@@ -73,7 +95,7 @@ const findUserFavorites = userId => {
     .then(artists => {
       const artistIds = artists.map(artist => artist.artist_id);
       logger.debug(`Followed artist ids for user ${userId}: ${JSON.stringify(artistIds, null, 4)}`);
-      return db(tables.artists).whereIn('id', artistIds); // TODO add albums info
+      return _findAllArtists().whereIn('ar.id', artistIds); // TODO add albums info
     });
 };
 
@@ -85,13 +107,14 @@ const getTracks = artistId => {
     .then(tracks => {
       const trackIds = tracks.map(track => track.track_id);
       logger.debug(`Track ids for artist ${artistId}: ${JSON.stringify(trackIds, null, 4)}`);
-      return db(tables.tracks).whereIn('id', trackIds); // TODO add albums & artists info
+      return trackHandler.findAllTracks({}).whereIn('tr.id', trackIds);
     });
 };
 
 module.exports = {
+  findAllArtists,
+  findArtistWithId,
   createNewArtistEntry,
-  getAlbumsInfo,
   updateArtistEntry,
   deleteArtist,
   follow,

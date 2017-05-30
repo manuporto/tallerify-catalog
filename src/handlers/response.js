@@ -232,7 +232,7 @@ const formatArtistJson = artist => ({
   href: artist.href,
   images: artist.images,
   genres: artist.genres,
-  albums: artist.hasOwnProperty('albums') ? artist.albums.map(formatAlbumShortJson) : [],
+  albums: artist.albums[0] ? artist.albums.map(formatAlbumShortJson) : [],
   popularity: artist.popularity,
 });
 
@@ -249,7 +249,7 @@ const successfulArtistsFetch = (artists, response) => {
 
 const successfulArtistCreation = (artist, response) => {
   logger.info('Successful artist creation');
-  response.status(201).json(formatArtistJson(artist[0]));
+  response.status(201).json(formatArtistJson(artist));
 };
 
 const successfulArtistFetch = (artist, response) => {
@@ -265,7 +265,7 @@ const successfulArtistFetch = (artist, response) => {
 
 const successfulArtistUpdate = (artist, response) => {
   logger.info('Successful artist update');
-  response.status(200).json(formatArtistJson(artist[0]));
+  response.status(200).json(formatArtistJson(artist));
 };
 
 const successfulArtistDeletion = response => {
@@ -296,16 +296,12 @@ const successfulArtistTracksFetch = (tracks, response) => {
 
 /* Albums */
 
-const formatAlbumShortJson = album => {
-  if (album) {
-    return {
-      id: album.id,
-      name: album.name,
-      href: album.href,
-      images: album.images,
-    };
-  }
-};
+const formatAlbumShortJson = album => ({
+  id: album.id,
+  name: album.name,
+  href: album.href,
+  images: album.images,
+});
 
 const formatAlbumJson = album => ({
   id: album.id,
@@ -313,8 +309,10 @@ const formatAlbumJson = album => ({
   release_date: album.release_date,
   href: album.href,
   popularity: album.popularity,
-  artists: album.artists, // TODO album.artists.map(artist => formatArtistShortJson(artist)),
-  tracks: album.tracks, // TODO album.tracks.map(track => formatTrackShortJson(track)),
+  artists: album.artists
+    ? [] : album.artists.map(artist => formatArtistShortJson(artist)),
+  tracks: album.tracks
+    ? [] : album.tracks.map(track => formatTrackShortJson(track)),
   genres: album.genres,
   images: album.images,
 });
@@ -332,7 +330,7 @@ const successfulAlbumsFetch = (albums, response) => {
 
 const successfulAlbumCreation = (album, response) => {
   logger.info('Successful album creation');
-  response.status(201).json(formatAlbumJson(album[0]));
+  response.status(201).json(formatAlbumJson(album));
 };
 
 const successfulAlbumFetch = (album, response) => {
@@ -348,7 +346,7 @@ const successfulAlbumFetch = (album, response) => {
 
 const successfulAlbumUpdate = (album, response) => {
   logger.info('Successful album update');
-  response.status(200).json(formatAlbumJson(album[0]));
+  response.status(200).json(formatAlbumJson(album));
 };
 
 const successfulAlbumDeletion = response => {
@@ -374,14 +372,11 @@ const successfulTrackAdditionToAlbum = (trackId, album, response) => {
 
 /* Tracks */
 
-/*
 const formatTrackShortJson = track => ({
   id: track.id,
   name: track.name,
   href: track.href,
-  images: track.images,
 });
-*/
 
 const formatTrackJson = track => ({
   id: track.id,
@@ -391,8 +386,8 @@ const formatTrackJson = track => ({
   popularity: {
     rate: track.rating,
   },
-  album: formatAlbumShortJson(track.album),
-  artists: (track.hasOwnProperty('artists')) ?
+  album: track.album ? formatAlbumShortJson(track.album) : {},
+  artists: track.artists ?
     track.artists.map(artist => formatArtistShortJson(artist)) : [],
 });
 
@@ -411,11 +406,12 @@ const successfulTracksFetch = (tracks, response) => {
 const successfulTrackCreation = (track, response) => {
   logger.info('Successful track creation');
   logger.debug(`Track: ${JSON.stringify(track, null, 4)}`);
-  response.status(201).json(formatTrackJson(track[0]));
+  response.status(201).json(formatTrackJson(track));
 };
 
 const successfulTrackFetch = (track, response) => {
   logger.info('Successful track fetch');
+  logger.debug(`Track: ${JSON.stringify(track, null, 4)}`);
   response.status(200).json({
     metadata: {
       count: 1,
@@ -427,7 +423,7 @@ const successfulTrackFetch = (track, response) => {
 
 const successfulTrackUpdate = (track, response) => {
   logger.info('Successful track update');
-  response.status(200).json(formatTrackJson(track[0]));
+  response.status(200).json(formatTrackJson(track));
 };
 
 const successfulTrackDeletion = response => {
