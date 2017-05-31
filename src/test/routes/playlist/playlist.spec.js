@@ -27,11 +27,11 @@ describe('Playlist', () => {
           .then(() => {
             dbHandler.general.createNewEntry(tables.users, constants.initialUser)
               .then(owner => {
-                logger.info(`Tests user created: ${JSON.stringify(owner, null, 4)}`);
+                logger.debug(`Tests user created: ${JSON.stringify(owner, null, 4)}`);
                 const initialUserId = owner[0].id;
                 dbHandler.artist.createNewArtistEntry(constants.initialArtist)
                   .then(artist => {
-                    logger.info(`Tests artist created: ${JSON.stringify(artist, null, 4)}`);
+                    logger.debug(`Tests artist created: ${JSON.stringify(artist, null, 4)}`);
                     const initialArtistId = artist.id;
 
                     const initialAlbum = constants.initialAlbum;
@@ -39,7 +39,7 @@ describe('Playlist', () => {
 
                     dbHandler.album.createNewAlbumEntry(initialAlbum)
                       .then(album => {
-                        logger.info(`Tests album created: ${JSON.stringify(album, null, 4)}`);
+                        logger.debug(`Tests album created: ${JSON.stringify(album, null, 4)}`);
                         const initialAlbumId = album.id;
 
                         const initialTrackInPlaylist = constants.initialTrackInPlaylist;
@@ -55,7 +55,7 @@ describe('Playlist', () => {
                           dbHandler.track.createNewTrackEntry(initialTrack),
                         ])
                           .then(tracks => {
-                            logger.info(`Tests tracks created: ${JSON.stringify(tracks, null, 4)}`);
+                            logger.debug(`Tests tracks created: ${JSON.stringify(tracks, null, 4)}`);
                             const initialTrackInPlaylistId = tracks[0].id;
 
                             const initialPlaylist = constants.initialPlaylist;
@@ -64,7 +64,7 @@ describe('Playlist', () => {
 
                             dbHandler.playlist.createNewPlaylistEntry(initialPlaylist)
                               .then(playlist => {
-                                logger.info(`Tests playlist created: ${JSON.stringify(playlist, null, 4)}`);
+                                logger.debug(`Tests playlist created: ${JSON.stringify(playlist, null, 4)}`);
                                 validPlaylistId = playlist[0].id;
                                 done();
                               })
