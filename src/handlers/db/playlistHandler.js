@@ -98,8 +98,8 @@ const getTracks = playlistId => {
       const albumIds = results[1].map(album => album.album_id);
       logger.debug(`Album ids for playlist ${playlistId}: ${JSON.stringify(albumIds, null, 4)}`);
       return Promise.all([
-        trackHandler.findTracksWithIds(trackIds), // TODO add albums & artists info
-        db(tables.tracks).whereIn('album_id', albumIds),
+        trackHandler.findTracksWithIds(trackIds),
+        trackHandler.findTracksWithAlbumsIds(albumIds),
       ])
         .then(results => {
           logger.debug(`Complete tracks from playlist ${playlistId}: ${JSON.stringify(union(results[0], results[1]), null, 4)}`);
@@ -120,7 +120,7 @@ const getAlbums = playlistId => {
     .then(albums => {
       const albumIds = albums.map(album => album.album_id);
       logger.debug(`Album ids for playlist ${playlistId}: ${JSON.stringify(albumIds, null, 4)}`);
-      return albumHandler.findAlbumsWithIds(albumIds); // TODO add artists and tracks info
+      return albumHandler.findAlbumsWithIds(albumIds);
     });
 };
 
