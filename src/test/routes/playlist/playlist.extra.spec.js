@@ -26,6 +26,7 @@ let albumInPlaylistId;
 let albumShort;
 let trackInPlaylistId;
 let trackShort;
+const initialTrackInPlaylist = constants.initialTrackInPlaylist;
 
 describe('Playlist', () => {
   beforeEach(done => {
@@ -63,7 +64,6 @@ describe('Playlist', () => {
                         albumInPlaylistId = albums[0].id;
                         validAlbumId = albums[1].id;
 
-                        const initialTrackInPlaylist = constants.initialTrackInPlaylist;
                         initialTrackInPlaylist.albumId = validAlbumId;
                         initialTrackInPlaylist.artists = [initialArtistId];
 
@@ -157,7 +157,7 @@ describe('Playlist', () => {
             .set('Authorization', `Bearer ${testToken}`)
             .end((err, res) => {
               res.should.have.status(200);
-              res.body.tracks[0].should.have.property('name').eql(constants.initialTrackInPlaylist.name);
+              res.body.tracks[0].should.have.property('name').eql(initialTrackInPlaylist.name);
               done();
             });
         });
