@@ -93,7 +93,7 @@ describe('Playlist', () => {
                             trackShort = {
                               id: validTrackId,
                               name: tracks[1].name,
-                              href: tracks[1].href
+                              href: tracks[1].href,
                             };
                             dbHandler.playlist.createNewPlaylistEntry(initialPlaylist)
                               .then(playlist => {
