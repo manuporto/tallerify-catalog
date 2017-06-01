@@ -21,8 +21,12 @@ const testToken = jwt.sign(constants.jwtTestUser, config.secret);
 let validAlbumId;
 let validTrackId;
 let validPlaylistId;
+let artistShort;
 let albumInPlaylistId;
+let albumShort;
 let trackInPlaylistId;
+let trackShort;
+
 describe('Playlist', () => {
   beforeEach(done => {
     db.migrate.rollback()
@@ -44,6 +48,12 @@ describe('Playlist', () => {
                     const initialAlbum = constants.initialAlbum;
                     initialAlbum.artists = [initialArtistId];
 
+                    artistShort = {
+                      id: initialArtistId,
+                      name: artist.name,
+                      href: artist.href,
+                      images: artist.images,
+                    };
                     Promise.all([
                       dbHandler.album.createNewAlbumEntry(albumInPlaylist),
                       dbHandler.album.createNewAlbumEntry(initialAlbum),
@@ -61,6 +71,12 @@ describe('Playlist', () => {
                         initialTrack.albumId = albumInPlaylistId;
                         initialTrack.artists = [initialArtistId];
 
+                        albumShort = {
+                          id: validAlbumId,
+                          name: albums[1].name,
+                          href: albums[1].href,
+                          images: albums[1].images,
+                        };
                         Promise.all([
                           dbHandler.track.createNewTrackEntry(initialTrackInPlaylist),
                           dbHandler.track.createNewTrackEntry(initialTrack),
@@ -74,6 +90,11 @@ describe('Playlist', () => {
                             initialPlaylist.ownerId = initialUserId;
                             initialPlaylist.songs = [trackInPlaylistId];
 
+                            trackShort = {
+                              id: validTrackId,
+                              name: tracks[1].name,
+                              href: tracks[1].href
+                            };
                             dbHandler.playlist.createNewPlaylistEntry(initialPlaylist)
                               .then(playlist => {
                                 logger.debug(`Tests playlist created: ${JSON.stringify(playlist, null, 4)}`);
@@ -454,8 +475,8 @@ describe('Playlist', () => {
               res.body.albums[0].should.have.property('images').eql(constants.initialAlbumInPlaylist.images);
               res.body.albums[0].should.have.property('genres').eql(constants.initialAlbumInPlaylist.genres);
               res.body.albums[0].should.have.property('release_date').eql(constants.initialAlbumInPlaylist.release_date);
-              res.body.albums[0].should.have.property('artists'); // TODO check value
-              res.body.albums[0].should.have.property('tracks'); // TODO check value
+              res.body.albums[0].should.have.property('artists').eql([artistShort]);
+              res.body.albums[0].should.have.property('tracks').eql([trackShort]);
               done();
             });
         });
@@ -526,8 +547,8 @@ describe('Playlist', () => {
           logger.warn(JSON.stringify(res.body));
           res.body.tracks.should.have.lengthOf(1);
           res.body.tracks[0].should.have.property('name').eql(constants.initialTrackInPlaylist.name);
-          res.body.tracks[0].should.have.property('artists'); // TODO check value
-          res.body.tracks[0].should.have.property('album'); // TODO check value
+          res.body.tracks[0].should.have.property('artists').eql([artistShort]);
+          res.body.tracks[0].should.have.property('album').eql(albumShort);
           done();
         });
     });
