@@ -488,7 +488,7 @@ const successfulPlaylistsFetch = (playlists, response) => {
 const successfulPlaylistCreation = (playlist, response) => {
   logger.info('Successful playlist creation');
   logger.debug(`Playlist: ${JSON.stringify(playlist, null, 4)}`);
-  response.status(201).json(formatPlaylistJson(playlist[0]));
+  response.status(201).json(formatPlaylistJson(playlist));
 };
 
 const successfulPlaylistFetch = (playlist, response) => {

@@ -65,7 +65,7 @@ describe('Playlist', () => {
                             dbHandler.playlist.createNewPlaylistEntry(initialPlaylist)
                               .then(playlist => {
                                 logger.debug(`Tests playlist created: ${JSON.stringify(playlist, null, 4)}`);
-                                validPlaylistId = playlist[0].id;
+                                validPlaylistId = playlist.id;
                                 done();
                               })
                               .catch(error => {
