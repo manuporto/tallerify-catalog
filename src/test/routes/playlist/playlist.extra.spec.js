@@ -136,8 +136,7 @@ describe('Playlist', () => {
             .set('Authorization', `Bearer ${testToken}`)
             .end((err, res) => {
               res.should.have.status(200);
-              // FIXME logger.warn(JSON.stringify(res.body));
-              // res.body.tracks[0].should.have.property('name').eql(constants.initialTrack.name);
+              res.body.tracks[0].should.have.property('name').eql(constants.initialTrackInPlaylist.name);
               done();
             });
         });
@@ -455,7 +454,8 @@ describe('Playlist', () => {
               res.body.albums[0].should.have.property('images').eql(constants.initialAlbumInPlaylist.images);
               res.body.albums[0].should.have.property('genres').eql(constants.initialAlbumInPlaylist.genres);
               res.body.albums[0].should.have.property('release_date').eql(constants.initialAlbumInPlaylist.release_date);
-              // TODO check artists & tracks
+              res.body.albums[0].should.have.property('artists'); // TODO check value
+              res.body.albums[0].should.have.property('tracks'); // TODO check value
               done();
             });
         });
@@ -526,7 +526,8 @@ describe('Playlist', () => {
           logger.warn(JSON.stringify(res.body));
           res.body.tracks.should.have.lengthOf(1);
           res.body.tracks[0].should.have.property('name').eql(constants.initialTrackInPlaylist.name);
-          // TODO check artists & album
+          res.body.tracks[0].should.have.property('artists'); // TODO check value
+          res.body.tracks[0].should.have.property('album'); // TODO check value
           done();
         });
     });

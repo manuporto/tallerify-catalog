@@ -185,8 +185,8 @@ describe('Playlist', () => {
           res.body.should.have.property('name').eql(constants.testPlaylist.name);
           res.body.should.have.property('description').eql(constants.testPlaylist.description);
           res.body.should.have.property('href');
-          // res.body.should.have.property('owner'); TODO
-          // res.body.should.have.property('tracks'); TODO
+          res.body.should.have.property('owner'); // TODO test value of owner
+          res.body.should.have.property('tracks'); // TODO test value of tracks
           done();
         });
     });
@@ -228,8 +228,8 @@ describe('Playlist', () => {
           res.body.playlist.should.have.property('name').eql(constants.initialPlaylist.name);
           res.body.playlist.should.have.property('description').eql(constants.initialPlaylist.description);
           res.body.playlist.should.have.property('href');
-          // res.body.playlist.should.have.property('owner'); TODO
-          // res.body.playlist.should.have.property('tracks'); TODO
+          res.body.playlist.should.have.property('owner'); // TODO test value of owner
+          res.body.playlist.should.have.property('tracks'); // TODO test value of tracks
           done();
         });
     });
@@ -278,8 +278,8 @@ describe('Playlist', () => {
           res.body.should.have.property('name').eql(constants.updatedPlaylist.name);
           res.body.should.have.property('description').eql(constants.updatedPlaylist.description);
           res.body.should.have.property('href');
-          // res.body.should.have.property('owner'); TODO
-          // res.body.should.have.property('tracks'); TODO
+          res.body.should.have.property('owner'); // TODO test value of owner
+          res.body.should.have.property('tracks'); // TODO test value of tracks
           done();
         });
     });
