@@ -8,10 +8,12 @@ const jwt = require('jsonwebtoken');
 const request = require('supertest');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
+const chaiThings = require('chai-things');
 const logger = require('../../../utils/logger');
 
 chai.should();
 chai.use(chaiHttp);
+chai.use(chaiThings);
 
 const config = require('./../../../config');
 const constants = require('./playlist.constants.json');
@@ -300,7 +302,9 @@ describe('Playlist', () => {
           res.body.should.have.property('description').eql(constants.updatedPlaylist.description);
           res.body.should.have.property('href');
           res.body.should.have.property('owner').eql(ownerShort);
-          res.body.should.have.property('tracks').eql([initialTrackInPlaylistShort, initialTrackShort]);
+          res.body.should.have.property('tracks');
+          res.body.tracks.should.include.something.that.deep.equals(initialTrackInPlaylistShort);
+          res.body.tracks.should.include.something.that.deep.equals(initialTrackShort);
           done();
         });
     });
