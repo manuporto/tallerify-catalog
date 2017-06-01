@@ -19,6 +19,10 @@ const constants = require('./playlist.constants.json');
 const testToken = jwt.sign(constants.jwtTestUser, config.secret);
 
 let validPlaylistId;
+let ownerShort;
+let initialTrackInPlaylistShort;
+let initialTrackShort;
+
 describe('Playlist', () => {
   beforeEach(done => {
     db.migrate.rollback()
@@ -29,6 +33,13 @@ describe('Playlist', () => {
               .then(owner => {
                 logger.debug(`Tests user created: ${JSON.stringify(owner, null, 4)}`);
                 const initialUserId = owner[0].id;
+                ownerShort = {
+                  id: initialUserId,
+                  userName: owner[0].userName,
+                  href: owner[0].href,
+                  images: owner[0].images,
+                };
+
                 dbHandler.artist.createNewArtistEntry(constants.initialArtist)
                   .then(artist => {
                     logger.debug(`Tests artist created: ${JSON.stringify(artist, null, 4)}`);
@@ -57,6 +68,16 @@ describe('Playlist', () => {
                           .then(tracks => {
                             logger.debug(`Tests tracks created: ${JSON.stringify(tracks, null, 4)}`);
                             const initialTrackInPlaylistId = tracks[0].id;
+                            initialTrackInPlaylistShort = {
+                              id: initialTrackInPlaylistId,
+                              name: tracks[0].name,
+                              href: tracks[0].href,
+                            };
+                            initialTrackShort = {
+                              id: tracks[1].id,
+                              name: tracks[1].name,
+                              href: tracks[1].href,
+                            };
 
                             const initialPlaylist = constants.initialPlaylist;
                             initialPlaylist.ownerId = initialUserId;
@@ -185,8 +206,8 @@ describe('Playlist', () => {
           res.body.should.have.property('name').eql(constants.testPlaylist.name);
           res.body.should.have.property('description').eql(constants.testPlaylist.description);
           res.body.should.have.property('href');
-          res.body.should.have.property('owner'); // TODO test value of owner
-          res.body.should.have.property('tracks'); // TODO test value of tracks
+          res.body.should.have.property('owner').eql(ownerShort);
+          res.body.should.have.property('tracks').eql([initialTrackShort]);
           done();
         });
     });
@@ -228,8 +249,8 @@ describe('Playlist', () => {
           res.body.playlist.should.have.property('name').eql(constants.initialPlaylist.name);
           res.body.playlist.should.have.property('description').eql(constants.initialPlaylist.description);
           res.body.playlist.should.have.property('href');
-          res.body.playlist.should.have.property('owner'); // TODO test value of owner
-          res.body.playlist.should.have.property('tracks'); // TODO test value of tracks
+          res.body.playlist.should.have.property('owner').eql(ownerShort);
+          res.body.playlist.should.have.property('tracks').eql([initialTrackInPlaylistShort]);
           done();
         });
     });
@@ -278,8 +299,8 @@ describe('Playlist', () => {
           res.body.should.have.property('name').eql(constants.updatedPlaylist.name);
           res.body.should.have.property('description').eql(constants.updatedPlaylist.description);
           res.body.should.have.property('href');
-          res.body.should.have.property('owner'); // TODO test value of owner
-          res.body.should.have.property('tracks'); // TODO test value of tracks
+          res.body.should.have.property('owner').eql(ownerShort);
+          res.body.should.have.property('tracks').eql([initialTrackInPlaylistShort, initialTrackShort]);
           done();
         });
     });
