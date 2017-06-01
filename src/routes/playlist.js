@@ -28,7 +28,7 @@ const playlistExpectedBodySchema = {
 };
 
 const getPlaylists = (req, res) => {
-  db.general.findAllEntries(tables.playlists)
+  db.playlist.findAllPlaylists()
     .then(playlists => respond.successfulPlaylistsFetch(playlists, res))
     .catch(error => respond.internalServerError(error, res));
 };
@@ -49,16 +49,10 @@ const newPlaylist = (req, res) => {
 };
 
 const getPlaylist = (req, res) => {
-  db.general.findEntryWithId(tables.playlists, req.params.id)
+  db.playlist.findPlaylistWithId(req.params.id)
     .then(playlist => {
       if (!respond.entryExists(req.params.id, playlist, res)) return;
-      const getters = [db.playlist.getTracksInfo(playlist), db.playlist.getOwnerInfo(playlist)];
-      Promise.all(getters)
-        .then(results => {
-          const finalPlaylist = Object.assign({}, playlist, { tracks: results[0], owner: results[1] }); // eslint-disable-line max-len
-          respond.successfulPlaylistFetch(finalPlaylist, res);
-        })
-        .catch(error => respond.internalServerError(error, res));
+      respond.successfulPlaylistFetch(playlist, res);
     });
 };
 
