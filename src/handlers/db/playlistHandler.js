@@ -11,6 +11,30 @@ const union = require('lodash.union');
 
 const NonExistentIdError = require('../../errors/NonExistentIdError');
 
+const _findAllPlaylists = () => db
+  .select('pl.*',
+    db.raw('to_json(array_agg(distinct tr.*)) as tracks, to_json(array_agg(distinct u.*))::json->0 as owner'))
+  .from(`${tables.playlists} as pl`)
+  .leftJoin(`${tables.users} as u`, 'pl.owner_id', 'u.id')
+  .leftJoin(`${tables.playlists_tracks} as pltr`, 'pl.id', 'pltr.playlist_id')
+  .leftJoin(`${tables.tracks} as tr`, 'tr.id', 'pltr.track_id')
+  .groupBy('pl.id');
+
+const findAllPlaylists = () => {
+  logger.info('Finding all playalists');
+  return _findAllPlaylists();
+};
+
+const findPlaylistWithId = id => {
+  logger.info('Finding playlist with id');
+  return _findAllPlaylists().where('pl.id', id);
+};
+
+const findPlaylistsWithIds = ids => {
+  logger.info('Finding playlists with ids');
+  return _findAllPlaylists().whereIn('pl.id', ids);
+};
+
 const findTracks = body => db(tables.tracks).whereIn('id', body.songs).then(tracks => {
   if (tracks.length < body.songs.length) {
     logger.warn(`Req tracks: ${JSON.stringify(body.songs)} vs DB tracks: ${JSON.stringify(tracks)}`);
@@ -130,6 +154,9 @@ const deleteAlbum = (playlistId, albumId) => playlistAlbumHandler.deleteAlbum(pl
 
 
 module.exports = {
+  findAllPlaylists,
+  findPlaylistWithId,
+  findPlaylistsWithIds,
   createNewPlaylistEntry,
   getTracksInfo,
   getOwnerInfo,
