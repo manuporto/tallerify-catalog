@@ -64,7 +64,7 @@ const createNewPlaylistEntry = body => {
         .then(insertedPlaylist => {
           logger.debug(`Inserted playlist: ${JSON.stringify(insertedPlaylist, null, 4)}`);
           return playlistTrackHandler.insertAssociations(insertedPlaylist[0].id, body.songs)
-            .then(() => insertedPlaylist);
+            .then(() => findPlaylistWithId(insertedPlaylist[0].id));
         }));
 };
 
