@@ -27,7 +27,7 @@ const findAllPlaylists = () => {
 
 const findPlaylistWithId = id => {
   logger.info('Finding playlist with id');
-  return _findAllPlaylists().where('pl.id', id);
+  return _findAllPlaylists().where('pl.id', id).first();
 };
 
 const findPlaylistsWithIds = ids => {
