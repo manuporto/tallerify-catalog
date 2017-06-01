@@ -504,7 +504,7 @@ const successfulPlaylistFetch = (playlist, response) => {
 
 const successfulPlaylistUpdate = (playlist, response) => {
   logger.info('Successful playlist update');
-  response.status(200).json(formatPlaylistJson(playlist[0]));
+  response.status(200).json(formatPlaylistJson(playlist));
 };
 
 const successfulPlaylistDeletion = response => {

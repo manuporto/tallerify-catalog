@@ -81,7 +81,7 @@ const updatePlaylistEntry = (body, id) => {
       .then(updatedPlaylist => {
         logger.debug(`Updated playlist: ${JSON.stringify(updatedPlaylist, null, 4)}`);
         return playlistTrackHandler.updateAssociations(updatedPlaylist[0].id, body.songs)
-          .then(() => updatedPlaylist);
+          .then(() => findPlaylistWithId(updatedPlaylist[0].id));
       }));
 };
 
