@@ -30,6 +30,16 @@ const findTrackWithId = id => {
   return _findAllTracks().where('tr.id', id).first();
 };
 
+const findTracksWithIds = ids => {
+  logger.info('Finding tracks with selected ids');
+  return _findAllTracks().whereIn('tr.id', ids);
+};
+
+const findTracksWithAlbumsIds = albumsIds => {
+  logger.info('Finding tracks with albums ids');
+  return _findAllTracks().whereIn('tr.album_id', albumsIds);
+};
+
 const findArtists = body => db(tables.artists).whereIn('id', body.artists).then(artists => {
   if (artists.length < body.artists.length) {
     logger.warn(`Req artists: ${JSON.stringify(body.artists)} vs DB artists: ${JSON.stringify(artists)}`);
@@ -160,6 +170,8 @@ const deleteAlbumId = trackId => {
 module.exports = {
   findAllTracks,
   findTrackWithId,
+  findTracksWithIds,
+  findTracksWithAlbumsIds,
   createNewTrackEntry,
   updateTrackEntry,
   like,

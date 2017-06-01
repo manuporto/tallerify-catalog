@@ -114,7 +114,7 @@ const getTracks = (req, res) => {
     .then(artist => {
       if (!respond.entryExists(req.params.id, artist, res)) return;
       db.artist.getTracks(req.params.id)
-        .then(tracks => respond.successfulArtistTracksFetch(tracks, res))
+        .then(tracks => respond.successfulTracksFetch(tracks, res))
         .catch(error => respond.internalServerError(error, res));
     })
     .catch(error => respond.internalServerError(error, res));

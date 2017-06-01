@@ -7,6 +7,7 @@ const artist = require('./artist');
 const album = require('./album');
 const track = require('./track');
 const admin = require('./admin');
+const playlist = require('./playlist');
 
 const loginRouter = require('../middlewares/login-router');
 
@@ -92,6 +93,30 @@ router.get('/api/tracks/me/favorites', track.getFavoriteTracks);
 router.get('/api/tracks/:id/popularity', track.getTrackPopularity);
 
 router.post('/api/tracks/:id/popularity', track.rateTrack);
+
+/* Playlists */
+
+router.get('/api/playlists', playlist.getPlaylists);
+
+router.post('/api/playlists', playlist.newPlaylist);
+
+router.get('/api/playlists/:id', playlist.getPlaylist);
+
+router.put('/api/playlists/:id', playlist.updatePlaylist);
+
+router.delete('/api/playlists/:id', playlist.deletePlaylist);
+
+router.get('/api/playlists/:id/tracks', playlist.getTracks);
+
+router.delete('/api/playlists/:id/tracks/:trackId', playlist.deleteTrackFromPlaylist);
+
+router.put('/api/playlists/:id/tracks/:trackId', playlist.addTrackToPlaylist);
+
+router.get('/api/playlists/:id/albums', playlist.getAlbums);
+
+router.delete('/api/playlists/:id/albums/:albumId', playlist.deleteAlbumFromPlaylist);
+
+router.put('/api/playlists/:id/albums/:albumId', playlist.addAlbumToPlaylist);
 
 /* Albums */
 
