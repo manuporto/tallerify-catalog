@@ -1,0 +1,46 @@
+{
+	"jwtTestUser": {
+		"admin": true
+	},
+	"initialArtist": {
+		"name": "Papa Baute",
+		"description": "Tiene un implante coclear?",
+		"genres": ["Bachata"],
+		"images": ["una con guido", "otra con sergio"]
+	},
+	"initialAlbum": {
+		"name": "Folie a deux",
+		"images": ["un oso", "otro oso"],
+		"genres": ["Rock"],
+		"release_date": "4011958"
+	},
+	"initialTrack": {
+		"name": "Despacito"
+	},
+	"testArtist": {
+		"name": "Luis Fonsi",
+		"description": "El que canta despacito",
+		"genres": ["pero que no es justin"],
+		"images": ["ni daddy yankee"]
+	},
+	"testTrack": {
+		"name": "Come a Little Closer"
+	},
+	"updatedArtist": {
+		"name": "Ininity on high",
+		"description": "El que no canta despacito",
+		"genres": ["Punk"],
+		"images": ["una oveja"]
+	},
+	"newArtistWithMissingAttributes": {
+		"name": "Christian de Lugano"
+	},
+	"invalidArtist": {
+		"name": "Alexander Cannigia",
+		"description": 4,
+		"genres": 3,
+		"images": "muchas",
+		"popularity": "#SiempreAlTop"
+	},
+	"invalidArtistId": 9999
+}
