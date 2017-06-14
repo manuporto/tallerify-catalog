@@ -31,7 +31,7 @@ const artistExpectedBodySchema = {
 };
 
 const getArtists = (req, res) => {
-  db.general.findAllEntries(tables.artists)
+  db.artist.findAllArtists(req.query)
     .then(artists => respond.successfulArtistsFetch(artists, res))
     .catch(error => respond.internalServerError(error, res));
 };
@@ -47,16 +47,12 @@ const newArtist = (req, res) => {
 };
 
 const getArtist = (req, res) => {
-  db.general.findEntryWithId(tables.artists, req.params.id)
+  db.artist.findArtistWithId(req.params.id)
     .then(artist => {
       if (!respond.entryExists(req.params.id, artist, res)) return;
-      db.artist.getAlbumsInfo(req.params.id)
-        .then(albums => {
-          const finalArtist = Object.assign({}, artist, { albums });
-          respond.successfulArtistFetch(finalArtist, res);
-        })
-        .catch(error => respond.internalServerError(error, res));
-    });
+      respond.successfulArtistFetch(artist, res);
+    })
+    .catch(error => respond.internalServerError(error, res));
 };
 
 const updateArtist = (req, res) => {
@@ -92,7 +88,7 @@ const getFavoriteArtists = (req, res) => {
 };
 
 const artistUnfollow = (req, res) => {
-  db.general.findEntryWithId(tables.artists, req.params.id)
+  db.artist.findArtistWithId(req.params.id)
     .then(artist => {
       if (!respond.entryExists(req.params.id, artist, res)) return;
       db.artist.unfollow(req.user.id, req.params.id)
@@ -103,7 +99,7 @@ const artistUnfollow = (req, res) => {
 };
 
 const artistFollow = (req, res) => {
-  db.general.findEntryWithId(tables.artists, req.params.id)
+  db.artist.findArtistWithId(req.params.id)
     .then(artist => {
       if (!respond.entryExists(req.params.id, artist, res)) return;
       db.artist.follow(req.user.id, req.params.id)
@@ -118,7 +114,7 @@ const getTracks = (req, res) => {
     .then(artist => {
       if (!respond.entryExists(req.params.id, artist, res)) return;
       db.artist.getTracks(req.params.id)
-        .then(tracks => respond.successfulArtistTracksFetch(tracks, res))
+        .then(tracks => respond.successfulTracksFetch(tracks, res))
         .catch(error => respond.internalServerError(error, res));
     })
     .catch(error => respond.internalServerError(error, res));
