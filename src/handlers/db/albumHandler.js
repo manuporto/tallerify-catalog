@@ -7,15 +7,33 @@ const albumArtistHandler = require('./albumArtistHandler');
 
 const NonExistentIdError = require('../../errors/NonExistentIdError');
 
-const findAllAlbums = () => {
+const _findAllAlbums = () => db
+    .select('al.*',
+      db.raw('to_json(array_agg(distinct ar.*)) as artists, to_json(array_agg(distinct tr.*)) as tracks'))
+    .from('albums as al')
+    .leftJoin('albums_artists as aa', 'al.id', 'aa.album_id')
+    .leftJoin('artists as ar', 'ar.id', 'aa.artist_id')
+    .leftJoin('tracks as tr', 'tr.album_id', 'al.id')
+    .groupBy('al.id');
+
+const findAllAlbums = queries => {
   logger.info('Fetching albums');
-  return generalHandler.findAllEntries(tables.albums); // TODO full query to get artists and tracks
+  // Ugly hack to return empty array if empty name query it'supplied
+  // The normal behavior (knex) it's to return everything
+  if (queries.name === '') return Promise.resolve([]);
+  return (queries.name) ? _findAllAlbums().where('al.name', queries.name) : _findAllAlbums();
 };
 
 const findAlbumWithId = id => {
   logger.info(`Fetching album with id: ${id}`);
-  // TODO full query to get artists and tracks
-  return generalHandler.findEntryWithId(tables.albums, id);
+  return _findAllAlbums()
+    .where('al.id', id)
+    .first();
+};
+
+const findAlbumsWithIds = ids => {
+  logger.info('Fetching albums with selected ids.');
+  return _findAllAlbums().whereIn('al.id', ids);
 };
 
 const checkArtistsExistence = body => db(tables.artists).whereIn('id', body.artists).then(artists => {
@@ -41,7 +59,7 @@ const createNewAlbumEntry = (body, picturePath) => {
         .then(insertedAlbum => {
           logger.debug(`Inserted album: ${JSON.stringify(insertedAlbum, null, 4)}`);
           return albumArtistHandler.insertAssociations(insertedAlbum[0].id, body.artists)
-            .then(() => insertedAlbum);
+            .then(() => findAlbumWithId(insertedAlbum[0].id));
         }));
 };
 
@@ -59,7 +77,7 @@ const updateAlbumEntry = (body, id) => {
         .then(updatedAlbum => {
           logger.debug(`Updated album: ${JSON.stringify(updatedAlbum, null, 4)}`);
           return albumArtistHandler.updateAssociationsOfAlbum(updatedAlbum[0].id, body.artists)
-            .then(() => updatedAlbum);
+            .then(() => findAlbumWithId(updatedAlbum[0].id));
         }));
 };
 
@@ -76,6 +94,7 @@ const deleteAlbumWithId = id => {
 module.exports = {
   findAllAlbums,
   findAlbumWithId,
+  findAlbumsWithIds,
   createNewAlbumEntry,
   updateAlbumEntry,
   deleteAlbumWithId,

@@ -103,6 +103,29 @@ exports.up = (knex, Promise) => Promise.all([
     table.integer('user_id');
     table.integer('friend_id');
   }),
+
+  knex.schema.createTableIfNotExists(tables.playlists, table => {
+    logger.debug('Creating playlists table.');
+    table.increments('id').primary();
+    table.string('name');
+    table.string('description');
+    table.string('href');
+    table.integer('owner_id');
+  }),
+
+  knex.schema.createTableIfNotExists(tables.playlists_tracks, table => {
+    logger.debug('Creating playlists_tracks table.');
+    table.increments('playlist_track_id').primary();
+    table.integer('playlist_id');
+    table.integer('track_id');
+  }),
+
+  knex.schema.createTableIfNotExists(tables.playlists_albums, table => {
+    logger.debug('Creating playlists_albums table.');
+    table.increments('playlist_album_id').primary();
+    table.integer('playlist_id');
+    table.integer('album_id');
+  }),
 ]);
 
 exports.down = (knex, Promise) => Promise.all([
@@ -117,4 +140,7 @@ exports.down = (knex, Promise) => Promise.all([
   knex.schema.dropTable(tables.users_artists),
   knex.schema.dropTable(tables.albums_artists),
   knex.schema.dropTable(tables.users_users),
+  knex.schema.dropTable(tables.playlists),
+  knex.schema.dropTable(tables.playlists_tracks),
+  knex.schema.dropTable(tables.playlists_albums),
 ]);

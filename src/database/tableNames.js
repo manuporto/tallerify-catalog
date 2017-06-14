@@ -8,6 +8,9 @@ module.exports = {
   users: 'users',
   admins: 'admins',
   users_tracks: 'users_tracks',
+  playlists: 'playlists',
   users_users: 'users_users',
   users_artists: 'users_artists',
+  playlists_tracks: 'playlists_tracks',
+  playlists_albums: 'playlists_albums',
 };

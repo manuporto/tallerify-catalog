@@ -33,7 +33,7 @@ const albumExpectedBodySchema = {
 /* Routes */
 
 const getAlbums = (req, res) => {
-  db.album.findAllAlbums()
+  db.album.findAllAlbums(req.query)
     .then(albums => respond.successfulAlbumsFetch(albums, res))
     .catch(error => respond.internalServerError(error, res));
 };
@@ -106,7 +106,8 @@ const addTrackToAlbum = (req, res) => {
       if (!respond.entryExists(req.params.trackId, results[0], res)) return;
       if (!respond.entryExists(req.params.albumId, results[1], res)) return;
       db.track.updateAlbumId(req.params.trackId, req.params.albumId)
-        .then(() => respond.successfulTrackAdditionToAlbum(req.params.trackId, results[1], res))
+        .then(() => db.album.findAlbumWithId(req.params.albumId)
+          .then(album => respond.successfulTrackAdditionToAlbum(req.params.trackId, album, res)))
         .catch(error => respond.internalServerError(error, res));
     })
     .catch(error => respond.internalServerError(error, res));
