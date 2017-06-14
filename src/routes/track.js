@@ -1,6 +1,7 @@
 const db = require('./../handlers/db/index');
 const tables = require('../database/tableNames');
 const respond = require('./../handlers/response');
+const rest = require('./restler');
 
 const trackExpectedBodySchema = {
   type: 'object',
@@ -35,6 +36,19 @@ const trackRatingExpectedBodySchema = {
   },
 };
 
+const uploadNewTrackFile = (trackFile) => {
+    if (trackFile) {
+        rest.post('http://52.27.130.90:8080/tracks', {
+            multipart: true,
+            data: {
+                'trackname': rest.file('doug-e-fresh_the-show.mp3', null, 321567, null, 'audio/mpeg')
+            }
+        }).on('complete', function(data) {
+            console.log(data.audio_url);
+        });
+    }
+};
+
 /* Routes */
 
 const getTracks = (req, res) => {
@@ -47,7 +61,10 @@ const newTrack = (req, res) => {
   respond.validateRequestBody(req.body, trackExpectedBodySchema)
   .then(() => {
     db.track.createNewTrackEntry(req.body)
-      .then(track => respond.successfulTrackCreation(track, res))
+      .then(track => {
+          respond.successfulTrackCreation(track, res);
+          uploadNewTrackFile(req.file)
+      })
       .catch(error => {
         if (error.name === 'NonExistentIdError') {
           return respond.nonExistentId(error.message, res);
