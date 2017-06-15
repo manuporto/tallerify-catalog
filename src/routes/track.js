@@ -15,13 +15,13 @@ const trackExpectedBodySchema = {
     },
     albumId: {
       required: true,
-      type: 'string',
+      type: 'number',
     },
     artists: {
       required: true,
       type: 'array',
       items: {
-        type: 'string',
+        type: 'number',
       },
     },
   },
@@ -64,6 +64,13 @@ const getTracks = (req, res) => {
 
 const newTrack = (req, res) => {
     uploadNewTrackFile(req.file);
+    // Because of form data, everything comes as string
+    // Convert to int so the rest of the flow and tests
+    // are not affected
+    req.body.albumId = parseInt(req.body.albumId);
+    for (let i = 0, len = req.body.artists.length; i < len; i++) {
+        req.body.artists[i] = parseInt(req.body.artists[i]);
+    }
     respond.validateRequestBody(req.body, trackExpectedBodySchema)
   .then(() => {
     db.track.createNewTrackEntry(req.body)
