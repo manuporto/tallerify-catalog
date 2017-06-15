@@ -1,7 +1,10 @@
 const db = require('./../handlers/db/index');
 const tables = require('../database/tableNames');
 const respond = require('./../handlers/response');
-const rest = require('./restler');
+const rest = require('restler');
+const logger = require('../utils/logger');
+const fs = require('fs');
+
 
 const trackExpectedBodySchema = {
   type: 'object',
@@ -12,13 +15,13 @@ const trackExpectedBodySchema = {
     },
     albumId: {
       required: true,
-      type: 'integer',
+      type: 'string',
     },
     artists: {
       required: true,
       type: 'array',
       items: {
-        type: 'integer',
+        type: 'string',
       },
     },
   },
@@ -41,10 +44,12 @@ const uploadNewTrackFile = (trackFile) => {
         rest.post('http://52.27.130.90:8080/tracks', {
             multipart: true,
             data: {
-                'trackname': rest.file('doug-e-fresh_the-show.mp3', null, 321567, null, 'audio/mpeg')
+                'trackname': rest.file(trackFile.path, trackFile.filename + '.mp3', trackFile.size, null, trackFile.mimetype)
             }
         }).on('complete', function(data) {
-            console.log(data.audio_url);
+            logger.info(`Uploaded file to app server`);
+            // TODO: Here inside data.trackId we have the external id
+            fs.unlinkSync(process.cwd() + "/" + trackFile.path);
         });
     }
 };
@@ -58,12 +63,12 @@ const getTracks = (req, res) => {
 };
 
 const newTrack = (req, res) => {
-  respond.validateRequestBody(req.body, trackExpectedBodySchema)
+    uploadNewTrackFile(req.file);
+    respond.validateRequestBody(req.body, trackExpectedBodySchema)
   .then(() => {
     db.track.createNewTrackEntry(req.body)
       .then(track => {
           respond.successfulTrackCreation(track, res);
-          uploadNewTrackFile(req.file)
       })
       .catch(error => {
         if (error.name === 'NonExistentIdError') {
