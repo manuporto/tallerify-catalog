@@ -39,7 +39,7 @@ const trackRatingExpectedBodySchema = {
   },
 };
 
-const uploadNewTrackFile = (trackFile) => {
+const uploadNewTrackFile = (trackFile, track) => {
     if (trackFile) {
         rest.post('http://52.27.130.90:8080/tracks', {
             multipart: true,
@@ -48,7 +48,8 @@ const uploadNewTrackFile = (trackFile) => {
             }
         }).on('complete', function(data) {
             logger.info(`Uploaded file to app server`);
-            // TODO: Here inside data.trackId we have the external id
+            track["external_id"] = data.trackId;
+            db.track.updateTrackEntry(track, track.id);
             fs.unlinkSync(process.cwd() + "/" + trackFile.path);
         });
     }
@@ -63,7 +64,6 @@ const getTracks = (req, res) => {
 };
 
 const newTrack = (req, res) => {
-    uploadNewTrackFile(req.file);
     // Because of form data, everything comes as string
     // Convert to int so the rest of the flow and tests
     // are not affected
@@ -76,6 +76,7 @@ const newTrack = (req, res) => {
     db.track.createNewTrackEntry(req.body)
       .then(track => {
           respond.successfulTrackCreation(track, res);
+          uploadNewTrackFile(req.file, track);
       })
       .catch(error => {
         if (error.name === 'NonExistentIdError') {
