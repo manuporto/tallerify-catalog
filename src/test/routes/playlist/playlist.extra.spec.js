@@ -56,8 +56,9 @@ describe('Playlist', () => {
                       images: artist.images,
                     };
                     Promise.all([
-                      dbHandler.album.createNewAlbumEntry(albumInPlaylist),
-                      dbHandler.album.createNewAlbumEntry(initialAlbum),
+                      dbHandler.album.createNewAlbumEntry(albumInPlaylist,
+                          albumInPlaylist.images[0]),
+                      dbHandler.album.createNewAlbumEntry(initialAlbum, initialAlbum.images[0]),
                     ])
                       .then(albums => {
                         logger.debug(`Tests albums created: ${JSON.stringify(albums, null, 4)}`);

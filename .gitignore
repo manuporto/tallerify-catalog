@@ -42,6 +42,5 @@ testem.log
 Thumbs.db
 *.log
 
-/public/media/users/*
-/src/media/users/*
-/public/media/users/*
+/public/media/*
+/src/public/media/*
