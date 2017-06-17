@@ -40,22 +40,22 @@ const trackRatingExpectedBodySchema = {
 };
 
 const uploadNewTrackFile = (trackFile, track) => {
-    if (trackFile) {
-        rest.post('http://52.27.130.90:8080/tracks', {
-            multipart: true,
-            data: {
-                'trackname': rest.file(trackFile.path, trackFile.filename + '.mp3', trackFile.size, null, trackFile.mimetype)
-            }
-        }).on('complete', function(data) {
-            logger.info(`Uploaded file to app server`);
-            const updatedTrack = {
-                external_id: data.trackId
-            };
-            db.general.updateEntryWithId(tables.tracks, track.id, updatedTrack)
-                .catch(error => logger.info('Error updating'));
-            fs.unlinkSync(process.cwd() + "/" + trackFile.path);
-        });
-    }
+  if (trackFile) {
+    rest.post('http://52.27.130.90:8080/tracks', {
+      multipart: true,
+      data: {
+        trackname: rest.file(trackFile.path, `${trackFile.filename}.mp3`, trackFile.size, null, trackFile.mimetype),
+      },
+    }).on('complete', data => {
+      logger.info('Uploaded file to app server');
+      const updatedTrack = {
+        external_id: data.trackId,
+      };
+      db.general.updateEntryWithId(tables.tracks, track.id, updatedTrack)
+        .catch(logger.debug('Updated external id'));
+      fs.unlinkSync(`${process.cwd()}/${trackFile.path}`);
+    });
+  }
 };
 
 /* Routes */
@@ -67,28 +67,28 @@ const getTracks = (req, res) => {
 };
 
 const newTrack = (req, res) => {
-    // Because of form data, everything comes as string
-    // Convert to int so the rest of the flow and tests
-    // are not affected
-    req.body.albumId = parseInt(req.body.albumId);
-    for (let i = 0, len = req.body.artists.length; i < len; i++) {
-        req.body.artists[i] = parseInt(req.body.artists[i]);
-    }
-    respond.validateRequestBody(req.body, trackExpectedBodySchema)
-  .then(() => {
-    db.track.createNewTrackEntry(req.body)
-      .then(track => {
+  // Because of form data, everything comes as string
+  // Convert to int so the rest of the flow and tests
+  // are not affected
+  req.body.albumId = parseInt(req.body.albumId, 10);
+  for (let i = 0, len = req.body.artists.length; i < len; i += 1) {
+    req.body.artists[i] = parseInt(req.body.artists[i], 10);
+  }
+  respond.validateRequestBody(req.body, trackExpectedBodySchema)
+    .then(() => {
+      db.track.createNewTrackEntry(req.body)
+        .then(track => {
           respond.successfulTrackCreation(track, res);
           uploadNewTrackFile(req.file, track);
-      })
-      .catch(error => {
-        if (error.name === 'NonExistentIdError') {
-          return respond.nonExistentId(error.message, res);
-        }
-        return respond.internalServerError(error, res);
-      });
-  })
-  .catch(error => respond.invalidRequestBodyError(error, res));
+        })
+        .catch(error => {
+          if (error.name === 'NonExistentIdError') {
+            return respond.nonExistentId(error.message, res);
+          }
+          return respond.internalServerError(error, res);
+        });
+    })
+    .catch(error => respond.invalidRequestBodyError(error, res));
 };
 
 const getTrack = (req, res) => {
