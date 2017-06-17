@@ -20,7 +20,7 @@ const _findAllUsers = () => db
 
 const findAllUsers = queries => {
   logger.debug('Getting all users.');
-  return queries.name ? _findAllUsers().where('u.name', queries.name) : _findAllUsers();
+  return queries.name ? _findAllUsers().where('u.userName', queries.name) : _findAllUsers();
 };
 
 const findUser = id => {
