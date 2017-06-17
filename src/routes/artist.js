@@ -124,6 +124,7 @@ const getTracks = (req, res) => {
     .catch(error => respond.internalServerError(error, res));
 };
 
+const getRecommendedArtists = (req, res) => getArtists(req, res);
 
 module.exports = {
   getArtists,
@@ -135,4 +136,5 @@ module.exports = {
   artistUnfollow,
   artistFollow,
   getTracks,
+  getRecommendedArtists,
 };
