@@ -77,7 +77,7 @@ const updateTrackEntry = (body, id) => {
   const track = {
     name: body.name,
     album_id: body.albumId,
-    external_id: body.externalId
+    external_id: body.external_id
   };
   const finders = [findArtists(body), findAlbum(body)];
   return Promise.all(finders)
