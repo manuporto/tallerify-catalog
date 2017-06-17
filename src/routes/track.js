@@ -48,9 +48,11 @@ const uploadNewTrackFile = (trackFile, track) => {
             }
         }).on('complete', function(data) {
             logger.info(`Uploaded file to app server`);
-            track["external_id"] = data.trackId;
-            db.general.updateEntryWithId(tables.tracks, track.id, track);
-            //db.track.updateTrackEntry(track, track.id);
+            const updatedTrack = {
+                external_id: data.trackId
+            };
+            db.general.updateEntryWithId(tables.tracks, track.id, updatedTrack)
+                .catch(error => logger.info('Error updating'));
             fs.unlinkSync(process.cwd() + "/" + trackFile.path);
         });
     }
