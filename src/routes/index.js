@@ -14,6 +14,7 @@ const loginRouter = require('../middlewares/login-router');
 const artistsMediaLocation = multer({ dest: 'public/media/artists/' });
 const albumsMediaLocation = multer({ dest: 'public/media/albums/' });
 const usersMediaLocation = multer({ dest: 'public/media/users/' });
+const tracksTempMediaLocation = multer({ dest: 'public/media/tracks/' });
 const router = express.Router();
 
 router.get('/', (req, res) => res.render('index'));
@@ -78,7 +79,7 @@ router.get('/api/artists/:id/tracks', artist.getTracks);
 
 router.get('/api/tracks', track.getTracks);
 
-router.post('/api/tracks', track.newTrack);
+router.post('/api/tracks', tracksTempMediaLocation.single('file'), track.newTrack);
 
 router.get('/api/tracks/:id', track.getTrack);
 

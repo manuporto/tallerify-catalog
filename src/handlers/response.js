@@ -383,6 +383,7 @@ const formatTrackJson = track => ({
   name: track.name,
   href: track.href,
   duration: track.duration,
+  externalId: track.external_id,
   popularity: {
     rate: track.rating,
   },

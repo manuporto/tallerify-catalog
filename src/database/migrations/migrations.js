@@ -11,6 +11,7 @@ exports.up = (knex, Promise) => Promise.all([
     table.integer('album_id');
     table.string('href');
     table.integer('popularity');
+    table.integer('external_id');
   }),
 
   knex.schema.createTableIfNotExists(tables.tracks_rating, table => {
