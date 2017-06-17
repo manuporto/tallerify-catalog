@@ -57,6 +57,8 @@ router.post('/api/admins/tokens', token.generateAdminToken);
 
 /* Artists */
 
+router.get('/api/artists/recommended', artist.getRecommendedArtists);
+
 router.get('/api/artists', artist.getArtists);
 
 router.post('/api/artists', artistsMediaLocation.single('picture'), artist.newArtist);
@@ -75,9 +77,9 @@ router.post('/api/artists/me/:id/follow', artist.artistFollow);
 
 router.get('/api/artists/:id/tracks', artist.getTracks);
 
-router.get('/api/artists/recommended', artist.getRecommendedArtists);
-
 /* Tracks */
+
+router.get('/api/tracks/recommended', track.getRecommendedTracks);
 
 router.get('/api/tracks', track.getTracks);
 
@@ -98,8 +100,6 @@ router.get('/api/tracks/me/favorites', track.getFavoriteTracks);
 router.get('/api/tracks/:id/popularity', track.getTrackPopularity);
 
 router.post('/api/tracks/:id/popularity', track.rateTrack);
-
-router.get('/api/tracks/recommended', track.getRecommendedTracks);
 
 /* Playlists */
 
