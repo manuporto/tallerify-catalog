@@ -18,9 +18,9 @@ const _findAllUsers = () => db
   .leftJoin(`${tables.users} as us`, 'us.id', 'uu.friend_id')
   .groupBy('u.id');
 
-const findAllUsers = () => {
+const findAllUsers = queries => {
   logger.debug('Getting all users.');
-  return _findAllUsers();
+  return queries.name ? _findAllUsers().where('u.name', querie.name) : _findAllUsers();
 };
 
 const findUser = id => {
