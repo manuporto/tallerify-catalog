@@ -9,12 +9,14 @@ const NonExistentIdError = require('../../errors/NonExistentIdError');
 
 const _findAllAlbums = () => db
     .select('al.*',
-      db.raw('to_json(array_agg(distinct ar.*)) as artists, to_json(array_agg(distinct tr.*)) as tracks'))
+      db.raw(`to_json(array_agg(distinct ar.*)) as artists, 
+        to_json(array_agg(distinct tr.*)) as tracks,
+        avg(rating.rating) as rating`))
     .from('albums as al')
     .leftJoin('albums_artists as aa', 'al.id', 'aa.album_id')
     .leftJoin('artists as ar', 'ar.id', 'aa.artist_id')
     .leftJoin('tracks as tr', 'tr.album_id', 'al.id')
-    .leftJoin('tracks_rating as rating', 'rating.album_id', 'al.id') // que falta para hacer un promedio entre estas entries???
+    .leftJoin('tracks_rating as rating', 'rating.album_id', 'al.id')
     .groupBy('al.id');
 
 const findAllAlbums = queries => {
