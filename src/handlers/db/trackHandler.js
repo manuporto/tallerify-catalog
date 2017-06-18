@@ -145,6 +145,7 @@ const rate = (track, userId, rating) => {
     user_id: userId,
     track_id: track.id,
   }).del()
+    .then(() => )
     .then(() => generalHandler.createNewEntry(tables.tracks_rating, {
       user_id: userId,
       track_id: track.id,

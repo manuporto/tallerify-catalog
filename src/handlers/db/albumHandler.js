@@ -92,18 +92,6 @@ const deleteAlbumWithId = id => {
   return Promise.all(deleters);
 };
 
-const calculateRate = albumId => {
-  logger.info(`Calculating rating for album ${albumId}`);
-  return db(tables.tracks_rating).select('rating').where({
-    album_id: albumId,
-  })
-    .then(ratings => {
-      logger.info(`Ratings for album ${albumId}: ${JSON.stringify(ratings, null, 4)}`);
-      if (!ratings.length) return 0;
-      return math.mean(ratings.map(rating => rating.rating));
-    });
-};
-
 module.exports = {
   findAllAlbums,
   findAlbumWithId,
@@ -111,5 +99,4 @@ module.exports = {
   createNewAlbumEntry,
   updateAlbumEntry,
   deleteAlbumWithId,
-  calculateRate,
 };

@@ -21,6 +21,7 @@ exports.up = (knex, Promise) => Promise.all([
     table.string('user_id');
     table.integer('track_id');
     table.integer('album_id');
+    table.integer('artist_id');
     table.integer('rating');
   }),
 
