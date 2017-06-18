@@ -131,14 +131,6 @@ const deleteTrack = (req, res) => {
 };
 
 const trackLike = (req, res) => {
-  //   .then(function() {
-  //   // What things might alice like?
-  //   return ger.recommendations_for_person('tracks', req.user.id, {actions: {likes: 1}, filter_previous_actions: ["likes"]})
-  // })
-  // .then( function(recommendations) {
-  //   console.log("\nRecommendations For 'alice'")
-  //   console.log(JSON.stringify(recommendations,null,2))
-  // });
   db.general.findEntryWithId(tables.tracks, req.params.id)
     .then(track => {
       if (!respond.entryExists(req.params.id, track, res)) return;
@@ -194,7 +186,21 @@ const rateTrack = (req, res) => {
     .catch(error => respond.invalidRequestBodyError(error, res));
 };
 
-const getRecommendedTracks = (req, res) => getTracks(req, res);
+const getRecommendedTracks = (req, res) => {
+  ger.recommendations_for_person('tracks', req.user.id, {
+    actions: { likes: 1 },
+    filter_previous_actions: ['likes'],
+  })
+    .then(recommendations => {
+      const recommendedIds = [];
+      for (let i = 0, len = recommendations.recommendations.length; i < len; i += 1) {
+        recommendedIds.push(recommendations.recommendations[i].thing);
+      }
+      db.track.findTracksWithIds(recommendedIds)
+        .then(tracks => respond.successfulTracksFetch(tracks, res))
+        .catch(error => respond.internalServerError(error, res));
+    });
+};
 
 module.exports = {
   getTracks,

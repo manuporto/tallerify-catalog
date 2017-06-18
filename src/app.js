@@ -22,13 +22,6 @@ const routes = require('./routes/index.js');
 // *** express instance *** //
 const app = express();
 
-// recommendations
-const g = require('ger');
-// const esm = new g.MemESM();
-// const ger = new g.GER(esm);
-// ger.initialize_namespace('tracks');
-// ger.initialize_namespace('artists');
-
 // *** view engine *** //
 app.engine('html', ejs.renderFile);
 app.set('view engine', 'html');
@@ -107,4 +100,3 @@ app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
 
 
 module.exports = app;
-//module.exports = ger;
