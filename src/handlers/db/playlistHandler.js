@@ -21,7 +21,7 @@ const _findAllPlaylists = () => db
   .groupBy('pl.id');
 
 const findAllPlaylists = () => {
-  logger.info('Finding all playalists');
+  logger.info('Finding all playlists');
   return _findAllPlaylists();
 };
 
@@ -43,9 +43,9 @@ const findTracks = body => db(tables.tracks).whereIn('id', body.songs).then(trac
   return tracks;
 });
 
-const findOwner = body => db(tables.users).where('id', body.ownerId).first().then(user => {
+const findOwner = body => db(tables.users).where('id', body.owner.id).first().then(user => {
   if (!user) {
-    logger.warn(`Req user: ${JSON.stringify(body.ownerId)} vs DB album: ${JSON.stringify(user)}`);
+    logger.warn(`Req user: ${JSON.stringify(body.owner.id)} vs DB album: ${JSON.stringify(user)}`);
     return Promise.reject(new NonExistentIdError('Non existing user.'));
   }
   return user;
@@ -56,7 +56,7 @@ const createNewPlaylistEntry = body => {
   const playlist = {
     name: body.name,
     description: body.description,
-    owner_id: body.ownerId,
+    owner_id: body.owner.id,
   };
   const finders = [findTracks(body), findOwner(body)];
   return Promise.all(finders)
@@ -73,7 +73,7 @@ const updatePlaylistEntry = (body, id) => {
   const playlist = {
     name: body.name,
     description: body.description,
-    owner_id: body.ownerId,
+    owner_id: body.owner.id,
   };
   const finders = [findTracks(body), findOwner(body)];
   return Promise.all(finders)

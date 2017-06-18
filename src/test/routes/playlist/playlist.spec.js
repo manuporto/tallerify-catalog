@@ -82,7 +82,7 @@ describe('Playlist', () => {
                             };
 
                             const initialPlaylist = constants.initialPlaylist;
-                            initialPlaylist.ownerId = initialUserId;
+                            initialPlaylist.owner = { id: initialUserId };
                             initialPlaylist.songs = [initialTrackInPlaylistId];
 
                             dbHandler.playlist.createNewPlaylistEntry(initialPlaylist)

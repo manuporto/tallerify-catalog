@@ -13,10 +13,17 @@ const playlistExpectedBodySchema = {
       required: true,
       type: 'string',
     },
-    ownerId: {
+    owner: {
       required: true,
-      type: 'integer',
+      type: 'object',
+      properties: {
+        id: {
+          required: true,
+          type: 'integer',
+        },
+      },
     },
+
     songs: {
       required: true,
       type: 'array',

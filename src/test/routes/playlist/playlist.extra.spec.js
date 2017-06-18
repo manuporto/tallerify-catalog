@@ -88,7 +88,7 @@ describe('Playlist', () => {
                             validTrackId = tracks[1].id;
 
                             const initialPlaylist = constants.initialPlaylist;
-                            initialPlaylist.ownerId = initialUserId;
+                            initialPlaylist.owner = { id: initialUserId };
                             initialPlaylist.songs = [trackInPlaylistId];
 
                             trackShort = {
