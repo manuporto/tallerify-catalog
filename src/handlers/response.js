@@ -308,7 +308,7 @@ const formatAlbumJson = album => ({
   name: album.name,
   release_date: album.release_date,
   href: album.href,
-  popularity: album.popularity,
+  popularity: album.popularity ? album.popularity : 0, // TODO never return null
   artists: album.artists[0]
     ? album.artists.map(artist => formatArtistShortJson(artist)) : [],
   tracks: album.tracks[0]

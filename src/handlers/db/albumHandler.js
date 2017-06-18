@@ -11,7 +11,7 @@ const _findAllAlbums = () => db
     .select('al.*',
       db.raw(`to_json(array_agg(distinct ar.*)) as artists, 
         to_json(array_agg(distinct tr.*)) as tracks,
-        avg(rating.rating) as rating`))
+        avg(rating.rating) as popularity`))
     .from('albums as al')
     .leftJoin('albums_artists as aa', 'al.id', 'aa.album_id')
     .leftJoin('artists as ar', 'ar.id', 'aa.artist_id')
