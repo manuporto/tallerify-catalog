@@ -308,7 +308,7 @@ const formatAlbumJson = album => ({
   name: album.name,
   release_date: album.release_date,
   href: album.href,
-  popularity: album.amount_of_ratings ? album.sum_of_ratings / album.amount_of_ratings : album.sum_of_ratings, // eslint-disable-line
+  popularity: album.popularity,
   artists: album.artists[0]
     ? album.artists.map(artist => formatArtistShortJson(artist)) : [],
   tracks: album.tracks[0]

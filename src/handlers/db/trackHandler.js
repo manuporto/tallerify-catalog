@@ -2,7 +2,6 @@ const logger = require('../../utils/logger');
 const tables = require('../../database/tableNames');
 const db = require('../../database/index');
 const generalHandler = require('./generalHandler');
-const albumHandler = require('./albumHandler');
 const artistTrackHandler = require('./artistTrackHandler');
 
 const NonExistentIdError = require('../../errors/NonExistentIdError');
@@ -149,9 +148,9 @@ const rate = (track, userId, rating) => {
     .then(() => generalHandler.createNewEntry(tables.tracks_rating, {
       user_id: userId,
       track_id: track.id,
+      album_id: track.album_id,
       rating,
-    })
-        .then(() => albumHandler.updateAlbumPopularityAttributes(track.album_id, rating)));
+    }))
 };
 
 const updateAlbumId = (trackId, albumId) => {

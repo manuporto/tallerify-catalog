@@ -14,6 +14,7 @@ const _findAllAlbums = () => db
     .leftJoin('albums_artists as aa', 'al.id', 'aa.album_id')
     .leftJoin('artists as ar', 'ar.id', 'aa.artist_id')
     .leftJoin('tracks as tr', 'tr.album_id', 'al.id')
+    .leftJoin('tracks_rating as rating', 'rating.album_id', 'al.id') // que falta para hacer un promedio entre estas entries???
     .groupBy('al.id');
 
 const findAllAlbums = queries => {
@@ -51,8 +52,6 @@ const createNewAlbumEntry = body => {
     release_date: body.release_date,
     genres: body.genres,
     images: body.images,
-    sum_of_ratings: 0,
-    amount_of_ratings: 0,
   };
   return checkArtistsExistence(body)
     .then(() => generalHandler.createNewEntry(tables.albums, album)
@@ -81,11 +80,6 @@ const updateAlbumEntry = (body, id) => {
         }));
 };
 
-const updateAlbumPopularityAttributes = (albumId, vote) => {
-  logger.debug(`Updating album ${albumId} popularity attributes`);
-  return db(tables.albums).where('id', albumId).increment('sum_of_ratings', vote).increment('amount_of_ratings', 1);
-};
-
 const deleteAlbumWithId = id => {
   logger.debug(`Deleting album ${id}`);
   const deleters = [
@@ -96,6 +90,18 @@ const deleteAlbumWithId = id => {
   return Promise.all(deleters);
 };
 
+const calculateRate = albumId => {
+  logger.info(`Calculating rating for album ${albumId}`);
+  return db(tables.tracks_rating).select('rating').where({
+    album_id: albumId,
+  })
+    .then(ratings => {
+      logger.info(`Ratings for album ${albumId}: ${JSON.stringify(ratings, null, 4)}`);
+      if (!ratings.length) return 0;
+      return math.mean(ratings.map(rating => rating.rating));
+    });
+};
+
 module.exports = {
   findAllAlbums,
   findAlbumWithId,
@@ -103,5 +109,5 @@ module.exports = {
   createNewAlbumEntry,
   updateAlbumEntry,
   deleteAlbumWithId,
-  updateAlbumPopularityAttributes,
+  calculateRate,
 };
