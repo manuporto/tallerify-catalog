@@ -51,7 +51,8 @@ const createNewAlbumEntry = body => {
     release_date: body.release_date,
     genres: body.genres,
     images: body.images,
-    popularity: 0,
+    sum_of_ratings: 0,
+    amount_of_ratings: 0
   };
   return checkArtistsExistence(body)
     .then(() => generalHandler.createNewEntry(tables.albums, album)
@@ -80,6 +81,11 @@ const updateAlbumEntry = (body, id) => {
         }));
 };
 
+const updateAlbumPopularityAttributes = (albumId, vote) => {
+  logger.debug(`Updating album ${albumId} popularity attributes`);
+  return db(tables.albums).where('id', albumId).increment('sum_of_ratings', vote).increment('amount_of_ratings', 1);
+};
+
 const deleteAlbumWithId = id => {
   logger.debug(`Deleting album ${id}`);
   const deleters = [
@@ -97,4 +103,5 @@ module.exports = {
   createNewAlbumEntry,
   updateAlbumEntry,
   deleteAlbumWithId,
+  updateAlbumPopularityAttributes,
 };

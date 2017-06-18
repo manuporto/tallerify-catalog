@@ -42,7 +42,7 @@ const invalidRequestBodyError = (reasons, response) => {
 };
 
 const entryExists = (id, entry, response) => {
-  logger.info('Checking if entry exist');
+  logger.info(`Checking if entry ${id} exist`);
   logger.debug(`Entry: ${JSON.stringify(entry, null, 4)}`);
   if (!entry) {
     logger.warn(`No entry with id ${id}`);
@@ -308,7 +308,7 @@ const formatAlbumJson = album => ({
   name: album.name,
   release_date: album.release_date,
   href: album.href,
-  popularity: album.popularity,
+  popularity: album.amount_of_ratings ? album.sum_of_ratings / album.amount_of_ratings : album.sum_of_ratings,
   artists: album.artists[0]
     ? album.artists.map(artist => formatArtistShortJson(artist)) : [],
   tracks: album.tracks[0]

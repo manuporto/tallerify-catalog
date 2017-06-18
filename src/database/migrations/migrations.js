@@ -12,6 +12,7 @@ exports.up = (knex, Promise) => Promise.all([
     table.string('href');
     table.integer('sum_of_ratings');
     table.integer('total_ratings');
+    table.integer('external_id');
   }),
 
   knex.schema.createTableIfNotExists(tables.tracks_rating, table => {
@@ -32,6 +33,7 @@ exports.up = (knex, Promise) => Promise.all([
     table.specificType('genres', 'text ARRAY');
     table.integer('sum_of_tracks_popularities');
     table.integer('total_of_tracks');
+    table.integer('popularity');
   }),
 
   knex.schema.createTableIfNotExists(tables.albums, table => {
@@ -40,7 +42,8 @@ exports.up = (knex, Promise) => Promise.all([
     table.string('href');
     table.string('name');
     table.string('release_date');
-    table.integer('popularity');
+    table.integer('sum_of_ratings');
+    table.integer('amount_of_ratings');
     table.specificType('images', 'text ARRAY');
     table.specificType('genres', 'text ARRAY');
   }),
