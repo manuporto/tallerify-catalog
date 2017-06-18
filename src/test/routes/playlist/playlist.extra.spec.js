@@ -83,7 +83,7 @@ describe('Playlist', () => {
                           dbHandler.track.createNewTrackEntry(initialTrack),
                         ])
                           .then(tracks => {
-                            logger.info(`Tests tracks created: ${JSON.stringify(tracks, null, 4)}`);
+                            logger.debug(`Tests tracks created: ${JSON.stringify(tracks, null, 4)}`);
                             trackInPlaylistId = tracks[0].id;
                             validTrackId = tracks[1].id;
 
@@ -96,10 +96,9 @@ describe('Playlist', () => {
                               name: tracks[1].name,
                               href: tracks[1].href,
                             };
-                            logger.info(JSON.stringify(initialPlaylist))
                             dbHandler.playlist.createNewPlaylistEntry(initialPlaylist)
                               .then(playlist => {
-                                logger.info(`Tests playlist created: ${JSON.stringify(playlist, null, 4)}`);
+                                logger.debug(`Tests playlist created: ${JSON.stringify(playlist, null, 4)}`);
                                 validPlaylistId = playlist.id;
                                 done();
                               })
