@@ -146,16 +146,12 @@ const rate = (track, userId, rating) => {
     user_id: userId,
     track_id: track.id,
   }).del()
-    .then(() => {
-      return generalHandler.createNewEntry(tables.tracks_rating, {
-          user_id: userId,
-          track_id: track.id,
-          rating,
-        })
-        .then(() => {
-          return albumHandler.updateAlbumPopularityAttributes(track.album_id, rating)
-        });
+    .then(() => generalHandler.createNewEntry(tables.tracks_rating, {
+      user_id: userId,
+      track_id: track.id,
+      rating,
     })
+        .then(() => albumHandler.updateAlbumPopularityAttributes(track.album_id, rating)));
 };
 
 const updateAlbumId = (trackId, albumId) => {

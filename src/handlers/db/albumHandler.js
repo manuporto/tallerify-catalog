@@ -52,7 +52,7 @@ const createNewAlbumEntry = body => {
     genres: body.genres,
     images: body.images,
     sum_of_ratings: 0,
-    amount_of_ratings: 0
+    amount_of_ratings: 0,
   };
   return checkArtistsExistence(body)
     .then(() => generalHandler.createNewEntry(tables.albums, album)
