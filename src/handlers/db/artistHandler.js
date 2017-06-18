@@ -26,6 +26,11 @@ const findArtistWithId = id => {
   return _findAllArtists().where('ar.id', id).first();
 };
 
+const findArtistsWithIds = ids => {
+  logger.info('Finding artists with selected ids');
+  return _findAllArtists().whereIn('tr.id', ids);
+};
+
 const createNewArtistEntry = body => {
   logger.debug(`Creating artist with info: ${JSON.stringify(body, null, 4)}`);
   const artist = {
@@ -121,4 +126,5 @@ module.exports = {
   unfollow,
   findUserFavorites,
   getTracks,
+  findArtistsWithIds,
 };
