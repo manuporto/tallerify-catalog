@@ -194,6 +194,7 @@ const rateTrack = (req, res) => {
     .catch(error => respond.invalidRequestBodyError(error, res));
 };
 
+const getRecommendedTracks = (req, res) => getTracks(req, res);
 
 module.exports = {
   getTracks,
@@ -206,4 +207,5 @@ module.exports = {
   getFavoriteTracks,
   getTrackPopularity,
   rateTrack,
+  getRecommendedTracks,
 };
