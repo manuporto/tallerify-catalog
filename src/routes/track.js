@@ -4,7 +4,7 @@ const respond = require('./../handlers/response');
 const rest = require('restler');
 const logger = require('../utils/logger');
 const fs = require('fs');
-
+const ger = require('../ger/');
 
 const trackExpectedBodySchema = {
   type: 'object',
@@ -134,6 +134,7 @@ const trackLike = (req, res) => {
   db.general.findEntryWithId(tables.tracks, req.params.id)
     .then(track => {
       if (!respond.entryExists(req.params.id, track, res)) return;
+      ger.event('tracks', req.user.id, 'likes', req.params.id, '2025-06-06');
       db.track.like(req.user.id, req.params.id)
         .then(() => respond.successfulTrackLike(track, res))
         .catch(error => respond.internalServerError(error, res));
@@ -145,6 +146,7 @@ const trackDislike = (req, res) => {
   db.general.findEntryWithId(tables.tracks, req.params.id)
     .then(track => {
       if (!respond.entryExists(req.params.id, track, res)) return;
+      ger.event('tracks', req.user.id, 'dislikes', req.params.id, '2025-06-06');
       db.track.dislike(req.user.id, req.params.id)
         .then(() => respond.successfulTrackDislike(track, res))
         .catch(error => respond.internalServerError(error, res));
@@ -184,7 +186,21 @@ const rateTrack = (req, res) => {
     .catch(error => respond.invalidRequestBodyError(error, res));
 };
 
-const getRecommendedTracks = (req, res) => getTracks(req, res);
+const getRecommendedTracks = (req, res) => {
+  ger.recommendations_for_person('tracks', req.user.id, {
+    actions: { likes: 1 },
+    filter_previous_actions: ['likes'],
+  })
+    .then(recommendations => {
+      const recommendedIds = [];
+      for (let i = 0, len = recommendations.recommendations.length; i < len; i += 1) {
+        recommendedIds.push(recommendations.recommendations[i].thing);
+      }
+      db.track.findTracksWithIds(recommendedIds)
+        .then(tracks => respond.successfulTracksFetch(tracks, res))
+        .catch(error => respond.internalServerError(error, res));
+    });
+};
 
 module.exports = {
   getTracks,
