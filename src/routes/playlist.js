@@ -20,8 +20,8 @@ const playlistExpectedBodySchema = {
         id: {
           required: true,
           type: 'integer',
-        }
-      }
+        },
+      },
     },
 
     songs: {
