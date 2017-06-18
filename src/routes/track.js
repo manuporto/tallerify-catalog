@@ -4,7 +4,7 @@ const respond = require('./../handlers/response');
 const rest = require('restler');
 const logger = require('../utils/logger');
 const fs = require('fs');
-
+const ger = require('../ger/');
 
 const trackExpectedBodySchema = {
   type: 'object',
@@ -131,9 +131,18 @@ const deleteTrack = (req, res) => {
 };
 
 const trackLike = (req, res) => {
+  //   .then(function() {
+  //   // What things might alice like?
+  //   return ger.recommendations_for_person('tracks', req.user.id, {actions: {likes: 1}, filter_previous_actions: ["likes"]})
+  // })
+  // .then( function(recommendations) {
+  //   console.log("\nRecommendations For 'alice'")
+  //   console.log(JSON.stringify(recommendations,null,2))
+  // });
   db.general.findEntryWithId(tables.tracks, req.params.id)
     .then(track => {
       if (!respond.entryExists(req.params.id, track, res)) return;
+      ger.event('tracks', req.user.id, 'likes', req.params.id, '2025-06-06');
       db.track.like(req.user.id, req.params.id)
         .then(() => respond.successfulTrackLike(track, res))
         .catch(error => respond.internalServerError(error, res));
@@ -145,6 +154,7 @@ const trackDislike = (req, res) => {
   db.general.findEntryWithId(tables.tracks, req.params.id)
     .then(track => {
       if (!respond.entryExists(req.params.id, track, res)) return;
+      ger.event('tracks', req.user.id, 'dislikes', req.params.id, '2025-06-06');
       db.track.dislike(req.user.id, req.params.id)
         .then(() => respond.successfulTrackDislike(track, res))
         .catch(error => respond.internalServerError(error, res));
