@@ -4,6 +4,15 @@ const amanda = require('amanda');
 
 const jsonSchemaValidator = amanda('json');
 
+const math = require('mathjs');
+
+const calculatePopularity = popularity => {
+  if (popularity) {
+    return math.round(popularity, 2);
+  }
+  return 0;
+};
+
 const internalServerError = (reason, response) => {
   const message = `Unexpected error: ${reason}`;
   logger.warn(message);
@@ -233,7 +242,7 @@ const formatArtistJson = artist => ({
   images: artist.images,
   genres: artist.genres,
   albums: artist.albums[0] ? artist.albums.map(formatAlbumShortJson) : [],
-  popularity: artist.popularity ? artist.popularity : 0, // TODO never return null
+  popularity: calculatePopularity(artist.popularity),
 });
 
 const successfulArtistsFetch = (artists, response) => {
@@ -308,7 +317,7 @@ const formatAlbumJson = album => ({
   name: album.name,
   release_date: album.release_date,
   href: album.href,
-  popularity: album.popularity ? album.popularity : 0, // TODO never return null
+  popularity: calculatePopularity(album.popularity),
   artists: album.artists[0]
     ? album.artists.map(artist => formatArtistShortJson(artist)) : [],
   tracks: album.tracks[0]
@@ -383,9 +392,7 @@ const formatTrackJson = track => ({
   name: track.name,
   href: track.href,
   duration: track.duration,
-  popularity: {
-    rate: track.rating,
-  },
+  popularity: calculatePopularity(track.popularity),
   album: track.album ? formatAlbumShortJson(track.album) : {},
   artists: track.artists ?
     track.artists.map(artist => formatArtistShortJson(artist)) : [],
@@ -411,7 +418,7 @@ const successfulTrackCreation = (track, response) => {
 
 const successfulTrackFetch = (track, response) => {
   logger.info('Successful track fetch');
-  logger.debug(`Track: ${JSON.stringify(track, null, 4)}`);
+  logger.info(`Track: ${JSON.stringify(track, null, 4)}`);
   response.status(200).json({
     metadata: {
       count: 1,

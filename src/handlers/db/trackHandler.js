@@ -10,11 +10,12 @@ const math = require('mathjs');
 
 const _findAllTracks = () => db
   .select('tr.*',
-    db.raw('to_json(array_agg(distinct ar.*)) as artists, to_json(array_agg(distinct al.*))::json->0 as album'))
+    db.raw('to_json(array_agg(distinct ar.*)) as artists, to_json(array_agg(distinct al.*))::json->0 as album, avg(rating.rating) as popularity'))
   .from(`${tables.tracks} as tr`)
   .leftJoin(`${tables.albums} as al`, 'al.id', 'tr.album_id')
   .innerJoin(`${tables.artists_tracks} as art`, 'art.track_id', 'tr.id')
   .innerJoin(`${tables.artists} as ar`, 'ar.id', 'art.artist_id')
+  .leftJoin(`${tables.tracks_rating} as rating`, 'rating.track_id', 'tr.id')
   .groupBy('tr.id');
 
 const findAllTracks = queries => {
