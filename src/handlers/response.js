@@ -233,7 +233,7 @@ const formatArtistJson = artist => ({
   images: artist.images,
   genres: artist.genres,
   albums: artist.albums[0] ? artist.albums.map(formatAlbumShortJson) : [],
-  popularity: artist.popularity,
+  popularity: artist.popularity ? artist.popularity : 0, // TODO never return null
 });
 
 const successfulArtistsFetch = (artists, response) => {
