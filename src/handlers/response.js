@@ -486,9 +486,8 @@ const formatPlaylistJson = playlist => ({
 const _formatTracks = tracks => {
   if (tracks.length === 1 && tracks[0] === null) {
     return [];
-  } else {
-  return tracks.map(track => formatTrackShortJson(track));
   }
+  return tracks.map(track => formatTrackShortJson(track));
 };
 
 const formatPlaylistCreationJson = playlist => ({

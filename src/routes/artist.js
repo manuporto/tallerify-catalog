@@ -96,7 +96,7 @@ const artistUnfollow = (req, res) => {
   db.artist.findArtistWithId(req.params.id)
     .then(artist => {
       if (!respond.entryExists(req.params.id, artist, res)) return;
-      ger.events([{namespace: 'artists', person: req.user.id, action: 'dislikes', thing: req.params.id, expires_at: '2025-06-06'}]);
+      ger.events([{ namespace: 'artists', person: req.user.id, action: 'dislikes', thing: req.params.id, expires_at: '2025-06-06' }]);
       db.artist.unfollow(req.user.id, req.params.id)
         .then(() => respond.successfulArtistUnfollow(artist, res))
         .catch(error => respond.internalServerError(error, res));
@@ -108,7 +108,7 @@ const artistFollow = (req, res) => {
   db.artist.findArtistWithId(req.params.id)
     .then(artist => {
       if (!respond.entryExists(req.params.id, artist, res)) return;
-      ger.events([{namespace: 'artists', person: req.user.id, action: 'likes', thing: req.params.id, expires_at: '2025-06-06'}]);
+      ger.events([{ namespace: 'artists', person: req.user.id, action: 'likes', thing: req.params.id, expires_at: '2025-06-06' }]);
       db.artist.follow(req.user.id, req.params.id)
         .then(() => respond.successfulArtistFollow(artist, res))
         .catch(error => respond.internalServerError(error, res));
@@ -137,9 +137,15 @@ const getRecommendedArtists = (req, res) => {
       for (let i = 0, len = recommendations.recommendations.length; i < len; i += 1) {
         recommendedIds.push(recommendations.recommendations[i].thing);
       }
-      db.artist.findArtistsWithIds(recommendedIds)
-        .then(artists => respond.successfulArtistsFetch(artists, res))
-        .catch(error => respond.internalServerError(error, res));
+      if (recommendedIds.length !== 0) {
+        db.artist.findArtistsWithIds(recommendedIds)
+          .then(artists => respond.successfulArtistsFetch(artists, res))
+          .catch(error => respond.internalServerError(error, res));
+      } else {
+        db.artist.findAllArtists(req.query)
+          .then(artists => respond.successfulArtistsFetch(artists, res))
+          .catch(error => respond.internalServerError(error, res));
+      }
     });
 };
 
