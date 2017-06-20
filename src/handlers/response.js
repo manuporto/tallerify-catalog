@@ -479,6 +479,8 @@ const formatPlaylistJson = playlist => ({
   owner: playlist.owner ? formatUserShortJson(playlist.owner) : {},
   tracks: playlist.tracks ?
     playlist.tracks.map(track => formatTrackShortJson(track)) : [],
+  images: playlist.images ?
+    playlist.images : [],
 });
 
 // const formatPlaylistCreationJson = playlist => ({
@@ -491,7 +493,7 @@ const formatPlaylistJson = playlist => ({
 
 const successfulPlaylistsFetch = (playlists, response) => {
   logger.info('Successful playlists fetch');
-  logger.info(`Playlists: ${JSON.stringify(playlists, null, 4)}`);
+  logger.debug(`Playlists: ${JSON.stringify(playlists, null, 4)}`);
   return response.status(200).json({
     metadata: {
       count: playlists.length,
