@@ -68,8 +68,12 @@ const createNewPlaylistEntry = body => {
     .then(() => generalHandler.createNewEntry(tables.playlists, playlist)
         .then(insertedPlaylist => {
           logger.debug(`Inserted playlist: ${JSON.stringify(insertedPlaylist, null, 4)}`);
-          return playlistTrackHandler.insertAssociations(insertedPlaylist[0].id, body.songs)
-             .then(() => findPlaylistWithId(insertedPlaylist[0].id));
+          if (body.songs.length > 0) {
+            return playlistTrackHandler.insertAssociations(insertedPlaylist[0].id, body.songs)
+              .then(() => findPlaylistWithId(insertedPlaylist[0].id))
+          } else {
+            return findPlaylistWithId(insertedPlaylist[0].id);
+          }
         }));
 };
 
