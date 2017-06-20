@@ -11,7 +11,10 @@ const playlist = require('./playlist');
 
 const loginRouter = require('../middlewares/login-router');
 
+const artistsMediaLocation = multer({ dest: 'public/media/artists/' });
+const albumsMediaLocation = multer({ dest: 'public/media/albums/' });
 const usersMediaLocation = multer({ dest: 'public/media/users/' });
+const tracksTempMediaLocation = multer({ dest: 'public/media/tracks/' });
 const router = express.Router();
 
 router.get('/', (req, res) => res.render('index'));
@@ -54,9 +57,11 @@ router.post('/api/admins/tokens', token.generateAdminToken);
 
 /* Artists */
 
+router.get('/api/artists/recommended', artist.getRecommendedArtists);
+
 router.get('/api/artists', artist.getArtists);
 
-router.post('/api/artists', artist.newArtist);
+router.post('/api/artists', artistsMediaLocation.single('picture'), artist.newArtist);
 
 router.get('/api/artists/:id', artist.getArtist);
 
@@ -74,9 +79,11 @@ router.get('/api/artists/:id/tracks', artist.getTracks);
 
 /* Tracks */
 
+router.get('/api/tracks/recommended', track.getRecommendedTracks);
+
 router.get('/api/tracks', track.getTracks);
 
-router.post('/api/tracks', track.newTrack);
+router.post('/api/tracks', tracksTempMediaLocation.single('file'), track.newTrack);
 
 router.get('/api/tracks/:id', track.getTrack);
 
@@ -97,6 +104,8 @@ router.post('/api/tracks/:id/popularity', track.rateTrack);
 /* Playlists */
 
 router.get('/api/playlists', playlist.getPlaylists);
+
+router.get('/api/playlists/me', playlist.getMyPlaylists);
 
 router.post('/api/playlists', playlist.newPlaylist);
 
@@ -122,9 +131,11 @@ router.put('/api/playlists/:id/albums/:albumId', playlist.addAlbumToPlaylist);
 
 router.get('/api/albums', album.getAlbums);
 
+router.get('/api/albums/:id/tracks', album.getTracks);
+
 router.get('/api/albums/:id', album.getAlbum);
 
-router.post('/api/albums', album.newAlbum);
+router.post('/api/albums', albumsMediaLocation.single('picture'), album.newAlbum);
 
 router.put('/api/albums/:id', album.updateAlbum);
 

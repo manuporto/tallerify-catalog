@@ -220,7 +220,7 @@ describe('Artist', () => {
           res.body.should.have.property('name').eql(constants.testArtist.name);
           res.body.should.have.property('description').eql(constants.testArtist.description);
           res.body.should.have.property('genres').eql(constants.testArtist.genres);
-          res.body.should.have.property('images').eql(constants.testArtist.images);
+          res.body.should.have.property('images');
           res.body.should.have.property('popularity').eql(0);
           res.body.should.have.property('albums').eql([]);
           done();

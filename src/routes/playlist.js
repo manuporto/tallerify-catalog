@@ -13,10 +13,17 @@ const playlistExpectedBodySchema = {
       required: true,
       type: 'string',
     },
-    ownerId: {
+    owner: {
       required: true,
-      type: 'integer',
+      type: 'object',
+      properties: {
+        id: {
+          required: true,
+          type: 'integer',
+        },
+      },
     },
+
     songs: {
       required: true,
       type: 'array',
@@ -29,6 +36,12 @@ const playlistExpectedBodySchema = {
 
 const getPlaylists = (req, res) => {
   db.playlist.findAllPlaylists()
+    .then(playlists => respond.successfulPlaylistsFetch(playlists, res))
+    .catch(error => respond.internalServerError(error, res));
+};
+
+const getMyPlaylists = (req, res) => {
+  db.playlist.findAllMyPlaylists(req.user.id)
     .then(playlists => respond.successfulPlaylistsFetch(playlists, res))
     .catch(error => respond.internalServerError(error, res));
 };
@@ -175,6 +188,7 @@ const deleteAlbumFromPlaylist = (req, res) => {
 
 module.exports = {
   getPlaylists,
+  getMyPlaylists,
   getPlaylist,
   newPlaylist,
   updatePlaylist,

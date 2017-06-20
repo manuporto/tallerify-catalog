@@ -43,6 +43,7 @@ const unprotectedRoutes = req => {
   const tokensRE = pathToRegexp('/api/tokens');
   const adminTokensRE = pathToRegexp('/api/admins/tokens');
   const usersRE = pathToRegexp('/api/users');
+  const adminsRE = pathToRegexp('/api/admins');
   const userRE = pathToRegexp('/api/users/:id');
   const usersMeRE = pathToRegexp('/api/users/me');
   const usersMediaRE = pathToRegexp('/media/*');
@@ -55,6 +56,9 @@ const unprotectedRoutes = req => {
     return true;
   }
   if ((usersRE.exec(req.path) && req.method === 'POST') || (userRE.exec(req.path) && req.method === 'PUT')) {
+    return true;
+  }
+  if (adminsRE.exec(req.path) && req.method === 'POST') {
     return true;
   }
   return false;

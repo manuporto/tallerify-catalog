@@ -393,6 +393,7 @@ const formatTrackJson = track => ({
   href: track.href,
   duration: track.duration,
   popularity: calculatePopularity(track.popularity),
+  externalId: track.external_id,
   album: track.album ? formatAlbumShortJson(track.album) : {},
   artists: track.artists ?
     track.artists.map(artist => formatArtistShortJson(artist)) : [],

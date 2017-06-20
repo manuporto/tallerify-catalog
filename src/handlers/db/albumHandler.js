@@ -47,8 +47,9 @@ const checkArtistsExistence = body => db(tables.artists).whereIn('id', body.arti
   return artists;
 });
 
-const createNewAlbumEntry = body => {
-  logger.debug(`Creating album with info: ${JSON.stringify(body, null, 4)}`);
+const createNewAlbumEntry = (body, picturePath) => {
+  logger.info(`Creating album with info: ${JSON.stringify(body, null, 4)}`);
+  const images = (picturePath !== '' && picturePath !== undefined) ? [picturePath] : [];
   const album = {
     name: body.name,
     release_date: body.release_date,

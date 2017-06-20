@@ -36,6 +36,11 @@ const findTracksWithIds = ids => {
   return _findAllTracks().whereIn('tr.id', ids);
 };
 
+const findTracksWithAlbumId = albumId => {
+  logger.info('Finding tracks with albums ids');
+  return _findAllTracks().where('tr.album_id', albumId);
+};
+
 const findTracksWithAlbumsIds = albumsIds => {
   logger.info('Finding tracks with albums ids');
   return _findAllTracks().whereIn('tr.album_id', albumsIds);
@@ -177,6 +182,7 @@ module.exports = {
   findAllTracks,
   findTrackWithId,
   findTracksWithIds,
+  findTracksWithAlbumId,
   findTracksWithAlbumsIds,
   createNewTrackEntry,
   updateTrackEntry,

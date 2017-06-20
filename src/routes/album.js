@@ -17,17 +17,10 @@ const albumExpectedBodySchema = {
       required: true,
       type: 'array',
       items: {
-        type: 'integer',
-      },
-    },
-    genres: {
-      required: true,
-      type: 'array',
-      items: {
         type: 'string',
       },
     },
-    images: {
+    genres: {
       required: true,
       type: 'array',
       items: {
@@ -54,10 +47,22 @@ const getAlbum = (req, res) => {
     .catch(error => respond.internalServerError(error, res));
 };
 
+const getTracks = (req, res) => {
+  db.track.findTracksWithAlbumId(req.params.id)
+    .then(tracks => {
+      if (!respond.entryExists(req.params.id, tracks, res)) return;
+      respond.successfulTracksFetch(tracks, res);
+    })
+    .catch(error => respond.internalServerError(error, res));
+};
+
 const newAlbum = (req, res) => {
+  if (!(req.file)) {
+    req.file = { path: '' };
+  }
   respond.validateRequestBody(req.body, albumExpectedBodySchema)
     .then(() => {
-      db.album.createNewAlbumEntry(req.body)
+      db.album.createNewAlbumEntry(req.body, req.file.path !== '' ? process.env.BASE_URL + req.file.path.replace('public/', '') : '')
         .then(album => respond.successfulAlbumCreation(album, res))
         .catch(error => {
           if (error.name === 'NonExistentIdError') {
@@ -138,6 +143,7 @@ const deleteTrackFromAlbum = (req, res) => {
 
 module.exports = {
   getAlbums,
+  getTracks,
   getAlbum,
   newAlbum,
   updateAlbum,

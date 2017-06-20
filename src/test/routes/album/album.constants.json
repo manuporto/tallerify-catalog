@@ -26,7 +26,7 @@
 		"name": "Folie a deux",
 		"images": ["un oso", "otro oso"],
 		"genres": ["Rock"],
-		"artists": [3],
+		"artists": ["3"],
 		"release_date": "4011958"
 	},
 	"newAlbumWithMissingAttributes": {
@@ -43,7 +43,7 @@
 	},
 	"updatedAlbum": {
 		"name": "October",
-		"artists": [2],
+		"artists": ["2"],
 		"release_date": "3121930",
 		"genres": ["Punk"],
 		"images": ["una oveja"]
