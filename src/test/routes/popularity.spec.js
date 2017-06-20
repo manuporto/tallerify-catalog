@@ -560,7 +560,7 @@ describe('Popularity', () => {
             .end((err, res) => {
               res.should.have.status(201);
               request(app)
-                .delete(`/api/albums/${initialAlbumId}/tracks/${initialTrackId2}`)
+                .delete(`/api/albums/${initialAlbumId}/track/${initialTrackId2}`)
                 .set('Authorization', `Bearer ${user1Token}`)
                 .end((err, res) => {
                   res.should.have.status(204);
@@ -590,7 +590,7 @@ describe('Popularity', () => {
             .end((err, res) => {
               res.should.have.status(201);
               request(app)
-                .delete(`/api/albums/${initialAlbumId}/tracks/${initialTrackId2}`)
+                .delete(`/api/albums/${initialAlbumId}/track/${initialTrackId2}`)
                 .set('Authorization', `Bearer ${user1Token}`)
                 .end((err, res) => {
                   res.should.have.status(204);
@@ -620,7 +620,7 @@ describe('Popularity', () => {
             .end((err, res) => {
               res.should.have.status(201);
               request(app)
-                .delete(`/api/albums/${initialAlbumId}/tracks/${initialTrackId2}`)
+                .delete(`/api/albums/${initialAlbumId}/track/${initialTrackId2}`)
                 .set('Authorization', `Bearer ${user1Token}`)
                 .end((err, res) => {
                   res.should.have.status(204);
