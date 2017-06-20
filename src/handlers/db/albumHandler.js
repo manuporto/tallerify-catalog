@@ -25,7 +25,7 @@ const findAllAlbums = queries => {
   // Ugly hack to return empty array if empty name query it'supplied
   // The normal behavior (knex) it's to return everything
   if (queries.name === '') return Promise.resolve([]);
-  return (queries.name) ? _findAllAlbums().where('al.name', queries.name) : _findAllAlbums();
+  return (queries.name) ? _findAllAlbums().where('al.name', 'ilike', `%${queries.name}%`) : _findAllAlbums();
 };
 
 const findAlbumWithId = id => {
