@@ -478,10 +478,18 @@ const formatPlaylistJson = playlist => ({
   description: playlist.description,
   owner: playlist.owner ? formatUserShortJson(playlist.owner) : {},
   songs: playlist.tracks ?
-    playlist.tracks.map(track => formatTrackShortJson(track)) : [],
+    _formatTracks(playlist.tracks) : [],
   images: playlist.images ?
     playlist.images : [],
 });
+
+const _formatTracks = tracks => {
+  if (tracks.length === 1 && tracks[0] === null) {
+    return [];
+  } else {
+  return tracks.map(track => formatTrackShortJson(track));
+  }
+};
 
 const formatPlaylistCreationJson = playlist => ({
   id: playlist.id,
