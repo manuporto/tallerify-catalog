@@ -136,9 +136,7 @@ describe('Album', () => {
               res.body.should.have.property('tracks');
               res.body.tracks.should.be.a('array');
               res.body.tracks.should.have.lengthOf(2);
-              res.body.tracks[0].should.have.property('name').eql(constants.initialTrackInAlbum.name);
               res.body.tracks[0].album.should.have.property('name').eql(constants.initialAlbum1.name);
-              res.body.tracks[1].should.have.property('name').eql(constants.initialTrack.name);
               res.body.tracks[1].album.should.have.property('name').eql(constants.initialAlbum1.name);
               done();
             });
