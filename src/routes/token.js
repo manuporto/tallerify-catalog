@@ -27,7 +27,17 @@ const resultIsValid = (result, response) => {
   return true;
 };
 
-const getToken = (secret, user) => jwt.sign(user, secret, {
+const getToken = (secret, user) => jwt.sign({
+  id: user.id,
+  admin: false,
+}, secret, {
+  expiresIn: '24h',
+});
+
+const getTokenAdmin = (secret, admin) => jwt.sign({
+  id: admin.id,
+  admin: true,
+}, secret, {
   expiresIn: '24h',
 });
 
@@ -42,7 +52,7 @@ const generateAdminToken = (req, res) => respond.validateRequestBody(req.body, e
       db.findWithUsernameAndPassword(tables.admins, req.body.userName, req.body.password)
         .then(admin => {
           if (!resultIsValid(admin, res)) return;
-          respond.successfulAdminTokenGeneration(admin, getToken(req.app.get('secret'), admin), res);
+          respond.successfulAdminTokenGeneration(admin, getTokenAdmin(req.app.get('secret'), admin), res);
         }).catch(reason => respond.internalServerError(reason, res));
     })
     .catch(error => respond.invalidRequestBodyError(error, res));
