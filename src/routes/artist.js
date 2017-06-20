@@ -138,7 +138,7 @@ const getRecommendedArtists = (req, res) => {
         recommendedIds.push(recommendations.recommendations[i].thing);
       }
       db.artist.findArtistsWithIds(recommendedIds)
-        .then(artists => respond.successfulArtistFetch(artists, res))
+        .then(artists => respond.successfulArtistsFetch(artists, res))
         .catch(error => respond.internalServerError(error, res));
     });
 };
