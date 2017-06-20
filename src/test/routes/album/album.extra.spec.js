@@ -86,7 +86,100 @@ describe('Album', () => {
       .then(() => done());
   });
 
-  describe('/PUT api/albums/{albumId}/track/{trackId}', () => {
+  describe('GET api/albums/{albumId}/tracks', () => {
+    it('should return status code 200 when correct parameters are sent', done => {
+      request(app)
+        .get(`/api/albums/${initialAlbumId}/tracks`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.should.have.status(200);
+          done();
+        });
+    });
+
+    it('should return a single track', done => {
+      request(app)
+        .get(`/api/albums/${initialAlbumId}/tracks`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.should.be.a('object');
+          res.body.should.have.property('metadata');
+          res.body.metadata.should.have.property('version');
+          res.body.metadata.should.have.property('count');
+          res.body.should.have.property('tracks');
+          res.body.tracks.should.be.a('array');
+          res.body.tracks.should.have.lengthOf(1);
+          res.body.tracks[0].should.have.property('name').eql(constants.initialTrackInAlbum.name);
+          res.body.tracks[0].should.have.property('artists');
+          res.body.tracks[0].should.have.property('album');
+          res.body.tracks[0].album.should.have.property('name').eql(constants.initialAlbum1.name);
+          done();
+        });
+    });
+
+    it('should return two tracks', done => {
+      request(app)
+        .put(`/api/albums/${initialAlbumId}/track/${validTrackId}`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.should.have.status(200);
+          request(app)
+            .get(`/api/albums/${initialAlbumId}/tracks`)
+            .set('Authorization', `Bearer ${testToken}`)
+            .end((err, res) => {
+              res.should.have.status(200);
+              res.body.should.be.a('object');
+              res.body.should.have.property('metadata');
+              res.body.metadata.should.have.property('version');
+              res.body.metadata.should.have.property('count');
+              res.body.should.have.property('tracks');
+              res.body.tracks.should.be.a('array');
+              res.body.tracks.should.have.lengthOf(2);
+              res.body.tracks[0].album.should.have.property('name').eql(constants.initialAlbum1.name);
+              res.body.tracks[1].album.should.have.property('name').eql(constants.initialAlbum1.name);
+              done();
+            });
+        });
+    });
+
+    it('should add a track to another album and still return a single track', done => {
+      request(app)
+        .put(`/api/albums/${additionalAlbumId}/track/${validTrackId}`)
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.should.have.status(200);
+          request(app)
+            .get(`/api/albums/${initialAlbumId}/tracks`)
+            .set('Authorization', `Bearer ${testToken}`)
+            .end((err, res) => {
+              res.should.have.status(200);
+              res.body.should.be.a('object');
+              res.body.should.have.property('metadata');
+              res.body.metadata.should.have.property('version');
+              res.body.metadata.should.have.property('count');
+              res.body.should.have.property('tracks');
+              res.body.tracks.should.be.a('array');
+              res.body.tracks.should.have.lengthOf(1);
+              res.body.tracks[0].should.have.property('name').eql(constants.initialTrackInAlbum.name);
+              res.body.tracks[0].album.should.have.property('name').eql(constants.initialAlbum1.name);
+              done();
+            });
+        });
+    });
+
+    it('should return status code 401 if unauthorized', done => {
+      request(app)
+        .put(`/api/albums/${initialAlbumId}/tracks`)
+        .set('Authorization', 'Bearer UNAUTHORIZED')
+        .end((err, res) => {
+          res.should.have.status(401);
+          done();
+        });
+    });
+  });
+
+  describe('PUT api/albums/{albumId}/track/{trackId}', () => {
     it('should return status code 200 when correct parameters are sent', done => {
       request(app)
         .put(`/api/albums/${initialAlbumId}/track/${validTrackId}`)
@@ -173,7 +266,7 @@ describe('Album', () => {
     });
   });
 
-  describe('/DELETE api/albums/{albumId}/track/{trackId}', () => {
+  describe('DELETE api/albums/{albumId}/track/{trackId}', () => {
     it('should return status code 204 when deletion is successful', done => {
       request(app)
         .delete(`/api/albums/${initialAlbumId}/track/${trackInAlbumId}`)

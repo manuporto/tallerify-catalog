@@ -141,7 +141,7 @@ const _updateUser = (id, body, response) => {
 /* Routes */
 
 const getUsers = (req, res) => {
-  db.user.findAllUsers()
+  db.user.findAllUsers(req.query)
     .then(users => respond.successfulUsersFetch(users, res))
     .catch(error => respond.internalServerError(error, res));
 };
@@ -156,7 +156,7 @@ const newUser = (req, res) => {
   }
   respond.validateRequestBody(req.body, userExpectedBodySchema)
     .then(() => {
-      createNewUser(req.body, process.env.BASE_URL + req.file.path.replace('public/', ''))
+      createNewUser(req.body, req.file !== '' ? process.env.BASE_URL + req.file.path.replace('public/', '') : '')
         .then(user => {
           const userWithContactsField = Object.assign({}, user[0], { contacts: [null] });
           return respond.successfulUserCreation(userWithContactsField, res);

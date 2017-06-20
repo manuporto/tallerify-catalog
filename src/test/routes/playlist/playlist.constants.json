@@ -2,6 +2,9 @@
 	"jwtTestUser": {
 		"admin": true
 	},
+	"jwtAnotherTestUser": {
+		"admin": true
+	},
 	"initialUser": {
 		"userName": "abrden",
 		"password": "1234",
@@ -14,6 +17,19 @@
 			"lala",
 			"lolo",
 			"lili"
+		]
+	},
+	"anotherUser": {
+		"userName": "mporto",
+		"password": "1234",
+		"firstName": "Manuel",
+		"lastName": "Porto",
+		"country": "Argentina",
+		"email": "porti@cia.com",
+		"birthdate": "240993",
+		"images": [
+			"lala",
+			"lolo"
 		]
 	},
 	"initialArtist": {
@@ -44,25 +60,31 @@
 	"testPlaylist": {
 		"name": "80s",
 		"description": "lala",
-		"ownerId": 1,
+		"owner": { "id": 1 },
+		"songs": [2]
+	},
+	"secondUserPlaylist": {
+		"name": "Pump",
+		"description": "lolo",
+		"owner": { "id": 2 },
 		"songs": [2]
 	},
 	"newPlaylistWithNonExistentTrack": {
 		"name": "Evermore",
 		"description": "Beauty and the beast",
-		"ownerId": 1,
+		"owner": { "id": 1 },
 		"songs": [1, 28]
 	},
 	"newPlaylistWithNonExistentOwner": {
 		"name": "Evermore",
 		"description": "Beauty and the beast",
-		"ownerId": 125,
+		"owner": { "id": 125 },
 		"songs": [1]
 	},
 	"updatedPlaylist": {
 		"name": "Andromeda",
 		"description": "Lorem",
-		"ownerId": 1,
+		"owner": { "id": 1 },
 		"songs": [1, 2]
 	},
 	"updatedPlaylistWithMissingAttributes": {
@@ -71,19 +93,19 @@
 	"updatedPlaylistWithNonExistentTrack": {
 		"name": "Evermore",
 		"description": "Beauty and the beast",
-		"ownerId": 1,
+		"owner": { "id": 1 },
 		"songs": [28]
 	},
 	"updatedPlaylistWithNonExistentOwner": {
 		"name": "Evermore",
 		"description": "Beauty and the beast",
-		"ownerId": 225,
+		"owner": { "id": 225 },
 		"songs": [2]
 	},
 	"invalidPlaylist": {
 		"name": "Machu Picchu",
 		"description": 123,
-		"ownerId": "Aisha",
+		"owner": 1,
 		"songs": 12
 	},
 	"invalidPlaylistId": 99999

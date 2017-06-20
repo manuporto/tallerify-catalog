@@ -1,6 +1,7 @@
 const db = require('./../handlers/db/index');
 const tables = require('../database/tableNames');
 const respond = require('./../handlers/response');
+const ger = require('../ger/');
 
 const artistExpectedBodySchema = {
   type: 'object',
@@ -37,8 +38,12 @@ const getArtists = (req, res) => {
 };
 
 const newArtist = (req, res) => {
+  if (!(req.file)) {
+    req.file = { path: '' };
+  }
   respond.validateRequestBody(req.body, artistExpectedBodySchema)
     .then(() => {
+      req.body.images = req.file.path !== '' ? [process.env.BASE_URL + req.file.path.replace('public/', '')] : [''];
       db.artist.createNewArtistEntry(req.body)
         .then(artist => respond.successfulArtistCreation(artist, res))
         .catch(error => respond.internalServerError(error, res));
@@ -91,6 +96,7 @@ const artistUnfollow = (req, res) => {
   db.artist.findArtistWithId(req.params.id)
     .then(artist => {
       if (!respond.entryExists(req.params.id, artist, res)) return;
+      ger.event('artists', req.user.id, 'dislikes', req.params.id, '2025-06-06');
       db.artist.unfollow(req.user.id, req.params.id)
         .then(() => respond.successfulArtistUnfollow(artist, res))
         .catch(error => respond.internalServerError(error, res));
@@ -102,6 +108,7 @@ const artistFollow = (req, res) => {
   db.artist.findArtistWithId(req.params.id)
     .then(artist => {
       if (!respond.entryExists(req.params.id, artist, res)) return;
+      ger.event('artists', req.user.id, 'likes', req.params.id, '2025-06-06');
       db.artist.follow(req.user.id, req.params.id)
         .then(() => respond.successfulArtistFollow(artist, res))
         .catch(error => respond.internalServerError(error, res));
@@ -120,6 +127,21 @@ const getTracks = (req, res) => {
     .catch(error => respond.internalServerError(error, res));
 };
 
+const getRecommendedArtists = (req, res) => {
+  ger.recommendations_for_person('artists', req.user.id, {
+    actions: { likes: 1 },
+    filter_previous_actions: ['likes'],
+  })
+    .then(recommendations => {
+      const recommendedIds = [];
+      for (let i = 0, len = recommendations.recommendations.length; i < len; i += 1) {
+        recommendedIds.push(recommendations.recommendations[i].thing);
+      }
+      db.artist.findArtistsWithIds(recommendedIds)
+        .then(artists => respond.successfulArtistFetch(artists, res))
+        .catch(error => respond.internalServerError(error, res));
+    });
+};
 
 module.exports = {
   getArtists,
@@ -131,4 +153,5 @@ module.exports = {
   artistUnfollow,
   artistFollow,
   getTracks,
+  getRecommendedArtists,
 };
