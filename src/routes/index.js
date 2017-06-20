@@ -129,6 +129,8 @@ router.put('/api/playlists/:id/albums/:albumId', playlist.addAlbumToPlaylist);
 
 router.get('/api/albums', album.getAlbums);
 
+router.get('/api/albums/:id/tracks', album.getTracks);
+
 router.get('/api/albums/:id', album.getAlbum);
 
 router.post('/api/albums', albumsMediaLocation.single('picture'), album.newAlbum);

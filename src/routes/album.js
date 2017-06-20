@@ -47,6 +47,15 @@ const getAlbum = (req, res) => {
     .catch(error => respond.internalServerError(error, res));
 };
 
+const getTracks = (req, res) => {
+  db.track.findTracksWithAlbumId(req.params.id)
+    .then(tracks => {
+      if (!respond.entryExists(req.params.id, tracks, res)) return;
+      respond.successfulTracksFetch(tracks, res);
+    })
+    .catch(error => respond.internalServerError(error, res));
+};
+
 const newAlbum = (req, res) => {
   if (!(req.file)) {
     req.file = { path: '' };
@@ -134,6 +143,7 @@ const deleteTrackFromAlbum = (req, res) => {
 
 module.exports = {
   getAlbums,
+  getTracks,
   getAlbum,
   newAlbum,
   updateAlbum,
