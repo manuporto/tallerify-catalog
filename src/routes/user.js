@@ -174,7 +174,7 @@ const deleteUser = (req, res) => {
   db.general.findEntryWithId(tables.users, req.params.id)
     .then(user => {
       if (!respond.entryExists(req.params.id, user, res)) return;
-      db.general.deleteEntryWithId(tables.users, req.params.id)
+      db.user.deleteUserWithId(req.params.id)
         .then(() => respond.successfulUserDeletion(res))
         .catch(error => respond.internalServerError(error, res));
     })
