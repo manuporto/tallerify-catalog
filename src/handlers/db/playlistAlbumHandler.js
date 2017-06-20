@@ -24,8 +24,14 @@ const deleteAssociationsOfAlbum = albumId => {
   return db(tables.playlists_albums).where('album_id', albumId).del();
 };
 
+const deleteAssociationsOfPlaylist = playlistId => {
+  logger.debug(`Deleting playlist ${playlistId} associations`);
+  return db(tables.playlists_albums).where('playlist_id', playlistId).del();
+};
+
 module.exports = {
   addAlbum,
   deleteAlbum,
   deleteAssociationsOfAlbum,
+  deleteAssociationsOfPlaylist,
 };

@@ -10,12 +10,12 @@ const insertAssociations = (playlistId, tracksIds) => {
   return generalHandler.createNewEntry(tables.playlists_tracks, rowValues);
 };
 
-const deleteAssociations = playlistId => {
+const deleteAssociationsOfPlaylist = playlistId => {
   logger.debug(`Deleting playlist ${playlistId} associations`);
   return db(tables.playlists_tracks).where('playlist_id', playlistId).del();
 };
 
-const updateAssociations = (playlistId, tracksIds) => deleteAssociations(playlistId)
+const updateAssociations = (playlistId, tracksIds) => deleteAssociationsOfPlaylist(playlistId)
     .then(() => insertAssociations(playlistId, tracksIds));
 
 const findTracksIdsFromPlaylist = playlistId =>
@@ -42,7 +42,7 @@ const deleteAssociationsOfTrack = trackId => {
 module.exports = {
   insertAssociations,
   updateAssociations,
-  deleteAssociations,
+  deleteAssociationsOfPlaylist,
   findTracksIdsFromPlaylist,
   addTrack,
   deleteTrack,
