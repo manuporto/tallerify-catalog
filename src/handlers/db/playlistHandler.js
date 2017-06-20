@@ -13,11 +13,15 @@ const NonExistentIdError = require('../../errors/NonExistentIdError');
 
 const _findAllPlaylists = () => db
   .select('pl.*',
-    db.raw('to_json(array_agg(distinct tr.*)) as tracks, to_json(array_agg(distinct u.*))::json->0 as owner'))
+    db.raw(`to_json(array_agg(distinct tr.*)) as tracks, 
+    to_json(array_agg(distinct u.*))::json->0 as owner,
+    array_agg(ar.images[1]) as images`))
   .from(`${tables.playlists} as pl`)
   .leftJoin(`${tables.users} as u`, 'pl.owner_id', 'u.id')
   .leftJoin(`${tables.playlists_tracks} as pltr`, 'pl.id', 'pltr.playlist_id')
   .leftJoin(`${tables.tracks} as tr`, 'tr.id', 'pltr.track_id')
+  .leftJoin(`${tables.artists_tracks} as atr`, 'tr.id', 'atr.track_id')
+  .leftJoin(`${tables.artists} as ar`, 'ar.id', 'atr.artist_id')
   .groupBy('pl.id');
 
 const findAllPlaylists = () => {
