@@ -15,6 +15,7 @@ const artistsMediaLocation = multer({ dest: 'public/media/artists/' });
 const albumsMediaLocation = multer({ dest: 'public/media/albums/' });
 const usersMediaLocation = multer({ dest: 'public/media/users/' });
 const tracksTempMediaLocation = multer({ dest: 'public/media/tracks/' });
+var guard = require('express-jwt-permissions')();
 const router = express.Router();
 
 router.get('/', (req, res) => res.render('index'));
@@ -47,7 +48,7 @@ router.get('/api/admins', admin.getAdmins);
 
 router.post('/api/admins', admin.newAdmin);
 
-router.delete('/api/admins/:id', admin.deleteAdmin);
+router.delete('/api/admins/:id', guard.check('admin'), admin.deleteAdmin);
 
 /* Tokens */
 
@@ -61,13 +62,13 @@ router.get('/api/artists/recommended', artist.getRecommendedArtists);
 
 router.get('/api/artists', artist.getArtists);
 
-router.post('/api/artists', artistsMediaLocation.single('picture'), artist.newArtist);
+router.post('/api/artists', guard.check('admin'), artistsMediaLocation.single('picture'), artist.newArtist);
 
 router.get('/api/artists/:id', artist.getArtist);
 
-router.put('/api/artists/:id', artist.updateArtist);
+router.put('/api/artists/:id', guard.check('admin'), artist.updateArtist);
 
-router.delete('/api/artists/:id', artist.deleteArtist);
+router.delete('/api/artists/:id', guard.check('admin'), artist.deleteArtist);
 
 router.get('/api/artists/me/favorites', artist.getFavoriteArtists);
 
@@ -83,13 +84,13 @@ router.get('/api/tracks/recommended', track.getRecommendedTracks);
 
 router.get('/api/tracks', track.getTracks);
 
-router.post('/api/tracks', tracksTempMediaLocation.single('file'), track.newTrack);
+router.post('/api/tracks', guard.check('admin'), tracksTempMediaLocation.single('file'), track.newTrack);
 
 router.get('/api/tracks/:id', track.getTrack);
 
-router.put('/api/tracks/:id', track.updateTrack);
+router.put('/api/tracks/:id', guard.check('admin'), track.updateTrack);
 
-router.delete('/api/tracks/:id', track.deleteTrack);
+router.delete('/api/tracks/:id', guard.check('admin'), track.deleteTrack);
 
 router.post('/api/tracks/me/:id/like', track.trackLike);
 
@@ -135,14 +136,14 @@ router.get('/api/albums/:id/tracks', album.getTracks);
 
 router.get('/api/albums/:id', album.getAlbum);
 
-router.post('/api/albums', albumsMediaLocation.single('picture'), album.newAlbum);
+router.post('/api/albums', guard.check('admin'), albumsMediaLocation.single('picture'), album.newAlbum);
 
-router.put('/api/albums/:id', album.updateAlbum);
+router.put('/api/albums/:id', guard.check('admin'), album.updateAlbum);
 
-router.delete('/api/albums/:id', album.deleteAlbum);
+router.delete('/api/albums/:id', guard.check('admin'), album.deleteAlbum);
 
-router.put('/api/albums/:albumId/track/:trackId', album.addTrackToAlbum);
+router.put('/api/albums/:albumId/track/:trackId', guard.check('admin'), album.addTrackToAlbum);
 
-router.delete('/api/albums/:albumId/track/:trackId', album.deleteTrackFromAlbum);
+router.delete('/api/albums/:albumId/track/:trackId', guard.check('admin'), album.deleteTrackFromAlbum);
 
 module.exports = router;

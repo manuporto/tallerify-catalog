@@ -29,14 +29,13 @@ const resultIsValid = (result, response) => {
 
 const getToken = (secret, user) => jwt.sign({
   id: user.id,
-  admin: false,
 }, secret, {
   expiresIn: '24h',
 });
 
 const getTokenAdmin = (secret, admin) => jwt.sign({
   id: admin.id,
-  admin: true,
+  permissions: ["admin"],
 }, secret, {
   expiresIn: '24h',
 });
