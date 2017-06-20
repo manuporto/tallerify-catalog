@@ -23,9 +23,8 @@ const playlistExpectedBodySchema = {
         },
       },
     },
-
     songs: {
-      required: true,
+      required: false,
       type: 'array',
       items: {
         type: 'integer',
