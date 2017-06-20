@@ -34,6 +34,11 @@ const deleteTrack = (playlistId, trackId) => {
   return db(tables.playlists_tracks).where({ playlist_id: playlistId, track_id: trackId }).del();
 };
 
+const deleteAssociationsOfTrack = trackId => {
+  logger.debug(`Deleting track ${trackId} associations`);
+  return db(tables.playlists_tracks).where('track_id', trackId).del();
+};
+
 module.exports = {
   insertAssociations,
   updateAssociations,
@@ -41,4 +46,5 @@ module.exports = {
   findTracksIdsFromPlaylist,
   addTrack,
   deleteTrack,
+  deleteAssociationsOfTrack,
 };

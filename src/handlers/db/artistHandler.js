@@ -3,6 +3,7 @@ const db = require('../../database/');
 const tables = require('../../database/tableNames');
 const generalHandler = require('./generalHandler');
 const albumArtistHandler = require('./albumArtistHandler');
+const artistTrackHandler = require('./artistTrackHandler');
 const trackHandler = require('./trackHandler');
 
 const _findAllArtists = () => db
@@ -61,6 +62,7 @@ const deleteArtist = id => {
   const deleters = [
     generalHandler.deleteEntryWithId(tables.artists, id),
     albumArtistHandler.deleteAssociationsOfArtist(id),
+    artistTrackHandler.deleteAssociationsOfArtist(id),
   ];
   return Promise.all(deleters);
 };

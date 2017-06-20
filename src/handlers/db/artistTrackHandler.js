@@ -10,14 +10,26 @@ const insertAssociations = (trackId, artistsIds) => {
   return generalHandler.createNewEntry(tables.artists_tracks, rowValues);
 };
 
-const deleteAssociations = trackId => {
+const deleteAssociationsOfTrack = trackId => {
   logger.debug(`Deleting track ${trackId} associations`);
   return db(tables.artists_tracks).where('track_id', trackId).del();
 };
 
-const updateAssociations = (trackId, artistsIds) => deleteAssociations(trackId)
+const updateAssociations = (trackId, artistsIds) => deleteAssociationsOfTrack(trackId)
     .then(() => insertAssociations(trackId, artistsIds));
 
 const findArtistsIdsFromTrack = trackId => db(tables.artists_tracks).where('track_id', trackId).select('artist_id');
 
-module.exports = { insertAssociations, updateAssociations, findArtistsIdsFromTrack };
+const deleteAssociationsOfArtist = artistId => {
+  logger.debug(`Deleting artist ${artistId} associations`);
+  return db(tables.albums_artists).where('artist_id', artistId).del();
+};
+
+module.exports = {
+  insertAssociations,
+  updateAssociations,
+  findArtistsIdsFromTrack,
+  deleteAssociationsOfTrack,
+  deleteAssociationsOfArtist,
+};
+
