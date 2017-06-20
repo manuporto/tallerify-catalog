@@ -11,11 +11,12 @@ const math = require('mathjs');
 
 const _findAllTracks = () => db
   .select('tr.*',
-    db.raw('to_json(array_agg(distinct ar.*)) as artists, to_json(array_agg(distinct al.*))::json->0 as album'))
+    db.raw('to_json(array_agg(distinct ar.*)) as artists, to_json(array_agg(distinct al.*))::json->0 as album, avg(rating.rating) as popularity'))
   .from(`${tables.tracks} as tr`)
   .leftJoin(`${tables.albums} as al`, 'al.id', 'tr.album_id')
   .innerJoin(`${tables.artists_tracks} as art`, 'art.track_id', 'tr.id')
   .innerJoin(`${tables.artists} as ar`, 'ar.id', 'art.artist_id')
+  .leftJoin(`${tables.tracks_rating} as rating`, 'rating.track_id', 'tr.id')
   .groupBy('tr.id');
 
 const findAllTracks = queries => {
@@ -145,22 +146,30 @@ const calculateRate = trackId => {
     });
 };
 
-const rate = (trackId, userId, rating) => {
-  logger.debug(`User ${userId} rating track ${trackId} with rate: ${rating}`);
+const rate = (track, userId, rating) => {
+  logger.info(`User ${userId} rating track ${track.id} with rate: ${rating}`);
   return db(tables.tracks_rating).where({
     user_id: userId,
-    track_id: trackId,
+    track_id: track.id,
   }).del()
-    .then(() => generalHandler.createNewEntry(tables.tracks_rating, {
-      user_id: userId,
-      track_id: trackId,
-      rating,
-    }));
+    .then(() => {
+      const entry = {
+        user_id: userId,
+        track_id: track.id,
+        album_id: track.album_id,
+        rating,
+      };
+      logger.info(`New rating table entry ${JSON.stringify(entry, null, 4)}`);
+      return generalHandler.createNewEntry(tables.tracks_rating, entry);
+    });
 };
 
 const updateAlbumId = (trackId, albumId) => {
   logger.debug(`Updating track ${trackId} albumId to ${albumId}`);
-  return db(tables.tracks).where('id', trackId).update({ album_id: albumId });
+  return Promise.all([
+    db(tables.tracks).where('id', trackId).update({ album_id: albumId }),
+    db(tables.tracks_rating).where('track_id', trackId).update('album_id', albumId),
+  ]);
 };
 
 const removeTracksFromAlbum = albumId => {

@@ -8,10 +8,12 @@ const trackHandler = require('./trackHandler');
 
 const _findAllArtists = () => db
   .select('ar.*',
-    db.raw('to_json(array_agg(distinct al.*)) as albums'))
+    db.raw('to_json(array_agg(distinct al.*)) as albums, avg(rating.rating) as popularity'))
   .from(`${tables.artists} as ar`)
   .leftJoin(`${tables.albums_artists} as aa`, 'ar.id', 'aa.artist_id')
   .leftJoin(`${tables.albums} as al`, 'al.id', 'aa.album_id')
+  .leftJoin(`${tables.artists_tracks} as atr`, 'atr.artist_id', 'ar.id')
+  .leftJoin(`${tables.tracks_rating} as rating`, 'rating.track_id', 'atr.track_id')
   .groupBy('ar.id');
 
 const findAllArtists = queries => {
