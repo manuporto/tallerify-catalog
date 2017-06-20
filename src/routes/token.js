@@ -35,7 +35,7 @@ const getToken = (secret, user) => jwt.sign({
 
 const getTokenAdmin = (secret, admin) => jwt.sign({
   id: admin.id,
-  permissions: ["admin"],
+  permissions: ['admin'],
 }, secret, {
   expiresIn: '24h',
 });

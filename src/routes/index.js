@@ -15,7 +15,8 @@ const artistsMediaLocation = multer({ dest: 'public/media/artists/' });
 const albumsMediaLocation = multer({ dest: 'public/media/albums/' });
 const usersMediaLocation = multer({ dest: 'public/media/users/' });
 const tracksTempMediaLocation = multer({ dest: 'public/media/tracks/' });
-var guard = require('express-jwt-permissions')();
+const guard = require('express-jwt-permissions')();
+
 const router = express.Router();
 
 router.get('/', (req, res) => res.render('index'));
