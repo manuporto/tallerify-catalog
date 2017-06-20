@@ -4,6 +4,15 @@ const amanda = require('amanda');
 
 const jsonSchemaValidator = amanda('json');
 
+const math = require('mathjs');
+
+const calculatePopularity = popularity => {
+  if (popularity) {
+    return math.round(popularity, 2);
+  }
+  return 0;
+};
+
 const internalServerError = (reason, response) => {
   const message = `Unexpected error: ${reason}`;
   logger.warn(message);
@@ -42,7 +51,7 @@ const invalidRequestBodyError = (reasons, response) => {
 };
 
 const entryExists = (id, entry, response) => {
-  logger.info('Checking if entry exist');
+  logger.info(`Checking if entry ${id} exist`);
   logger.debug(`Entry: ${JSON.stringify(entry, null, 4)}`);
   if (!entry) {
     logger.warn(`No entry with id ${id}`);
@@ -233,7 +242,7 @@ const formatArtistJson = artist => ({
   images: artist.images,
   genres: artist.genres,
   albums: artist.albums[0] ? artist.albums.map(formatAlbumShortJson) : [],
-  popularity: artist.popularity,
+  popularity: calculatePopularity(artist.popularity),
 });
 
 const successfulArtistsFetch = (artists, response) => {
@@ -308,7 +317,7 @@ const formatAlbumJson = album => ({
   name: album.name,
   release_date: album.release_date,
   href: album.href,
-  popularity: album.popularity,
+  popularity: calculatePopularity(album.popularity),
   artists: album.artists[0]
     ? album.artists.map(artist => formatArtistShortJson(artist)) : [],
   tracks: album.tracks[0]
@@ -383,10 +392,8 @@ const formatTrackJson = track => ({
   name: track.name,
   href: track.href,
   duration: track.duration,
+  popularity: calculatePopularity(track.popularity),
   externalId: track.external_id,
-  popularity: {
-    rate: track.rating,
-  },
   album: track.album ? formatAlbumShortJson(track.album) : {},
   artists: track.artists ?
     track.artists.map(artist => formatArtistShortJson(artist)) : [],
@@ -412,7 +419,7 @@ const successfulTrackCreation = (track, response) => {
 
 const successfulTrackFetch = (track, response) => {
   logger.info('Successful track fetch');
-  logger.debug(`Track: ${JSON.stringify(track, null, 4)}`);
+  logger.info(`Track: ${JSON.stringify(track, null, 4)}`);
   response.status(200).json({
     metadata: {
       count: 1,
@@ -473,6 +480,14 @@ const formatPlaylistJson = playlist => ({
   tracks: playlist.tracks ?
     playlist.tracks.map(track => formatTrackShortJson(track)) : [],
 });
+
+// const formatPlaylistCreationJson = playlist => ({
+//   id: playlist.id,
+//   name: playlist.name,
+//   href: playlist.href,
+//   description: playlist.description,
+//   owner: playlist.owner ? formatUserShortJson(playlist.owner) : {},
+// });
 
 const successfulPlaylistsFetch = (playlists, response) => {
   logger.info('Successful playlists fetch');

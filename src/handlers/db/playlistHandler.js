@@ -69,7 +69,7 @@ const createNewPlaylistEntry = body => {
         .then(insertedPlaylist => {
           logger.debug(`Inserted playlist: ${JSON.stringify(insertedPlaylist, null, 4)}`);
           return playlistTrackHandler.insertAssociations(insertedPlaylist[0].id, body.songs)
-            .then(() => findPlaylistWithId(insertedPlaylist[0].id));
+             .then(() => findPlaylistWithId(insertedPlaylist[0].id));
         }));
 };
 
@@ -110,7 +110,8 @@ const deletePlaylistWithId = id => {
   logger.debug(`Deleting playlist ${id}`);
   const deleters = [
     generalHandler.deleteEntryWithId(tables.playlists, id),
-    playlistTrackHandler.deleteAssociations(id),
+    playlistTrackHandler.deleteAssociationsOfPlaylist(id),
+    playlistAlbumHandler.deleteAssociationsOfPlaylist(id),
   ];
   return Promise.all(deleters);
 };

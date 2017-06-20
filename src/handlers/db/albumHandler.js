@@ -4,16 +4,20 @@ const db = require('../../database/index');
 const generalHandler = require('./generalHandler');
 const trackHandler = require('./trackHandler');
 const albumArtistHandler = require('./albumArtistHandler');
+const playlistAlbumHandler = require('./playlistAlbumHandler');
 
 const NonExistentIdError = require('../../errors/NonExistentIdError');
 
 const _findAllAlbums = () => db
     .select('al.*',
-      db.raw('to_json(array_agg(distinct ar.*)) as artists, to_json(array_agg(distinct tr.*)) as tracks'))
+      db.raw(`to_json(array_agg(distinct ar.*)) as artists, 
+        to_json(array_agg(distinct tr.*)) as tracks,
+        avg(rating.rating) as popularity`))
     .from('albums as al')
     .leftJoin('albums_artists as aa', 'al.id', 'aa.album_id')
     .leftJoin('artists as ar', 'ar.id', 'aa.artist_id')
     .leftJoin('tracks as tr', 'tr.album_id', 'al.id')
+    .leftJoin('tracks_rating as rating', 'rating.album_id', 'al.id')
     .groupBy('al.id');
 
 const findAllAlbums = queries => {
@@ -52,7 +56,6 @@ const createNewAlbumEntry = (body, picturePath) => {
     release_date: body.release_date,
     genres: body.genres,
     images,
-    popularity: 0,
   };
   return checkArtistsExistence(body)
     .then(() => generalHandler.createNewEntry(tables.albums, album)
@@ -87,6 +90,7 @@ const deleteAlbumWithId = id => {
     generalHandler.deleteEntryWithId(tables.albums, id),
     albumArtistHandler.deleteAssociationsOfAlbum(id),
     trackHandler.removeTracksFromAlbum(id),
+    playlistAlbumHandler.deleteAssociationsOfAlbum(id),
   ];
   return Promise.all(deleters);
 };

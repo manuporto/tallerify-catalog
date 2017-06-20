@@ -1,0 +1,45 @@
+{
+	"jwtTestUser1": {
+		"admin": true,
+		"id": 24
+	},
+	"jwtTestUser2": {
+		"admin": false,
+		"id": 4
+	},
+	"initialArtist1": {
+		"name": "Papa Baute",
+		"description": "Tiene un implante coclear?",
+		"genres": ["Bachata"],
+		"images": ["una con guido", "otra con sergio"]
+	},
+	"initialArtist2": {
+		"name": "Luis Fonsi",
+		"description": "El que canta despacito",
+		"genres": ["pero que no es justin"],
+		"images": ["ni daddy yankee"]
+	},
+	"initialAlbum": {
+		"name": "2nd law",
+		"images": ["Matt B", "Chris W"],
+		"genres": ["Rock"],
+		"artists": [1, 2],
+		"release_date": "20091959"
+	},
+	"initialTrack": {
+		"name": "Despacito",
+		"artists": [1, 2]
+	},
+	"initialTrack2": {
+		"name": "Come a Little Closer"
+	},
+    "rateTrackWith3": {
+      "rate": 3
+    },
+	"rateTrackWith2": {
+		"rate": 2
+	},
+	"rateTrackWith4": {
+		"rate": 4
+	}
+}
