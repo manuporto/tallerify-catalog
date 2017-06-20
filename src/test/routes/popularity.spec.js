@@ -48,7 +48,9 @@ describe('Popularity', () => {
                   logger.debug(`Tests album created: ${JSON.stringify(album, null, 4)}`);
 
                   initialAlbumId = album.id;
-                  initialTrack = Object.assign({}, constants.initialTrack, { albumId: initialAlbumId });
+                  initialTrack = Object.assign({}, constants.initialTrack, {
+                    albumId: initialAlbumId,
+                  });
                   initialTrack2 = Object.assign({}, constants.initialTrack2, {
                     albumId: initialAlbumId,
                     artists: [initialArtistId2],
@@ -57,7 +59,7 @@ describe('Popularity', () => {
                   Promise.all([
                     dbHandler.track.createNewTrackEntry(initialTrack),
                     dbHandler.track.createNewTrackEntry(initialTrack2),
-                    ])
+                  ])
                     .then(tracks => {
                       logger.debug(`Tests tracks created: ${JSON.stringify(tracks, null, 4)}`);
                       initialTrackId = tracks[0].id;

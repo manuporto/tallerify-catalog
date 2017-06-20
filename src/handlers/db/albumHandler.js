@@ -55,7 +55,7 @@ const createNewAlbumEntry = (body, picturePath) => {
     name: body.name,
     release_date: body.release_date,
     genres: body.genres,
-    images: body.images,
+    images,
   };
   return checkArtistsExistence(body)
     .then(() => generalHandler.createNewEntry(tables.albums, album)

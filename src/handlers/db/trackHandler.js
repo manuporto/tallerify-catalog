@@ -168,8 +168,8 @@ const updateAlbumId = (trackId, albumId) => {
   logger.debug(`Updating track ${trackId} albumId to ${albumId}`);
   return Promise.all([
     db(tables.tracks).where('id', trackId).update({ album_id: albumId }),
-    db(tables.tracks_rating).where('track_id', trackId).update('album_id', albumId)
-    ]);
+    db(tables.tracks_rating).where('track_id', trackId).update('album_id', albumId),
+  ]);
 };
 
 const removeTracksFromAlbum = albumId => {
