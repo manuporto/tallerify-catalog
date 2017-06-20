@@ -40,6 +40,12 @@ const getPlaylists = (req, res) => {
     .catch(error => respond.internalServerError(error, res));
 };
 
+const getMyPlaylists = (req, res) => {
+  db.playlist.findAllMyPlaylists(req.user.id)
+    .then(playlists => respond.successfulPlaylistsFetch(playlists, res))
+    .catch(error => respond.internalServerError(error, res));
+};
+
 const newPlaylist = (req, res) => {
   respond.validateRequestBody(req.body, playlistExpectedBodySchema)
     .then(() => {
@@ -182,6 +188,7 @@ const deleteAlbumFromPlaylist = (req, res) => {
 
 module.exports = {
   getPlaylists,
+  getMyPlaylists,
   getPlaylist,
   newPlaylist,
   updatePlaylist,

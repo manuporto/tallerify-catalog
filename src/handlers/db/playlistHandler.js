@@ -25,6 +25,11 @@ const findAllPlaylists = () => {
   return _findAllPlaylists();
 };
 
+const findAllMyPlaylists = ownerId => {
+  logger.info(`Finding all playlists of user ${ownerId}`);
+  return _findAllPlaylists().where('pl.owner_id', ownerId);
+};
+
 const findPlaylistWithId = id => {
   logger.info('Finding playlist with id');
   return _findAllPlaylists().where('pl.id', id).first();
@@ -155,6 +160,7 @@ const deleteAlbum = (playlistId, albumId) => playlistAlbumHandler.deleteAlbum(pl
 
 module.exports = {
   findAllPlaylists,
+  findAllMyPlaylists,
   findPlaylistWithId,
   findPlaylistsWithIds,
   createNewPlaylistEntry,

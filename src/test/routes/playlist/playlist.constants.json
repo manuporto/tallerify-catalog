@@ -2,6 +2,9 @@
 	"jwtTestUser": {
 		"admin": true
 	},
+	"jwtAnotherTestUser": {
+		"admin": true
+	},
 	"initialUser": {
 		"userName": "abrden",
 		"password": "1234",
@@ -14,6 +17,19 @@
 			"lala",
 			"lolo",
 			"lili"
+		]
+	},
+	"anotherUser": {
+		"userName": "mporto",
+		"password": "1234",
+		"firstName": "Manuel",
+		"lastName": "Porto",
+		"country": "Argentina",
+		"email": "porti@cia.com",
+		"birthdate": "240993",
+		"images": [
+			"lala",
+			"lolo"
 		]
 	},
 	"initialArtist": {
@@ -45,6 +61,12 @@
 		"name": "80s",
 		"description": "lala",
 		"owner": { "id": 1 },
+		"songs": [2]
+	},
+	"secondUserPlaylist": {
+		"name": "Pump",
+		"description": "lolo",
+		"owner": { "id": 2 },
 		"songs": [2]
 	},
 	"newPlaylistWithNonExistentTrack": {

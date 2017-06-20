@@ -18,7 +18,8 @@ chai.use(chaiThings);
 const config = require('./../../../config');
 const constants = require('./playlist.constants.json');
 
-const testToken = jwt.sign(constants.jwtTestUser, config.secret);
+let testToken;
+let testToken2;
 
 let validPlaylistId;
 let ownerShort;
@@ -31,15 +32,30 @@ describe('Playlist', () => {
       .then(() => {
         db.migrate.latest()
           .then(() => {
-            dbHandler.general.createNewEntry(tables.users, constants.initialUser)
-              .then(owner => {
-                logger.debug(`Tests user created: ${JSON.stringify(owner, null, 4)}`);
-                const initialUserId = owner[0].id;
+            Promise.all([
+              dbHandler.general.createNewEntry(tables.users, constants.initialUser),
+              dbHandler.general.createNewEntry(tables.users, constants.anotherUser),
+            ])
+              .then(owners => {
+                logger.debug(`Tests user created: ${JSON.stringify(owners, null, 4)}`);
+                const initialUserId = owners[0][0].id;
+                const anotherUserId = owners[1][0].id;
+
+                const jwtInitialUser = constants.jwtTestUser;
+                jwtInitialUser.id = initialUserId;
+
+                testToken = jwt.sign(jwtInitialUser, config.secret);
+
+                const jwtAnotherUser = constants.jwtAnotherTestUser;
+                jwtAnotherUser.id = anotherUserId;
+
+                testToken2 = jwt.sign(jwtAnotherUser, config.secret);
+
                 ownerShort = {
                   id: initialUserId,
-                  userName: owner[0].userName,
-                  href: owner[0].href,
-                  images: owner[0].images,
+                  userName: owners[0][0].userName,
+                  href: owners[0][0].href,
+                  images: owners[0][0].images,
                 };
 
                 dbHandler.artist.createNewArtistEntry(constants.initialArtist)
@@ -155,6 +171,90 @@ describe('Playlist', () => {
     it('should return status code 401 if unauthorized', done => {
       request(app)
         .get('/api/playlists')
+        .set('Authorization', 'Bearer UNAUTHORIZED')
+        .end((err, res) => {
+          res.should.have.status(401);
+          done();
+        });
+    });
+  });
+
+  describe('/GET playlists/me', () => {
+    it('should return status code 200', done => {
+      request(app)
+        .get('/api/playlists/me')
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.should.have.status(200);
+          done();
+        });
+    });
+
+    it('should return the expected body response when correct parameters are sent', done => {
+      request(app)
+        .get('/api/playlists/me')
+        .set('Authorization', `Bearer ${testToken}`)
+        .end((err, res) => {
+          res.body.should.be.a('object');
+          res.body.should.have.property('metadata');
+          res.body.metadata.should.have.property('version');
+          res.body.metadata.should.have.property('count');
+          res.body.should.have.property('playlists');
+          res.body.playlists.should.be.a('array');
+          res.body.playlists.should.have.lengthOf(1);
+          done();
+        });
+    });
+
+    it('should return a two playlists if user creates a new one', done => {
+      request(app)
+        .post('/api/playlists')
+        .set('Authorization', `Bearer ${testToken}`)
+        .send(constants.testPlaylist)
+        .end((err, res) => {
+          res.should.have.status(201);
+          request(app)
+            .get('/api/playlists/me')
+            .set('Authorization', `Bearer ${testToken}`)
+            .end((err, res) => {
+              res.body.should.be.a('object');
+              res.body.should.have.property('metadata');
+              res.body.metadata.should.have.property('version');
+              res.body.metadata.should.have.property('count');
+              res.body.should.have.property('playlists');
+              res.body.playlists.should.be.a('array');
+              res.body.playlists.should.have.lengthOf(2);
+              done();
+            });
+        });
+    });
+
+    it('should return a just one playlists if another user creates a new one', done => {
+      request(app)
+        .post('/api/playlists')
+        .set('Authorization', `Bearer ${testToken2}`)
+        .send(constants.secondUserPlaylist)
+        .end((err, res) => {
+          res.should.have.status(201);
+          request(app)
+            .get('/api/playlists/me')
+            .set('Authorization', `Bearer ${testToken}`)
+            .end((err, res) => {
+              res.body.should.be.a('object');
+              res.body.should.have.property('metadata');
+              res.body.metadata.should.have.property('version');
+              res.body.metadata.should.have.property('count');
+              res.body.should.have.property('playlists');
+              res.body.playlists.should.be.a('array');
+              res.body.playlists.should.have.lengthOf(1);
+              done();
+            });
+        });
+    });
+
+    it('should return status code 401 if unauthorized', done => {
+      request(app)
+        .get('/api/playlists/me')
         .set('Authorization', 'Bearer UNAUTHORIZED')
         .end((err, res) => {
           res.should.have.status(401);

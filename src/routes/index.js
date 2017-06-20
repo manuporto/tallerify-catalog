@@ -105,6 +105,8 @@ router.post('/api/tracks/:id/popularity', track.rateTrack);
 
 router.get('/api/playlists', playlist.getPlaylists);
 
+router.get('/api/playlists/me', playlist.getMyPlaylists);
+
 router.post('/api/playlists', playlist.newPlaylist);
 
 router.get('/api/playlists/:id', playlist.getPlaylist);
