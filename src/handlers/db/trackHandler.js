@@ -152,22 +152,14 @@ const rate = (track, userId, rating) => {
     track_id: track.id,
   }).del()
     .then(() => {
-      return db(tables.artists_tracks).whereIn('track_id', track.id).select('artist_id')
-        .then(artists => {
-          const artistsIds = artists.map(artist => artist.artist_id);
-          logger.info(`Track ${track.id} has artists ${JSON.stringify(artistsIds)}`);
-          const entries = [];
-          artistsIds.forEach(artistId => {
-            entries.push({
-              user_id: userId,
-              track_id: track.id,
-              album_id: track.album_id,
-              artist_id: artistId,
-              rating,
-            })});
-          logger.info(`New rating table entries ${JSON.stringify(entries)}`);
-          return generalHandler.createNewEntry(tables.tracks_rating, entries);
-        });
+      const entry = {
+        user_id: userId,
+        track_id: track.id,
+        album_id: track.album_id,
+        rating,
+      };
+      logger.info(`New rating table entry ${JSON.stringify(entry, null, 4)}`);
+      return generalHandler.createNewEntry(tables.tracks_rating, entry);
     });
 };
 
