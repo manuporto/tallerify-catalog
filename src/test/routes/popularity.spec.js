@@ -21,15 +21,11 @@ const user2Token = jwt.sign(constants.jwtTestUser2, config.secret);
 
 let initialArtistId1;
 let initialArtistId2;
-let initialArtistShort1;
-let initialArtistShort2;
 let initialAlbumId;
-let initialAlbumShort;
 let initialTrackId;
 let initialTrackId2;
 let initialTrack;
-let testTrack;
-let updatedTrack;
+let initialTrack2;
 
 describe('Popularity', () => {
   beforeEach(done => {
@@ -43,33 +39,15 @@ describe('Popularity', () => {
                 constants.initialArtist2,
               ]).then(artists => {
                 logger.debug(`Tests artists created: ${JSON.stringify(artists, null, 4)}`);
+                
                 initialArtistId1 = artists[0].id;
                 initialArtistId2 = artists[1].id;
 
-                initialArtistShort1 = {
-                  id: initialArtistId1,
-                  name: artists[0].name,
-                  href: null,
-                  images: artists[0].images,
-                };
-                initialArtistShort2 = {
-                  id: initialArtistId2,
-                  name: artists[1].name,
-                  href: null,
-                  images: artists[1].images,
-                };
                 dbHandler.album.createNewAlbumEntry(constants.initialAlbum)
                 .then(album => {
                   logger.debug(`Tests album created: ${JSON.stringify(album, null, 4)}`);
 
                   initialAlbumId = album.id;
-                  initialAlbumShort = {
-                    id: initialAlbumId,
-                    href: null,
-                    name: album.name,
-                    images: album.images,
-                  };
-
                   initialTrack = Object.assign({}, constants.initialTrack, { albumId: initialAlbumId });
                   initialTrack2 = Object.assign({}, constants.testTrack, {
                     albumId: initialAlbumId,
@@ -444,7 +422,7 @@ describe('Popularity', () => {
         });
     });
 
-    it('should return artist1 popularity 4', done => {
+    it('should return artist1 popularity 2', done => {
       request(app)
         .post(`/api/tracks/${initialTrackId}/popularity`)
         .set('Authorization', `Bearer ${user1Token}`)
@@ -461,7 +439,7 @@ describe('Popularity', () => {
                 .get(`/api/artists/${initialArtistId1}`)
                 .set('Authorization', `Bearer ${user1Token}`)
                 .end((err, res) => {
-                  res.body.artist.should.have.property('popularity').eql(4);
+                  res.body.artist.should.have.property('popularity').eql(2);
                   done();
                 });
             });
@@ -486,6 +464,222 @@ describe('Popularity', () => {
                 .set('Authorization', `Bearer ${user1Token}`)
                 .end((err, res) => {
                   res.body.artist.should.have.property('popularity').eql(3);
+                  done();
+                });
+            });
+        });
+    });
+  });
+
+  describe('Every popularity is 3 with a track rated with 2, and a track rated with 4 by the same user', () => {
+    it('should return album popularity 3', done => {
+      request(app)
+        .post(`/api/tracks/${initialTrackId}/popularity`)
+        .set('Authorization', `Bearer ${user1Token}`)
+        .send(constants.rateTrackWith2)
+        .end((err, res) => {
+          res.should.have.status(201);
+          request(app)
+            .post(`/api/tracks/${initialTrackId2}/popularity`)
+            .set('Authorization', `Bearer ${user1Token}`)
+            .send(constants.rateTrackWith4)
+            .end((err, res) => {
+              res.should.have.status(201);
+              request(app)
+                .get(`/api/albums/${initialAlbumId}`)
+                .set('Authorization', `Bearer ${user1Token}`)
+                .end((err, res) => {
+                  res.body.album.should.have.property('popularity').eql(3);
+                  done();
+                });
+            });
+        });
+    });
+
+    it('should return artist1 popularity 2', done => {
+      request(app)
+        .post(`/api/tracks/${initialTrackId}/popularity`)
+        .set('Authorization', `Bearer ${user1Token}`)
+        .send(constants.rateTrackWith2)
+        .end((err, res) => {
+          res.should.have.status(201);
+          request(app)
+            .post(`/api/tracks/${initialTrackId2}/popularity`)
+            .set('Authorization', `Bearer ${user1Token}`)
+            .send(constants.rateTrackWith4)
+            .end((err, res) => {
+              res.should.have.status(201);
+              request(app)
+                .get(`/api/artists/${initialArtistId1}`)
+                .set('Authorization', `Bearer ${user1Token}`)
+                .end((err, res) => {
+                  res.body.artist.should.have.property('popularity').eql(2);
+                  done();
+                });
+            });
+        });
+    });
+
+    it('should return artist2 popularity 3', done => {
+      request(app)
+        .post(`/api/tracks/${initialTrackId}/popularity`)
+        .set('Authorization', `Bearer ${user1Token}`)
+        .send(constants.rateTrackWith2)
+        .end((err, res) => {
+          res.should.have.status(201);
+          request(app)
+            .post(`/api/tracks/${initialTrackId2}/popularity`)
+            .set('Authorization', `Bearer ${user1Token}`)
+            .send(constants.rateTrackWith4)
+            .end((err, res) => {
+              res.should.have.status(201);
+              request(app)
+                .get(`/api/artists/${initialArtistId2}`)
+                .set('Authorization', `Bearer ${user1Token}`)
+                .end((err, res) => {
+                  res.body.artist.should.have.property('popularity').eql(3);
+                  done();
+                });
+            });
+        });
+    });
+  });
+
+  describe('Every popularity is 2 with a track rated with 2, and a track rated with 4 by the same user and a deletion of the second track', () => {
+    it('should return album popularity 2', done => {
+      request(app)
+        .post(`/api/tracks/${initialTrackId}/popularity`)
+        .set('Authorization', `Bearer ${user1Token}`)
+        .send(constants.rateTrackWith2)
+        .end((err, res) => {
+          res.should.have.status(201);
+          request(app)
+            .post(`/api/tracks/${initialTrackId2}/popularity`)
+            .set('Authorization', `Bearer ${user1Token}`)
+            .send(constants.rateTrackWith4)
+            .end((err, res) => {
+              res.should.have.status(201);
+              request(app)
+                .delete(`/api/albums/${initialAlbumId}/tracks/${initialTrackId2}`)
+                .set('Authorization', `Bearer ${user1Token}`)
+                .end((err, res) => {
+                  res.should.have.status(204);
+                  request(app)
+                    .get(`/api/albums/${initialAlbumId}`)
+                    .set('Authorization', `Bearer ${user1Token}`)
+                    .end((err, res) => {
+                      res.body.album.should.have.property('popularity').eql(2);
+                      done();
+                    });
+                });
+            });
+        });
+    });
+
+    it('should return artist1 popularity 2', done => {
+      request(app)
+        .post(`/api/tracks/${initialTrackId}/popularity`)
+        .set('Authorization', `Bearer ${user1Token}`)
+        .send(constants.rateTrackWith2)
+        .end((err, res) => {
+          res.should.have.status(201);
+          request(app)
+            .post(`/api/tracks/${initialTrackId2}/popularity`)
+            .set('Authorization', `Bearer ${user1Token}`)
+            .send(constants.rateTrackWith4)
+            .end((err, res) => {
+              res.should.have.status(201);
+              request(app)
+                .delete(`/api/albums/${initialAlbumId}/tracks/${initialTrackId2}`)
+                .set('Authorization', `Bearer ${user1Token}`)
+                .end((err, res) => {
+                  res.should.have.status(204);
+                  request(app)
+                    .get(`/api/artists/${initialArtistId1}`)
+                    .set('Authorization', `Bearer ${user1Token}`)
+                    .end((err, res) => {
+                      res.body.artist.should.have.property('popularity').eql(2);
+                      done();
+                    });
+                });
+            });
+        });
+    });
+
+    it('should return artist2 popularity 3', done => {
+      request(app)
+        .post(`/api/tracks/${initialTrackId}/popularity`)
+        .set('Authorization', `Bearer ${user1Token}`)
+        .send(constants.rateTrackWith2)
+        .end((err, res) => {
+          res.should.have.status(201);
+          request(app)
+            .post(`/api/tracks/${initialTrackId2}/popularity`)
+            .set('Authorization', `Bearer ${user1Token}`)
+            .send(constants.rateTrackWith4)
+            .end((err, res) => {
+              res.should.have.status(201);
+              request(app)
+                .delete(`/api/albums/${initialAlbumId}/tracks/${initialTrackId2}`)
+                .set('Authorization', `Bearer ${user1Token}`)
+                .end((err, res) => {
+                  res.should.have.status(204);
+                  request(app)
+                    .get(`/api/artists/${initialArtistId2}`)
+                    .set('Authorization', `Bearer ${user1Token}`)
+                    .end((err, res) => {
+                      res.body.artist.should.have.property('popularity').eql(3);
+                      done();
+                    });
+                });
+            });
+        });
+    });
+  });
+
+  describe('Rate the same track multiple times', () => {
+    it('should return track popularity 3', done => {
+      request(app)
+        .post(`/api/tracks/${initialTrackId}/popularity`)
+        .set('Authorization', `Bearer ${user1Token}`)
+        .send(constants.rateTrackWith2)
+        .end((err, res) => {
+          res.should.have.status(201);
+          request(app)
+            .post(`/api/tracks/${initialTrackId}/popularity`)
+            .set('Authorization', `Bearer ${user2Token}`)
+            .send(constants.rateTrackWith4)
+            .end((err, res) => {
+              res.should.have.status(201);
+              request(app)
+                .get(`/api/tracks/${initialTrackId}`)
+                .set('Authorization', `Bearer ${user1Token}`)
+                .end((err, res) => {
+                  res.body.track.should.have.property('popularity').eql(3);
+                  done();
+                });
+            });
+        });
+    });
+
+    it('should return track popularity 3', done => {
+      request(app)
+        .post(`/api/tracks/${initialTrackId2}/popularity`)
+        .set('Authorization', `Bearer ${user1Token}`)
+        .send(constants.rateTrackWith2)
+        .end((err, res) => {
+          res.should.have.status(201);
+          request(app)
+            .post(`/api/tracks/${initialTrackId2}/popularity`)
+            .set('Authorization', `Bearer ${user2Token}`)
+            .send(constants.rateTrackWith4)
+            .end((err, res) => {
+              res.should.have.status(201);
+              request(app)
+                .get(`/api/tracks/${initialTrackId2}`)
+                .set('Authorization', `Bearer ${user1Token}`)
+                .end((err, res) => {
+                  res.body.track.should.have.property('popularity').eql(3);
                   done();
                 });
             });
