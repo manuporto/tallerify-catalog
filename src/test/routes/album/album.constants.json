@@ -1,6 +1,6 @@
 {
 	"jwtTestUser": {
-		"admin": true
+		"permissions": [ "admin" ],
 	},
 	"initialAlbum": {
 		"name": "2nd law",

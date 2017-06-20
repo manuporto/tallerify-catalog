@@ -1,4 +1,8 @@
 {
+  "jwtTestUser": {
+    "permissions": [ "admin" ],
+    "id": 1
+  },
   "initialAdmin": {
       "userName": "abrden",
       "password": "1234",
