@@ -25,7 +25,7 @@ const findAllPlaylists = () => {
   return _findAllPlaylists();
 };
 
-const findAllMyPlaylists = (ownerId) => {
+const findAllMyPlaylists = ownerId => {
   logger.info(`Finding all playlists of user ${ownerId}`);
   return _findAllPlaylists().where('pl.owner_id', ownerId);
 };
