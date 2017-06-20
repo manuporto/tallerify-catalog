@@ -167,6 +167,16 @@ const deleteAlbumId = trackId => {
   return updateAlbumId(trackId, -1);
 };
 
+const deleteTrackWithId = id => {
+  logger.debug(`Deleting track ${id}`);
+  const deleters = [
+    generalHandler.deleteEntryWithId(tables.tracks, id),
+    generalHandler.deleteEntryWithId(tables.tracks_rating, id),
+    generalHandler.deleteEntryWithId(tables.artists_tracks, id),
+  ];
+  return Promise.all(deleters);
+};
+
 module.exports = {
   findAllTracks,
   findTrackWithId,
@@ -182,4 +192,5 @@ module.exports = {
   removeTracksFromAlbum,
   updateAlbumId,
   deleteAlbumId,
+  deleteTrackWithId,
 };
