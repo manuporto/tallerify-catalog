@@ -39,7 +39,7 @@ describe('Popularity', () => {
                 constants.initialArtist2,
               ]).then(artists => {
                 logger.debug(`Tests artists created: ${JSON.stringify(artists, null, 4)}`);
-                
+
                 initialArtistId1 = artists[0].id;
                 initialArtistId2 = artists[1].id;
 
@@ -49,7 +49,7 @@ describe('Popularity', () => {
 
                   initialAlbumId = album.id;
                   initialTrack = Object.assign({}, constants.initialTrack, { albumId: initialAlbumId });
-                  initialTrack2 = Object.assign({}, constants.testTrack, {
+                  initialTrack2 = Object.assign({}, constants.initialTrack2, {
                     albumId: initialAlbumId,
                     artists: [initialArtistId2],
                   });
