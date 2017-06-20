@@ -15,7 +15,7 @@ const _findAllPlaylists = () => db
   .select('pl.*',
     db.raw(`to_json(array_agg(distinct tr.*)) as tracks, 
     to_json(array_agg(distinct u.*))::json->0 as owner,
-    array_agg(ar.images) as images`))
+    array_agg(ar.images[1]) as images`))
   .from(`${tables.playlists} as pl`)
   .leftJoin(`${tables.users} as u`, 'pl.owner_id', 'u.id')
   .leftJoin(`${tables.playlists_tracks} as pltr`, 'pl.id', 'pltr.playlist_id')
