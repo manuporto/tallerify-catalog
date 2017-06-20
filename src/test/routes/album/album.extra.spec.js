@@ -128,7 +128,7 @@ describe('Album', () => {
             .get(`/api/albums/${initialAlbumId}/tracks`)
             .set('Authorization', `Bearer ${testToken}`)
             .end((err, res) => {
-              res.should.have.status(200);
+              res.should.have.status(201);
               res.body.should.be.a('object');
               res.body.should.have.property('metadata');
               res.body.metadata.should.have.property('version');
@@ -169,7 +169,7 @@ describe('Album', () => {
             });
         });
     });
-    
+
     it('should return status code 401 if unauthorized', done => {
       request(app)
         .put(`/api/albums/${initialAlbumId}/tracks`)
