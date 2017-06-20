@@ -4,6 +4,7 @@ const db = require('../../database/index');
 const generalHandler = require('./generalHandler');
 const trackHandler = require('./trackHandler');
 const albumArtistHandler = require('./albumArtistHandler');
+const playlistAlbumHandler = require('./playlistAlbumHandler');
 
 const NonExistentIdError = require('../../errors/NonExistentIdError');
 
@@ -87,6 +88,7 @@ const deleteAlbumWithId = id => {
     generalHandler.deleteEntryWithId(tables.albums, id),
     albumArtistHandler.deleteAssociationsOfAlbum(id),
     trackHandler.removeTracksFromAlbum(id),
+    playlistAlbumHandler.deleteAssociationsOfAlbum(id),
   ];
   return Promise.all(deleters);
 };
