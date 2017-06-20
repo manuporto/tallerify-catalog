@@ -134,7 +134,7 @@ const trackLike = (req, res) => {
   db.general.findEntryWithId(tables.tracks, req.params.id)
     .then(track => {
       if (!respond.entryExists(req.params.id, track, res)) return;
-      ger.event('tracks', req.user.id, 'likes', req.params.id, '2025-06-06');
+      ger.events([{namespace: 'tracks', person: req.user.id, action: 'likes', thing: req.params.id, expires_at: '2025-06-06'}]);
       db.track.like(req.user.id, req.params.id)
         .then(() => respond.successfulTrackLike(track, res))
         .catch(error => respond.internalServerError(error, res));
@@ -146,7 +146,7 @@ const trackDislike = (req, res) => {
   db.general.findEntryWithId(tables.tracks, req.params.id)
     .then(track => {
       if (!respond.entryExists(req.params.id, track, res)) return;
-      ger.event('tracks', req.user.id, 'dislikes', req.params.id, '2025-06-06');
+      ger.events([{namespace: 'tracks', person: req.user.id, action: 'dislikes', thing: req.params.id, expires_at: '2025-06-06'}]);
       db.track.dislike(req.user.id, req.params.id)
         .then(() => respond.successfulTrackDislike(track, res))
         .catch(error => respond.internalServerError(error, res));

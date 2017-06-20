@@ -96,7 +96,7 @@ const artistUnfollow = (req, res) => {
   db.artist.findArtistWithId(req.params.id)
     .then(artist => {
       if (!respond.entryExists(req.params.id, artist, res)) return;
-      ger.event('artists', req.user.id, 'dislikes', req.params.id, '2025-06-06');
+      ger.events([{namespace: 'artists', person: req.user.id, action: 'dislikes', thing: req.params.id, expires_at: '2025-06-06'}]);
       db.artist.unfollow(req.user.id, req.params.id)
         .then(() => respond.successfulArtistUnfollow(artist, res))
         .catch(error => respond.internalServerError(error, res));
@@ -108,7 +108,7 @@ const artistFollow = (req, res) => {
   db.artist.findArtistWithId(req.params.id)
     .then(artist => {
       if (!respond.entryExists(req.params.id, artist, res)) return;
-      ger.event('artists', req.user.id, 'likes', req.params.id, '2025-06-06');
+      ger.events([{namespace: 'artists', person: req.user.id, action: 'likes', thing: req.params.id, expires_at: '2025-06-06'}]);
       db.artist.follow(req.user.id, req.params.id)
         .then(() => respond.successfulArtistFollow(artist, res))
         .catch(error => respond.internalServerError(error, res));

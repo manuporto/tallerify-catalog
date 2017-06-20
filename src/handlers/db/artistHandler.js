@@ -28,7 +28,7 @@ const findArtistWithId = id => {
 
 const findArtistsWithIds = ids => {
   logger.info('Finding artists with selected ids');
-  return _findAllArtists().whereIn('tr.id', ids);
+  return _findAllArtists().whereIn('ar.id', ids);
 };
 
 const createNewArtistEntry = body => {
