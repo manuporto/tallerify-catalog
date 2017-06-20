@@ -10,8 +10,8 @@ const NonExistentIdError = require('../../errors/NonExistentIdError');
 const _findAllAlbums = () => db
     .select('al.*',
       db.raw(`to_json(array_agg(distinct ar.*)) as artists, 
-        to_json(array_nagg(distinct tr.*)) as tracks,
-        avg(distinct (rating.track_id) rating.rating) as popularity`))
+        to_json(array_agg(distinct tr.*)) as tracks,
+        distinct on (rating.track_id) avg(rating.rating) as popularity`))
     .from('albums as al')
     .leftJoin('albums_artists as aa', 'al.id', 'aa.album_id')
     .leftJoin('artists as ar', 'ar.id', 'aa.artist_id')
