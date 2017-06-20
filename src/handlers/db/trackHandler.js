@@ -3,6 +3,7 @@ const tables = require('../../database/tableNames');
 const db = require('../../database/index');
 const generalHandler = require('./generalHandler');
 const artistTrackHandler = require('./artistTrackHandler');
+const playlistTrackHandler = require('./playlistTrackHandler');
 
 const NonExistentIdError = require('../../errors/NonExistentIdError');
 
@@ -178,6 +179,22 @@ const deleteAlbumId = trackId => {
   return updateAlbumId(trackId, -1);
 };
 
+const deleteRatingsOfTrack = trackId => {
+  logger.debug(`Deleting track ${trackId} ratings`);
+  return db(tables.tracks_rating).where('track_id', trackId).del();
+};
+
+const deleteTrackWithId = id => {
+  logger.debug(`Deleting track ${id}`);
+  const deleters = [
+    generalHandler.deleteEntryWithId(tables.tracks, id),
+    deleteRatingsOfTrack(id),
+    artistTrackHandler.deleteAssociationsOfTrack(id),
+    playlistTrackHandler.deleteAssociationsOfTrack(id),
+  ];
+  return Promise.all(deleters);
+};
+
 module.exports = {
   findAllTracks,
   findTrackWithId,
@@ -194,4 +211,5 @@ module.exports = {
   removeTracksFromAlbum,
   updateAlbumId,
   deleteAlbumId,
+  deleteTrackWithId,
 };

@@ -123,7 +123,7 @@ const deleteTrack = (req, res) => {
   db.general.findEntryWithId(tables.tracks, req.params.id)
     .then(track => {
       if (!respond.entryExists(req.params.id, track, res)) return;
-      db.general.deleteEntryWithId(tables.tracks, req.params.id)
+      db.track.deleteTrackWithId(req.params.id)
         .then(() => respond.successfulTrackDeletion(res))
         .catch(error => respond.internalServerError(error, res));
     })
