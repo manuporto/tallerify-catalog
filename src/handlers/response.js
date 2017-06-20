@@ -477,7 +477,7 @@ const formatPlaylistJson = playlist => ({
   href: playlist.href,
   description: playlist.description,
   owner: playlist.owner ? formatUserShortJson(playlist.owner) : {},
-  tracks: playlist.tracks ?
+  songs: playlist.tracks ?
     playlist.tracks.map(track => formatTrackShortJson(track)) : [],
 });
 
