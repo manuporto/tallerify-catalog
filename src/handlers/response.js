@@ -7,6 +7,7 @@ const jsonSchemaValidator = amanda('json');
 const math = require('mathjs');
 
 const calculatePopularity = popularity => {
+  logger.debug('Calculating popularity');
   if (popularity) {
     return math.round(popularity, 2);
   }
@@ -401,7 +402,7 @@ const formatTrackJson = track => ({
 
 const successfulTracksFetch = (tracks, response) => {
   logger.info('Successful tracks fetch');
-  logger.debug(`Tracks: ${JSON.stringify(tracks, null, 4)}`);
+  logger.info(`Tracks: ${JSON.stringify(tracks, null, 4)}`);
   return response.status(200).json({
     metadata: {
       count: tracks.length,
@@ -419,7 +420,7 @@ const successfulTrackCreation = (track, response) => {
 
 const successfulTrackFetch = (track, response) => {
   logger.info('Successful track fetch');
-  logger.info(`Track: ${JSON.stringify(track, null, 4)}`);
+  logger.debug(`Track: ${JSON.stringify(track, null, 4)}`);
   response.status(200).json({
     metadata: {
       count: 1,
