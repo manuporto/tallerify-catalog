@@ -1,1 +1,1 @@
-PGPASSWORD=postgres psql -U postgres -d tallerify_dev -a -f shared_fake.sql
+PGPASSWORD=postgres psql -U postgres -h localhost -d tallerify_dev -a -f shared_fake.sql
