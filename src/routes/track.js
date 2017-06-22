@@ -40,7 +40,9 @@ const trackRatingExpectedBodySchema = {
 };
 
 const uploadNewTrackFile = (trackFile, track) => {
+  logger.warn(trackFile);
   if (trackFile) {
+    logger.warn('Uploading track');
     rest.post('http://52.27.130.90:8080/tracks', {
       multipart: true,
       data: {

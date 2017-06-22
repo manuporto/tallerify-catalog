@@ -402,7 +402,7 @@ const formatTrackJson = track => ({
 
 const successfulTracksFetch = (tracks, response) => {
   logger.info('Successful tracks fetch');
-  logger.info(`Tracks: ${JSON.stringify(tracks, null, 4)}`);
+  logger.debug(`Tracks: ${JSON.stringify(tracks, null, 4)}`);
   return response.status(200).json({
     metadata: {
       count: tracks.length,
