@@ -1,10 +1,9 @@
 {
 	"jwtTestUser1": {
-		"admin": true,
+		"permissions": ["admin"],
 		"id": 24
 	},
 	"jwtTestUser2": {
-		"admin": false,
 		"id": 4
 	},
 	"initialArtist1": {
