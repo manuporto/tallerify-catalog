@@ -1,12 +1,12 @@
 insert into admins ("userName", "password", "firstName", "lastName", "email") values
   ('admin', 'admin', 'papa', 'admin', 'papa@admin.com');
 
-insert into albums ("href", "name", "release_date", "popularity", "images", "genres") values
-  ('http://album1.com', 'Album 1', current_date, 3, '{image1}', '{pop}'),
-  ('http://album2.com', 'Album 2', current_date, 2, '{image2}', '{rock}'),
-  ('http://album3.com', 'Album 3', current_date, 1, '{image3}', '{metal}'),
-  ('http://album4.com', 'Album 4', current_date, 5, '{image4}', '{pop}'),
-  ('http://album5.com', 'Album 5', current_date, 4, '{image5}', '{country}');
+insert into albums ("href", "name", "release_date", "images", "genres") values
+  ('http://album1.com', 'Album 1', current_date, '{image1}', '{pop}'),
+  ('http://album2.com', 'Album 2', current_date, '{image2}', '{rock}'),
+  ('http://album3.com', 'Album 3', current_date, '{image3}', '{metal}'),
+  ('http://album4.com', 'Album 4', current_date, '{image4}', '{pop}'),
+  ('http://album5.com', 'Album 5', current_date, '{image5}', '{country}');
 
 insert into artists ("name", "description", "href", "popularity", "images", "genres") values
   ('Carlos Vives', 'Colombia?', 'http://carlitos.com', 5, '{vives1}', '{pop}'),
@@ -34,12 +34,12 @@ insert into playlists_tracks ("playlist_id", "track_id") values
   (2, 1),
   (4, 4);
 
-insert into tracks ("name", "duration", "album_id", "href", "popularity", "external_id") values
-  ('Track1', 2, 1, 'http://track1.com', 3, NULL),
-  ('Track2', 1, 2, 'http://track2.com', 2, NULL),
-  ('Track3', 5, 3, 'http://track3.com', 1, NULL),
-  ('Track4', 1, 1, 'http://track4.com', 1, NULL),
-  ('Track5', 6, 5, 'http://track5.com', 5, NULL);
+insert into tracks ("name", "duration", "album_id", "href", "external_id") values
+  ('Track1', 2, 1, 'http://track1.com', NULL),
+  ('Track2', 1, 2, 'http://track2.com', NULL),
+  ('Track3', 5, 3, 'http://track3.com', NULL),
+  ('Track4', 1, 1, 'http://track4.com', NULL),
+  ('Track5', 6, 5, 'http://track5.com', NULL);
 
 insert into artists_tracks ("artist_id", "track_id") values
   (1,1),
@@ -48,10 +48,10 @@ insert into artists_tracks ("artist_id", "track_id") values
   (4,4),
   (3,5);
 
-insert into tracks_rating ("user_id", "track_id", "rating") values
-  (1,1,3),
-  (2,2,4),
-  (1,2,5);
+insert into tracks_rating ("user_id", "track_id", "album_id", "rating") values
+  (1,1,1,3),
+  (2,2,2,4),
+  (1,2,3,5);
 
 insert into users ("facebookUserId", "facebookAuthToken", "userName", "password", "firstName", "lastName", "country",
    "birthdate", "email", "images", "href") values

@@ -13,11 +13,15 @@ const NonExistentIdError = require('../../errors/NonExistentIdError');
 
 const _findAllPlaylists = () => db
   .select('pl.*',
-    db.raw('to_json(array_agg(distinct tr.*)) as tracks, to_json(array_agg(distinct u.*))::json->0 as owner'))
+    db.raw(`to_json(array_agg(distinct tr.*)) as tracks, 
+    to_json(array_agg(distinct u.*))::json->0 as owner,
+    array_agg(ar.images[1]) as images`))
   .from(`${tables.playlists} as pl`)
   .leftJoin(`${tables.users} as u`, 'pl.owner_id', 'u.id')
   .leftJoin(`${tables.playlists_tracks} as pltr`, 'pl.id', 'pltr.playlist_id')
   .leftJoin(`${tables.tracks} as tr`, 'tr.id', 'pltr.track_id')
+  .leftJoin(`${tables.artists_tracks} as atr`, 'tr.id', 'atr.track_id')
+  .leftJoin(`${tables.artists} as ar`, 'ar.id', 'atr.artist_id')
   .groupBy('pl.id');
 
 const findAllPlaylists = () => {
@@ -68,8 +72,11 @@ const createNewPlaylistEntry = body => {
     .then(() => generalHandler.createNewEntry(tables.playlists, playlist)
         .then(insertedPlaylist => {
           logger.debug(`Inserted playlist: ${JSON.stringify(insertedPlaylist, null, 4)}`);
-          return playlistTrackHandler.insertAssociations(insertedPlaylist[0].id, body.songs)
-            .then(() => findPlaylistWithId(insertedPlaylist[0].id));
+          if (body.songs.length > 0) {
+            return playlistTrackHandler.insertAssociations(insertedPlaylist[0].id, body.songs)
+              .then(() => findPlaylistWithId(insertedPlaylist[0].id));
+          }
+          return findPlaylistWithId(insertedPlaylist[0].id);
         }));
 };
 
@@ -110,7 +117,8 @@ const deletePlaylistWithId = id => {
   logger.debug(`Deleting playlist ${id}`);
   const deleters = [
     generalHandler.deleteEntryWithId(tables.playlists, id),
-    playlistTrackHandler.deleteAssociations(id),
+    playlistTrackHandler.deleteAssociationsOfPlaylist(id),
+    playlistAlbumHandler.deleteAssociationsOfPlaylist(id),
   ];
   return Promise.all(deleters);
 };

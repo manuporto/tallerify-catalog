@@ -353,7 +353,7 @@ describe('Playlist', () => {
           res.body.playlist.should.have.property('description').eql(constants.initialPlaylist.description);
           res.body.playlist.should.have.property('href');
           res.body.playlist.should.have.property('owner').eql(ownerShort);
-          res.body.playlist.should.have.property('tracks').eql([initialTrackInPlaylistShort]);
+          res.body.playlist.should.have.property('songs').eql([initialTrackInPlaylistShort]);
           done();
         });
     });
@@ -403,9 +403,9 @@ describe('Playlist', () => {
           res.body.should.have.property('description').eql(constants.updatedPlaylist.description);
           res.body.should.have.property('href');
           res.body.should.have.property('owner').eql(ownerShort);
-          res.body.should.have.property('tracks');
-          res.body.tracks.should.include.something.that.deep.equals(initialTrackInPlaylistShort);
-          res.body.tracks.should.include.something.that.deep.equals(initialTrackShort);
+          res.body.should.have.property('songs');
+          res.body.songs.should.include.something.that.deep.equals(initialTrackInPlaylistShort);
+          res.body.songs.should.include.something.that.deep.equals(initialTrackShort);
           done();
         });
     });

@@ -123,7 +123,7 @@ const deleteTrack = (req, res) => {
   db.general.findEntryWithId(tables.tracks, req.params.id)
     .then(track => {
       if (!respond.entryExists(req.params.id, track, res)) return;
-      db.general.deleteEntryWithId(tables.tracks, req.params.id)
+      db.track.deleteTrackWithId(req.params.id)
         .then(() => respond.successfulTrackDeletion(res))
         .catch(error => respond.internalServerError(error, res));
     })
@@ -134,7 +134,7 @@ const trackLike = (req, res) => {
   db.general.findEntryWithId(tables.tracks, req.params.id)
     .then(track => {
       if (!respond.entryExists(req.params.id, track, res)) return;
-      ger.event('tracks', req.user.id, 'likes', req.params.id, '2025-06-06');
+      ger.events([{ namespace: 'tracks', person: req.user.id, action: 'likes', thing: req.params.id, expires_at: '2025-06-06' }]);
       db.track.like(req.user.id, req.params.id)
         .then(() => respond.successfulTrackLike(track, res))
         .catch(error => respond.internalServerError(error, res));
@@ -146,7 +146,7 @@ const trackDislike = (req, res) => {
   db.general.findEntryWithId(tables.tracks, req.params.id)
     .then(track => {
       if (!respond.entryExists(req.params.id, track, res)) return;
-      ger.event('tracks', req.user.id, 'dislikes', req.params.id, '2025-06-06');
+      ger.events([{ namespace: 'tracks', person: req.user.id, action: 'dislikes', thing: req.params.id, expires_at: '2025-06-06' }]);
       db.track.dislike(req.user.id, req.params.id)
         .then(() => respond.successfulTrackDislike(track, res))
         .catch(error => respond.internalServerError(error, res));
@@ -177,7 +177,7 @@ const rateTrack = (req, res) => {
       db.general.findEntryWithId(tables.tracks, req.params.id)
         .then(track => {
           if (!respond.entryExists(req.params.id, track, res)) return;
-          db.track.rate(req.params.id, req.user.id, req.body.rate)
+          db.track.rate(track, req.user.id, req.body.rate)
             .then(() => respond.successfulTrackRate(req.body.rate, res))
             .catch(error => respond.internalServerError(error, res));
         })
@@ -196,9 +196,15 @@ const getRecommendedTracks = (req, res) => {
       for (let i = 0, len = recommendations.recommendations.length; i < len; i += 1) {
         recommendedIds.push(recommendations.recommendations[i].thing);
       }
-      db.track.findTracksWithIds(recommendedIds)
-        .then(tracks => respond.successfulTracksFetch(tracks, res))
-        .catch(error => respond.internalServerError(error, res));
+      if (recommendedIds.length !== 0) {
+        db.track.findTracksWithIds(recommendedIds)
+          .then(tracks => respond.successfulTracksFetch(tracks, res))
+          .catch(error => respond.internalServerError(error, res));
+      } else {
+        db.track.findAllTracks(req.query)
+          .then(tracks => respond.successfulTracksFetch(tracks, res))
+          .catch(error => respond.internalServerError(error, res));
+      }
     });
 };
 

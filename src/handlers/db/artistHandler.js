@@ -3,14 +3,17 @@ const db = require('../../database/');
 const tables = require('../../database/tableNames');
 const generalHandler = require('./generalHandler');
 const albumArtistHandler = require('./albumArtistHandler');
+const artistTrackHandler = require('./artistTrackHandler');
 const trackHandler = require('./trackHandler');
 
 const _findAllArtists = () => db
   .select('ar.*',
-    db.raw('to_json(array_agg(distinct al.*)) as albums'))
+    db.raw('to_json(array_agg(distinct al.*)) as albums, avg(rating.rating) as popularity'))
   .from(`${tables.artists} as ar`)
   .leftJoin(`${tables.albums_artists} as aa`, 'ar.id', 'aa.artist_id')
   .leftJoin(`${tables.albums} as al`, 'al.id', 'aa.album_id')
+  .leftJoin(`${tables.artists_tracks} as atr`, 'atr.artist_id', 'ar.id')
+  .leftJoin(`${tables.tracks_rating} as rating`, 'rating.track_id', 'atr.track_id')
   .groupBy('ar.id');
 
 const findAllArtists = queries => {
@@ -18,7 +21,7 @@ const findAllArtists = queries => {
   // Ugly hack to return empty array if empty name query it's supplied
   // The normal behavior (knex) it's to return everything
   if (queries.name === '') return Promise.resolve([]);
-  return (queries.name) ? _findAllArtists().where('ar.name', queries.name) : _findAllArtists();
+  return (queries.name) ? _findAllArtists().where('ar.name', 'ilike', `%${queries.name}%`) : _findAllArtists();
 };
 
 const findArtistWithId = id => {
@@ -28,7 +31,7 @@ const findArtistWithId = id => {
 
 const findArtistsWithIds = ids => {
   logger.info('Finding artists with selected ids');
-  return _findAllArtists().whereIn('tr.id', ids);
+  return _findAllArtists().whereIn('ar.id', ids);
 };
 
 const createNewArtistEntry = body => {
@@ -61,6 +64,7 @@ const deleteArtist = id => {
   const deleters = [
     generalHandler.deleteEntryWithId(tables.artists, id),
     albumArtistHandler.deleteAssociationsOfArtist(id),
+    artistTrackHandler.deleteAssociationsOfArtist(id),
   ];
   return Promise.all(deleters);
 };

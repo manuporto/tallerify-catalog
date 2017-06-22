@@ -20,7 +20,7 @@ const _findAllUsers = () => db
 
 const findAllUsers = queries => {
   logger.debug('Getting all users.');
-  return queries.name ? _findAllUsers().where('u.userName', queries.name) : _findAllUsers();
+  return queries.name ? _findAllUsers().where('u.userName', 'ilike', `%${queries.name}%`) : _findAllUsers();
 };
 
 const findUser = id => {
@@ -55,4 +55,31 @@ const unfriend = (userId, friendId) => {
   }).del();
 };
 
-module.exports = { findWithFacebookUserId, findUser, findAllUsers, friend, unfriend };
+const deleteAssociationsOfUser = id => {
+  logger.debug(`Deleting user ${id} associations`);
+  return db(tables.users_users).where('user_id', id).del();
+};
+
+const cleanAssociationsOfContact = id => {
+  logger.debug(`Cleaning user ${id} from contacts associations`);
+  return db(tables.users_users).where('friend_id', id).del();
+};
+
+const deleteUserWithId = id => {
+  logger.debug(`Deleting user ${id}`);
+  const deleters = [
+    generalHandler.deleteEntryWithId(tables.users, id),
+    deleteAssociationsOfUser(id),
+    cleanAssociationsOfContact(id),
+  ];
+  return Promise.all(deleters);
+};
+
+module.exports = {
+  findWithFacebookUserId,
+  findUser,
+  findAllUsers,
+  friend,
+  unfriend,
+  deleteUserWithId,
+};
