@@ -1,9 +1,9 @@
 {
 	"jwtTestUser": {
-		"admin": true
+		"permissions": [ "admin" ]
 	},
 	"jwtAnotherTestUser": {
-		"admin": true
+		"permissions": [ "admin" ]
 	},
 	"initialUser": {
 		"userName": "abrden",

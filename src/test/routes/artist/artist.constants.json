@@ -1,6 +1,6 @@
 {
 	"jwtTestUser": {
-		"admin": true
+		"permissions": [ "admin" ]
 	},
 	"initialArtist": {
 		"name": "Papa Baute",
