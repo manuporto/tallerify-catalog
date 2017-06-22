@@ -1,6 +1,5 @@
 {
 	"jwtTestUser": {
-		"admin": false,
 		"id": 42
 	},
 	"initialArtist": {

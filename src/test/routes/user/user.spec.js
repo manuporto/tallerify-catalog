@@ -15,7 +15,7 @@ chai.use(chaiHttp);
 const config = require('./../../../config');
 const constants = require('./user.constants.json');
 
-const testToken = jwt.sign({ admin: true }, config.secret);
+const testToken = jwt.sign({ permissions: ['admin'] }, config.secret);
 const initialUser = Object.assign({}, constants.initialUser, { id: 1 });
 const initialUserToken = jwt.sign(initialUser, config.secret);
 
